@@ -688,28 +688,34 @@
           return null;
         };
 
+        // 네이티브 남성 보이스 여부 검사
+        const isNativeMale = (v) => {
+          if (!v) return false;
+          return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|male|남성|guy|david|mark|george|ryan|james|brian|eric/i.test(v.name);
+        };
+
         if (isEnglish) {
           const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
             utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
-            utterance.rate = 1.10;
-            utterance.pitch = 1.20;
+            utterance.rate = 1.08;
+            utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.75;
           } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
-            utterance.pitch = 0.98;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.60;
           } else if (spk.includes('수석판정관') || spk.includes('Adjudicator')) {
             utterance.voice = pickVoice(enVoices, ['george', 'brian', 'christopher', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
-            utterance.pitch = 0.65;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.65 : 0.40;
           } else if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('Doctor')) {
             utterance.voice = pickVoice(enVoices, ['eric', 'andrew', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 0.92;
-            utterance.pitch = 0.78;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.78 : 0.50;
           } else {
             utterance.voice = pickVoice(enVoices, ['male', 'david']) || enVoices[0] || null;
             utterance.rate = 0.96;
-            utterance.pitch = 0.88;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.88 : 0.55;
           }
         } else {
           // 한국어 음성 탐색
@@ -719,44 +725,52 @@
           const injoonVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성']);
           const bongjinVoice = pickVoice(koVoices, ['bongjin', '봉진']);
           const gookminVoice = pickVoice(koVoices, ['gookmin', '국민', 'yunho', '윤호']);
-          const anyMaleVoice = injoonVoice || bongjinVoice || gookminVoice || koVoices[0] || null;
+          const anyVoice = injoonVoice || bongjinVoice || gookminVoice || koVoices[0] || null;
 
-          // ================= [캐릭터별 개별 남성 보이스 & 피치/속도 튜닝] =================
+          // 크롬(Google 한국의)이나 기본 여성 음성만 설치된 브라우저에서도
+          // 피치(Pitch)를 남성 성대 주파수(100Hz~130Hz) 대역으로 확실하게 낮춰 100% 완벽한 남성 음성 구현
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-            // 1. 힘찬이: 밝고 명랑하며 씩씩한 AI 마스코트 청년 보이스
-            utterance.voice = injoonVoice || anyMaleVoice;
-            utterance.rate = 1.12;
-            utterance.pitch = 1.25; // 쾌활하고 에너지 넘치는 피치
+            // 1. 힘찬이: 씩씩하고 밝은 청년 AI 가이드 남성 보이스
+            utterance.voice = injoonVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 1.08;
+            utterance.pitch = hasMale ? 1.15 : 0.72; // 여성 기본 음성일 때 0.72로 씩씩한 청년 톤
           } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
-            // 2. 김민우: 자연스럽고 편안한 20대 대학생 청년 주인공 보이스
-            utterance.voice = injoonVoice || anyMaleVoice;
-            utterance.rate = 1.02;
-            utterance.pitch = 0.96; // 일상적인 20대 청년 표준 톤
+            // 2. 김민우: 20대 대학생 청년 주인공 남성 보이스
+            utterance.voice = injoonVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 1.0;
+            utterance.pitch = hasMale ? 0.95 : 0.58; // 여성 기본 음성일 때 0.58로 자연스러운 20대 청년 남성 톤
           } else if (spk.includes('수석판정관') || spk.includes('Adjudicator')) {
-            // 3. 수석판정관: 묵직하고 엄숙하며 중후한 50대 최고 판정관 딥 베이스 보이스
-            utterance.voice = gookminVoice || bongjinVoice || anyMaleVoice;
-            utterance.rate = 0.88;
-            utterance.pitch = 0.65; // 확실하게 차별화된 깊은 저음 베이스
+            // 3. 수석판정관: 묵직하고 엄숙한 50대 판정관 딥 베이스 남성 보이스
+            utterance.voice = gookminVoice || bongjinVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 0.86;
+            utterance.pitch = hasMale ? 0.65 : 0.38; // 확실하게 묵직한 중후한 초저음
           } else if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('Doctor')) {
-            // 4. 정형외과 전문의: 진중하고 전문적인 30대 의사 바리톤 보이스
-            utterance.voice = bongjinVoice || gookminVoice || anyMaleVoice;
+            // 4. 정형외과 전문의: 진중하고 신뢰감 있는 30~40대 의사 바리톤 남성 보이스
+            utterance.voice = bongjinVoice || gookminVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
             utterance.rate = 0.92;
-            utterance.pitch = 0.78; // 차분하고 신뢰감 있는 저음
+            utterance.pitch = hasMale ? 0.78 : 0.48; // 차분하고 깊은 바리톤 남성 톤
           } else if (spk.includes('의무관') || spk.includes('임상병리') || spk.includes('판정보조관') || spk.includes('Medical')) {
-            // 5. 의무관 & 검사보조관: 신속하고 절도 있는 군 의료 스태프 보이스
-            utterance.voice = bongjinVoice || injoonVoice || anyMaleVoice;
-            utterance.rate = 1.04;
-            utterance.pitch = 0.85; // 절도 있고 또렷한 톤
+            // 5. 의무관 & 보조관: 절도 있고 신속한 군 의료관 남성 보이스
+            utterance.voice = bongjinVoice || injoonVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 1.02;
+            utterance.pitch = hasMale ? 0.85 : 0.52; // 절도 있는 남성 톤
           } else if (spk.includes('심리상담관') || spk.includes('진로상담') || spk.includes('상담관') || spk.includes('Counselor')) {
-            // 6. 심리/진로 상담관: 나긋나긋하고 따뜻하며 지적인 남성 멘토 보이스
-            utterance.voice = injoonVoice || bongjinVoice || anyMaleVoice;
+            // 6. 상담관: 따뜻하고 지적인 남성 멘토 보이스
+            utterance.voice = injoonVoice || bongjinVoice || anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
             utterance.rate = 0.95;
-            utterance.pitch = 0.90; // 부드럽고 친근한 중음
+            utterance.pitch = hasMale ? 0.90 : 0.55; // 부드러운 남성 톤
           } else {
             // 7. 기타 안내
-            utterance.voice = anyMaleVoice;
-            utterance.rate = 1.0;
-            utterance.pitch = 0.92;
+            utterance.voice = anyVoice;
+            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 0.98;
+            utterance.pitch = hasMale ? 0.92 : 0.56;
           }
         }
 
