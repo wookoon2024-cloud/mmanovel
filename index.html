@@ -640,11 +640,32 @@
               <span class="text-xs text-slate-400 font-medium">전국 14개 청 실시간 연동</span>
             </div>
             <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
-              <option value="강원지방병무청">강원특별자치도 춘천시 (강원지방병무청)</option>
-              <option value="서울지방병무청">서울특별시 (서울지방병무청)</option>
-              <option value="부산지방병무청">부산·울산 (부산지방병무청)</option>
-              <option value="대전충남지방병무청">대전·세종·충남 (대전충남지방병무청)</option>
-              <option value="대구경북지방병무청">대구·경북 (대구경북지방병무청)</option>
+              <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
+                <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
+                <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
+                <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
+              </optgroup>
+              <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
+                <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
+                <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
+              </optgroup>
+              <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
+                <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
+              </optgroup>
+              <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
+                <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
+              </optgroup>
+              <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
+                <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
+              </optgroup>
+              <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
+              </optgroup>
             </select>
             <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
               <i data-lucide="calendar" class="w-4 h-4"></i> 실시간 월별 잔여석 달력 열기
@@ -867,6 +888,8 @@
     function openCalendarModal() {
       const modal = document.getElementById('calendar-modal');
       if (modal) {
+        const modalTitle = document.getElementById('cal-modal-title');
+        if (modalTitle) modalTitle.innerText = `${userData.region} 병역판정검사 실시간 공석 달력`;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         renderCalendarGrid();
