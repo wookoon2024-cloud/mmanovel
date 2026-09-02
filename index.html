@@ -757,11 +757,15 @@
       }, 1100);
     }
 
-    // 선택 완료 후 다음 씬으로 즉시 전환 실행
-    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx) {
+    // 장소 이동 전 예고 대사를 대화창에 먼저 안내하고, 클릭 시 실제 장소 이동 실행
+    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx, speakerKo = "힘찬이 (병무청 AI 가이드)", speakerEn = "Himchan (MMA AI Guide)") {
       playBeep(750, 'triangle', 0.05);
       
-      // 중앙 선택지 창 완전히 닫기 및 초기화
+      // 전환 안내 모드 활성화 및 이동 대상 씬 저장
+      isAnnouncement = true;
+      pendingTransitionSceneIdx = nextSceneIdx;
+
+      // 중앙 선택지 창을 즉시 완전히 닫고 초기화
       const choiceOverlay = document.getElementById('center-choice-overlay');
       const choiceContainer = document.getElementById('center-choice-container');
       if (choiceOverlay) {
@@ -770,11 +774,41 @@
       }
       if (choiceContainer) choiceContainer.innerHTML = '';
 
-      renderScene(nextSceneIdx);
+      // 화자 설정
+      const spkName = document.getElementById('speaker-name');
+      const currentSpeaker = (currentLang === 'en') ? speakerEn : speakerKo;
+      if (spkName) spkName.innerText = currentSpeaker;
+
+      // 안내 대사 포맷팅
+      const rawMsg = (currentLang === 'en') ? announcementEn : announcementKo;
+      const formattedMsg = formatSceneText(rawMsg);
+      currentDialogueList = [formattedMsg];
+      currentDialogueIdx = 0;
+
+      // TTS 음성 낭독 및 타이핑 효과 실행
+      speakDialogue(currentSpeaker, formattedMsg);
+      typewriterEffect(formattedMsg, () => {
+        if (autoPlay) {
+          autoPlayTimer = setTimeout(() => {
+            proceedTransition();
+          }, 2400);
+        }
+      });
+    }
+
+    // 안내 대사 확인 후 실제 씬 이동 실행
+    function proceedTransition() {
+      if (!isAnnouncement || pendingTransitionSceneIdx === null) return;
+      const targetIdx = pendingTransitionSceneIdx;
+      isAnnouncement = false;
+      pendingTransitionSceneIdx = null;
+      renderScene(targetIdx);
     }
 
     // 실제 씬 화면 업데이트 및 대사 출력
     function applyScene(idx) {
+      isAnnouncement = false;
+      pendingTransitionSceneIdx = null;
       currentSceneIdx = idx;
       const scene = SCENARIOS[idx];
       currentBg = scene.bg;
@@ -942,6 +976,21 @@
       const scrollContainer = document.getElementById('dialogue-scroll-container');
       const nextIndicator = document.getElementById('next-indicator');
       const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
+
+      // 0. 장소 이동 예고 대사(Announcement) 상태일 때 클릭 처리
+      if (isAnnouncement) {
+        if (isTyping) {
+          clearInterval(typingInterval);
+          const currentText = currentDialogueList[currentDialogueIdx] || '';
+          if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
+          isTyping = false;
+          if (scrollContainer) scrollContainer.scrollTop = 0;
+          if (nextIndicator) nextIndicator.classList.remove('hidden');
+        } else {
+          proceedTransition();
+        }
+        return;
+      }
 
       // 1. 타이핑 진행 중에 화면 클릭 시: 현재 대사를 즉시 끝까지 출력
       if (isTyping) {
