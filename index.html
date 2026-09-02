@@ -506,8 +506,11 @@
       const scrollContainer = document.getElementById('dialogue-scroll-container');
       if (scrollContainer) scrollContainer.scrollTop = 0;
 
+      // 동적 대사 포맷팅 (선택된 날짜, 지역, 여비, 카드 실시간 치환)
+      const formattedText = formatSceneText(scene.text);
+
       // Typewriter 효과 실행
-      typewriterEffect(scene.text, () => {
+      typewriterEffect(formattedText, () => {
         renderWidget(scene.widgetType);
         if (scrollContainer) {
           setTimeout(() => { scrollContainer.scrollTop = scrollContainer.scrollHeight; }, 50);
@@ -522,10 +525,24 @@
       // 대화 기록
       conversationHistory.push({
         speaker: scene.speaker,
-        text: scene.text,
+        text: formattedText,
         step: topTitle ? topTitle.innerText : ''
       });
       lucide.createIcons();
+    }
+
+    // 동적 플레이스홀더 치환 함수
+    function formatSceneText(rawText) {
+      if (!rawText) return '';
+      return rawText
+        .replace(/\{examDate\}/g, userData.examDate || '2026-10-29 (목) 오전')
+        .replace(/\{region\}/g, userData.region || '서울지방병무청')
+        .replace(/\{healthCheck\}/g, userData.healthCheck || '건강 체질')
+        .replace(/\{cardType\}/g, userData.cardType || '나라사랑카드')
+        .replace(/\{bmi\}/g, userData.bmi || '22.7')
+        .replace(/\{finalGrade\}/g, userData.finalGrade || '4급 (보충역)')
+        .replace(/\{disposition\}/g, userData.disposition || '사회복무요원 소집 대상')
+        .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
     }
 
     // Typewriter 효과 (실시간 자동 상향 스크롤)
@@ -569,7 +586,7 @@
         const scene = SCENARIOS[currentSceneIdx];
         const textElem = document.getElementById('dialogue-text');
         const nextIndicator = document.getElementById('next-indicator');
-        if (textElem) textElem.innerHTML = scene.text.replace(/\n/g, '<br>');
+        if (textElem) textElem.innerHTML = formatSceneText(scene.text).replace(/\n/g, '<br>');
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
         if (nextIndicator) nextIndicator.classList.remove('hidden');
