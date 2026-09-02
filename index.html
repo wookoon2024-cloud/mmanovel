@@ -259,10 +259,10 @@
 
   </div>
 
-  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (대화창 위로 자연스럽게 상반신 노출)] ================= -->
-  <div id="character-layer" class="fixed inset-0 z-10 flex items-end pointer-events-none pb-[125px] sm:pb-[175px] md:pb-[195px] px-2 sm:px-24">
+  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (화면 바닥에 자연스럽게 안착)] ================= -->
+  <div id="character-layer" class="fixed inset-0 z-10 flex items-end pointer-events-none pb-0 px-2 sm:px-24">
     <!-- 캐릭터가 화면 하단 바닥에 자연스럽게 안착 -->
-    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[50vh] sm:h-[65vh] md:h-[75vh]">
+    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[60vh] sm:h-[75vh] md:h-[85vh] max-h-[88vh]">
       <!-- 캐릭터 투명 PNG 스프라이트 -->
       <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
     </div>
