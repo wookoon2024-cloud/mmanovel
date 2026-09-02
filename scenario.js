@@ -101,7 +101,7 @@ const SCENARIOS = [
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
-  // [SCENE 5] 병무청 1층 로비 - 검사장 도착 & 나라사랑카드 등록
+  // [SCENE 5] 병무청 로비 - 가상 검사장 도착 & 나라사랑카드 등록
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
@@ -109,8 +109,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "드디어 검사 당일!\n{region} 1층 로비 접수데스크에 도착했습니다.\n\n먼저 오늘 검사 여비(교통비/식비)와 군 복무 월급을 입금받을 나라사랑카드를 선택·등록해 주세요.",
-    text_en: "Finally, the day of the exam!\nYou've arrived at the 1st floor lobby reception desk of {region}.\n\nFirst, please select and register the Nara Sarang Card that will receive today's travel expense (transit/meal allowance) and your military service salary.",
+    text: "드디어 가상 {region} 로비 접수데스크에 도착했습니다!\n\n가장 먼저 본인 확인 후 [나라사랑카드]를 발급·등록해야 하는데요, 이 카드가 왜 검사의 시작이자 필수인지 아시나요?\n\n① 검사장 전자신분증: 환복 후 이 카드를 주머니에 넣고 다니며, 모든 검사실(심리, 임상병리, 신체계측, 의사 진료) 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n\n② 실시간 여비 지급: 오늘 검사가 끝나면 왕복 교통비와 식비가 당일 이 계좌로 즉시 자동 입금됩니다.\n\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 군 생활 전 기간 동안 핵심 혜택 카드로 쭉 사용하게 됩니다!\n\n두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
+    text_en: "We've arrived at the virtual {region} reception lobby!\n\nFirst, you will register your [Nara Sarang Card]. Why is this card essential?\n\n① Exam Electronic ID: You will carry this card in your pocket and tap it at readers before entering every exam room (psychology, pathology, biometrics, doctor clinic) to record results in real-time.\n\n② Real-time Travel Allowance: Transit and meal allowances are directly deposited into this account on the same day.\n\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nCompare the benefits and select your preferred Nara Sarang Card.",
     apiSource: "공공데이터포털: 병무청_나라사랑카드 금융연계 서비스 API",
     apiSource_en: "Public Data Portal: MMA Nara Sarang Card Financial Linkage Service API",
     apiIcon: "database",
@@ -118,7 +118,7 @@ const SCENARIOS = [
     widgetType: "NARA_CARD_CHOICE"
   },
 
-  // [SCENE 6] 1층 탈의실 및 사물함실 - 나라사랑카드 지참 & 검사복 환복
+  // [SCENE 6] 탈의실 및 사물함실 - 사물함 보관 & 검사복 환복
   {
     bg: "assets/locker_room.jpg",
     char: "assets/himchan.png",
@@ -126,8 +126,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탈의실로 이동했습니다!\n소지품을 배정된 사물함에 보관하고 전용 검사복(상·하의)으로 환복해 주세요.\n\n발급받은 [나라사랑카드]는 검사복 주머니에 꼭 챙겨주세요! 모든 검사실(심리검사, 채혈, 신체계측, 전문의 진료 등)에 들어갈 때마다 리더기에 카드를 태그하게 됩니다.\n환복을 마치셨다면 2층 심리검사실로 이동해 볼까요?",
-    text_en: "We've moved to the locker room!\nStore your belongings in your assigned locker and change into the official examination uniform.\n\nBe sure to keep your registered [Nara Sarang Card] in your pocket! You will tag this card at electronic readers whenever entering each exam room.\nOnce you've changed, shall we head up to the 2nd floor psychological testing room?",
+    text: "탈의실 및 사물함실로 이동했습니다!\n\n여기서 아주 중요한 주의사항이 있습니다!\n\n모든 개인 소지품(휴대폰, 지갑, 시계, 겉옷 등)은 배정된 사물함에 넣고 전용 검사복(상·하의)으로 환복하셔야 합니다.\n\n⚠️ 단, 절대 사물함에 넣으면 안 되는 2가지!\n① 방금 등록한 [나라사랑카드] (모든 검사실 전산 태그용)\n② 의사 진료 시 제출할 [필수 의료서류](병무용 진단서, 수술기록지, 영상 CD 등)\n\n이 2가지는 사물함에 넣지 말고 꼭 검사복 주머니에 챙겨서 나오셔야 합니다!\n환복을 마치셨다면 첫 번째 검사인 [심리검사장]으로 이동해 볼까요?",
+    text_en: "We've moved to the locker room!\n\nImportant instructions:\nStore all personal belongings (phone, wallet, watch, coat) in your assigned locker and change into the examination uniform.\n\n⚠️ 2 items you MUST keep with you:\n① Your registered [Nara Sarang Card] (for tagging at all exam rooms)\n② Required [Medical Documents] (diagnosis, surgical notes, MRI CD for doctor)\n\nKeep these in your pockets! Once changed, let's head to the [Psychological Testing Hall]!",
     apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
     apiIcon: "scale",
@@ -135,16 +135,16 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 2층 심리검사실 (전산실) - 1차 인성 및 인지능력 검사
+  // [SCENE 7] 심리검사장 (전산실) - 1차 인지능력 및 인성검사
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
     charPos: "right",
-    speaker: "심리상담관 NPC",
-    speaker_en: "Psychological Counselor NPC",
+    speaker: "병무청 검사관 NPC",
+    speaker_en: "MMA Testing Officer NPC",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-    text: "병역판정검사의 본격적인 첫 순서는 '심리검사'입니다.\n\n좌석 모니터 화면에 나오는\n1차 인성 및 인지능력 검사 문항을 솔직하게 답변해 주세요.",
-    text_en: "The first official step of the draft physical exam is the 'Psychological Test'.\n\nPlease answer the personality and cognitive aptitude test questions on the computer monitor honestly.",
+    text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장(전산실)입니다.\n\n약 100여 대의 전산 컴퓨터가 마련되어 있으며, 배정받은 좌석에 착석 후 [나라사랑카드]를 모니터 앞 리더기에 태그하여 검사를 시작합니다.\n\n심리검사는 크게 2가지로 구성됩니다:\n① 1차 인지능력검사: 언어, 수리, 공간지각 등 기초 인지능력 측정\n② 1차 인성검사: 성격 특성, 정서적 안정성 및 군 복무 적합도 종합 평가\n(추가로 본인의 신체/정신건강 상태를 체크하는 질병상태문진표도 함께 작성합니다)\n\n💡 [핵심 꿀팁]: 신검 방문 전, 병무청 누리집(mwpt.mma.go.kr)이나 모바일 e-병무지갑 앱에서 [병역판정 심리검사 사전 실시]를 미리 작성하고 오시면 현장에서 검사 시간을 크게 단축하실 수 있습니다!\n\n그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
+    text_en: "Welcome examinees! This is the Psychological Testing Hall, the first official station.\n\nWith over 100 computer terminals, take your assigned seat and tap your [Nara Sarang Card] on the card reader to begin.\n\nThe test consists of:\n① 1st Cognitive Aptitude Test: basic verbal, numerical, spatial reasoning\n② 1st Personality Test: personality traits, emotional stability, and military adaptability\n(A medical condition questionnaire is also completed)\n\n💡 [Pro Tip]: You can complete the [Pre-exam Psychological Test] online beforehand on the MMA portal (mwpt.mma.go.kr) or e-MMA Wallet app to save substantial time on-site!\n\nNow, let's solve sample questions on screen.",
     apiSource: "국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
     apiIcon: "scale",
@@ -203,7 +203,7 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 1층 로비 및 수석판정관실 - 최종 판정, 여비 정산 & 정책 홍보
+  // [SCENE 11] 수석판정관실 - 최종 판정, 여비 정산 & 정책 홍보
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",

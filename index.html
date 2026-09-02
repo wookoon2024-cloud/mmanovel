@@ -496,9 +496,9 @@
           "STEP 1: 통지서 확인 & 스마트 일정 변경",
           "STEP 1: 통지서 확인 & 스마트 일정 변경",
           "STEP 2: 맞춤형 서류 및 사전 점검",
-          "STEP 3: 1층 로비 접수 & 카드 등록",
-          "STEP 4: 탈의실 환복 & 나라사랑카드 소지",
-          "STEP 5: 2층 심리검사 (전산실)",
+          "STEP 3: 로비 접수 & 카드 등록",
+          "STEP 4: 탈의실 환복 & 카드 지참",
+          "STEP 5: 심리검사장 (전산실)",
           "STEP 5: 임상병리 및 영상의학",
           "STEP 5: 자동 신체계측 & BMI",
           "STEP 6: 전문의 정밀 진료 (정형외과)",
@@ -539,9 +539,9 @@
           "STEP 1: Notice Check & Smart Rescheduling",
           "STEP 1: Notice Check & Smart Rescheduling",
           "STEP 2: Tailored Documents & Checkup",
-          "STEP 3: 1F Reception & Card Registration",
-          "STEP 4: Locker Room Uniform & Nara Sarang Card",
-          "STEP 5: 2F Psychological Examination",
+          "STEP 3: Reception & Card Registration",
+          "STEP 4: Locker Room Uniform & Card",
+          "STEP 5: Psychological Examination (PC Lab)",
           "STEP 5: Clinical Pathology & Chest X-Ray",
           "STEP 5: Biometric Measurement & BMI",
           "STEP 6: Specialist Medical Examination",
@@ -706,16 +706,16 @@
 
       // 목적지에 따른 이동 타이틀 및 안내 동적 설정
       if (newScene.bg.includes('lobby') && currentSceneIdx < 5) {
-        if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 검사장 도착`;
-        if (desc) desc.innerText = (currentLang === 'en') ? "1F Reception & Nara Sarang Card Registration" : "1층 안내데스크 접수 및 나라사랑카드 금융 등록";
+        if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 가상 검사장 도착`;
+        if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk & Nara Sarang Card Registration" : "로비 접수데스크 도착 및 나라사랑카드 금융 등록";
         if (icon) icon.setAttribute('data-lucide', 'building-2');
       } else if (newScene.bg.includes('locker_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to 1F Locker Room..." : "1층 전용 탈의실 및 사물함실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "RFID Smart Wristband Tag & Changing into Exam Uniform" : "RFID 스마트 팔찌 수령 및 전용 검사복(상·하의) 환복";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실 및 사물함실로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else if (newScene.bg.includes('exam_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to 2F Psychological Testing Lab..." : "2층 심리검사실(전산실)로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Personality & Cognitive Aptitude Psychological Test" : "1차 인성 및 인지능력 컴퓨터 심리검사";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장(전산실)으로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "1차 인지능력 및 인성검사 (전산 PC 평가)";
         if (icon) icon.setAttribute('data-lucide', 'brain');
       } else if (newScene.bg.includes('lab_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Pathology & Radiology Room..." : "임상병리검사실 및 영상의학실로 이동 중...";
@@ -730,7 +730,7 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
       } else if (newScene.bg.includes('lobby') && currentSceneIdx >= 9) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator & 1F Lobby..." : "수석판정관실 및 1층 로비로 이동 중...";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "수석판정관실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Final Result Paper & Real-time Travel Allowance" : "최종 병역처분 결과서 수령 및 실시간 여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
       } else {
@@ -1326,17 +1326,46 @@
               </div>
             </div>
             <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Changing Uniform Complete ➔ Move to 2F Psych Lab' : '검사복 환복 완료 ➔ 2층 심리검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${(currentLang === 'en') ? 'Changing Uniform Complete ➔ Move to Psych Hall' : '검사복 환복 완료 ➔ 심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
       } else if (type === 'PSYCH_TEST_UI') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 p-5 rounded-2xl border border-slate-700 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <div class="flex justify-between text-xs sm:text-sm text-slate-300 font-bold"><span>1차 심리검사 진행도 (인성 및 인지능력)</span><span class="text-emerald-400">100% 완료</span></div>
-            <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800"><div class="bg-blue-500 h-full w-full"></div></div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Psych Test Complete ➔ Move to Pathology/X-ray' : '심리검사 완료 ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
+                <span class="font-bold text-xs sm:text-sm text-white">${isEn ? '1st Psychological Test (PC Sample)' : '1차 심리검사 PC 실전 체험 (대표 문항)'}</span>
+              </div>
+              <span class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">${isEn ? '2 Sample Items' : '체험용 2문항'}</span>
+            </div>
+
+            <!-- 문항 1: 인지능력검사 -->
+            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+              <span class="font-bold text-slate-200 text-[11px] sm:text-xs">[문항 1 · 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?</span>
+              <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+                <button onclick="answerPsych(1, 1, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">① 군인 - 군대</button>
+                <button onclick="answerPsych(1, 2, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">② 학생 - 학교</button>
+                <button onclick="answerPsych(1, 3, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">③ 의사 - 병원</button>
+                <button onclick="answerPsych(1, 4, this)" class="psych-q1 p-2 rounded-lg bg-indigo-600/40 border border-indigo-500 text-indigo-200 text-left transition text-[11px] font-bold cursor-pointer">④ 자동차 - 도로 (선택됨)</button>
+              </div>
+            </div>
+
+            <!-- 문항 2: 인성검사 -->
+            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+              <span class="font-bold text-slate-200 text-[11px] sm:text-xs">[문항 2 · 인성/적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.</span>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-0.5">
+                <button onclick="answerPsych(2, 1, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">매우 그렇다</button>
+                <button onclick="answerPsych(2, 2, this)" class="psych-q2 p-1.5 rounded-lg bg-indigo-600 text-white border border-indigo-400 text-center transition text-[11px] font-bold cursor-pointer">대체로 그렇다</button>
+                <button onclick="answerPsych(2, 3, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">보통이다</button>
+                <button onclick="answerPsych(2, 4, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">그렇지 않다</button>
+              </div>
+            </div>
+
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="w-full py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>${isEn ? 'Psych Test Submitted ➔ Move to Pathology/X-ray' : '1차 심리검사 제출 완료 (정상 판정) ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1352,7 +1381,7 @@
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Diagnosis Complete ➔ Move to Chief Adjudicator & 1F Lobby' : '전문의 진료 완료 ➔ 1층 최종 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${(currentLang === 'en') ? 'Diagnosis Complete ➔ Move to Chief Adjudicator Office' : '전문의 진료 완료 ➔ 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1456,6 +1485,19 @@
       }
     }
 
+    function answerPsych(qNum, optNum, btn) {
+      playBeep(650, 'sine', 0.02);
+      const groupClass = qNum === 1 ? '.psych-q1' : '.psych-q2';
+      document.querySelectorAll(groupClass).forEach(b => {
+        b.classList.remove('bg-indigo-600', 'bg-indigo-600/40', 'text-white', 'text-indigo-200', 'border-indigo-400', 'border-indigo-500', 'font-bold', 'font-semibold');
+        b.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
+      });
+      if (btn) {
+        btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
+        btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-400', 'font-bold');
+      }
+    }
+
     function selectHealth(val) {
       // 선택 즉시 오버레이 숨김
       const choiceOverlay = document.getElementById('center-choice-overlay');
@@ -1475,16 +1517,16 @@
         }
       }
       transitionWithAnnouncement(
-        "좋습니다! 맞춤형 구비서류 점검을 완료했습니다. 이제 검사 당일 {region} 1층 로비 접수데스크로 이동하겠습니다!",
-        "Great! Document check complete. Now let's head to the 1st floor lobby reception desk of {region} on your exam day!",
+        "좋습니다! 맞춤형 구비서류 점검까지 완벽하게 마쳤습니다.\n\n민우 님, 실제 검사 당일 긴장하거나 당황하지 않도록 지금 저와 함께 [AI 가상 병역판정검사장]으로 이동해서 실제 신검 전 과정을 시뮬레이션 체험해 볼까요?",
+        "Great! Tailored documents checked.\n\nMinwoo, to make sure you won't be nervous on exam day, shall we head to the [Virtual MMA Exam Center] and simulate the entire process together?",
         5
       );
     }
     function selectCard(val) {
       userData.cardType = val;
       transitionWithAnnouncement(
-        "{cardType} 등록이 완료되었습니다! 이제 사물함에 소지품을 보관하고 전용 검사복으로 환복하기 위해 1층 탈의실로 이동하겠습니다.",
-        "{cardType} registered! Now let's move to the 1st floor locker room to store your belongings and change into the examination uniform.",
+        "{cardType} 등록이 완료되었습니다! 이제 사물함에 소지품을 보관하고 전용 검사복으로 환복하기 위해 탈의실로 이동하겠습니다.",
+        "{cardType} registered! Now let's move to the locker room to store your belongings and change into the examination uniform.",
         6
       );
     }
