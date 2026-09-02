@@ -697,7 +697,7 @@
       if (currentBg && currentBg !== scene.bg) {
         triggerSceneTransition(scene, () => {
           applyScene(idx);
-        });
+        }, idx);
       } else {
         applyScene(idx);
       }
@@ -705,7 +705,7 @@
 
     // 장소 이동 시네마틱 트랜지션 (검은 화면 페이드아웃 + 로딩 프로그레스 바)
     // 장소 이동 시네마틱 트랜지션 (검은 화면 페이드아웃 + 2.5초 로딩 프로그레스 바)
-    function triggerSceneTransition(newScene, onComplete) {
+    function triggerSceneTransition(newScene, onComplete, targetIdx) {
       const overlay = document.getElementById('scene-transition-overlay');
       const bar = document.getElementById('transition-progress-bar');
       const title = document.getElementById('transition-title');
@@ -717,44 +717,46 @@
         return;
       }
 
+      const bg = newScene && newScene.bg ? newScene.bg : '';
+
       // 목적지에 따른 이동 타이틀 및 안내 동적 설정
-      if (newScene.bg.includes('lobby') && currentSceneIdx < 5) {
+      if (bg.includes('lobby') && currentSceneIdx < 5) {
         if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 가상 검사장 도착`;
         if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk & Nara Sarang Card Registration" : "로비 접수데스크 도착 및 나라사랑카드 금융 등록";
         if (icon) icon.setAttribute('data-lucide', 'building-2');
-      } else if (newScene.bg.includes('locker_room')) {
+      } else if (bg.includes('locker_room') && currentSceneIdx < 10) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실 및 사물함실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
-      } else if (newScene.bg.includes('exam_room')) {
+      } else if (bg.includes('exam_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장으로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "인지능력 및 인성검사";
         if (icon) icon.setAttribute('data-lucide', 'brain');
-      } else if (newScene.bg.includes('lab_room')) {
+      } else if (bg.includes('lab_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Pathology & Radiology Room..." : "임상병리검사실 및 영상의학실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Blood/Urine Sampling & Chest X-Ray Imaging" : "혈액·소변 검체 채취 및 흉부 X-ray 촬영";
         if (icon) icon.setAttribute('data-lucide', 'flask-conical');
-      } else if (newScene.bg.includes('body_measure_room')) {
+      } else if (bg.includes('body_measure_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Basic Examination Room..." : "기본검사실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압, 시력 정밀 측정";
         if (icon) icon.setAttribute('data-lucide', 'ruler');
-      } else if (newScene.bg.includes('doctor_room')) {
+      } else if (bg.includes('doctor_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
-      } else if (idx === 11) {
+      } else if (bg.includes('career_center') || targetIdx === 11) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude & Military Career Center..." : "적성분류실 (병역진로설계)로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
         if (icon) icon.setAttribute('data-lucide', 'compass');
-      } else if (idx === 12) {
+      } else if (bg.includes('adjudicator_room') || targetIdx === 12) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "수석판정관실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 실시간 여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
-      } else if (idx === 13) {
+      } else if (bg.includes('locker_room') || targetIdx === 13) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실(사물함실)로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Changing into Normal Clothes & Collecting Belongings" : "검사복 환복, 소지품 회수 및 전자키 반납";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
-      } else if (idx === 14 || (newScene && newScene.bg.includes('room.jpg'))) {
+      } else if (bg.includes('room.jpg') || targetIdx === 14) {
         if (title) title.innerText = (currentLang === 'en') ? "Arrived Back Home..." : "집 도착 & 귀가 완료";
         if (desc) desc.innerText = (currentLang === 'en') ? "Checking Travel Allowance & Completing Episode 1" : "실시간 여비 입금 확인 및 제1화 시뮬레이션 완주";
         if (icon) icon.setAttribute('data-lucide', 'home');
