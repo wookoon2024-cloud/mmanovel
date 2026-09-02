@@ -17,10 +17,10 @@
  */
 
 const SCENARIOS = [
-  // [SCENE 0] 민우의 자취방 - 통지서 수령
+  // [SCENE 0] 민우의 자취방 - 통지서 수령 (당황하고 긴장한 민우)
   {
     bg: "assets/room.jpg",
-    char: "assets/minwoo.png",
+    char: "assets/minwoo_nervous.png",
     charPos: "right",
     speaker: "김민우 (주인공)",
     speaker_en: "Minwoo Kim (Protagonist)",
@@ -33,10 +33,10 @@ const SCENARIOS = [
     widgetType: null
   },
 
-  // [SCENE 1] 민우의 자취방 - 힘찬이 등장 & 일정 변경 제안
+  // [SCENE 1] 민우의 자취방 - 힘찬이 첫 등장 & 일정 변경 제안 (반갑게 웃으며 인사)
   {
     bg: "assets/room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
@@ -50,10 +50,10 @@ const SCENARIOS = [
     widgetType: "CHOICE_SCHEDULE_CONSENT"
   },
 
-  // [SCENE 2] 민우의 자취방 - 지역 및 달력 선택
+  // [SCENE 2] 민우의 자취방 - 지역 및 달력 선택 (안내하는 힘찬이)
   {
     bg: "assets/room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
@@ -67,10 +67,10 @@ const SCENARIOS = [
     widgetType: "REGION_CALENDAR_PICKER"
   },
 
-  // [SCENE 3] 민우의 자취방 - 예약 확정 및 직통 연락처
+  // [SCENE 3] 민우의 자취방 - 예약 확정 및 직통 연락처 (신나게 응원하는 힘찬이)
   {
     bg: "assets/room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_cheer.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
@@ -84,10 +84,10 @@ const SCENARIOS = [
     widgetType: "CONTACT_CARD"
   },
 
-  // [SCENE 4] 민우의 자취방 - 맞춤형 서류 점검
+  // [SCENE 4] 민우의 자취방 - 맞춤형 서류 점검 (친절한 힘찬이)
   {
     bg: "assets/room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
@@ -101,7 +101,7 @@ const SCENARIOS = [
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
-  // [SCENE 5] 병무청 로비 - 가상 검사장 도착 & 나라사랑카드 등록
+  // [SCENE 5] 병무청 로비 - 가상 검사장 도착 & 나라사랑카드 등록 (씩씩한 힘찬이)
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
@@ -118,10 +118,10 @@ const SCENARIOS = [
     widgetType: "NARA_CARD_CHOICE"
   },
 
-  // [SCENE 6] 탈의실 및 사물함실 - 사물함 보관 & 검사복 환복
+  // [SCENE 6] 탈의실 및 사물함실 - 사물함 보관 & 검사복 환복 (미소 힘찬이)
   {
     bg: "assets/locker_room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
@@ -135,7 +135,7 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 심리검사장 (전산실) - 1차 인지능력 및 인성검사
+  // [SCENE 7] 심리검사장 (전산실) - 1차 인지능력 및 인성검사 (병무청 검사관)
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
@@ -169,7 +169,7 @@ const SCENARIOS = [
     widgetType: "LAB_ROOM_CONFIRM"
   },
 
-  // [SCENE 9] 자동 신체계측실 - 신장/체중/혈압 & BMI 계산기
+  // [SCENE 9] 자동 신체계측실 - 신장/체중/혈압/시력 3단계 측정 & BMI 계산기
   {
     bg: "assets/body_measure_room.jpg",
     char: "assets/doctor.png",
@@ -212,10 +212,10 @@ const SCENARIOS = [
     widgetType: "BMI_CALCULATOR"
   },
 
-  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료 (질환/서류 지참자 분기)
+  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료 (진지한 전문의 & 긴장한 민우)
   {
     bg: "assets/doctor_room.jpg",
-    char: "assets/doctor.png",
+    char: "assets/doctor_serious.png",
     speaker: "정형외과 전담의사 NPC",
     speaker_en: "Orthopedic Specialist Doctor NPC",
     plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
@@ -223,7 +223,7 @@ const SCENARIOS = [
       {
         speaker: "정형외과 전담의사 NPC",
         speaker_en: "Orthopedic Specialist Doctor NPC",
-        char: "assets/doctor.png",
+        char: "assets/doctor_serious.png",
         charPos: "right",
         plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
         text: "김민우 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
@@ -232,7 +232,7 @@ const SCENARIOS = [
       {
         speaker: "김민우 (주인공)",
         speaker_en: "Minwoo Kim (Protagonist)",
-        char: "assets/minwoo.png",
+        char: "assets/minwoo_nervous.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         text: "선생님, 제가 예전에 무릎 십자인대 수술을 받았는데, 탈의실에서 챙겨온 병무용 진단서와 수술기록지, MRI 영상 CD를 여기 제출하면 될까요?",
@@ -241,7 +241,7 @@ const SCENARIOS = [
       {
         speaker: "정형외과 전담의사 NPC",
         speaker_en: "Orthopedic Specialist Doctor NPC",
-        char: "assets/doctor.png",
+        char: "assets/doctor_serious.png",
         charPos: "right",
         plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
         text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
@@ -255,10 +255,10 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 적성분류실 (병역진로설계 & 군 특기 분류) - 정상 1~2급 수검자 분기
+  // [SCENE 11] 적성분류실 (병역진로설계 & 군 특기 분류) - 정상 1~2급 수검자 분기 (자신감 넘치는 민우)
   {
     bg: "assets/career_center.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     speaker: "병역진로상담관 NPC",
     speaker_en: "Military Career Counselor NPC",
     plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
@@ -275,7 +275,7 @@ const SCENARIOS = [
       {
         speaker: "김민우 (주인공)",
         speaker_en: "Minwoo Kim (Protagonist)",
-        char: "assets/minwoo.png",
+        char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         text: "제가 대학교에서 컴퓨터/소프트웨어를 전공하고 있는데, 제 전공을 살릴 수 있는 군 특기로 복무할 수 있나요?",
@@ -298,10 +298,10 @@ const SCENARIOS = [
     widgetType: "APTITUDE_CONFIRM"
   },
 
-  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산
+  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산 (수석판정관 & 응원하는 힘찬이)
   {
     bg: "assets/adjudicator_room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/adjudicator.png",
     speaker: "수석판정관 NPC",
     speaker_en: "Chief Adjudicator NPC",
     plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
@@ -309,7 +309,7 @@ const SCENARIOS = [
       {
         speaker: "판정보조관 NPC",
         speaker_en: "Adjudication Assistant NPC",
-        char: "assets/doctor.png",
+        char: "assets/doctor_serious.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
         text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 자동 신체계측(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
@@ -318,7 +318,7 @@ const SCENARIOS = [
       {
         speaker: "수석판정관 NPC",
         speaker_en: "Chief Adjudicator NPC",
-        char: "assets/doctor.png",
+        char: "assets/adjudicator.png",
         charPos: "right",
         plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
         text: "수검자 김민우 님! 오늘 오전 8시부터 시작하여 심리검사, 임상병리, 신체계측, 전문의 진료까지 총 3시간 30분 동안 진행된 모든 검사를 무사히 마치셨습니다. 대단히 수고 많으셨습니다!\n\n종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
@@ -327,7 +327,7 @@ const SCENARIOS = [
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
         speaker_en: "Himchan (MMA AI Guide)",
-        char: "assets/himchan.png",
+        char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
         text: "민우 님 고생 많으셨습니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n최종 결과서를 확인하신 후, 탈의실로 이동하여 평상복으로 갈아입고 귀가하시면 됩니다!",
@@ -341,10 +341,10 @@ const SCENARIOS = [
     widgetType: "FINAL_SUMMARY_CARDS"
   },
 
-  // [SCENE 13] 탈의실 및 사물함실 - 환복 & 귀가 (제1화 완결)
+  // [SCENE 13] 탈의실 및 사물함실 - 환복 & 귀가 (제1화 완결 / 환하게 웃는 민우 & 힘찬이)
   {
     bg: "assets/locker_room.jpg",
-    char: "assets/himchan.png",
+    char: "assets/himchan_smile.png",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -352,7 +352,7 @@ const SCENARIOS = [
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
         speaker_en: "Himchan (MMA AI Guide)",
-        char: "assets/himchan.png",
+        char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
         text: "민우 님, 탈의실 사물함에서 검사복을 벗고 본인 옷으로 편안하게 환복해 주세요.\n\n사물함에 보관했던 지갑, 스마트폰, 챙겨온 서류 등 소지품을 빠짐없이 챙기시고, 사물함 전자키를 반납함에 넣으시면 오늘의 모든 검사가 완벽하게 종료됩니다!",
@@ -361,7 +361,7 @@ const SCENARIOS = [
       {
         speaker: "김민우 (주인공)",
         speaker_en: "Minwoo Kim (Protagonist)",
-        char: "assets/minwoo.png",
+        char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         text: "약 3~4시간 동안 가상 검사장 시뮬레이션을 직접 겪어보니, 실제 신검 당일에도 전혀 긴장하지 않고 완벽하게 검사를 마칠 수 있을 것 같아요! 정말 감사합니다!",
@@ -370,7 +370,7 @@ const SCENARIOS = [
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
         speaker_en: "Himchan (MMA AI Guide)",
-        char: "assets/himchan.png",
+        char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
         text: "대한민국 청춘 민우 님의 당당한 병역 이행의 첫걸음을 진심으로 응원합니다!\n\n앞으로의 군 복무와 예비군 여정도 항상 병무청이 든든하게 함께하겠습니다. 조심히 귀가하세요!",
