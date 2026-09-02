@@ -118,7 +118,7 @@ const SCENARIOS = [
     widgetType: "NARA_CARD_CHOICE"
   },
 
-  // [SCENE 6] 1층 탈의실 및 사물함실 - RFID 스마트 팔찌 & 검사복 환복
+  // [SCENE 6] 1층 탈의실 및 사물함실 - 나라사랑카드 지참 & 검사복 환복
   {
     bg: "assets/locker_room.jpg",
     char: "assets/himchan.png",
@@ -126,8 +126,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탈의실로 이동했습니다!\n접수대에서 발급받은 RFID 스마트 팔찌를 배정된 사물함에 태그하고, 소지품을 보관한 뒤 전용 검사복(상·하의)으로 환복해 주세요.\n\n스마트 팔찌는 모든 검사실에 들어갈 때 전자기록 리더기에 태그하게 됩니다.\n환복을 마치셨다면 2층 심리검사실로 이동해 볼까요?",
-    text_en: "We've moved to the locker room!\nTag the RFID smart wristband issued at reception to your assigned locker, store your belongings, and change into the official examination uniform.\n\nYou will tag this smart wristband at electronic readers whenever entering each exam room.\nOnce you've changed, shall we head up to the 2nd floor psychological testing room?",
+    text: "탈의실로 이동했습니다!\n소지품을 배정된 사물함에 보관하고 전용 검사복(상·하의)으로 환복해 주세요.\n\n발급받은 [나라사랑카드]는 검사복 주머니에 꼭 챙겨주세요! 모든 검사실(심리검사, 채혈, 신체계측, 전문의 진료 등)에 들어갈 때마다 리더기에 카드를 태그하게 됩니다.\n환복을 마치셨다면 2층 심리검사실로 이동해 볼까요?",
+    text_en: "We've moved to the locker room!\nStore your belongings in your assigned locker and change into the official examination uniform.\n\nBe sure to keep your registered [Nara Sarang Card] in your pocket! You will tag this card at electronic readers whenever entering each exam room.\nOnce you've changed, shall we head up to the 2nd floor psychological testing room?",
     apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
     apiIcon: "scale",

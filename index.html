@@ -497,7 +497,7 @@
           "STEP 1: 통지서 확인 & 스마트 일정 변경",
           "STEP 2: 맞춤형 서류 및 사전 점검",
           "STEP 3: 1층 로비 접수 & 카드 등록",
-          "STEP 4: 탈의실 환복 & 스마트 팔찌 착용",
+          "STEP 4: 탈의실 환복 & 나라사랑카드 소지",
           "STEP 5: 2층 심리검사 (전산실)",
           "STEP 5: 임상병리 및 영상의학",
           "STEP 5: 자동 신체계측 & BMI",
@@ -540,7 +540,7 @@
           "STEP 1: Notice Check & Smart Rescheduling",
           "STEP 2: Tailored Documents & Checkup",
           "STEP 3: 1F Reception & Card Registration",
-          "STEP 4: Locker Room Uniform & Smart Wristband",
+          "STEP 4: Locker Room Uniform & Nara Sarang Card",
           "STEP 5: 2F Psychological Examination",
           "STEP 5: Clinical Pathology & Chest X-Ray",
           "STEP 5: Biometric Measurement & BMI",
@@ -1318,14 +1318,14 @@
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0">
-                <i data-lucide="shirt" class="w-5 h-5"></i>
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
               </div>
               <div>
-                <h4 class="font-bold text-sm text-white">RFID 스마트 팔찌 태그 및 환복 완료</h4>
-                <p class="text-xs text-slate-400">배정된 사물함에 소지품 보관 및 검사복(상·하의) 착용</p>
+                <h4 class="font-bold text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
+                <p class="text-xs text-slate-400">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
               </div>
             </div>
-            <button onclick="transitionWithAnnouncement('환복과 사물함 보관이 완료되었습니다! 이제 본격적인 첫 번째 순서인 2층 심리검사실로 이동하겠습니다.', 'Uniform changed and locker stored! Now let\'s head up to the 2nd floor psychological testing room for your first exam.', 7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
               <span>${(currentLang === 'en') ? 'Changing Uniform Complete ➔ Move to 2F Psych Lab' : '검사복 환복 완료 ➔ 2층 심리검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1335,7 +1335,7 @@
           <div class="bg-slate-900/95 p-5 rounded-2xl border border-slate-700 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <div class="flex justify-between text-xs sm:text-sm text-slate-300 font-bold"><span>1차 심리검사 진행도 (인성 및 인지능력)</span><span class="text-emerald-400">100% 완료</span></div>
             <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800"><div class="bg-blue-500 h-full w-full"></div></div>
-            <button onclick="transitionWithAnnouncement('심리검사 작성이 모두 완료되었습니다! 이제 채혈, 소변검사, 흉부 X-ray 촬영을 위해 임상병리검사실과 영상의학실로 이동하겠습니다.', 'Psychological test submitted! Now let\'s move to the clinical pathology & radiology room for blood/urine tests and chest X-ray.', 8, '심리상담관 NPC', 'Psychological Counselor NPC');" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
               <span>${(currentLang === 'en') ? 'Psych Test Complete ➔ Move to Pathology/X-ray' : '심리검사 완료 ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1343,7 +1343,7 @@
       } else if (type === 'LAB_ROOM_CONFIRM') {
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <button onclick="transitionWithAnnouncement('임상병리 검사를 무사히 마쳤습니다! 이제 키와 몸무게, 혈압을 측정하는 자동 신체계측실로 이동하겠습니다.', 'Pathology tests complete! Now let\'s move to the automated biometric measurement room to measure height, weight, and blood pressure.', 9, '임상병리사 NPC', 'Clinical Pathologist NPC');" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
               <span>${(currentLang === 'en') ? 'Pathology/X-ray Complete ➔ Move to Biometric Lab' : '임상병리/X-ray 완료 ➔ 자동 신체계측실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1351,7 +1351,7 @@
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <button onclick="transitionWithAnnouncement('정형외과 전문의 소견이 전산에 등록되었습니다! 이제 최종 판정서 수령과 여비 정산을 위해 1층 수석판정관실로 이동하겠습니다.', 'Orthopedic evaluation registered! Now let\'s head to the Chief Adjudicator\'s office on the 1st floor for your final result and travel allowance settlement.', 11, '정형외과 전담의사 NPC', 'Orthopedic Specialist Doctor NPC');" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
               <span>${(currentLang === 'en') ? 'Diagnosis Complete ➔ Move to Chief Adjudicator & 1F Lobby' : '전문의 진료 완료 ➔ 1층 최종 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1446,7 +1446,7 @@
           <div class="space-y-1.5">
             <div class="flex justify-between font-bold"><span class="text-teal-300">BMI 지수: ${bmi}</span><span class="text-amber-400">${gradeText}</span></div>
             <p class="text-[11px] text-slate-300">${descText}</p>
-            <button onclick="transitionWithAnnouncement('신체계측이 완료되었습니다! 민우 님이 제출하신 관절 질환 서류를 정밀 진단받기 위해 정형외과 전문의 진료실로 이동하겠습니다.', 'Biometric measurement complete! Now let\'s move to the Orthopedic Specialist Clinic to evaluate your medical documents.', 10, '의무관 NPC', 'Medical Officer NPC');" class="w-full mt-2 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(10);" class="w-full mt-2 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
               <span>${(currentLang === 'en') ? 'Move to Orthopedic Specialist Clinic' : '정형외과/과목별 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1483,8 +1483,8 @@
     function selectCard(val) {
       userData.cardType = val;
       transitionWithAnnouncement(
-        "{cardType} 등록이 완료되었습니다! 이제 RFID 스마트 팔찌를 수령하고 전용 검사복으로 환복하기 위해 1층 전용 탈의실로 이동하겠습니다.",
-        "{cardType} registered! Now let's move to the 1st floor locker room to receive your RFID smart wristband and change uniforms.",
+        "{cardType} 등록이 완료되었습니다! 이제 사물함에 소지품을 보관하고 전용 검사복으로 환복하기 위해 1층 탈의실로 이동하겠습니다.",
+        "{cardType} registered! Now let's move to the 1st floor locker room to store your belongings and change into the examination uniform.",
         6
       );
     }
