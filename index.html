@@ -643,7 +643,21 @@
       updateLobbyResumeButton();
     }
 
-    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API)] =================
+    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API - 캐릭터별 남성 보이스)] =================
+    let availableVoices = [];
+
+    function initTTSVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const load = () => {
+        availableVoices = window.speechSynthesis.getVoices() || [];
+      };
+      load();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = load;
+      }
+    }
+    initTTSVoices();
+
     function speakDialogue(speaker, text) {
       if (!soundEnabled || !('speechSynthesis' in window)) return;
       try {
@@ -652,7 +666,7 @@
         // 읽기 전용 텍스트 정제 (특수문자, HTML 태그, 괄호 제거)
         const cleanText = text
           .replace(/<[^>]*>/g, ' ')
-          .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️/g, ' ')
+          .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
 
@@ -662,26 +676,54 @@
         const isEnglish = (currentLang === 'en');
         utterance.lang = isEnglish ? 'en-US' : 'ko-KR';
 
-        const voices = window.speechSynthesis.getVoices();
-        if (isEnglish) {
-          const enVoice = voices.find(v => v.lang.startsWith('en')) || null;
-          if (enVoice) utterance.voice = enVoice;
-        } else {
-          const koVoice = voices.find(v => v.lang.includes('ko') || v.lang.includes('KO')) || null;
-          if (koVoice) utterance.voice = koVoice;
+        if (availableVoices.length === 0) {
+          availableVoices = window.speechSynthesis.getVoices() || [];
         }
 
-        // 화자별 AI 음성 톤앤매너 설정
         const spk = speaker || '';
-        if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-          utterance.rate = 1.08;
-          utterance.pitch = 1.18; // 밝고 친절한 AI 어시스턴트 톤
-        } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
-          utterance.rate = 1.0;
-          utterance.pitch = 0.95; // 청년 주인공의 자연스러운 톤
+
+        if (isEnglish) {
+          // 영어 남성 보이스 우선 탐색 (David, Mark, Guy, George, Ryan, etc.)
+          const enMaleVoices = availableVoices.filter(v => v.lang.startsWith('en') && /david|mark|guy|george|ryan|james|male|andrew|brian|christopher|eric/i.test(v.name));
+          const enVoice = enMaleVoices.length > 0 ? enMaleVoices[0] : (availableVoices.find(v => v.lang.startsWith('en')) || null);
+          if (enVoice) utterance.voice = enVoice;
         } else {
+          // 한국어 남성 보이스 우선 탐색 (InJoon, BongJin, GookMin, Male, 인준, 봉진, 국민, 남성 등)
+          const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
+          const koMaleVoices = koVoices.filter(v => /injoon|인준|bongjin|봉진|gookmin|국민|male|남성|guy|yunho|윤호/i.test(v.name));
+          
+          if (koMaleVoices.length > 0) {
+            utterance.voice = koMaleVoices[0];
+          } else if (koVoices.length > 0) {
+            utterance.voice = koVoices[0];
+          }
+        }
+
+        // 화자별 최적화된 남성 톤앤매너 설정 (청년 남성, 씩씩한 가이드, 중저음 군의관/전문의, 중후한 수석판정관)
+        if (spk.includes('힘찬이') || spk.includes('Himchan')) {
+          // 씩씩하고 활기찬 청년 AI 가이드 (명료하고 자신감 넘치는 톤)
+          utterance.rate = 1.08;
+          utterance.pitch = 1.12;
+        } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
+          // 20대 청년 주인공 민우 (자연스럽고 부드러운 청년 톤)
+          utterance.rate = 1.02;
+          utterance.pitch = 0.94;
+        } else if (spk.includes('수석판정관') || spk.includes('Adjudicator')) {
+          // 중후하고 위엄 있는 수석판정관 (묵직한 중저음 베이스 톤)
+          utterance.rate = 0.92;
+          utterance.pitch = 0.76;
+        } else if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('의무관') || spk.includes('Doctor') || spk.includes('Medical')) {
+          // 전문적이고 신뢰감 있는 전담의사 / 군의관 (차분한 바리톤 톤)
+          utterance.rate = 0.95;
+          utterance.pitch = 0.84;
+        } else if (spk.includes('심리상담관') || spk.includes('진로상담') || spk.includes('상담관') || spk.includes('Counselor')) {
+          // 차분하고 따뜻한 남성 전문상담관 (편안하고 지적인 톤)
           utterance.rate = 0.96;
-          utterance.pitch = 0.9; // 의무관/전문의의 신뢰감 있는 톤
+          utterance.pitch = 0.88;
+        } else {
+          // 기타 남성 스태프 및 안내
+          utterance.rate = 0.98;
+          utterance.pitch = 0.88;
         }
 
         window.speechSynthesis.speak(utterance);
