@@ -407,11 +407,11 @@
       </div>
 
       <div class="grid grid-cols-2 gap-2.5">
-        <button onclick="downloadCertMock()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30">
+        <button onclick="downloadCertMock()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i data-lucide="download" class="w-4 h-4"></i> 결과서 PDF 저장
         </button>
-        <button onclick="closeCertModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl font-bold text-xs sm:text-sm transition">
-          닫기
+        <button onclick="closeCertModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
+          <span>탈의실 환복 & 귀가 ➔</span>
         </button>
       </div>
     </div>
@@ -503,7 +503,8 @@
           "STEP 5: 자동 신체계측 & 기초검사",
           "STEP 6: 과목별 전문의 정밀 진료",
           "STEP 6: 적성분류실 (병역진로설계)",
-          "STEP 7: 판정보조관 & 수석판정관실"
+          "STEP 7: 판정보조관 & 수석판정관실",
+          "STEP 8: 탈의실 환복 & 귀가"
         ],
         lobby: {
           mainTitle: "병무행정 비주얼노벨",
@@ -547,7 +548,8 @@
           "STEP 5: Biometric Measurement & Basic Check",
           "STEP 6: Specialist Medical Examination",
           "STEP 6: Aptitude & Military Career Center",
-          "STEP 7: Adjudication & Travel Allowance"
+          "STEP 7: Adjudication & Travel Allowance",
+          "STEP 8: Uniform Change & Heading Home"
         ],
         lobby: {
           mainTitle: "MMA Visual Novel",
@@ -735,10 +737,14 @@
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude & Military Career Center..." : "적성분류실 (병역진로설계)로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
         if (icon) icon.setAttribute('data-lucide', 'compass');
-      } else if (idx >= 12 || (newScene.bg.includes('lobby') && currentSceneIdx >= 9)) {
+      } else if (idx === 12) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "판정보조관 & 수석판정관실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 실시간 여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
+      } else if (idx === 13) {
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실(사물함실)로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Changing into Normal Clothes & Heading Home" : "검사복 환복, 소지품 회수 및 최종 귀가";
+        if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else {
         if (title) title.innerText = (currentLang === 'en') ? "Changing Location..." : "다음 장소로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Please wait a moment." : "잠시만 기다려 주세요.";
@@ -1609,27 +1615,53 @@
           </div>
         `;
       } else if (type === 'FINAL_SUMMARY_CARDS') {
+        const isEn = (currentLang === 'en');
         // 여비 자동 계산 API 연동
         const fareData = (typeof MmaApiService !== 'undefined') ? MmaApiService.calculateFare(userData.region) : { formattedText: "16,500원 (교통비 8,500원 + 식비 8,000원)" };
         userData.fare = fareData.formattedText;
 
         choiceContainer.innerHTML = `
-          <div class="space-y-3 animate-in fade-in zoom-in-95 duration-150">
+          <div class="space-y-3 animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="p-4 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
                 <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="smartphone" class="w-4 h-4 text-blue-400"></i> 스마트 e-병무지갑</p>
                 <p class="text-xs text-slate-400">검사 결과서 모바일 저장 & 군 장병 할인 바우처</p>
-                <button onclick="alert('e-병무지갑 공식 설치 페이지로 연결됩니다.')" class="mt-1 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-xs text-white">e-병무지갑 바로가기</button>
+                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0003346', '_blank')" class="mt-1 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+                  <span>e-병무지갑 공식 안내</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </button>
               </div>
               <div class="p-4 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
                 <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="compass" class="w-4 h-4 text-emerald-400"></i> 병역진로설계센터</p>
                 <p class="text-xs text-slate-400">1:1 전문 상담관과 군 특기 및 취업 무료 연계</p>
-                <button onclick="alert('병역진로설계 1:1 맞춤 상담 예약 페이지로 연결됩니다.')" class="mt-1 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-xs text-white">1:1 상담 예약하기</button>
+                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0002065', '_blank')" class="mt-1 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+                  <span>1:1 맞춤상담 공식 페이지</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </button>
               </div>
             </div>
             <button onclick="showCertModal()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm font-bold shadow-xl flex items-center justify-center gap-2 transition cursor-pointer">
-              <i data-lucide="award" class="w-5 h-5"></i> 최종 병역판정 결과서 발급받기
+              <i data-lucide="award" class="w-5 h-5"></i> 최종 병역판정 결과서 발급 및 확인
             </button>
+          </div>
+        `;
+      } else if (type === 'EPISODE_COMPLETE') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full text-center space-y-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white">${isEn ? 'Episode 1 Complete!' : '제1화 병역판정검사 편 완료!'}</h3>
+              <p class="text-xs text-slate-400 mt-1">${isEn ? 'Thank you for completing the Draft Physical Examination simulation.' : '가상 병역판정검사 풀코스 시뮬레이션을 완주하셨습니다.'}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-md cursor-pointer">
+                <i data-lucide="home" class="w-4 h-4"></i> 메인 메뉴로 이동
+              </button>
+              <button onclick="playBeep(650, 'sine', 0.03); renderScene(0);" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 처음부터 다시하기
+              </button>
+            </div>
           </div>
         `;
       }
@@ -2086,6 +2118,10 @@
       if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+      }
+      // 결과서 확인 후 탈의실 환복 씬(SCENE 13)으로 자동 진행
+      if (currentSceneIdx === 12) {
+        renderScene(13);
       }
     }
     function downloadCertMock() {

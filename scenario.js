@@ -257,7 +257,7 @@ const SCENARIOS = [
 
   // [SCENE 11] 적성분류실 (병역진로설계 & 군 특기 분류) - 정상 1~2급 수검자 분기
   {
-    bg: "assets/exam_room.jpg",
+    bg: "assets/career_center.jpg",
     char: "assets/himchan.png",
     speaker: "병역진로상담관 NPC",
     speaker_en: "Military Career Counselor NPC",
@@ -300,11 +300,11 @@ const SCENARIOS = [
 
   // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산
   {
-    bg: "assets/lobby.jpg",
+    bg: "assets/adjudicator_room.jpg",
     char: "assets/himchan.png",
-    speaker: "힘찬이 (병무청 AI 가이드)",
-    speaker_en: "Himchan (MMA AI Guide)",
-    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    speaker: "수석판정관 NPC",
+    speaker_en: "Chief Adjudicator NPC",
+    plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
     dialogues: [
       {
         speaker: "판정보조관 NPC",
@@ -321,8 +321,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
-        text: "수검자 김민우 님! 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
-        text_en: "Examinee Minwoo Kim! Based on comprehensive adjudication, your final Physical Grade is [ {finalGrade} ] with [ {disposition} ] disposition."
+        text: "수검자 김민우 님! 오늘 오전 8시부터 시작하여 심리검사, 임상병리, 신체계측, 전문의 진료까지 총 3시간 30분 동안 진행된 모든 검사를 무사히 마치셨습니다. 대단히 수고 많으셨습니다!\n\n종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
+        text_en: "Examinee Minwoo Kim! You have completed all exams spanning 3.5 hours since 8 AM today. Great job!\n\nYour final physical grade is [ {finalGrade} ] with [ {disposition} ] disposition."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -330,8 +330,8 @@ const SCENARIOS = [
         char: "assets/himchan.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님, 모든 검사가 무사히 끝났습니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 아까 등록하신 {cardType} 계좌로 즉시 입금 완료되었습니다. 최종 결과서를 확인해 보실까요?",
-        text_en: "Minwoo, all examinations are complete! Your travel allowance of [ {fare} ] has been deposited into your {cardType} account. Let's check your final summary certificate!"
+        text: "민우 님 고생 많으셨습니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n최종 결과서를 확인하신 후, 탈의실로 이동하여 평상복으로 갈아입고 귀가하시면 됩니다!",
+        text_en: "Minwoo, wonderful job! Your travel allowance of [ {fare} ] has been deposited into your {cardType} account.\n\nAfter checking your final certificate, please proceed to the locker room to change into your normal clothes and head home!"
       }
     ],
     apiSource: "공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",
@@ -339,5 +339,48 @@ const SCENARIOS = [
     apiIcon: "database",
     isApi: true,
     widgetType: "FINAL_SUMMARY_CARDS"
+  },
+
+  // [SCENE 13] 탈의실 및 사물함실 - 환복 & 귀가 (제1화 완결)
+  {
+    bg: "assets/locker_room.jpg",
+    char: "assets/himchan.png",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "민우 님, 탈의실 사물함에서 검사복을 벗고 본인 옷으로 편안하게 환복해 주세요.\n\n사물함에 보관했던 지갑, 스마트폰, 챙겨온 서류 등 소지품을 빠짐없이 챙기시고, 사물함 전자키를 반납함에 넣으시면 오늘의 모든 검사가 완벽하게 종료됩니다!",
+        text_en: "Minwoo, please change from your exam uniform back into your normal clothes at the locker room.\n\nMake sure to take all belongings including your wallet, phone, and documents from your locker, and return your locker key to complete the day!"
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "약 3~4시간 동안 가상 검사장 시뮬레이션을 직접 겪어보니, 실제 신검 당일에도 전혀 긴장하지 않고 완벽하게 검사를 마칠 수 있을 것 같아요! 정말 감사합니다!",
+        text_en: "Experiencing the 3-4 hour virtual exam center simulation makes me confident I won't be nervous on my real exam day. Thank you so much!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "대한민국 청춘 민우 님의 당당한 병역 이행의 첫걸음을 진심으로 응원합니다!\n\n앞으로의 군 복무와 예비군 여정도 항상 병무청이 든든하게 함께하겠습니다. 조심히 귀가하세요!",
+        text_en: "We sincerely support the first step of your military service journey!\n\nMMA will always be with you throughout your service and reserve training. Have a safe trip home!"
+      }
+    ],
+    apiSource: "병무청 공식: 병역판정검사 종합 안내 포털 (mma.go.kr)",
+    apiSource_en: "MMA Official: Draft Physical Examination Comprehensive Portal (mma.go.kr)",
+    apiIcon: "check-circle",
+    isApi: true,
+    widgetType: "EPISODE_COMPLETE"
   }
 ];
