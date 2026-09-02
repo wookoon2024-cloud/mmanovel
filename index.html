@@ -238,10 +238,11 @@
     </div>
   </div>
 
-  <!-- ================= [SCRIPT: 대본 데이터 로드] ================= -->
+  <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
+  <script src="api.js"></script>
   <script src="scenario.js"></script>
 
-  <!-- ================= [SCRIPT: 비주얼 노벨 엔진] ================= -->
+  <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
     let currentSceneIdx = 0;
     let isTyping = false;
@@ -250,7 +251,7 @@
     let autoPlayTimer = null;
     let soundEnabled = true;
 
-    // 사용자 시뮬레이션 상태
+    // 사용자 시뮬레이션 상태 저장소
     const userData = {
       name: "김민우",
       region: "강원지방병무청",
@@ -270,7 +271,8 @@
 
     const conversationHistory = [];
 
-    function playBeep(freq = 600, type = 'sine', duration = 0.04) {
+    // 오디오 비프음 생성 (Web Audio API)
+    function playBeep(freq = 560, type = 'sine', duration = 0.03) {
       if (!soundEnabled) return;
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -278,7 +280,7 @@
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -287,8 +289,9 @@
       } catch(e) {}
     }
 
+    // 장면 렌더링
     function renderScene(idx) {
-      if (idx >= SCENARIOS.length) {
+      if (typeof SCENARIOS === 'undefined' || !SCENARIOS || idx >= SCENARIOS.length) {
         showCertModal();
         return;
       }
@@ -296,50 +299,56 @@
       const scene = SCENARIOS[idx];
 
       // 배경 변경
-      document.getElementById('bg-image').style.backgroundImage = `url('${scene.bg}')`;
+      const bgImg = document.getElementById('bg-image');
+      if (bgImg) bgImg.style.backgroundImage = `url('${scene.bg}')`;
 
       // 캐릭터 스프라이트 및 위치 제어
       const spriteWrapper = document.getElementById('sprite-wrapper');
       const spriteImg = document.getElementById('sprite-img');
-      spriteImg.src = scene.char;
-      
-      // 위치 클래스 초기화 및 적용 (기본: 우측 right)
-      spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
-      if (scene.charPos === 'left') {
-        spriteWrapper.classList.add('mr-auto');
-      } else if (scene.charPos === 'center') {
-        spriteWrapper.classList.add('mx-auto');
-      } else {
-        spriteWrapper.classList.add('ml-auto'); // 기본 우측
+      if (spriteImg && spriteWrapper) {
+        spriteImg.src = scene.char;
+        spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
+        if (scene.charPos === 'left') {
+          spriteWrapper.classList.add('mr-auto');
+        } else if (scene.charPos === 'center') {
+          spriteWrapper.classList.add('mx-auto');
+        } else {
+          spriteWrapper.classList.add('ml-auto');
+        }
+        spriteWrapper.classList.remove('opacity-0', 'translate-y-8');
+        spriteWrapper.classList.add('opacity-100', 'translate-y-0');
       }
 
-      spriteWrapper.classList.remove('opacity-0', 'translate-y-8');
-      spriteWrapper.classList.add('opacity-100', 'translate-y-0');
-
       // 화자 네임플레이트
-      document.getElementById('speaker-name').innerText = scene.speaker;
-      document.getElementById('speaker-plate').className = `px-5 py-2 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-black text-sm sm:text-base shadow-2xl tracking-wide ${scene.plateClass}`;
+      const spkName = document.getElementById('speaker-name');
+      const spkPlate = document.getElementById('speaker-plate');
+      if (spkName) spkName.innerText = scene.speaker;
+      if (spkPlate) spkPlate.className = `px-5 py-2 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-black text-sm sm:text-base shadow-2xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
       // 하단 API / 스토리 배지
-      document.getElementById('api-source-badge').innerText = scene.apiSource;
-      document.getElementById('api-icon').setAttribute('data-lucide', scene.apiIcon);
+      const apiBadge = document.getElementById('api-source-badge');
+      const apiIcon = document.getElementById('api-icon');
       const verifyBadge = document.getElementById('api-verify-badge');
-      if (scene.isApi) {
-        verifyBadge.classList.remove('hidden');
-      } else {
-        verifyBadge.classList.add('hidden');
+      if (apiBadge) apiBadge.innerText = scene.apiSource;
+      if (apiIcon) apiIcon.setAttribute('data-lucide', scene.apiIcon || 'database');
+      if (verifyBadge) {
+        if (scene.isApi) verifyBadge.classList.remove('hidden');
+        else verifyBadge.classList.add('hidden');
       }
 
       // 상단 스텝 타이틀
-      if (idx <= 3) document.getElementById('top-step-title').innerText = "STEP 1: 통지서 확인 & 스마트 일정 변경";
-      else if (idx === 4) document.getElementById('top-step-title').innerText = "STEP 2: 맞춤형 서류 및 사전 점검";
-      else if (idx === 5) document.getElementById('top-step-title').innerText = "STEP 3: 검사장 접수 & 나라사랑카드";
-      else if (idx <= 8) document.getElementById('top-step-title').innerText = "STEP 4: 심리/임상/신체계측 정밀 검사";
-      else document.getElementById('top-step-title').innerText = "STEP 5: 최종 판정 & 실시간 여비 정산";
+      const topTitle = document.getElementById('top-step-title');
+      if (topTitle) {
+        if (idx <= 3) topTitle.innerText = "STEP 1: 통지서 확인 & 스마트 일정 변경";
+        else if (idx === 4) topTitle.innerText = "STEP 2: 맞춤형 서류 및 사전 점검";
+        else if (idx === 5) topTitle.innerText = "STEP 3: 검사장 접수 & 나라사랑카드";
+        else if (idx <= 8) topTitle.innerText = "STEP 4: 심리/임상/신체계측 정밀 검사";
+        else topTitle.innerText = "STEP 5: 최종 판정 & 실시간 여비 정산";
+      }
 
       // 위젯 초기화
       const widgetArea = document.getElementById('widget-area');
-      widgetArea.innerHTML = '';
+      if (widgetArea) widgetArea.innerHTML = '';
 
       // Typewriter 효과 실행
       typewriterEffect(scene.text, () => {
@@ -355,58 +364,60 @@
       conversationHistory.push({
         speaker: scene.speaker,
         text: scene.text,
-        step: document.getElementById('top-step-title').innerText
+        step: topTitle ? topTitle.innerText : ''
       });
       lucide.createIcons();
     }
 
+    // Typewriter 효과 (안전한 null 검증)
     function typewriterEffect(text, callback) {
       clearInterval(typingInterval);
       const textElem = document.getElementById('dialogue-text');
-      const typingTag = document.getElementById('typing-tag');
       const nextIndicator = document.getElementById('next-indicator');
 
+      if (!textElem) return;
       textElem.innerHTML = '';
-      typingTag.classList.remove('hidden');
-      nextIndicator.classList.add('hidden');
+      if (nextIndicator) nextIndicator.classList.add('hidden');
       isTyping = true;
 
       let i = 0;
       typingInterval = setInterval(() => {
         if (i < text.length) {
           textElem.innerHTML += text[i] === '\n' ? '<br>' : text[i];
-          if (i % 3 === 0) playBeep(560, 'sine', 0.03);
+          if (i % 3 === 0) playBeep(560, 'sine', 0.025);
           i++;
         } else {
           clearInterval(typingInterval);
           isTyping = false;
-          typingTag.classList.add('hidden');
-          nextIndicator.classList.remove('hidden');
+          if (nextIndicator) nextIndicator.classList.remove('hidden');
           if (callback) callback();
         }
       }, 20);
     }
 
+    // 다음 클릭
     function handleNextClick() {
       if (isTyping) {
         clearInterval(typingInterval);
         const scene = SCENARIOS[currentSceneIdx];
-        document.getElementById('dialogue-text').innerHTML = scene.text.replace(/\n/g, '<br>');
+        const textElem = document.getElementById('dialogue-text');
+        const nextIndicator = document.getElementById('next-indicator');
+        if (textElem) textElem.innerHTML = scene.text.replace(/\n/g, '<br>');
         isTyping = false;
-        document.getElementById('typing-tag').classList.add('hidden');
-        document.getElementById('next-indicator').classList.remove('hidden');
+        if (nextIndicator) nextIndicator.classList.remove('hidden');
         renderWidget(scene.widgetType);
         return;
       }
       const scene = SCENARIOS[currentSceneIdx];
-      if (scene.widgetType) return; // 선택지 입력 대기
+      if (scene && scene.widgetType) return; // 선택지 입력 대기
       renderScene(currentSceneIdx + 1);
     }
 
+    // 위젯 렌더러
     function renderWidget(type) {
       const area = document.getElementById('widget-area');
+      if (!area || !type) return;
       area.innerHTML = '';
-      if (!type) return;
 
       if (type === 'CHOICE_SCHEDULE_CONSENT') {
         area.innerHTML = `
@@ -440,17 +451,18 @@
           </div>
         `;
       } else if (type === 'CONTACT_CARD') {
+        const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)" };
         area.innerHTML = `
           <div class="bg-slate-900/95 border border-blue-500/50 rounded-xl p-4 space-y-3 shadow-xl">
             <div class="flex items-center justify-between">
               <span class="font-extrabold text-sm text-blue-300 flex items-center gap-1.5">
-                <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> ${userData.region} 병역판정검사과
+                <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> ${userData.region} ${contact.dept || '병역판정검사과'}
               </span>
               <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 font-bold">직통연결</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
-              <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i> 033-240-6241 (담당 주무관 직통)</div>
-              <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i> 강원도 춘천시 백령로 65 (남춘천역 셔틀)</div>
+              <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i> ${contact.phone} (담당 주무관 직통)</div>
+              <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i> ${contact.address}</div>
             </div>
             <button onclick="renderScene(4)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/30">
               선택 완료하고 서류 점검으로 이동 <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -523,17 +535,21 @@
           </div>
         `;
       } else if (type === 'FINAL_SUMMARY_CARDS') {
+        // 여비 자동 계산 API 연동
+        const fareData = (typeof MmaApiService !== 'undefined') ? MmaApiService.calculateFare(userData.region) : { formattedText: "16,500원 (교통비 8,500원 + 식비 8,000원)" };
+        userData.fare = fareData.formattedText;
+
         area.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="p-3.5 bg-gradient-to-br from-blue-900/50 to-slate-900 border border-blue-500/40 rounded-xl text-xs space-y-1.5 shadow-md">
               <p class="font-bold text-blue-300 flex items-center gap-1.5"><i data-lucide="smartphone" class="w-4 h-4"></i> 스마트 e-병무지갑</p>
               <p class="text-[11px] text-slate-300">검사 결과서 모바일 저장 & 군 장병 할인 바우처</p>
-              <button onclick="alert('e-병무지갑 앱 설치 링크로 연결됩니다.')" class="mt-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-lg text-[11px] text-white">e-병무지갑 바로가기</button>
+              <button onclick="alert('e-병무지갑 공식 설치 페이지로 연결됩니다.')" class="mt-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-lg text-[11px] text-white">e-병무지갑 바로가기</button>
             </div>
             <div class="p-3.5 bg-gradient-to-br from-purple-900/50 to-slate-900 border border-purple-500/40 rounded-xl text-xs space-y-1.5 shadow-md">
               <p class="font-bold text-purple-300 flex items-center gap-1.5"><i data-lucide="target" class="w-4 h-4"></i> 병역진로설계센터</p>
               <p class="text-[11px] text-slate-300">1:1 전문 상담관과 군 특기 및 취업 무료 연계</p>
-              <button onclick="alert('병역진로설계 1:1 상담 예약 페이지로 연결됩니다.')" class="mt-1 px-3 py-1.5 bg-purple-600 hover:bg-purple-500 font-bold rounded-lg text-[11px] text-white">1:1 상담 예약하기</button>
+              <button onclick="alert('병역진로설계 1:1 맞춤 상담 예약 페이지로 연결됩니다.')" class="mt-1 px-3 py-1.5 bg-purple-600 hover:bg-purple-500 font-bold rounded-lg text-[11px] text-white">1:1 상담 예약하기</button>
             </div>
           </div>
           <button onclick="showCertModal()" class="w-full mt-3 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs sm:text-sm font-extrabold shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 transition">
@@ -544,9 +560,14 @@
       lucide.createIcons();
     }
 
+    // BMI 계산 함수
     function calculateBMI() {
-      const h = parseFloat(document.getElementById('inp-height').value) / 100;
-      const w = parseFloat(document.getElementById('inp-weight').value);
+      const hInp = document.getElementById('inp-height');
+      const wInp = document.getElementById('inp-weight');
+      if (!hInp || !wInp) return;
+
+      const h = parseFloat(hInp.value) / 100;
+      const w = parseFloat(wInp.value);
       if (!h || !w) return;
 
       const bmi = (w / (h * h)).toFixed(1);
@@ -574,18 +595,27 @@
       userData.bmiGrade = gradeText;
 
       const resBox = document.getElementById('bmi-result-box');
-      resBox.innerHTML = `
-        <div class="space-y-1.5">
-          <div class="flex justify-between font-bold"><span class="text-teal-300">BMI 지수: ${bmi}</span><span class="text-amber-400">${gradeText}</span></div>
-          <p class="text-[11px] text-slate-300">${descText}</p>
-          <button onclick="renderScene(9)" class="w-full mt-2 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition">정형외과/과목별 진료실로 이동</button>
-        </div>
-      `;
-      resBox.classList.remove('hidden');
+      if (resBox) {
+        resBox.innerHTML = `
+          <div class="space-y-1.5">
+            <div class="flex justify-between font-bold"><span class="text-teal-300">BMI 지수: ${bmi}</span><span class="text-amber-400">${gradeText}</span></div>
+            <p class="text-[11px] text-slate-300">${descText}</p>
+            <button onclick="renderScene(9)" class="w-full mt-2 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition">정형외과/과목별 진료실로 이동</button>
+          </div>
+        `;
+        resBox.classList.remove('hidden');
+      }
     }
 
-    function selectHealth(val) {
+    async function selectHealth(val) {
       userData.healthCheck = val;
+      if (typeof MmaApiService !== 'undefined') {
+        const criteria = await MmaApiService.getLawCriteria(val);
+        if (criteria) {
+          userData.lawRef = criteria.lawRef;
+          userData.expectedGrade = criteria.expectedGrade;
+        }
+      }
       renderScene(5);
     }
     function selectCard(val) {
@@ -594,29 +624,43 @@
     }
     function updateRegion(val) {
       userData.region = val;
-      document.getElementById('cal-modal-title').innerText = `${val} 병역판정검사 실시간 공석 달력`;
+      const modalTitle = document.getElementById('cal-modal-title');
+      if (modalTitle) modalTitle.innerText = `${val} 병역판정검사 실시간 공석 달력`;
     }
 
+    // 캘린더 모달 컨트롤
     let currentCalMonthOffset = 0;
     function openCalendarModal() {
-      document.getElementById('calendar-modal').classList.remove('hidden');
-      document.getElementById('calendar-modal').classList.add('flex');
-      renderCalendarGrid(currentCalMonthOffset);
+      const modal = document.getElementById('calendar-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        renderCalendarGrid(currentCalMonthOffset);
+      }
     }
     function closeCalendarModal() {
-      document.getElementById('calendar-modal').classList.add('hidden');
-      document.getElementById('calendar-modal').classList.remove('flex');
+      const modal = document.getElementById('calendar-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
     function changeCalMonth(offset) {
       currentCalMonthOffset += offset;
       renderCalendarGrid(currentCalMonthOffset);
     }
-    function renderCalendarGrid(offset) {
+    async function renderCalendarGrid(offset) {
       const monthNames = ["2026년 9월", "2026년 10월", "2026년 11월", "2026년 12월"];
       const mIdx = Math.max(0, Math.min(3, 1 + offset));
-      document.getElementById('cal-current-month').innerText = monthNames[mIdx];
+      const curMonthElem = document.getElementById('cal-current-month');
+      if (curMonthElem) curMonthElem.innerText = monthNames[mIdx];
 
       const grid = document.getElementById('cal-days-grid');
+      if (!grid) return;
+      grid.innerHTML = '<div class="col-span-7 text-center py-4 text-xs text-blue-400 animate-pulse">실시간 공공데이터 공석 현황 조회 중...</div>';
+
+      // API 비동기 공석 호출
+      const slotData = (typeof MmaApiService !== 'undefined') ? await MmaApiService.getExamSlots(userData.region, `2026${mIdx + 9}`) : null;
       grid.innerHTML = '';
 
       for (let i = 1; i <= 31; i++) {
@@ -624,16 +668,16 @@
         let statusTag = "";
         let clickable = true;
 
-        if (isWeekend) {
-          statusTag = '<span class="text-slate-500">휴무</span>';
-          clickable = false;
-        } else if (i === 1 || i === 7 || i === 15) {
-          statusTag = '<span class="text-rose-400 font-bold">마감</span>';
-          clickable = false;
-        } else if (i === 29) {
-          statusTag = '<span class="text-emerald-400 font-bold">오전12/오후5</span>';
+        if (slotData && slotData.days && slotData.days[i]) {
+          const d = slotData.days[i];
+          clickable = d.available;
+          if (d.status === '휴무') statusTag = '<span class="text-slate-500">휴무</span>';
+          else if (d.status === '마감') statusTag = '<span class="text-rose-400 font-bold">마감</span>';
+          else statusTag = `<span class="text-emerald-400 font-bold">오전${d.morning}/오후${d.afternoon}</span>`;
         } else {
-          statusTag = '<span class="text-emerald-400">오전8/오후10</span>';
+          if (isWeekend) { statusTag = '<span class="text-slate-500">휴무</span>'; clickable = false; }
+          else if (i === 1 || i === 7) { statusTag = '<span class="text-rose-400 font-bold">마감</span>'; clickable = false; }
+          else { statusTag = '<span class="text-emerald-400">오전12/오후5</span>'; }
         }
 
         const dayCard = document.createElement('div');
@@ -657,39 +701,59 @@
 
     function openLogModal() {
       const container = document.getElementById('log-content');
-      container.innerHTML = conversationHistory.map(c => `
-        <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
-          <div class="flex justify-between text-xs text-blue-400 font-bold mb-1">
-            <span>${c.speaker}</span><span class="text-slate-400">${c.step}</span>
+      if (container) {
+        container.innerHTML = conversationHistory.map(c => `
+          <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700">
+            <div class="flex justify-between text-xs text-blue-400 font-bold mb-1">
+              <span>${c.speaker}</span><span class="text-slate-400">${c.step}</span>
+            </div>
+            <p class="text-slate-200 text-xs sm:text-sm whitespace-pre-line leading-relaxed">${c.text}</p>
           </div>
-          <p class="text-slate-200 text-xs sm:text-sm whitespace-pre-line leading-relaxed">${c.text}</p>
-        </div>
-      `).join('');
-      document.getElementById('log-modal').classList.remove('hidden');
-      document.getElementById('log-modal').classList.add('flex');
+        `).join('');
+      }
+      const modal = document.getElementById('log-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
     }
     function closeLogModal() {
-      document.getElementById('log-modal').classList.add('hidden');
-      document.getElementById('log-modal').classList.remove('flex');
+      const modal = document.getElementById('log-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
 
     function showCertModal() {
-      document.getElementById('res-name').innerText = `${userData.name} (만 19세)`;
-      document.getElementById('res-location').innerText = userData.region;
-      document.getElementById('res-grade').innerText = userData.finalGrade;
-      document.getElementById('res-disp').innerText = userData.disposition;
-      document.getElementById('res-pay').innerText = userData.fare;
+      const resName = document.getElementById('res-name');
+      const resLoc = document.getElementById('res-location');
+      const resGrade = document.getElementById('res-grade');
+      const resDisp = document.getElementById('res-disp');
+      const resPay = document.getElementById('res-pay');
 
-      document.getElementById('cert-modal').classList.remove('hidden');
-      document.getElementById('cert-modal').classList.add('flex');
+      if (resName) resName.innerText = `${userData.name} (만 19세)`;
+      if (resLoc) resLoc.innerText = userData.region;
+      if (resGrade) resGrade.innerText = userData.finalGrade;
+      if (resDisp) resDisp.innerText = userData.disposition;
+      if (resPay) resPay.innerText = userData.fare;
+
+      const modal = document.getElementById('cert-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
 
       try {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       } catch(e) {}
     }
     function closeCertModal() {
-      document.getElementById('cert-modal').classList.add('hidden');
-      document.getElementById('cert-modal').classList.remove('flex');
+      const modal = document.getElementById('cert-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
     function downloadCertMock() {
       alert("✅ [김민우 님 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!");
@@ -697,20 +761,23 @@
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('sound-icon').setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
+      const icon = document.getElementById('sound-icon');
+      if (icon) icon.setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
       lucide.createIcons();
     }
     function toggleAuto() {
       autoPlay = !autoPlay;
       const btn = document.getElementById('btn-auto');
-      if (autoPlay) {
-        btn.classList.add('bg-blue-600', 'text-white');
-        btn.classList.remove('bg-slate-900/70', 'text-slate-300');
-        if (!isTyping) handleNextClick();
-      } else {
-        btn.classList.remove('bg-blue-600', 'text-white');
-        btn.classList.add('bg-slate-900/70', 'text-slate-300');
-        clearTimeout(autoPlayTimer);
+      if (btn) {
+        if (autoPlay) {
+          btn.classList.add('bg-blue-600', 'text-white');
+          btn.classList.remove('bg-slate-900/70', 'text-slate-300');
+          if (!isTyping) handleNextClick();
+        } else {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('bg-slate-900/70', 'text-slate-300');
+          clearTimeout(autoPlayTimer);
+        }
       }
     }
     function restartGame() {
