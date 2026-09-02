@@ -122,12 +122,38 @@ const SCENARIOS = [
   {
     bg: "assets/locker_room.jpg",
     char: "assets/himchan_smile.png",
-    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탈의실 및 사물함실로 이동했습니다!\n\n여기서 아주 중요한 주의사항이 있습니다!\n\n모든 개인 소지품(휴대폰, 지갑, 시계, 겉옷 등)은 배정된 사물함에 넣고 전용 검사복(상·하의)으로 환복하셔야 합니다.\n\n⚠️ 단, 절대 사물함에 넣으면 안 되는 2가지!\n① 방금 등록한 [나라사랑카드] (모든 검사실 전산 태그용)\n② 의사 진료 시 제출할 [필수 의료서류](병무용 진단서, 수술기록지, 영상 CD 등)\n\n이 2가지는 사물함에 넣지 말고 꼭 검사복 주머니에 챙겨서 나오셔야 합니다!\n환복을 마치셨다면 첫 번째 검사인 [심리검사장]으로 이동해 볼까요?",
-    text_en: "We've moved to the locker room!\n\nImportant instructions:\nStore all personal belongings (phone, wallet, watch, coat) in your assigned locker and change into the examination uniform.\n\n⚠️ 2 items you MUST keep with you:\n① Your registered [Nara Sarang Card] (for tagging at all exam rooms)\n② Required [Medical Documents] (diagnosis, surgical notes, MRI CD for doctor)\n\nKeep these in your pockets! Once changed, let's head to the [Psychological Testing Hall]!",
+    dialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "탈의실 및 사물함실로 이동했습니다!\n\n휴대폰, 지갑, 시계 등 모든 개인 소지품은 배정된 사물함에 넣고 편안한 전용 검사복으로 환복해 주세요.",
+        text_en: "We've moved to the locker room!\n\nPlease store all personal belongings in your locker and change into the examination uniform."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "소지품은 사물함에 넣고... 아! 아까 발급받은 나라사랑카드랑 챙겨온 병원 진단서 서류는 검사복 주머니에 꼭 챙겨야지!",
+        text_en: "Belongings in locker... Oh! I must keep my Nara Sarang Card and medical documents in my pocket!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "정확합니다 민우 님! 카드와 서류를 주머니에 챙기셨다면 첫 번째 검사인 [심리검사장]으로 출발해 볼까요?",
+        text_en: "Exactly right! With your card and documents ready, let's head to the [Psychological Testing Hall]!"
+      }
+    ],
     apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
     apiIcon: "scale",
@@ -139,12 +165,38 @@ const SCENARIOS = [
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
-    charPos: "right",
     speaker: "병무청 검사관 NPC",
     speaker_en: "MMA Testing Officer NPC",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-    text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n약 100여 대의 컴퓨터가 마련되어 있으며, 배정받은 좌석에 착석 후 [나라사랑카드]를 모니터 앞 리더기에 태그하여 검사를 시작합니다.\n\n심리검사는 크게 2가지로 구성됩니다:\n① 1차 인지능력검사: 언어, 수리, 공간지각 등 기초 인지능력 측정\n② 1차 인성검사: 성격 특성, 정서적 안정성 및 군 복무 적합도 종합 평가\n(추가로 본인의 신체/정신건강 상태를 체크하는 질병상태문진표도 함께 작성합니다)\n\n💡 [핵심 꿀팁]: 신검 방문 전, 병무청 누리집(mwpt.mma.go.kr)이나 모바일 e-병무지갑 앱에서 [병역판정 심리검사 사전 실시]를 미리 작성하고 오시면 현장에서 검사 시간을 크게 단축하실 수 있습니다!\n\n그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
-    text_en: "Welcome examinees! This is the Psychological Testing Hall, the first official station.\n\nWith over 100 computer terminals, take your assigned seat and tap your [Nara Sarang Card] on the card reader to begin.\n\nThe test consists of:\n① 1st Cognitive Aptitude Test: basic verbal, numerical, spatial reasoning\n② 1st Personality Test: personality traits, emotional stability, and military adaptability\n(A medical condition questionnaire is also completed)\n\n💡 [Pro Tip]: You can complete the [Pre-exam Psychological Test] online beforehand on the MMA portal (mwpt.mma.go.kr) or e-MMA Wallet app to save substantial time on-site!\n\nNow, let's solve sample questions on screen.",
+    dialogues: [
+      {
+        speaker: "병무청 검사관 NPC",
+        speaker_en: "MMA Testing Officer NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+        text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n배정받은 좌석에 착석 후 모니터 앞 리더기에 [나라사랑카드]를 태그하여 검사를 시작해 주세요.",
+        text_en: "Welcome examinees! This is the Psychological Testing Hall.\n\nPlease take your seat and tap your Nara Sarang Card on the reader to begin."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "모니터 앞 리더기에 나라사랑카드를 태그하면 되는 건가? 삑- 1차 인지능력검사와 인성검사 화면이 떴네!",
+        text_en: "I tap my card on the monitor reader? Beep- Cognitive and Personality test screens appeared!"
+      },
+      {
+        speaker: "병무청 검사관 NPC",
+        speaker_en: "MMA Testing Officer NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+        text: "차분하고 솔직하게 문항을 풀어주세요. 그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
+        text_en: "Please answer calmly and honestly. Let's solve sample questions on screen!"
+      }
+    ],
     apiSource: "국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
     apiIcon: "scale",
@@ -156,12 +208,29 @@ const SCENARIOS = [
   {
     bg: "assets/lab_room.jpg",
     char: "assets/doctor.png",
-    charPos: "right",
     speaker: "임상병리사 NPC",
     speaker_en: "Clinical Pathologist NPC",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-    text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등 체내 주요 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n먼저 [나라사랑카드]를 리더기에 태그한 후, 소변검사 키트를 챙겨 화장실에서 소변을 채취해 오셔야 합니다.",
-    text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests to evaluate liver/kidney functions, blood glucose, proteinuria, and blood disorders.\n\nFirst, tap your [Nara Sarang Card] on the reader, receive your urine test kit, and proceed to the restroom to collect your sample!",
+    dialogues: [
+      {
+        speaker: "임상병리사 NPC",
+        speaker_en: "Clinical Pathologist NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨 등 체내 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n먼저 입구 리더기에 [나라사랑카드]를 태그해 주세요.",
+        text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests to evaluate organ functions and overall health.\n\nFirst, please tap your [Nara Sarang Card] on the card reader."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "입구 리더기에 나라사랑카드를 태그하면 되는 건가? 삑- 접수 완료됐네!\n\n검사관님이 주신 소변검사 키트를 챙겨서 우측 화장실로 가보자.",
+        text_en: "I just tap my Nara Sarang Card on the reader? Beep- registration done!\n\nLet's take the urine test kit and head to the restroom."
+      }
+    ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
     apiSource_en: "National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
     apiIcon: "scale",
@@ -169,7 +238,7 @@ const SCENARIOS = [
     widgetType: "LAB_ROOM_CONFIRM"
   },
 
-  // [SCENE 9] 자동 신체계측실 - 신장/체중/혈압/시력 3단계 측정 & BMI 계산기
+  // [SCENE 9] 기본검사실 - 신장/체중/혈압/시력 3단계 측정 & BMI 판정
   {
     bg: "assets/body_measure_room.jpg",
     char: "assets/doctor.png",
@@ -183,8 +252,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "김민우 님 들어오세요! 이곳은 [자동 신체계측실]입니다.\n\n최첨단 자동 계측기를 통해 신장(키), 체중(몸무게), 혈압, 시력을 전산으로 정밀 측정하여 신체등급의 핵심 기준인 체질량지수(BMI)를 판정하는 곳입니다.",
-        text_en: "Minwoo Kim, please come in! This is the [Automated Biometric Measurement Room].\n\nWe measure your height, weight, blood pressure, and eyesight using automated precision instruments to calculate your Body Mass Index (BMI)."
+        text: "김민우 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 신체등급의 기준인 체질량지수(BMI)를 판정하는 곳입니다.",
+        text_en: "Minwoo Kim, please come in! This is the [Basic Examination Room].\n\nWe measure your height, weight, blood pressure, and eyesight to evaluate your Body Mass Index (BMI) and fundamental physical condition."
       },
       {
         speaker: "김민우 (주인공)",
@@ -192,8 +261,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "아, 여기서 키와 몸무게를 재는군요! 나라사랑카드를 먼저 모니터 리더기에 태그하면 되나요?",
-        text_en: "Ah, this is where height and weight are measured! Do I tap my Nara Sarang Card on the monitor reader first?"
+        text: "신체계측기 리더기에 나라사랑카드를 태그하고 발판에 올라서면 되는 건가? 삑- 키와 몸무게를 정확히 재어보자!",
+        text_en: "I tap my card on the reader and step onto the platform? Beep- let's measure my height and weight accurately!"
       },
       {
         speaker: "의무관 NPC",
@@ -201,8 +270,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "네 맞습니다! 카드를 태그하시고, 측정 발판 위에 정자세로 바르게 올라서 주세요.\n\n발뒤꿈치를 밀착하고 턱을 가볍게 당겨주시면 자동으로 측정이 진행됩니다. 민우 님의 신장과 체중을 입력해 실시간 BMI 판정을 확인해 볼까요?",
-        text_en: "That's correct! Tap your card and step onto the platform in an upright posture.\n\nKeep your heels together and tuck your chin slightly for accurate measurement. Let's check your real-time BMI evaluation!"
+        text: "측정 발판 위에 정자세로 바르게 서 주시면 자동으로 측정이 진행됩니다.\n\n민우 님의 신장과 체중을 확인하고 3단계 기본검사를 진행해 볼까요?",
+        text_en: "Stand straight on the platform for automated measurement.\n\nLet's check your height and weight and proceed with the 3-step basic examination!"
       }
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",
@@ -312,7 +381,7 @@ const SCENARIOS = [
         char: "assets/doctor_serious.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
-        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 자동 신체계측(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
+        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 기본검사(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
         text_en: "Hello, I am the Adjudication Assistant. I have verified all data from your psychological test, lab tests, biometrics, specialist doctor evaluations, and aptitude classifications.\n\nSubmitting to Chief Adjudicator for final determination."
       },
       {

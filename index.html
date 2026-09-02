@@ -319,8 +319,9 @@
   <!-- ================= [CINEMATIC SCENE TRANSITION: 페이드아웃 및 장소 이동 로딩 바] ================= -->
   <div id="scene-transition-overlay" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center space-y-5 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out">
     <div class="flex flex-col items-center space-y-3">
-      <div class="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-        <i id="transition-icon" data-lucide="map-pin" class="w-7 h-7"></i>
+      <!-- 대한민국 병무청 공식 로고 (화이트 라운드 카드) -->
+      <div class="p-3 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.35)] animate-pulse">
+        <img src="assets/mma_logo_original.png" alt="대한민국 병무청" class="h-8 sm:h-9 w-auto object-contain">
       </div>
       <div class="text-center space-y-1">
         <h3 id="transition-title" class="text-base sm:text-xl font-black text-white tracking-tight">검사장으로 이동 중...</h3>
@@ -507,7 +508,7 @@
           "STEP 4: 탈의실 환복 & 카드 지참",
           "STEP 5: 심리검사장",
           "STEP 5: 임상병리 및 영상의학",
-          "STEP 5: 자동 신체계측 & 기초검사",
+          "STEP 5: 기본검사실 (신체계측·혈압·시력)",
           "STEP 6: 과목별 전문의 정밀 진료",
           "STEP 6: 적성분류실 (병역진로설계)",
           "STEP 7: 판정보조관 & 수석판정관실",
@@ -733,8 +734,8 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Blood/Urine Sampling & Chest X-Ray Imaging" : "혈액·소변 검체 채취 및 흉부 X-ray 촬영";
         if (icon) icon.setAttribute('data-lucide', 'flask-conical');
       } else if (newScene.bg.includes('body_measure_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Biometric Measurement Room..." : "자동 신체계측실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압 자동 정밀 측정";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Basic Examination Room..." : "기본검사실로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압, 시력 정밀 측정";
         if (icon) icon.setAttribute('data-lucide', 'ruler');
       } else if (newScene.bg.includes('doctor_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
@@ -1276,12 +1277,9 @@
               <div class="space-y-3.5">
                 <!-- 카드 헤더 영역 -->
                 <div class="flex items-center justify-between">
-                  <div class="w-10 h-10 rounded-2xl bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shadow-inner">
+                  <div class="w-10 h-10 rounded-2xl bg-yellow-500/15 flex items-center justify-center text-yellow-400">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                   </div>
-                  <span class="text-[11px] px-2.5 py-1 rounded-full bg-yellow-500/20 text-yellow-300 font-extrabold border border-yellow-500/30 shadow-sm">
-                    ${isEn ? 'PX Max 20% Refund' : '군마트 PX 최대 20%'}
-                  </span>
                 </div>
 
                 <div>
@@ -1293,8 +1291,8 @@
                   </p>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (세로형) -->
-                <div class="space-y-2 pt-1 text-xs text-slate-300 border-t border-slate-800">
+                <!-- 핵심 혜택 리스트 (세로형, 테두리 박스 없는 플랫 리스트) -->
+                <div class="space-y-2 pt-1 text-xs text-slate-300">
                   <div class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
                     <span><strong>${isEn ? 'Public Transit:' : '전국 대중교통:'}</strong> ${isEn ? '20% billing discount' : '20% 청구할인 (버스/지하철)'}</span>
@@ -1315,11 +1313,11 @@
               </div>
 
               <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-2 pt-2 border-t border-slate-800/80">
+              <div class="space-y-2 pt-2">
                 <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-yellow-500/20 cursor-pointer">
                   <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-yellow-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                   <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : '나라사랑포털 혜택 안내 ↗'}
                 </a>
               </div>
@@ -1333,12 +1331,9 @@
               <div class="space-y-3.5">
                 <!-- 카드 헤더 영역 -->
                 <div class="flex items-center justify-between">
-                  <div class="w-10 h-10 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-inner">
+                  <div class="w-10 h-10 rounded-2xl bg-blue-500/15 flex items-center justify-center text-blue-400">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                   </div>
-                  <span class="text-[11px] px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-extrabold border border-blue-500/30 shadow-sm">
-                    ${isEn ? 'Convenience 10% Unlimited' : 'CU/GS25 편의점 10%'}
-                  </span>
                 </div>
 
                 <div>
@@ -1350,8 +1345,8 @@
                   </p>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (세로형) -->
-                <div class="space-y-2 pt-1 text-xs text-slate-300 border-t border-slate-800">
+                <!-- 핵심 혜택 리스트 (세로형, 테두리 박스 없는 플랫 리스트) -->
+                <div class="space-y-2 pt-1 text-xs text-slate-300">
                   <div class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
                     <span><strong>${isEn ? 'Convenience Stores:' : '편의점 CU·GS25:'}</strong> ${isEn ? '10% unlimited discount' : '10% 무제한 할인'}</span>
@@ -1372,11 +1367,11 @@
               </div>
 
               <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-2 pt-2 border-t border-slate-800/80">
+              <div class="space-y-2 pt-2">
                 <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-500/25 cursor-pointer">
                   <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-blue-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                   <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : 'IBK 공식 혜택 보기 ↗'}
                 </a>
               </div>
@@ -1388,7 +1383,7 @@
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0">
+              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
               </div>
               <div>
@@ -1406,31 +1401,31 @@
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
             
-            <!-- 상단 헤더 & 진행 바 -->
+            <!-- 상단 헤더 & 진행 바 (테두리 없는 깔끔한 텍스트 배지) -->
             <div class="space-y-2 border-b border-slate-800 pb-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
                   <span class="font-bold text-xs sm:text-sm text-white">${isEn ? '1st Psychological Test (PC Simulation)' : '1차 심리검사 PC 실전 테스트'}</span>
                 </div>
-                <span id="psych-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
+                <span id="psych-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
               </div>
-              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
                 <div id="psych-progress-bar" class="bg-indigo-500 h-full w-1/2 transition-all duration-300"></div>
               </div>
             </div>
 
             <!-- [STAGE 1] 문항 1: 인지능력검사 (정답 맞출 때까지 진행) -->
             <div id="psych-stage-1" class="space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
                 <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
                   [문항 1 · 기초 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?
                 </div>
                 <div class="grid grid-cols-2 gap-2 pt-1">
-                  <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">① 군인 - 군대</button>
-                  <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">② 학생 - 학교</button>
-                  <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">③ 의사 - 병원</button>
-                  <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/30 hover:border-indigo-500 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">④ 자동차 - 도로</button>
+                  <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">① 군인 - 군대</button>
+                  <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">② 학생 - 학교</button>
+                  <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">③ 의사 - 병원</button>
+                  <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-left transition text-xs cursor-pointer">④ 자동차 - 도로</button>
                 </div>
               </div>
               <div id="psych-q1-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
@@ -1438,18 +1433,18 @@
 
             <!-- [STAGE 2] 문항 2: 인성 및 군 복무 적응도 검사 (기본 숨김) -->
             <div id="psych-stage-2" class="hidden space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
                 <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
                   [문항 2 · 인성 및 군 복무 적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                  <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">매우 그렇다</button>
-                  <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">대체로 그렇다</button>
-                  <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">보통이다</button>
-                  <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">그렇지 않다</button>
+                  <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">매우 그렇다</button>
+                  <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">대체로 그렇다</button>
+                  <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">보통이다</button>
+                  <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">그렇지 않다</button>
                 </div>
               </div>
-              <div id="psych-q2-feedback" class="hidden p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-xs font-semibold flex items-center gap-1.5">
+              <div id="psych-q2-feedback" class="hidden p-3 rounded-xl bg-indigo-950/40 text-indigo-300 text-xs font-semibold flex items-center gap-1.5">
                 <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span>답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다.</span>
               </div>
               <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition items-center justify-center gap-2 shadow-md cursor-pointer animate-in fade-in">
@@ -1471,23 +1466,23 @@
                   <i data-lucide="flask-conical" class="w-4 h-4 text-teal-400"></i>
                   <span id="lab-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Urine Test Kit Received' : '1단계: 임상병리실 접수 & 소변검사 키트 수령'}</span>
                 </div>
-                <span id="lab-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 font-semibold">1단계 / 총 4단계</span>
+                <span id="lab-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 4단계</span>
               </div>
-              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
                 <div id="lab-progress-bar" class="bg-teal-500 h-full w-1/4 transition-all duration-300"></div>
               </div>
             </div>
 
             <!-- [LAB STAGE 1: 임상병리 접수 & 키트 수령] -->
             <div id="lab-stage-1" class="space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
                 <div class="flex items-center gap-2 text-teal-300 font-bold text-xs sm:text-sm">
                   <i data-lucide="info" class="w-4 h-4"></i> 임상병리검사실 업무 안내
                 </div>
                 <p class="text-slate-300 leading-relaxed">
                   간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등을 정밀하게 확인하기 위해 <strong>소변검사와 혈액검사(채혈)</strong>를 실시합니다.
                 </p>
-                <div class="p-2.5 rounded-lg bg-teal-950/40 border border-teal-500/30 text-teal-200">
+                <div class="p-2.5 rounded-lg bg-teal-950/40 text-teal-200">
                   📋 <strong>나라사랑카드 태그 완료</strong>: 소변검사용 종이컵과 스틱을 수령했습니다.
                 </div>
               </div>
@@ -1498,7 +1493,7 @@
 
             <!-- [LAB STAGE 2: 화장실 소변 채취 가이드] -->
             <div id="lab-stage-2" class="hidden space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
                 <div class="flex items-center gap-2 text-amber-300 font-bold text-xs sm:text-sm">
                   <i data-lucide="alert-triangle" class="w-4 h-4"></i> 올바른 소변 채취 필수 수칙 (중간뇨 채취)
                 </div>
@@ -1506,7 +1501,7 @@
                   <p>1️⃣ <strong>첫 소변(처음 1~2초)은 변기에 버리고</strong>, 반드시 <strong>'중간 소변'을 컵의 1/3~1/2 정도</strong> 받아주세요. (요도 입구 분비물로 인한 검사 오차 방지)</p>
                   <p>2️⃣ 채취한 소변에 검사 스틱을 살짝 적신 후, 지정된 검체 보관함에 컵과 함께 안전하게 제출합니다.</p>
                 </div>
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-semibold">
+                <div class="p-2.5 rounded-lg bg-emerald-950/40 text-emerald-300 font-semibold">
                   ✓ 중간뇨 채취 완료 & 검체 보관함 제출 준비 완료!
                 </div>
               </div>
@@ -1517,14 +1512,14 @@
 
             <!-- [LAB STAGE 3: 채혈 진행 및 지혈 주의사항] -->
             <div id="lab-stage-3" class="hidden space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
                 <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
                   <i data-lucide="syringe" class="w-4 h-4"></i> 채혈(혈액검사) 진행 & 필수 지혈 요령
                 </div>
                 <p class="text-slate-300 leading-relaxed">
                   전날 밤 10시 이후 금식(혈당·지질 수치 왜곡 방지) 상태를 확인하고 안전하게 혈액 검체를 채취했습니다.
                 </p>
-                <div class="p-2.5 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-200 font-semibold leading-relaxed">
+                <div class="p-2.5 rounded-lg bg-rose-950/40 text-rose-200 font-semibold leading-relaxed">
                   ⚠️ <strong>[절대 주의]</strong> 채혈 부위의 알코올 솜을 절대 문지르지 마시고, <strong>손가락으로 5분간 꾹 눌러서 지혈</strong>해 주세요! (문지르면 혈관이 터져 피멍이 들 수 있습니다)
                 </div>
               </div>
@@ -1535,7 +1530,7 @@
 
             <!-- [LAB STAGE 4: 흉부 X-ray 촬영 및 최종 이동] -->
             <div id="lab-stage-4" class="hidden space-y-3">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
                 <div class="flex items-center gap-2 text-indigo-300 font-bold text-xs sm:text-sm">
                   <i data-lucide="sparkles" class="w-4 h-4"></i> 흉부 X-ray 촬영 (영상의학)
                 </div>
@@ -1543,12 +1538,12 @@
                   "숨을 깊게 들이마시고 참으세요! (찰칵)"<br>
                   결핵 및 흉부 질환 유무 판독 결과, 이상 소견 없이 정상입니다.
                 </p>
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-semibold">
+                <div class="p-2.5 rounded-lg bg-emerald-950/40 text-emerald-300 font-semibold">
                   ✓ 소변검사, 혈액검사(채혈), 흉부 X-ray 전산 등록 완료!
                 </div>
               </div>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Pathology/X-ray Complete ➔ Move to Biometric Lab' : '임상병리/X-ray 완료 ➔ 자동 신체계측실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Pathology/X-ray Complete ➔ Move to Basic Exam Lab' : '임상병리/X-ray 완료 ➔ 기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1582,18 +1577,18 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <i data-lucide="ruler" class="w-4 h-4 text-teal-400"></i>
-                  <span id="bio-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Height & Weight (BMI) Measurement' : '1단계: 신장 및 체중(BMI) 자동 계측'}</span>
+                  <span id="bio-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Height & Weight (BMI) Measurement' : '1단계: 신장 및 체중(BMI) 계측'}</span>
                 </div>
-                <span id="bio-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 font-semibold">1단계 / 총 3단계</span>
+                <span id="bio-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 3단계</span>
               </div>
-              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
                 <div id="bio-progress-bar" class="bg-teal-500 h-full w-1/3 transition-all duration-300"></div>
               </div>
             </div>
 
             <!-- [BIO STAGE 1: 신장 & 체중] -->
             <div id="bio-stage-1" class="space-y-3.5">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
                 <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
                   <i data-lucide="user-check" class="w-4 h-4"></i> 측정 발판에 바른 자세로 올라서 주세요
                 </div>
@@ -1609,54 +1604,41 @@
                 </div>
               </div>
               <button onclick="goBiometricStep(2)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Height/Weight Measured ➔ Move to Blood Pressure' : '키·체중 측정 완료 ➔ 혈압 측정대로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Height/Weight OK ➔ Move to Blood Pressure' : '신장·체중 계측 완료 ➔ 자동 혈압 측정으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
             <!-- [BIO STAGE 2: 자동 혈압 측정] -->
             <div id="bio-stage-2" class="hidden space-y-3.5">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
                 <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
-                  <i data-lucide="activity" class="w-4 h-4"></i> 자동 혈압계에 오른팔을 편안하게 넣어주세요
+                  <i data-lucide="activity" class="w-4 h-4"></i> 자동 혈압계에 오른팔을 넣고 시작 버튼을 누르세요
                 </div>
-                <p class="text-slate-300 leading-relaxed">
-                  움직이거나 말을 하지 마시고 편안한 호흡을 유지해 주세요.
-                </p>
-                <div class="grid grid-cols-2 gap-2.5 pt-1">
-                  <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-semibold block">수축기 / 이완기 혈압</span>
-                    <span class="text-base font-black text-emerald-400">120 / 80 <span class="text-xs font-normal text-slate-400">mmHg</span></span>
-                  </div>
-                  <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-semibold block">맥박수 & 판정</span>
-                    <span class="text-base font-black text-blue-400">72 <span class="text-xs font-normal text-slate-400">bpm</span> (정상)</span>
-                  </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 text-[11px] text-slate-300 space-y-1">
+                  <div>• 수축기 혈압: <strong class="text-emerald-400">120 mmHg</strong> (정상)</div>
+                  <div>• 이완기 혈압: <strong class="text-emerald-400">80 mmHg</strong> (정상)</div>
+                  <div>• 맥박수: <strong class="text-teal-300">72 bpm</strong> (안정)</div>
                 </div>
               </div>
               <button onclick="goBiometricStep(3)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Blood Pressure Complete ➔ Move to Eyesight Test' : '혈압 측정 완료 ➔ 시력·안과 검사대로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Blood Pressure Normal ➔ Move to Eyesight Test' : '혈압 측정 정상 ➔ 안과 시력·색신 검사로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
-            <!-- [BIO STAGE 3: 시력(안과) 및 종합 판정] -->
+            <!-- [BIO STAGE 3: 시력 & 색신 검사 및 BMI 종합 판정] -->
             <div id="bio-stage-3" class="hidden space-y-3.5">
-              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
                 <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
-                  <i data-lucide="eye" class="w-4 h-4"></i> 시력표 및 색각(색신) 검사
+                  <i data-lucide="eye" class="w-4 h-4"></i> 안과 시력표 및 색각 검사 결과
                 </div>
-                <div class="grid grid-cols-2 gap-2.5 pt-1">
-                  <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-700 text-center">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-0.5">좌/우 나안 시력</span>
-                    <span class="text-sm font-black text-blue-400">좌 1.0 / 우 1.0</span>
-                  </div>
-                  <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-700 text-center">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-0.5">색각(색신) 검사</span>
-                    <span class="text-sm font-black text-emerald-400">정상 (이상 없음)</span>
-                  </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 text-[11px] text-slate-300 space-y-1">
+                  <div>• 나안 시력: 좌 <strong>1.0</strong> / 우 <strong>1.0</strong> (교정 불필요 정상)</div>
+                  <div>• 색신 검사: 정상 (색맹/색약 없음)</div>
                 </div>
               </div>
-
-              <div id="bmi-result-box" class="p-3.5 bg-slate-950 rounded-xl text-xs border border-slate-800 space-y-2"></div>
+              
+              <!-- 실시간 BMI 종합 판정 결과 박스 -->
+              <div id="bmi-result-box" class="p-3.5 rounded-xl bg-slate-950 text-xs space-y-2"></div>
             </div>
 
           </div>
