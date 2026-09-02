@@ -296,6 +296,25 @@
     </div>
   </div>
 
+  <!-- ================= [CINEMATIC SCENE TRANSITION: 페이드아웃 및 장소 이동 로딩 바] ================= -->
+  <div id="scene-transition-overlay" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center space-y-5 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out">
+    <div class="flex flex-col items-center space-y-3">
+      <div class="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+        <i id="transition-icon" data-lucide="map-pin" class="w-7 h-7"></i>
+      </div>
+      <div class="text-center space-y-1">
+        <h3 id="transition-title" class="text-base sm:text-xl font-black text-white tracking-tight">검사장으로 이동 중...</h3>
+        <p id="transition-desc" class="text-xs sm:text-sm text-slate-400">신분증 및 구비서류 확인 준비</p>
+      </div>
+    </div>
+    
+    <!-- 프로그레스 게이지 바 -->
+    <div class="w-56 sm:w-80 bg-slate-900 rounded-full h-2.5 p-0.5 border border-slate-700/80 overflow-hidden shadow-inner">
+      <div id="transition-progress-bar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-700 ease-out w-0"></div>
+    </div>
+    <span class="text-[10px] text-slate-500 font-mono tracking-widest uppercase">Location Changing...</span>
+  </div>
+
   <!-- ================= [MODAL 1: 월별 실시간 공석 캘린더 (고정 크기 & 게임 HUD 로딩)] ================= -->
   <div id="calendar-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-cyan-500/50 rounded-2xl max-w-xl w-full h-[580px] p-5 sm:p-6 shadow-[0_0_50px_rgba(34,211,238,0.25)] relative flex flex-col justify-between animate-in fade-in zoom-in-95 duration-200">
@@ -437,14 +456,85 @@
       } catch(e) {}
     }
 
-    // 장면 렌더링
+    let currentBg = "";
+
+    // 장면 렌더링 (배경 변경 감지 시 장소 이동 트랜지션 실행)
     function renderScene(idx) {
       if (typeof SCENARIOS === 'undefined' || !SCENARIOS || idx >= SCENARIOS.length) {
         showCertModal();
         return;
       }
+      const scene = SCENARIOS[idx];
+
+      // 배경 변경 감지 시 시네마틱 페이드아웃 & 장소 이동 로딩 바 전환 실행
+      if (currentBg && currentBg !== scene.bg) {
+        triggerSceneTransition(scene, () => {
+          applyScene(idx);
+        });
+      } else {
+        applyScene(idx);
+      }
+    }
+
+    // 장소 이동 시네마틱 트랜지션 (검은 화면 페이드아웃 + 로딩 프로그레스 바)
+    function triggerSceneTransition(newScene, onComplete) {
+      const overlay = document.getElementById('scene-transition-overlay');
+      const bar = document.getElementById('transition-progress-bar');
+      const title = document.getElementById('transition-title');
+      const desc = document.getElementById('transition-desc');
+      const icon = document.getElementById('transition-icon');
+
+      if (!overlay || !bar) {
+        onComplete();
+        return;
+      }
+
+      // 목적지에 따른 이동 타이틀 및 안내 동적 설정
+      if (newScene.bg.includes('lobby') && currentSceneIdx < 5) {
+        if (title) title.innerText = `${userData.region} 검사장으로 이동 중...`;
+        if (desc) desc.innerText = "신분증 확인 및 전용 검사복 환복";
+        if (icon) icon.setAttribute('data-lucide', 'building-2');
+      } else if (newScene.bg.includes('exam_room')) {
+        if (title) title.innerText = "정밀 검사장(심리/임상/신체계측)으로 이동 중...";
+        if (desc) desc.innerText = "1차 심리검사실 및 혈액/소변 검사, 신체계측실 입장";
+        if (icon) icon.setAttribute('data-lucide', 'activity');
+      } else if (newScene.bg.includes('lobby')) {
+        if (title) title.innerText = "수석판정관실 및 1층 로비로 이동 중...";
+        if (desc) desc.innerText = "최종 병역판정 결과서 수령 및 실시간 여비 정산";
+        if (icon) icon.setAttribute('data-lucide', 'award');
+      } else {
+        if (title) title.innerText = "다음 장소로 이동 중...";
+        if (desc) desc.innerText = "잠시만 기다려 주세요.";
+        if (icon) icon.setAttribute('data-lucide', 'map-pin');
+      }
+      lucide.createIcons();
+
+      // 바 리셋 & 페이드 인 (검은 화면)
+      bar.style.width = '0%';
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100', 'pointer-events-auto');
+
+      // 로딩 게이지 바 전진 애니메이션
+      setTimeout(() => {
+        bar.style.width = '100%';
+      }, 50);
+
+      // 로딩 완료 후 씬 적용 및 페이드 아웃
+      setTimeout(() => {
+        onComplete();
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          bar.style.width = '0%';
+        }, 350);
+      }, 850);
+    }
+
+    // 실제 씬 화면 업데이트 및 대사 출력
+    function applyScene(idx) {
       currentSceneIdx = idx;
       const scene = SCENARIOS[idx];
+      currentBg = scene.bg;
 
       // 중앙 선택지 오버레이 숨김 초기화
       const choiceOverlay = document.getElementById('center-choice-overlay');
@@ -1250,6 +1340,7 @@
         if (forceNew) {
           clearSaveGameState();
           conversationHistory.length = 0;
+          currentBg = "";
         }
         renderScene(0);
       } else if (epNum === 2) {
@@ -1273,6 +1364,7 @@
     function restartGame() {
       clearSaveGameState();
       conversationHistory.length = 0;
+      currentBg = "";
       renderScene(0);
     }
 
