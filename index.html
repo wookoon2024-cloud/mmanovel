@@ -2539,11 +2539,26 @@
     }
 
     // 메인 로비 메뉴로 복귀
+    function openLobby() {
+      showMainMenu();
+    }
     function showMainMenu() {
       playBeep(600, 'triangle', 0.05);
       clearInterval(typingInterval);
       clearTimeout(autoPlayTimer);
       isTyping = false;
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      const certModal = document.getElementById('cert-modal');
+      if (certModal) {
+        certModal.classList.add('hidden');
+        certModal.classList.remove('flex');
+      }
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.remove('hidden');
       updateLobbyResumeButton();
