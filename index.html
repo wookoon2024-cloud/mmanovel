@@ -1065,13 +1065,13 @@
               </div>
             </div>
 
-            <!-- 버튼 영역: 실제 병무청 민원 바로가기 & 시뮬레이션 계속 진행 -->
+            <!-- 버튼 영역: 실제 병무청 민원 바로가기 & 계속 진행 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
               <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <i data-lucide="external-link" class="w-4 h-4"></i> 병무청 민원포털 예약하기
+                <i data-lucide="external-link" class="w-4 h-4"></i> <span>${(currentLang === 'en') ? 'Go to MMA Portal' : '병무청 민원포털 예약하기'}</span>
               </a>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-2.5 px-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>시뮬레이션 계속 진행</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
