@@ -161,7 +161,7 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 심리검사장 - 1차 인지능력 및 인성검사 (병무청 검사관)
+  // [SCENE 7] 심리검사장 - 인지능력 및 인성검사 (병무청 검사관)
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
@@ -184,8 +184,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나! 엔터-\n인지능력검사와 인성검사 화면이 떴네.",
-        text_en: "I log in by typing my name and ID number on the keyboard! Enter-\nCognitive and Personality test screens appeared."
+        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나!\n인지능력검사와 인성검사 화면이 떴네.",
+        text_en: "I log in by typing my name and ID number on the keyboard!\nCognitive and Personality test screens appeared."
       },
       {
         speaker: "병무청 검사관 NPC",
