@@ -212,7 +212,7 @@ const SCENARIOS = [
     widgetType: "BMI_CALCULATOR"
   },
 
-  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료
+  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료 (질환/서류 지참자 분기)
   {
     bg: "assets/doctor_room.jpg",
     char: "assets/doctor.png",
@@ -244,7 +244,7 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 수석판정관실에 상신하겠습니다.",
+        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
         text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 2] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
       }
     ],
@@ -255,7 +255,50 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 수석판정관실 - 최종 판정, 여비 정산 & 정책 홍보
+  // [SCENE 11] 적성분류실 (병역진로설계 & 군 특기 분류) - 정상 1~2급 수검자 분기
+  {
+    bg: "assets/exam_room.jpg",
+    char: "assets/himchan.png",
+    speaker: "병역진로상담관 NPC",
+    speaker_en: "Military Career Counselor NPC",
+    plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
+    dialogues: [
+      {
+        speaker: "병역진로상담관 NPC",
+        speaker_en: "Military Career Counselor NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
+        text: "김민우 님 반갑습니다! 이곳은 [적성분류실 및 병역진로설계센터]입니다.\n\n기본 신체검사에서 1~2급 현역 판정을 받은 수검자분들의 전공, 보유 자격증, 적성검사 결과를 종합하여 가장 적합한 [군 특기(병과)]를 1:1로 맞춤 추천하고 분류해 드리는 곳입니다.",
+        text_en: "Welcome Minwoo Kim! This is the [Aptitude Classification & Military Career Center].\n\nFor examinees classified as Grade 1-2 Active Duty, we match and recommend military specialties based on your major, licenses, and aptitude test results."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "제가 대학교에서 컴퓨터/소프트웨어를 전공하고 있는데, 제 전공을 살릴 수 있는 군 특기로 복무할 수 있나요?",
+        text_en: "I am majoring in Computer Science / Software in college. Can I serve in a military specialty related to my major?"
+      },
+      {
+        speaker: "병역진로상담관 NPC",
+        speaker_en: "Military Career Counselor NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
+        text: "물론입니다! 전공과 자격증 연계를 통해 [육군 정보통신/SW개발병] 또는 [공군 정보체계운영병] 특기로 적극 지원하실 수 있도록 적성을 부여했습니다.\n\n이제 최종 판정서 수령과 여비 정산을 위해 판정보조관 및 수석판정관실로 이동하겠습니다!",
+        text_en: "Certainly! We have classified your military aptitude for Army IT/SW Developer or Air Force Information Systems Specialist.\n\nNow, let's proceed to the Chief Adjudicator office for your final result and travel allowance settlement!"
+      }
+    ],
+    apiSource: "공공데이터포털: 병무청_병역진로설계 맞춤 군특기 추천 데이터",
+    apiSource_en: "Public Data Portal: MMA Military Career Design Recommended Specialties Data",
+    apiIcon: "database",
+    isApi: true,
+    widgetType: "APTITUDE_CONFIRM"
+  },
+
+  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
@@ -264,22 +307,22 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     dialogues: [
       {
+        speaker: "판정보조관 NPC",
+        speaker_en: "Adjudication Assistant NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
+        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 자동 신체계측(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
+        text_en: "Hello, I am the Adjudication Assistant. I have verified all data from your psychological test, lab tests, biometrics, specialist doctor evaluations, and aptitude classifications.\n\nSubmitting to Chief Adjudicator for final determination."
+      },
+      {
         speaker: "수석판정관 NPC",
         speaker_en: "Chief Adjudicator NPC",
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
-        text: "김민우 님, 오늘 모든 검사를 받으시느라 대단히 고생 많으셨습니다!\n\n이곳은 신검의 최종 관문인 [수석판정관실]입니다. 오늘 진행한 심리검사, 임상병리, 신체계측(BMI), 정형외과 전문의 소견을 종합 판정하여 최종 신체등급과 병역 처분을 확정하는 곳입니다.",
-        text_en: "Minwoo Kim, thank you for completing all examinations today!\n\nThis is the [Chief Adjudicator Office]. We synthesize your psychological, laboratory, biometric, and specialist medical results to determine your final physical grade and military disposition."
-      },
-      {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
-        char: "assets/minwoo.png",
-        charPos: "right",
-        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "드디어 모든 검사가 끝났군요! 저의 최종 병역 처분 결과는 어떻게 결정되었나요?",
-        text_en: "Finally, all exams are done! What is my final military service disposition?"
+        text: "수검자 김민우 님! 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
+        text_en: "Examinee Minwoo Kim! Based on comprehensive adjudication, your final Physical Grade is [ {finalGrade} ] with [ {disposition} ] disposition."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -287,8 +330,8 @@ const SCENARIOS = [
         char: "assets/himchan.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님, 수석판정관실 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분이 최종 확정되었습니다!\n\n오늘 {region} 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다. 최종 결과서를 확인해 보실까요?",
-        text_en: "Minwoo, your final grade is [ {finalGrade} ] with [ {disposition} ] disposition!\n\nYour travel allowance of [ {fare} ] has been deposited in real-time into your {cardType} account. Let's check your final certificate!"
+        text: "민우 님, 모든 검사가 무사히 끝났습니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 아까 등록하신 {cardType} 계좌로 즉시 입금 완료되었습니다. 최종 결과서를 확인해 보실까요?",
+        text_en: "Minwoo, all examinations are complete! Your travel allowance of [ {fare} ] has been deposited into your {cardType} account. Let's check your final summary certificate!"
       }
     ],
     apiSource: "공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",

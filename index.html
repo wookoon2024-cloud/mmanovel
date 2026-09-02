@@ -500,9 +500,10 @@
           "STEP 4: 탈의실 환복 & 카드 지참",
           "STEP 5: 심리검사장 (전산실)",
           "STEP 5: 임상병리 및 영상의학",
-          "STEP 5: 자동 신체계측 & BMI",
-          "STEP 6: 전문의 정밀 진료 (정형외과)",
-          "STEP 7: 최종 판정 & 실시간 여비 정산"
+          "STEP 5: 자동 신체계측 & 기초검사",
+          "STEP 6: 과목별 전문의 정밀 진료",
+          "STEP 6: 적성분류실 (병역진로설계)",
+          "STEP 7: 판정보조관 & 수석판정관실"
         ],
         lobby: {
           mainTitle: "병무행정 비주얼노벨",
@@ -543,9 +544,10 @@
           "STEP 4: Locker Room Uniform & Card",
           "STEP 5: Psychological Examination (PC Lab)",
           "STEP 5: Clinical Pathology & Chest X-Ray",
-          "STEP 5: Biometric Measurement & BMI",
+          "STEP 5: Biometric Measurement & Basic Check",
           "STEP 6: Specialist Medical Examination",
-          "STEP 7: Final Adjudication & Travel Allowance"
+          "STEP 6: Aptitude & Military Career Center",
+          "STEP 7: Adjudication & Travel Allowance"
         ],
         lobby: {
           mainTitle: "MMA Visual Novel",
@@ -726,12 +728,16 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압 자동 정밀 측정";
         if (icon) icon.setAttribute('data-lucide', 'ruler');
       } else if (newScene.bg.includes('doctor_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "정형외과 전문의 정밀 진료실로 이동 중...";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
-      } else if (newScene.bg.includes('lobby') && currentSceneIdx >= 9) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "수석판정관실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Final Result Paper & Real-time Travel Allowance" : "최종 병역처분 결과서 수령 및 실시간 여비 정산";
+      } else if (idx === 11) {
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude & Military Career Center..." : "적성분류실 (병역진로설계)로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
+        if (icon) icon.setAttribute('data-lucide', 'compass');
+      } else if (idx >= 12 || (newScene.bg.includes('lobby') && currentSceneIdx >= 9)) {
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "판정보조관 & 수석판정관실로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 실시간 여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
       } else {
         if (title) title.innerText = (currentLang === 'en') ? "Changing Location..." : "다음 장소로 이동 중...";
@@ -1536,30 +1542,70 @@
           </div>
         `;
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Diagnosis Complete ➔ Move to Chief Adjudicator Office' : '전문의 진료 완료 ➔ 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(12);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>${isEn ? 'Diagnosis Complete ➔ Move to Chief Adjudicator Office' : '전문의 진료 소견 완료 ➔ 판정보조관 & 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'APTITUDE_CONFIRM') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(12);" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>${isEn ? 'Aptitude Assigned ➔ Move to Chief Adjudicator Office' : '군 특기 적성부여 완료 ➔ 판정보조관 & 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
       } else if (type === 'BMI_CALCULATOR') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <span class="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+                <i data-lucide="ruler" class="w-4 h-4 text-teal-400"></i>
+                ${isEn ? 'Basic Biometric Examination (BMI / BP / Eyesight)' : '기본 신체계측 종합 측정 (체형·혈압·시력)'}
+              </span>
+              <span class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 font-semibold">자동 전산 계측</span>
+            </div>
+
+            <!-- 신장 / 체중 -->
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <div>
-                <label class="text-slate-300 block mb-1 font-semibold">신장 (cm):</label>
-                <input id="inp-height" type="number" value="${userData.height}" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-center focus:outline-none focus:border-blue-400">
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <label class="text-slate-400 block mb-1 font-semibold">① 신장 (cm):</label>
+                <input id="inp-height" type="number" value="${userData.height}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-center focus:outline-none focus:border-teal-400">
               </div>
-              <div>
-                <label class="text-slate-300 block mb-1 font-semibold">체중 (kg):</label>
-                <input id="inp-weight" type="number" value="${userData.weight}" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-center focus:outline-none focus:border-blue-400">
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <label class="text-slate-400 block mb-1 font-semibold">② 체중 (kg):</label>
+                <input id="inp-weight" type="number" value="${userData.weight}" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-center focus:outline-none focus:border-teal-400">
               </div>
             </div>
-            <button onclick="calculateBMI()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <i data-lucide="calculator" class="w-4 h-4"></i> 실시간 BMI 계산 및 판정 확인
+
+            <!-- 혈압 / 시력 -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <label class="text-slate-400 block mb-1 font-semibold">③ 자동 혈압 측정:</label>
+                <div class="flex items-center justify-between text-white font-bold px-2.5 py-1.5 bg-slate-900 rounded-lg border border-slate-700">
+                  <span class="text-emerald-400">120 / 80 mmHg</span>
+                  <span class="text-[10px] text-slate-400 font-normal">정상</span>
+                </div>
+              </div>
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <label class="text-slate-400 block mb-1 font-semibold">④ 안과 시력 측정:</label>
+                <div class="flex items-center justify-between text-white font-bold px-2.5 py-1.5 bg-slate-900 rounded-lg border border-slate-700">
+                  <span class="text-blue-400">좌 1.0 / 우 1.0</span>
+                  <span class="text-[10px] text-slate-400 font-normal">정상</span>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="calculateBMI()" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <i data-lucide="calculator" class="w-4 h-4"></i> 기본 신체계측 종합 판정 확인
             </button>
-            <div id="bmi-result-box" class="hidden p-3.5 bg-slate-950 rounded-xl text-xs border border-slate-800"></div>
+
+            <div id="bmi-result-box" class="hidden p-3.5 bg-slate-950 rounded-xl text-xs border border-slate-800 space-y-2"></div>
           </div>
         `;
       } else if (type === 'FINAL_SUMMARY_CARDS') {
@@ -1593,7 +1639,7 @@
       lucide.createIcons();
     }
 
-    // BMI 계산 함수
+    // BMI 및 기본 신체검사 종합 판정 & 스마트 분기 함수
     function calculateBMI() {
       const hInp = document.getElementById('inp-height');
       const wInp = document.getElementById('inp-weight');
@@ -1612,14 +1658,14 @@
       let descText = "";
 
       if (bmi >= 18.5 && bmi < 25.0) {
-        gradeText = "신체등급 1급 (정상)";
-        descText = "체질량지수 정상 범위입니다. 혈압 및 기초 건강 상태 양호합니다.";
+        gradeText = "신체등급 1급 (정상 체형)";
+        descText = "신장·체중 BMI 정상 범위입니다. 혈압(120/80) 및 시력(1.0/1.0) 모두 양호합니다.";
       } else if (bmi >= 25.0 && bmi < 30.0) {
         gradeText = "신체등급 2급 (과체중 경계)";
-        descText = "과체중 2급 기준에 해당합니다. 전반적인 건강 상태는 양호합니다.";
+        descText = "과체중 2급 기준에 해당하며 혈압 및 시력 기초 건강 상태는 양호합니다.";
       } else if (bmi >= 35.0 || bmi < 16.0) {
         gradeText = "신체등급 4급 (보충역 대상)";
-        descText = "국방부령에 따라 BMI 35 이상(고도비만)은 4급 기준이며, 100~120일 후 [불시 체중 재측정] 대상자로 분류될 수 있습니다.";
+        descText = "국방부령에 따라 BMI 35 이상(고도비만)은 4급 기준이며, 100~120일 후 불시 체중 재측정 대상입니다.";
       } else {
         gradeText = "신체등급 3급";
         descText = "체질량지수 3급 기준에 해당합니다.";
@@ -1629,13 +1675,36 @@
 
       const resBox = document.getElementById('bmi-result-box');
       if (resBox) {
-        resBox.innerHTML = `
-          <div class="space-y-1.5">
-            <div class="flex justify-between font-bold"><span class="text-teal-300">BMI 지수: ${bmi}</span><span class="text-amber-400">${gradeText}</span></div>
-            <p class="text-[11px] text-slate-300">${descText}</p>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(10);" class="w-full mt-2 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Move to Orthopedic Specialist Clinic' : '정형외과/과목별 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        // 질환 서류 보유 여부 검사 (Step 2에서 정형외과 등 질환을 선택했는지 확인)
+        const hasDisease = userData.healthCheck && !userData.healthCheck.includes('특이 질환 없음');
+        const isEn = (currentLang === 'en');
+
+        let branchHtml = "";
+        if (hasDisease) {
+          branchHtml = `
+            <div class="p-2.5 rounded-lg bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs">
+              ⚠️ <strong>[질환 서류 지참자 분기]</strong>: 민우 님이 사전 등록하신 <strong>[정형외과 수술 서류]</strong>가 확인되었습니다. 전문의 정밀 판정을 위해 진료실로 이동합니다.
+            </div>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(10);" class="w-full mt-1.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>${isEn ? 'Move to Specialist (Orthopedic) Clinic' : '과목별 전문의(정형외과) 정밀 진료실로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
+          `;
+        } else {
+          branchHtml = `
+            <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs">
+              ✅ <strong>[정상 수검자 분기]</strong>: 기본 신체검사 결과 모든 항목이 정상(1급)입니다! 군 특기 분류 및 병역진로설계를 위해 적성분류실로 이동합니다.
+            </div>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full mt-1.5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>${isEn ? 'Move to Aptitude Classification Center' : '적성분류실 (군 특기 및 병역진로설계)로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          `;
+        }
+
+        resBox.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex justify-between font-bold"><span class="text-teal-300">BMI: ${bmi} (혈압·시력 정상)</span><span class="text-amber-400">${gradeText}</span></div>
+            <p class="text-[11px] text-slate-300">${descText}</p>
+            ${branchHtml}
           </div>
         `;
         resBox.classList.remove('hidden');
