@@ -83,8 +83,12 @@
 
     <!-- 우측 인터랙션 퀵 컨트롤 버튼 -->
     <div class="flex items-center space-x-2 text-xs">
-      <button onclick="showMainMenu()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="메인 시나리오 선택 로비로 이동">
-        <i data-lucide="home" class="w-3.5 h-3.5"></i> 메인메뉴
+      <!-- 언어 전환 버튼 (KO / EN) -->
+      <button id="btn-lang" onclick="toggleLanguage()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-800 font-bold shadow-sm cursor-pointer" title="다국어 언어 변경 (KO / EN)">
+        <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span id="lang-label">EN</span>
+      </button>
+      <button onclick="showMainMenu()" id="btn-home" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="메인 시나리오 선택 로비로 이동">
+        <i data-lucide="home" class="w-3.5 h-3.5"></i> <span id="label-home">메인메뉴</span>
       </button>
       <button id="btn-speed" onclick="toggleSpeed()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-800 font-bold shadow-sm cursor-pointer" title="대사 출력 속도 조절">
         <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> <span id="speed-label">1.0x</span>
@@ -95,11 +99,11 @@
       <button id="btn-auto" onclick="toggleAuto()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-700 font-semibold shadow-sm cursor-pointer">
         <i data-lucide="play-circle" class="w-3.5 h-3.5 text-blue-600"></i> AUTO
       </button>
-      <button onclick="openLogModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-700 font-semibold shadow-sm cursor-pointer">
-        <i data-lucide="history" class="w-3.5 h-3.5 text-blue-600"></i> 대화기록
+      <button id="btn-log" onclick="openLogModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-700 font-semibold shadow-sm cursor-pointer">
+        <i data-lucide="history" class="w-3.5 h-3.5 text-blue-600"></i> <span id="label-log">대화기록</span>
       </button>
-      <button onclick="restartGame()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-semibold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 처음으로
+      <button id="btn-restart" onclick="restartGame()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-semibold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> <span id="label-restart">처음으로</span>
       </button>
     </div>
   </header>
@@ -113,9 +117,12 @@
         <div class="flex items-center gap-3">
           <img src="assets/mma_logo_original.png" alt="대한민국 병무청" class="h-8 sm:h-9 w-auto object-contain">
           <div class="border-l border-slate-300 pl-3">
-            <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
+            <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
           </div>
         </div>
+        <button onclick="toggleLanguage()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-800 font-bold text-xs shadow-sm cursor-pointer" title="다국어 언어 변경 (KO / EN)">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span class="lobby-lang-label">EN</span>
+        </button>
       </div>
     </div>
 
@@ -125,10 +132,10 @@
         <span class="text-xs font-bold text-blue-400 tracking-wide uppercase">
           Scenario Episodes
         </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 id="lobby-select-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           체험할 시나리오를 선택해 주세요
         </h2>
-        <p class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+        <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
           병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.
         </p>
       </div>
@@ -145,7 +152,7 @@
             
             <!-- 이미지 상단 배지 -->
             <div class="absolute top-4 left-4 right-4 flex items-center justify-between">
-              <span class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
+              <span id="ep1-badge-title" class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
                 제1화 · 병역판정검사 편
               </span>
               <div id="ep1-saved-badge">
@@ -159,10 +166,10 @@
           <!-- 하단 설명 및 버튼 영역 -->
           <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
             <div>
-              <h3 class="text-lg sm:text-xl font-black text-white tracking-tight">
+              <h3 id="ep1-title-text" class="text-lg sm:text-xl font-black text-white tracking-tight">
                 청춘의 첫 관문, 병역판정검사
               </h3>
-              <p class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
+              <p id="ep1-desc-text" class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
                 통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 실시간 여비 정산까지 완벽 시뮬레이션!
               </p>
             </div>
@@ -191,10 +198,10 @@
             
             <!-- 이미지 상단 배지 -->
             <div class="absolute top-4 left-4 right-4 flex items-center justify-between">
-              <span class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
+              <span id="ep2-badge-title" class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
                 제2화 · 예비군 훈련 편
               </span>
-              <span class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-xs font-bold flex items-center gap-1.5">
+              <span id="ep2-saved-badge" class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-xs font-bold flex items-center gap-1.5">
                 <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> 오픈 준비 중
               </span>
             </div>
@@ -203,10 +210,10 @@
           <!-- 하단 설명 및 버튼 영역 -->
           <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
             <div>
-              <h3 class="text-lg sm:text-xl font-black text-slate-200 tracking-tight">
+              <h3 id="ep2-title-text" class="text-lg sm:text-xl font-black text-slate-200 tracking-tight">
                 슬기로운 예비군 훈련 생활
               </h3>
-              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
+              <p id="ep2-desc-text" class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
                 동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드
               </p>
             </div>
@@ -456,22 +463,160 @@
       } catch(e) {}
     }
 
-    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API)] =================
-    let ttsVoice = null;
+    // ================= [다국어 i18n 시스템 (Korean / English)] =================
+    let currentLang = 'ko'; // 'ko' | 'en'
 
-    function initTTSVoices() {
-      if (!('speechSynthesis' in window)) return;
-      const loadVoices = () => {
-        const voices = window.speechSynthesis.getVoices();
-        ttsVoice = voices.find(v => v.lang.includes('ko') || v.lang.includes('KO')) || null;
-      };
-      loadVoices();
-      if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = loadVoices;
+    const I18N = {
+      ko: {
+        appTitle: "병무행정 비주얼노벨",
+        subTitle: "슬기로운 병역 라이프",
+        mainMenu: "메인메뉴",
+        speed: "속도",
+        auto: "AUTO",
+        log: "대화기록",
+        restart: "처음으로",
+        langToggle: "EN",
+        langBtnTitle: "Switch to English (영어 전환)",
+        soundOn: "TTS 음성 ON",
+        soundOff: "음소거 OFF",
+        clickToNext: "화면을 클릭하여 계속",
+        verified: "✓ 실시간 연동",
+        steps: [
+          "STEP 1: 통지서 확인 & 스마트 일정 변경",
+          "STEP 1: 통지서 확인 & 스마트 일정 변경",
+          "STEP 1: 통지서 확인 & 스마트 일정 변경",
+          "STEP 1: 통지서 확인 & 스마트 일정 변경",
+          "STEP 2: 맞춤형 서류 및 사전 점검",
+          "STEP 3: 1층 로비 접수 & 카드 등록",
+          "STEP 4: 탈의실 환복 & 스마트 팔찌 착용",
+          "STEP 5: 2층 심리검사 (전산실)",
+          "STEP 5: 임상병리 및 영상의학",
+          "STEP 5: 자동 신체계측 & BMI",
+          "STEP 6: 전문의 정밀 진료 (정형외과)",
+          "STEP 7: 최종 판정 & 실시간 여비 정산"
+        ],
+        lobby: {
+          mainTitle: "병무행정 비주얼노벨",
+          selectTitle: "체험할 시나리오를 선택해 주세요",
+          sub: "병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.",
+          ep1Badge: "제1화 · 병역판정검사 편",
+          ep1Title: "청춘의 첫 관문, 병역판정검사",
+          ep1Desc: "통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 실시간 여비 정산까지 완벽 시뮬레이션!",
+          ep2Badge: "제2화 · 예비군 훈련 편",
+          ep2Title: "슬기로운 예비군 훈련 생활",
+          ep2Desc: "동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드",
+          startBtn: "시나리오 시작하기",
+          resumeBtn: "이어서 플레이하기",
+          restartBtn: "처음부터 다시 시작하기"
+        }
+      },
+      en: {
+        appTitle: "MMA Visual Novel",
+        subTitle: "Smart Military Life Guide",
+        mainMenu: "Main Menu",
+        speed: "Speed",
+        auto: "AUTO",
+        log: "Log",
+        restart: "Restart",
+        langToggle: "KO",
+        langBtnTitle: "한국어로 전환 (Switch to Korean)",
+        soundOn: "TTS Voice ON",
+        soundOff: "Mute OFF",
+        clickToNext: "Click screen to continue",
+        verified: "✓ Live Synced",
+        steps: [
+          "STEP 1: Notice Check & Smart Rescheduling",
+          "STEP 1: Notice Check & Smart Rescheduling",
+          "STEP 1: Notice Check & Smart Rescheduling",
+          "STEP 1: Notice Check & Smart Rescheduling",
+          "STEP 2: Tailored Documents & Checkup",
+          "STEP 3: 1F Reception & Card Registration",
+          "STEP 4: Locker Room Uniform & Smart Wristband",
+          "STEP 5: 2F Psychological Examination",
+          "STEP 5: Clinical Pathology & Chest X-Ray",
+          "STEP 5: Biometric Measurement & BMI",
+          "STEP 6: Specialist Medical Examination",
+          "STEP 7: Final Adjudication & Travel Allowance"
+        ],
+        lobby: {
+          mainTitle: "MMA Visual Novel",
+          selectTitle: "Select a Scenario Episode",
+          sub: "Experience authentic administrative procedures and document checklists from draft physical exams to reserve forces training.",
+          ep1Badge: "Episode 1 · Draft Physical Exam",
+          ep1Title: "First Step of Youth: Draft Physical Exam",
+          ep1Desc: "Full simulation from notice check, real-time vacancy rescheduling, document checklist, BMI evaluation, to live travel expense payout!",
+          ep2Badge: "Episode 2 · Reserve Forces Training",
+          ep2Title: "Smart Reserve Forces Training Life",
+          ep2Desc: "Interactive scenario for mobilization notices, nationwide training registration, and real-time training stipend calculation.",
+          startBtn: "Start Scenario",
+          resumeBtn: "Resume Play",
+          restartBtn: "Start Over from Beginning"
+        }
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = (currentLang === 'ko') ? 'en' : 'ko';
+      applyLanguage();
+    }
+
+    function applyLanguage() {
+      const dict = I18N[currentLang];
+      const langLabel = document.getElementById('lang-label');
+      const lobbyLangLabels = document.querySelectorAll('.lobby-lang-label');
+      const btnLang = document.getElementById('btn-lang');
+      const labelHome = document.getElementById('label-home');
+      const labelLog = document.getElementById('label-log');
+      const labelRestart = document.getElementById('label-restart');
+      const soundLabel = document.getElementById('sound-label');
+      const nextIndicatorSpan = document.querySelector('#next-indicator span');
+      const verifyBadge = document.getElementById('api-verify-badge');
+
+      if (langLabel) langLabel.innerText = dict.langToggle;
+      lobbyLangLabels.forEach(el => el.innerText = dict.langToggle);
+      if (btnLang) btnLang.title = dict.langBtnTitle;
+      if (labelHome) labelHome.innerText = dict.mainMenu;
+      if (labelLog) labelLog.innerText = dict.log;
+      if (labelRestart) labelRestart.innerText = dict.restart;
+      if (soundLabel) soundLabel.innerText = soundEnabled ? dict.soundOn : dict.soundOff;
+      if (nextIndicatorSpan) nextIndicatorSpan.innerText = dict.clickToNext;
+      if (verifyBadge) verifyBadge.innerText = dict.verified;
+
+      // 로비 텍스트 갱신
+      updateLobbyTexts();
+
+      // 현재 진행 중인 씬 즉시 재적용
+      if (typeof SCENARIOS !== 'undefined' && SCENARIOS[currentSceneIdx]) {
+        applyScene(currentSceneIdx);
       }
     }
-    initTTSVoices();
 
+    function updateLobbyTexts() {
+      const dict = I18N[currentLang];
+      const lobbyMain = document.getElementById('lobby-main-header-title');
+      const lobbySelect = document.getElementById('lobby-select-title');
+      const lobbySub = document.getElementById('lobby-sub-title');
+      const ep1Badge = document.getElementById('ep1-badge-title');
+      const ep1Title = document.getElementById('ep1-title-text');
+      const ep1Desc = document.getElementById('ep1-desc-text');
+      const ep2Badge = document.getElementById('ep2-badge-title');
+      const ep2Title = document.getElementById('ep2-title-text');
+      const ep2Desc = document.getElementById('ep2-desc-text');
+
+      if (lobbyMain) lobbyMain.innerText = dict.lobby.mainTitle;
+      if (lobbySelect) lobbySelect.innerText = dict.lobby.selectTitle;
+      if (lobbySub) lobbySub.innerText = dict.lobby.sub;
+      if (ep1Badge) ep1Badge.innerText = dict.lobby.ep1Badge;
+      if (ep1Title) ep1Title.innerText = dict.lobby.ep1Title;
+      if (ep1Desc) ep1Desc.innerText = dict.lobby.ep1Desc;
+      if (ep2Badge) ep2Badge.innerText = dict.lobby.ep2Badge;
+      if (ep2Title) ep2Title.innerText = dict.lobby.ep2Title;
+      if (ep2Desc) ep2Desc.innerText = dict.lobby.ep2Desc;
+
+      updateLobbyResumeButton();
+    }
+
+    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API)] =================
     function speakDialogue(speaker, text) {
       if (!soundEnabled || !('speechSynthesis' in window)) return;
       try {
@@ -487,14 +632,24 @@
         if (!cleanText) return;
 
         const utterance = new SpeechSynthesisUtterance(cleanText);
-        utterance.lang = 'ko-KR';
-        if (ttsVoice) utterance.voice = ttsVoice;
+        const isEnglish = (currentLang === 'en');
+        utterance.lang = isEnglish ? 'en-US' : 'ko-KR';
+
+        const voices = window.speechSynthesis.getVoices();
+        if (isEnglish) {
+          const enVoice = voices.find(v => v.lang.startsWith('en')) || null;
+          if (enVoice) utterance.voice = enVoice;
+        } else {
+          const koVoice = voices.find(v => v.lang.includes('ko') || v.lang.includes('KO')) || null;
+          if (koVoice) utterance.voice = koVoice;
+        }
 
         // 화자별 AI 음성 톤앤매너 설정
-        if (speaker && speaker.includes('힘찬이')) {
+        const spk = speaker || '';
+        if (spk.includes('힘찬이') || spk.includes('Himchan')) {
           utterance.rate = 1.08;
           utterance.pitch = 1.18; // 밝고 친절한 AI 어시스턴트 톤
-        } else if (speaker && speaker.includes('김민우')) {
+        } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
           utterance.rate = 1.0;
           utterance.pitch = 0.95; // 청년 주인공의 자연스러운 톤
         } else {
@@ -633,7 +788,8 @@
       // 화자 네임플레이트
       const spkName = document.getElementById('speaker-name');
       const spkPlate = document.getElementById('speaker-plate');
-      if (spkName) spkName.innerText = scene.speaker;
+      const currentSpeaker = (currentLang === 'en' && scene.speaker_en) ? scene.speaker_en : scene.speaker;
+      if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
       // 하단 API / 법령 근거 배지 (API 또는 법령 데이터가 있을 때만 표출, 없으면 완전 숨김)
@@ -643,11 +799,15 @@
       const verifyBadge = document.getElementById('api-verify-badge');
 
       if (apiBadgeContainer) {
-        if (scene.isApi && scene.apiSource) {
+        const sourceVal = (currentLang === 'en' && scene.apiSource_en) ? scene.apiSource_en : scene.apiSource;
+        if (scene.isApi && sourceVal) {
           apiBadgeContainer.classList.remove('hidden');
-          if (apiBadgeText) apiBadgeText.innerText = scene.apiSource;
+          if (apiBadgeText) apiBadgeText.innerText = sourceVal;
           if (apiIcon) apiIcon.setAttribute('data-lucide', scene.apiIcon || 'database');
-          if (verifyBadge) verifyBadge.classList.remove('hidden');
+          if (verifyBadge) {
+            verifyBadge.innerText = (currentLang === 'en') ? "✓ Live Synced" : "✓ 실시간 연동";
+            verifyBadge.classList.remove('hidden');
+          }
         } else {
           apiBadgeContainer.classList.add('hidden');
           if (verifyBadge) verifyBadge.classList.add('hidden');
@@ -657,24 +817,20 @@
       // 상단 스텝 타이틀
       const topTitle = document.getElementById('top-step-title');
       if (topTitle) {
-        if (idx <= 3) topTitle.innerText = "STEP 1: 통지서 확인 & 스마트 일정 변경";
-        else if (idx === 4) topTitle.innerText = "STEP 2: 맞춤형 서류 및 사전 점검";
-        else if (idx === 5) topTitle.innerText = "STEP 3: 1층 로비 접수 & 카드 등록";
-        else if (idx === 6) topTitle.innerText = "STEP 4: 탈의실 환복 & 스마트 팔찌 착용";
-        else if (idx <= 9) topTitle.innerText = "STEP 5: 심리/임상/신체계측 정밀 검사";
-        else if (idx === 10) topTitle.innerText = "STEP 6: 전문의 정밀 진료 (정형외과)";
-        else topTitle.innerText = "STEP 7: 최종 판정 & 실시간 여비 정산";
+        const stepList = I18N[currentLang].steps;
+        topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
       }
 
       // 대사를 문단별(\n\n)로 분절하여 1~2줄씩 깔끔하게 끊어 출력
-      const rawFullText = formatSceneText(scene.text);
+      const baseSceneText = (currentLang === 'en' && scene.text_en) ? scene.text_en : scene.text;
+      const rawFullText = formatSceneText(baseSceneText);
       currentDialogueList = rawFullText.split('\n\n').map(s => s.trim()).filter(Boolean);
       if (currentDialogueList.length === 0) currentDialogueList = [rawFullText];
       currentDialogueIdx = 0;
 
       // 대화 기록 저장
       conversationHistory.push({
-        speaker: scene.speaker,
+        speaker: currentSpeaker,
         text: rawFullText,
         step: topTitle ? topTitle.innerText : ''
       });
@@ -1556,19 +1712,22 @@
       if (!btnContainer) return;
 
       const save = getSavedGameState();
+      const dict = I18N[currentLang];
       if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
-        let stepText = "STEP 1: 일정 변경";
-        if (save.sceneIdx === 4) stepText = "STEP 2: 구비서류 점검";
-        else if (save.sceneIdx === 5) stepText = "STEP 3: 1층 로비 접수";
-        else if (save.sceneIdx === 6) stepText = "STEP 4: 탈의실 환복";
-        else if (save.sceneIdx <= 9) stepText = "STEP 5: 정밀 신체검사";
-        else if (save.sceneIdx === 10) stepText = "STEP 6: 전문의 진료";
-        else if (save.sceneIdx >= 11) stepText = "STEP 7: 최종 판정";
+        let stepText = (currentLang === 'en') ? "STEP 1: Rescheduling" : "STEP 1: 일정 변경";
+        if (save.sceneIdx === 4) stepText = (currentLang === 'en') ? "STEP 2: Document Check" : "STEP 2: 구비서류 점검";
+        else if (save.sceneIdx === 5) stepText = (currentLang === 'en') ? "STEP 3: 1F Reception" : "STEP 3: 1층 로비 접수";
+        else if (save.sceneIdx === 6) stepText = (currentLang === 'en') ? "STEP 4: Locker Uniform" : "STEP 4: 탈의실 환복";
+        else if (save.sceneIdx <= 9) stepText = (currentLang === 'en') ? "STEP 5: Medical Exams" : "STEP 5: 정밀 신체검사";
+        else if (save.sceneIdx === 10) stepText = (currentLang === 'en') ? "STEP 6: Specialist Doctor" : "STEP 6: 전문의 진료";
+        else if (save.sceneIdx >= 11) stepText = (currentLang === 'en') ? "STEP 7: Final Adjudication" : "STEP 7: 최종 판정";
+
+        const savedText = (currentLang === 'en') ? `Saved at ${save.savedAt}` : `${save.savedAt} 저장됨`;
 
         if (badgeContainer) {
           badgeContainer.innerHTML = `
             <span class="px-2.5 py-1 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center gap-1 shadow-md">
-              <i data-lucide="bookmark" class="w-3 h-3 text-cyan-300"></i> ${save.savedAt} 저장됨
+              <i data-lucide="bookmark" class="w-3 h-3 text-cyan-300"></i> ${savedText}
             </span>
           `;
         }
@@ -1576,24 +1735,25 @@
         btnContainer.innerHTML = `
           <div class="space-y-2">
             <button onclick="resumeEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
-              <i data-lucide="play-circle" class="w-4 h-4 fill-white"></i> 이어서 플레이하기 (${stepText})
+              <i data-lucide="play-circle" class="w-4 h-4 fill-white"></i> ${dict.lobby.resumeBtn} (${stepText})
             </button>
             <button onclick="startEpisode(1, true)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 처음부터 다시 시작하기
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> ${dict.lobby.restartBtn}
             </button>
           </div>
         `;
       } else {
+        const playableText = (currentLang === 'en') ? "Playable" : "플레이 가능";
         if (badgeContainer) {
           badgeContainer.innerHTML = `
             <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md">
-              <span class="w-2 h-2 rounded-full bg-white"></span> 플레이 가능
+              <span class="w-2 h-2 rounded-full bg-white"></span> ${playableText}
             </span>
           `;
         }
         btnContainer.innerHTML = `
           <button onclick="startEpisode(1, true)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
-            <i data-lucide="play" class="w-4 h-4 fill-white"></i> 시나리오 시작하기
+            <i data-lucide="play" class="w-4 h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
       }
