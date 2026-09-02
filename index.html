@@ -442,7 +442,7 @@
       renderScene(currentSceneIdx + 1);
     }
 
-    // 위젯 렌더러
+    // 위젯 렌더러 (정통 비주얼 노벨 세로형 게임 선택지 UI)
     function renderWidget(type) {
       const area = document.getElementById('widget-area');
       if (!area || !type) return;
@@ -450,23 +450,49 @@
 
       if (type === 'CHOICE_SCHEDULE_CONSENT') {
         area.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <button onclick="renderScene(2)" class="p-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm text-white transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30">
-              <i data-lucide="calendar" class="w-4 h-4"></i> [추천] 네! 달력으로 공석을 확인해 볼래요
+          <div class="flex flex-col gap-2 w-full my-1.5">
+            <!-- 선택지 1: 추천 공석 달력 조회 -->
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(2);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-950/90 via-blue-900/60 to-slate-900/90 border border-blue-500/70 hover:border-cyan-400 hover:from-blue-900/90 hover:to-indigo-900/90 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between shadow-lg shadow-blue-950/60 cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-lg bg-blue-600/50 border border-blue-400/60 flex items-center justify-center text-xs font-black text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition">01</span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-extrabold text-xs sm:text-sm text-white group-hover:text-cyan-300 transition">네! 실시간 잔여석 달력으로 확인해 볼래요</span>
+                    <span class="px-2 py-0.5 text-[10px] font-black rounded-full bg-cyan-500/25 text-cyan-300 border border-cyan-400/50 animate-pulse">★ 추천</span>
+                  </div>
+                  <p class="text-[11px] text-blue-200/80 mt-0.5">원하는 날짜(오전/오후)를 자유롭게 선택하여 스마트 일정 변경</p>
+                </div>
+              </div>
+              <div class="flex items-center text-blue-400 group-hover:text-cyan-300 group-hover:translate-x-1 transition font-bold text-xs">
+                <span>선택</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-0.5"></i>
+              </div>
             </button>
-            <button onclick="renderScene(4)" class="p-3.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 rounded-xl font-semibold text-xs sm:text-sm text-slate-300 transition flex items-center justify-center gap-2">
-              <i data-lucide="check" class="w-4 h-4"></i> 괜찮아요. 통지된 날짜에 갈게요
+
+            <!-- 선택지 2: 기본 통지 일정 진행 -->
+            <button onclick="playBeep(600, 'triangle', 0.05); renderScene(4);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3 rounded-xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-500 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center text-xs font-bold text-slate-400 group-hover:bg-slate-700 group-hover:text-white transition">02</span>
+                <div>
+                  <span class="font-bold text-xs sm:text-sm text-slate-300 group-hover:text-white transition">괜찮아요. 통지된 기본 일정에 갈게요</span>
+                  <p class="text-[11px] text-slate-400 mt-0.5">지정된 통지 날짜 그대로 검사장 방문</p>
+                </div>
+              </div>
+              <div class="flex items-center text-slate-500 group-hover:text-slate-300 group-hover:translate-x-1 transition font-bold text-xs">
+                <span>선택</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 ml-0.5"></i>
+              </div>
             </button>
           </div>
         `;
       } else if (type === 'REGION_CALENDAR_PICKER') {
         area.innerHTML = `
-          <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700/80 space-y-3">
+          <div class="bg-slate-900/95 p-3 sm:p-4 rounded-xl border border-blue-500/50 space-y-2.5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span class="text-xs text-slate-300 font-semibold flex items-center gap-1.5">
-                <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 선택:
+              <span class="text-xs text-blue-300 font-bold flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-4 h-4 text-cyan-400"></i> 관할 지방병무청 선택:
               </span>
-              <select id="region-select" onchange="updateRegion(this.value)" class="bg-slate-950 border border-slate-600 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500">
+              <select id="region-select" onchange="updateRegion(this.value)" class="bg-slate-950 border border-slate-600 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 <option value="강원지방병무청">강원특별자치도 춘천시 (강원지방병무청)</option>
                 <option value="서울지방병무청">서울특별시 (서울지방병무청)</option>
                 <option value="부산지방병무청">부산·울산 (부산지방병무청)</option>
@@ -474,64 +500,90 @@
                 <option value="대구경북지방병무청">대구·경북 (대구경북지방병무청)</option>
               </select>
             </div>
-            <button onclick="openCalendarModal()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition">
-              <i data-lucide="calendar-search" class="w-4 h-4"></i> 실시간 월별 공석 달력 열기
+            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition transform hover:scale-[1.01]">
+              <i data-lucide="calendar-search" class="w-4 h-4 text-cyan-300"></i> 실시간 월별 잔여석 달력 열기
             </button>
           </div>
         `;
       } else if (type === 'CONTACT_CARD') {
         const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)" };
         area.innerHTML = `
-          <div class="bg-slate-900/95 border border-blue-500/50 rounded-xl p-4 space-y-3 shadow-xl">
+          <div class="bg-slate-900/95 border border-blue-500/50 rounded-xl p-3 sm:p-4 space-y-2.5 shadow-xl">
             <div class="flex items-center justify-between">
-              <span class="font-extrabold text-sm text-blue-300 flex items-center gap-1.5">
+              <span class="font-extrabold text-xs sm:text-sm text-cyan-300 flex items-center gap-1.5">
                 <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> ${userData.region} ${contact.dept || '병역판정검사과'}
               </span>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 font-bold">직통연결</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-bold">실시간 연동</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
-              <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i> ${contact.phone} (담당 주무관 직통)</div>
+              <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i> ${contact.phone} (직통)</div>
               <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i> ${contact.address}</div>
             </div>
-            <button onclick="renderScene(4)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/30">
-              선택 완료하고 서류 점검으로 이동 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/30">
+              선택 완료하고 구비서류 점검으로 이동 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
       } else if (type === 'HEALTH_CHECK_CHOICE') {
         area.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <button onclick="selectHealth('정형외과 수술/치료 이력')" class="p-3 bg-slate-900/90 hover:bg-slate-800 border border-blue-500/40 rounded-xl text-left text-xs transition flex items-center gap-2.5 shadow-md">
-              <i data-lucide="activity" class="w-5 h-5 text-blue-400 shrink-0"></i>
-              <div><p class="font-bold text-white">무릎/발목/척추 치료 이력</p><p class="text-[11px] text-slate-400 mt-0.5">병무용진단서+수술기록지+MRI CD 필수</p></div>
+          <div class="flex flex-col gap-2 w-full my-1">
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('정형외과 수술/치료 이력');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 rounded-xl bg-slate-900/90 hover:bg-blue-950/90 border border-blue-500/50 hover:border-cyan-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-5 h-5 rounded-md bg-blue-600/40 text-cyan-300 flex items-center justify-center text-[11px] font-black group-hover:bg-cyan-400 group-hover:text-black">1</span>
+                <div><p class="font-bold text-xs text-white group-hover:text-cyan-300">무릎 / 발목 / 척추 질환 및 수술 이력</p><p class="text-[10px] text-slate-400">병무용진단서 + 수술기록지 + MRI 영상 CD 필수</p></div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-blue-400 group-hover:text-cyan-300 group-hover:translate-x-1 transition"></i>
             </button>
-            <button onclick="selectHealth('시력/안과 질환')" class="p-3 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 rounded-xl text-left text-xs transition flex items-center gap-2.5 shadow-md">
-              <i data-lucide="eye" class="w-5 h-5 text-emerald-400 shrink-0"></i>
-              <div><p class="font-bold text-white">시력 교정술 및 안과 질환</p><p class="text-[11px] text-slate-400 mt-0.5">최근 안과 소견서/의무기록사본</p></div>
+
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('시력/안과 질환');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-emerald-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-400 flex items-center justify-center text-[11px] font-bold group-hover:bg-emerald-500 group-hover:text-black">2</span>
+                <div><p class="font-bold text-xs text-slate-200 group-hover:text-emerald-300">시력 교정술 및 안과 질환</p><p class="text-[10px] text-slate-400">최근 안과 소견서 / 의무기록사본 지참</p></div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-emerald-300 group-hover:translate-x-1 transition"></i>
             </button>
-            <button onclick="selectHealth('내과/복용약')" class="p-3 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 rounded-xl text-left text-xs transition flex items-center gap-2.5 shadow-md">
-              <i data-lucide="pill" class="w-5 h-5 text-amber-400 shrink-0"></i>
-              <div><p class="font-bold text-white">천식/아토피/지속 복용약</p><p class="text-[11px] text-slate-400 mt-0.5">처방전 및 6개월 이상 투약기록</p></div>
+
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-400 flex items-center justify-center text-[11px] font-bold group-hover:bg-amber-500 group-hover:text-black">3</span>
+                <div><p class="font-bold text-xs text-slate-200 group-hover:text-amber-300">천식 / 피부질환 / 만성 투약 질환</p><p class="text-[10px] text-slate-400">처방전 및 6개월 이상 지속 복용기록</p></div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-amber-300 group-hover:translate-x-1 transition"></i>
             </button>
-            <button onclick="selectHealth('건강 체질')" class="p-3 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 rounded-xl text-left text-xs transition flex items-center gap-2.5 shadow-md">
-              <i data-lucide="shield" class="w-5 h-5 text-purple-400 shrink-0"></i>
-              <div><p class="font-bold text-white">특별한 지병 없음 (건강)</p><p class="text-[11px] text-slate-400 mt-0.5">신분증만 지참하고 당일 참석</p></div>
+
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('건강 체질');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-purple-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-400 flex items-center justify-center text-[11px] font-bold group-hover:bg-purple-500 group-hover:text-black">4</span>
+                <div><p class="font-bold text-xs text-slate-200 group-hover:text-purple-300">특별한 지병 없음 (신체 건강)</p><p class="text-[10px] text-slate-400">신분증만 지참하고 당일 참석</p></div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-purple-300 group-hover:translate-x-1 transition"></i>
             </button>
           </div>
         `;
       } else if (type === 'NARA_CARD_CHOICE') {
         area.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="p-3.5 bg-slate-900/95 border border-yellow-500/40 rounded-xl space-y-2 text-xs shadow-lg">
-              <div class="flex justify-between items-center"><span class="font-bold text-yellow-400 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-4 h-4"></i> KB국민 나라사랑</span><span class="text-[10px] text-slate-400">군마트(PX) 20%</span></div>
-              <p class="text-slate-300 text-[11px]">• 대중교통 20% 청구할인, 스타벅스 15%</p>
-              <button onclick="selectCard('KB국민은행 나라사랑카드')" class="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-extrabold rounded-lg text-xs mt-1 transition">KB국민카드 등록</button>
-            </div>
-            <div class="p-3.5 bg-slate-900/95 border border-blue-500/40 rounded-xl space-y-2 text-xs shadow-lg">
-              <div class="flex justify-between items-center"><span class="font-bold text-blue-400 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-4 h-4"></i> IBK기업 나라사랑</span><span class="text-[10px] text-slate-400">편의점 10%</span></div>
-              <p class="text-slate-300 text-[11px]">• CU/GS25 10%, KTX/고속버스 5%</p>
-              <button onclick="selectCard('IBK기업은행 나라사랑카드')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-lg text-xs mt-1 transition">IBK기업카드 등록</button>
-            </div>
+          <div class="flex flex-col gap-2 w-full my-1.5">
+            <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 rounded-xl bg-gradient-to-r from-yellow-950/40 via-slate-900/90 to-slate-950/90 border border-yellow-500/50 hover:border-yellow-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between shadow-md">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center text-yellow-400"><i data-lucide="credit-card" class="w-4 h-4"></i></div>
+                <div>
+                  <div class="flex items-center gap-2"><span class="font-black text-xs sm:text-sm text-yellow-400 group-hover:text-yellow-300">KB국민 나라사랑카드</span><span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 font-bold">군마트 PX 20%</span></div>
+                  <p class="text-[11px] text-slate-300 mt-0.5">대중교통 20% 청구할인, 스타벅스 15%, 놀이공원 50%</p>
+                </div>
+              </div>
+              <span class="text-xs font-black px-3 py-1.5 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-slate-950 transition">선택</span>
+            </button>
+
+            <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 rounded-xl bg-gradient-to-r from-blue-950/40 via-slate-900/90 to-slate-950/90 border border-blue-500/50 hover:border-blue-400 transition-all duration-150 transform hover:translate-x-2 text-left flex items-center justify-between shadow-md">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400"><i data-lucide="credit-card" class="w-4 h-4"></i></div>
+                <div>
+                  <div class="flex items-center gap-2"><span class="font-black text-xs sm:text-sm text-blue-400 group-hover:text-blue-300">IBK기업 나라사랑카드</span><span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">편의점 10%</span></div>
+                  <p class="text-[11px] text-slate-300 mt-0.5">CU/GS25 10% 무제한, KTX/고속버스 5%, 어학시험 2천원</p>
+                </div>
+              </div>
+              <span class="text-xs font-black px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition">선택</span>
+            </button>
           </div>
         `;
       } else if (type === 'PSYCH_TEST_UI') {
