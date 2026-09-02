@@ -1,0 +1,7 @@
+﻿node_modules/
+*.mp3
+!assets/audio/*.mp3
+test_*.js
+fix_audio.py
+build_all_voice_audio.py
+scenario.json

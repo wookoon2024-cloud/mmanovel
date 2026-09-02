@@ -657,14 +657,68 @@
         window.speechSynthesis.onvoiceschanged = load;
       }
     }
+    // ================= [AI 남성 보이스 오디오 재생 & 폴백 엔진] =================
+    let currentVoiceAudio = null;
+    let availableVoices = [];
+
+    function initTTSVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const load = () => {
+        availableVoices = window.speechSynthesis.getVoices() || [];
+      };
+      load();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = load;
+      }
+    }
     initTTSVoices();
 
-    function speakDialogue(speaker, text) {
+    function stopVoiceAudio() {
+      if (currentVoiceAudio) {
+        try {
+          currentVoiceAudio.pause();
+          currentVoiceAudio.currentTime = 0;
+        } catch (e) {}
+        currentVoiceAudio = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function speakDialogue(speaker, text, audioKey = null) {
+      if (!soundEnabled) return;
+      stopVoiceAudio();
+
+      const langCode = (currentLang === 'en') ? 'en' : 'ko';
+      let audioPath = null;
+
+      if (audioKey) {
+        audioPath = `assets/audio/${audioKey}_${langCode}.mp3`;
+      } else if (typeof currentSceneIdx === 'number' && typeof currentDialogueIdx === 'number') {
+        audioPath = `assets/audio/voice_${currentSceneIdx}_${currentDialogueIdx}_${langCode}.mp3`;
+      }
+
+      if (audioPath) {
+        const audio = new Audio(audioPath);
+        currentVoiceAudio = audio;
+        audio.play().then(() => {
+          // 실제 Neural 남성 AI 오디오 MP3 재생 성공!
+        }).catch(() => {
+          // 오디오 로드 실패 시 Web Speech API 폴백 실행
+          speakWithWebSpeech(speaker, text);
+        });
+        return;
+      }
+
+      speakWithWebSpeech(speaker, text);
+    }
+
+    function speakWithWebSpeech(speaker, text) {
       if (!soundEnabled || !('speechSynthesis' in window)) return;
       try {
-        window.speechSynthesis.cancel(); // 이전 음성 즉시 중단
+        window.speechSynthesis.cancel();
         
-        // 읽기 전용 텍스트 정제 (특수문자, HTML 태그, 괄호 제거)
         const cleanText = text
           .replace(/<[^>]*>/g, ' ')
           .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※/g, ' ')
@@ -682,8 +736,6 @@
         }
 
         const spk = speaker || '';
-
-        // 헬퍼: 보이스 목록에서 특정 키워드를 포함하는 보이스 탐색
         const pickVoice = (voices, keywords) => {
           for (const kw of keywords) {
             const found = voices.find(v => v.name.toLowerCase().includes(kw.toLowerCase()));
@@ -692,7 +744,6 @@
           return null;
         };
 
-        // 네이티브 남성 보이스 여부 검사
         const isNativeMale = (v) => {
           if (!v) return false;
           return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|male|남성|guy|david|mark|george|ryan|james|brian|eric/i.test(v.name);
@@ -708,73 +759,29 @@
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
             utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.60;
-          } else if (spk.includes('수석판정관') || spk.includes('Adjudicator')) {
-            utterance.voice = pickVoice(enVoices, ['george', 'brian', 'christopher', 'male']) || enVoices[0] || null;
+          } else {
+            utterance.voice = pickVoice(enVoices, ['george', 'brian', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
             utterance.pitch = isNativeMale(utterance.voice) ? 0.65 : 0.40;
-          } else if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('Doctor')) {
-            utterance.voice = pickVoice(enVoices, ['eric', 'andrew', 'david', 'male']) || enVoices[0] || null;
-            utterance.rate = 0.92;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.78 : 0.50;
-          } else {
-            utterance.voice = pickVoice(enVoices, ['male', 'david']) || enVoices[0] || null;
-            utterance.rate = 0.96;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.88 : 0.55;
           }
         } else {
-          // 한국어 음성 탐색
           const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
-          
-          // Edge/Windows neural voices 및 Chrome 남성 보이스 탐색
           const injoonVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성']);
-          const bongjinVoice = pickVoice(koVoices, ['bongjin', '봉진']);
-          const gookminVoice = pickVoice(koVoices, ['gookmin', '국민', 'yunho', '윤호']);
-          const anyVoice = injoonVoice || bongjinVoice || gookminVoice || koVoices[0] || null;
+          const anyVoice = injoonVoice || koVoices[0] || null;
+          const hasMale = isNativeMale(anyVoice);
 
-          // 크롬(Google 한국의)이나 기본 여성 음성만 설치된 브라우저에서도
-          // 피치(Pitch)를 남성 성대 주파수(100Hz~130Hz) 대역으로 확실하게 낮춰 100% 완벽한 남성 음성 구현
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-            // 1. 힘찬이: 씩씩하고 밝은 청년 AI 가이드 남성 보이스
-            utterance.voice = injoonVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 1.08;
-            utterance.pitch = hasMale ? 1.15 : 0.60; // 여성 기본 음성일 때 0.60으로 씩씩한 청년 톤
-          } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
-            // 2. 김민우: 20대 대학생 청년 주인공 남성 보이스
-            utterance.voice = injoonVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 0.98;
-            utterance.pitch = hasMale ? 0.95 : 0.45; // 여성 기본 음성일 때 0.45로 확실하고 자연스러운 20대 청년 남성 톤
-          } else if (spk.includes('수석판정관') || spk.includes('Adjudicator')) {
-            // 3. 수석판정관: 묵직하고 엄숙한 50대 판정관 딥 베이스 남성 보이스
-            utterance.voice = gookminVoice || bongjinVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 0.86;
-            utterance.pitch = hasMale ? 0.65 : 0.25; // 확실하게 묵직한 중후한 초저음 딥 베이스
-          } else if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('Doctor')) {
-            // 4. 정형외과 전문의: 진중하고 신뢰감 있는 30~40대 의사 바리톤 남성 보이스
-            utterance.voice = bongjinVoice || gookminVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 0.92;
-            utterance.pitch = hasMale ? 0.78 : 0.35; // 차분하고 깊은 바리톤 남성 톤
-          } else if (spk.includes('의무관') || spk.includes('임상병리') || spk.includes('판정보조관') || spk.includes('Medical')) {
-            // 5. 의무관 & 보조관: 절도 있고 신속한 군 의료관 남성 보이스
-            utterance.voice = bongjinVoice || injoonVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 1.02;
-            utterance.pitch = hasMale ? 0.85 : 0.38; // 절도 있는 남성 톤
-          } else if (spk.includes('심리상담관') || spk.includes('진로상담') || spk.includes('상담관') || spk.includes('Counselor')) {
-            // 6. 상담관: 따뜻하고 지적인 남성 멘토 보이스
-            utterance.voice = injoonVoice || bongjinVoice || anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
-            utterance.rate = 0.95;
-            utterance.pitch = hasMale ? 0.90 : 0.42; // 부드러운 남성 톤
-          } else {
-            // 7. 기타 안내
             utterance.voice = anyVoice;
-            const hasMale = isNativeMale(utterance.voice);
+            utterance.rate = 1.08;
+            utterance.pitch = hasMale ? 1.15 : 0.60;
+          } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
+            utterance.voice = anyVoice;
             utterance.rate = 0.98;
-            utterance.pitch = hasMale ? 0.92 : 0.42;
+            utterance.pitch = hasMale ? 0.95 : 0.45;
+          } else {
+            utterance.voice = anyVoice;
+            utterance.rate = 0.88;
+            utterance.pitch = hasMale ? 0.65 : 0.25;
           }
         }
 
@@ -891,7 +898,7 @@
     }
 
     // 장소 이동 전 예고 대사를 대화창에 먼저 안내하고, 클릭 시 실제 장소 이동 실행
-    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx, speakerKo = "힘찬이 (병무청 AI 가이드)", speakerEn = "Himchan (MMA AI Guide)") {
+    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx, speakerKo = "힘찬이 (병무청 AI 가이드)", speakerEn = "Himchan (MMA AI Guide)", audioKey = null) {
       playBeep(750, 'triangle', 0.05);
       
       // 전환 안내 모드 활성화 및 이동 대상 씬 저장
@@ -918,8 +925,8 @@
       currentDialogueList = [formattedMsg];
       currentDialogueIdx = 0;
 
-      // TTS 음성 낭독 및 타이핑 효과 실행
-      speakDialogue(currentSpeaker, formattedMsg);
+      // 실제 남성 음성 오디오 또는 TTS 음성 낭독 실행
+      speakDialogue(currentSpeaker, formattedMsg, audioKey);
       typewriterEffect(formattedMsg, () => {
         if (autoPlay) {
           autoPlayTimer = setTimeout(() => {
@@ -2257,7 +2264,10 @@
       transitionWithAnnouncement(
         "좋습니다! 맞춤형 구비서류 점검까지 완벽하게 마쳤습니다.\n\n민우 님, 실제 검사 당일 긴장하거나 당황하지 않도록 지금 저와 함께 [가상 병역판정검사장]으로 이동해서 실제 신검 전 과정을 시뮬레이션 체험해 볼까요?",
         "Great! Tailored documents checked.\n\nMinwoo, to make sure you won't be nervous on exam day, shall we head to the [Virtual MMA Exam Center] and simulate the entire process together?",
-        5
+        5,
+        "힘찬이 (병무청 AI 가이드)",
+        "Himchan (MMA AI Guide)",
+        "ann_health"
       );
     }
     function selectCard(val) {
@@ -2265,7 +2275,10 @@
       transitionWithAnnouncement(
         "{cardType} 등록이 완료되었습니다! 이제 사물함에 소지품을 보관하고 전용 검사복으로 환복하기 위해 탈의실로 이동하겠습니다.",
         "{cardType} registered! Now let's move to the locker room to store your belongings and change into the examination uniform.",
-        6
+        6,
+        "힘찬이 (병무청 AI 가이드)",
+        "Himchan (MMA AI Guide)",
+        "ann_card"
       );
     }
     function updateRegion(val) {
