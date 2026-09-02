@@ -149,27 +149,71 @@ class MmaApiHandler(SimpleHTTPRequestHandler):
         # 1. 실시간 공석 API 엔드포인트
         if parsed.path == '/api/slots':
             office = params.get('office', ['강원지방병무청'])[0]
-            month = params.get('month', ['202610'])[0]
+            month_str = params.get('month', ['202610'])[0]
             
+            try:
+                y = int(month_str[:4])
+                m = int(month_str[4:])
+            except:
+                y, m = 2026, 10
+
+            schedules = {
+                "강원영동병무지청": {"open": [4, 5], "rec": 4, "alt": "강원지방병무청", "reason": "강원영동병무지청(강릉)은 연간 수검 인원 규모에 따라 매년 [4월 ~ 5월(2개월간)] 집중 수검 기간에만 자체 검사장을 운영합니다.\n\n현재 선택하신 월에는 강릉 검사장이 열리지 않으므로, 4~5월 일정을 선택하시거나 상시 운영되는 '강원지방병무청(춘천)'을 이용해 주세요."},
+                "제주지방병무청": {"open": [6, 7, 11], "rec": 6, "alt": None, "reason": "제주지방병무청은 도내 수검 대상자 일정에 맞춰 [6월 ~ 7월, 11월]에 집중 검사를 진행합니다.\n\n해당 월에는 검사 일정이 없으니, 6·7·11월 일정을 선택해 주세요."},
+                "충북지방병무청": {"open": [2, 3, 4, 7, 8, 9, 10], "rec": 10, "alt": None, "reason": "충북지방병무청(청주)은 분기별 지정 기간에 검사를 진행합니다."},
+                "전북지방병무청": {"open": [2, 3, 4, 5, 8, 9, 10, 11], "rec": 10, "alt": None, "reason": "전북지방병무청(전주)은 분기별 지정 기간에 검사를 진행합니다."}
+            }
+            sched = schedules.get(office, {"open": list(range(2, 13)), "rec": 10, "alt": None, "reason": "정기 검사 비운영 기간입니다."})
+
+            if y != 2026 or m not in sched["open"]:
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    "officeName": office,
+                    "year": y,
+                    "month": m,
+                    "isOpen": False,
+                    "reason": sched["reason"],
+                    "recommendMonth": sched["rec"],
+                    "recommendYear": 2026,
+                    "alternativeOffice": sched["alt"]
+                }, ensure_ascii=False).encode('utf-8'))
+                return
+
+            import calendar
+            first_day, total_days = calendar.monthrange(y, m)
+            # Python weekday: 0=Mon..6=Sun -> convert to JS: 0=Sun..6=Sat
+            js_first_day = (first_day + 1) % 7
+
             days = {}
-            for day in range(1, 32):
-                is_weekend = (day % 7 == 3 or day % 7 == 4)
+            office_seed = sum(ord(c) for c in office)
+            month_seed = (y * 100 + m) * 13 + office_seed
+
+            for day in range(1, total_days + 1):
+                day_of_week = (js_first_day + day - 1) % 7
+                is_weekend = (day_of_week == 0 or day_of_week == 6)
                 if is_weekend:
-                    days[day] = {"status": "휴무", "morning": 0, "afternoon": 0, "available": False}
-                elif day in [1, 7, 15]:
-                    days[day] = {"status": "마감", "morning": 0, "afternoon": 0, "available": False}
-                elif day == 29:
-                    days[day] = {"status": "예약가능", "morning": 12, "afternoon": 5, "available": True}
+                    days[day] = {"day": day, "dayOfWeek": day_of_week, "status": "휴무", "morning": 0, "afternoon": 0, "available": False}
                 else:
-                    days[day] = {"status": "예약가능", "morning": (day * 3) % 15 + 2, "afternoon": (day * 2) % 12 + 3, "available": True}
+                    h = (month_seed + day * 31) % 100
+                    if h < 18:
+                        days[day] = {"day": day, "dayOfWeek": day_of_week, "status": "마감", "morning": 0, "afternoon": 0, "available": False}
+                    else:
+                        morning = ((h * 7 + day) % 16) + 2
+                        afternoon = ((h * 13 + day * 3) % 14) + 1
+                        days[day] = {"day": day, "dayOfWeek": day_of_week, "status": "예약가능", "morning": morning, "afternoon": afternoon, "available": True}
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
             self.wfile.write(json.dumps({
                 "officeName": office,
-                "yearMonth": month,
-                "source": "공공데이터포털 - 병무청_병역판정 신체검사 정보 Open API (실시간)",
+                "year": y,
+                "month": m,
+                "isOpen": True,
+                "firstDay": js_first_day,
+                "totalDays": total_days,
                 "days": days
             }, ensure_ascii=False).encode('utf-8'))
             return

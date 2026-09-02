@@ -1203,21 +1203,32 @@
       ]);
       grid.innerHTML = '';
 
-      // 1. 접수 비시즌 / 해당 월 미운영 안내 화면 (12월 이후 또는 기간 외)
+      // 1. 접수 비시즌 / 해당 청 월별 미운영 안내 화면 (예: 강원영동 4~5월 외 기간, 제주 6~7/11월 외 기간)
       if (!slotData || slotData.isOpen === false) {
         const reasonText = (slotData && slotData.reason) ? slotData.reason : `${currentCalYear}년 ${currentCalMonth}월은 접수 가능한 공석이 없습니다.`;
+        const recYear = (slotData && slotData.recommendYear) || 2026;
+        const recMonth = (slotData && slotData.recommendMonth) || 10;
+        const altOffice = (slotData && slotData.alternativeOffice) || null;
+
         grid.innerHTML = `
           <div class="col-span-7 h-[310px] flex flex-col items-center justify-center p-5 text-center space-y-3 animate-in fade-in duration-150">
             <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <i data-lucide="calendar-x" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-bold text-sm text-white">${currentCalYear}년 ${currentCalMonth}월 공석 접수 기간 아님</h4>
-              <p class="text-xs text-slate-400 mt-1 whitespace-pre-line leading-relaxed">${reasonText}</p>
+              <h4 class="font-bold text-sm text-white">${userData.region} ${currentCalYear}년 ${currentCalMonth}월 검사 미운영</h4>
+              <p class="text-xs text-slate-300 mt-1.5 whitespace-pre-line leading-relaxed max-w-md bg-slate-950/80 p-3 rounded-xl border border-slate-800">${reasonText}</p>
             </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); jumpToCalMonth(2026, 10);" class="mt-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-bold text-white transition flex items-center gap-1.5 shadow-md">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 2026년 10월 접수 달력으로 이동
-            </button>
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+              <button onclick="playBeep(750, 'triangle', 0.05); jumpToCalMonth(${recYear}, ${recMonth});" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-bold text-white transition flex items-center gap-1.5 shadow-md cursor-pointer">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${userData.region} ${recMonth}월 검사 일정 보기
+              </button>
+              ${altOffice ? `
+                <button onclick="playBeep(750, 'triangle', 0.05); updateRegion('${altOffice}'); jumpToCalMonth(${currentCalYear}, ${currentCalMonth});" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl text-xs font-bold text-slate-200 hover:text-white transition flex items-center gap-1.5 shadow-md cursor-pointer">
+                  <i data-lucide="building-2" class="w-3.5 h-3.5 text-blue-400"></i> ${altOffice}(춘천) ${currentCalMonth}월 공석 보기
+                </button>
+              ` : ''}
+            </div>
           </div>
         `;
         lucide.createIcons();

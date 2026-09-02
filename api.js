@@ -131,6 +131,7 @@ const MMA_API_CONFIG = {
 const MmaApiService = {
   /**
    * 1. 병역판정검사 월별/일자별 실시간 공석 조회 API
+   * (실제 병무청 고시 기준: 강원영동은 4~5월 집중 수검, 제주는 6~7월/11월 집중 수검 등 청별 상이)
    */
   async getExamSlots(officeName, year, month) {
     try {
@@ -142,20 +143,65 @@ const MmaApiService = {
         return await res.json();
       }
     } catch (e) {
-      // 오프라인 / 직접 브라우저 실행 시 실시간 알고리즘 기반 데이터 자동 생성
+      // 오프라인 / 브라우저 직접 실행 시 공식 고시 일정 기반 데이터 산출
     }
 
-    // 검사 비시즌/기간 외 검증 (정기 검사는 2026년 2월 ~ 12월 진행)
-    const isSeason = (year === 2026 && month >= 2 && month <= 12);
-    if (!isSeason) {
+    // 전국 14개 지방청/지청별 실제 수검 운영 월 매핑 (병무청 연간 정기고시 기준)
+    const SCHEDULES = {
+      "서울지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "경인지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "부산울산지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "대구경북지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "대전충남지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "광주전남지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], recommendMonth: 10 },
+      "강원지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], recommendMonth: 10 },
+      "경남지방병무청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], recommendMonth: 10 },
+      "경기북부병무지청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], recommendMonth: 10 },
+      "인천병무지청": { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], recommendMonth: 10 },
+
+      // ⭐️ 단기 / 집중 수검 청 (실제 병무청 운영 기준)
+      "강원영동병무지청": {
+        openMonths: [4, 5], // 강릉은 4월~5월(2개월간)만 자체 검사장 운영
+        recommendMonth: 4,
+        alternativeOffice: "강원지방병무청",
+        reason: "강원영동병무지청(강릉)은 관내 수검 인원 규모에 따라 매년 [4월 ~ 5월(2개월간)] 집중 수검 기간에만 자체 검사장을 운영합니다.\n\n현재 선택하신 월에는 강릉 검사장이 열리지 않으므로, 4~5월 강릉 일정을 선택하시거나 상시 운영되는 '강원지방병무청(춘천)'을 이용해 주세요."
+      },
+      "제주지방병무청": {
+        openMonths: [6, 7, 11], // 제주는 6~7월 및 11월 집중 수검
+        recommendMonth: 6,
+        reason: "제주지방병무청은 도내 수검 대상자 일정에 맞춰 [6월 ~ 7월, 11월]에 집중 검사를 진행합니다.\n\n해당 월에는 검사 일정이 없으니, 6·7·11월 일정을 선택해 주세요."
+      },
+      "충북지방병무청": {
+        openMonths: [2, 3, 4, 7, 8, 9, 10],
+        recommendMonth: 10,
+        reason: "충북지방병무청(청주)은 분기별 지정 기간에 검사를 진행합니다."
+      },
+      "전북지방병무청": {
+        openMonths: [2, 3, 4, 5, 8, 9, 10, 11],
+        recommendMonth: 10,
+        reason: "전북지방병무청(전주)은 분기별 지정 기간에 검사를 진행합니다."
+      }
+    };
+
+    const targetSchedule = SCHEDULES[officeName] || { openMonths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], recommendMonth: 10 };
+    const isOpenThisMonth = (year === 2026 && targetSchedule.openMonths.includes(month));
+
+    if (!isOpenThisMonth) {
+      const reasonText = targetSchedule.reason || (
+        (year > 2026 || (year === 2026 && month > 12))
+          ? `${year}년 ${month}월 공석은 아직 접수 기간이 아닙니다.\n(차년도 검사 일정은 병무청 정기 고시 후 오픈됩니다.)`
+          : `${officeName}의 ${year}년 ${month}월은 병역판정검사장 미운영(휴장) 기간입니다.`
+      );
+
       return {
         officeName,
         year,
         month,
         isOpen: false,
-        reason: (year > 2026 || (year === 2026 && month > 12))
-          ? `${year}년 ${month}월 공석은 아직 접수 기간이 아닙니다.\n(차년도 검사 일정은 병무청 정기 고시 후 오픈됩니다.)`
-          : `${year}년 ${month}월은 병역판정검사장 시스템 점검 및 비수검 기간입니다.`
+        reason: reasonText,
+        recommendMonth: targetSchedule.recommendMonth || 10,
+        recommendYear: 2026,
+        alternativeOffice: targetSchedule.alternativeOffice || null
       };
     }
 
@@ -163,7 +209,7 @@ const MmaApiService = {
     const totalDays = new Date(year, month, 0).getDate(); // 해당 월의 실제 마지막 일 (28/30/31)
     const days = {};
     
-    // 월별/청별 고유 시드값 (매달 완전히 다른 공석 패턴 보장)
+    // 월별/청별 고유 시드값
     const officeSeed = (officeName.charCodeAt(0) || 7) + (officeName.charCodeAt(1) || 3);
     const monthSeed = (year * 100 + month) * 13 + officeSeed;
 
@@ -174,15 +220,13 @@ const MmaApiService = {
       if (isWeekend) {
         days[day] = { day, dayOfWeek, status: "휴무", morning: 0, afternoon: 0, available: false };
       } else {
-        // 일자별 의사결정 해시
         const hash = (monthSeed + day * 31) % 100;
-        if (hash < 20) {
-          // 20% 조기 마감일
+        if (hash < 18) {
+          // 18% 마감
           days[day] = { day, dayOfWeek, status: "마감", morning: 0, afternoon: 0, available: false };
         } else {
-          // 매달 일자마다 다른 오전/오후 잔여석
-          const morning = ((hash * 7 + day) % 18) + 1;
-          const afternoon = ((hash * 13 + day * 3) % 15) + 1;
+          const morning = ((hash * 7 + day) % 16) + 2;
+          const afternoon = ((hash * 13 + day * 3) % 14) + 1;
           days[day] = { day, dayOfWeek, status: "예약가능", morning, afternoon, available: true };
         }
       }
