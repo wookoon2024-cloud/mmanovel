@@ -1843,6 +1843,18 @@
         step: document.getElementById('top-step-title') ? document.getElementById('top-step-title').innerText : ''
       });
       speakDialogue(targetSpeaker, formattedTxt);
+
+      // currentDialogueList와 currentDialogueIdx를 일치시킴으로써 handleNextClick 시 대사 꼬임 방지
+      currentDialogueList = [{
+        speaker: speaker,
+        speaker_en: speakerEn,
+        plateClass: plateClass,
+        char: charSrc,
+        text: txt,
+        text_en: textEn
+      }];
+      currentDialogueIdx = 0;
+
       typewriterEffect(formattedTxt);
     }
 
@@ -1936,7 +1948,7 @@
         let branchBtn = "";
         if (hasDisease) {
           branchBtn = `
-            <button onclick="proceedFromBiometrics(10);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-blue-400/40">
+            <button onclick="goToScene(10);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-blue-400/40">
               <span>${isEn ? 'Move to Specialist Clinic' : '전문의 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
@@ -1950,7 +1962,7 @@
           );
         } else {
           branchBtn = `
-            <button onclick="proceedFromBiometrics(11);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-indigo-400/40">
+            <button onclick="goToScene(11);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-indigo-400/40">
               <span>${isEn ? 'Move to Aptitude Center' : '적성분류실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
