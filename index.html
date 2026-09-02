@@ -85,6 +85,9 @@
 
     <!-- 우측 인터랙션 퀵 컨트롤 버튼 -->
     <div class="flex items-center space-x-2 text-xs">
+      <button id="btn-speed" onclick="toggleSpeed()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-blue-300 font-bold shadow-md" title="대사 출력 속도 조절">
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> <span id="speed-label">1.0x</span>
+      </button>
       <button id="btn-sound" onclick="toggleSound()" class="p-1.5 sm:p-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1 shadow-md" title="사운드 On/Off">
         <i id="sound-icon" data-lucide="volume-2" class="w-4 h-4 text-blue-400"></i>
       </button>
@@ -251,6 +254,8 @@
     let autoPlay = false;
     let autoPlayTimer = null;
     let soundEnabled = true;
+    let currentSpeed = 1.0; // 기본 대사 속도 1.0x
+    const SPEED_INTERVALS = { 1.0: 38, 1.5: 22, 2.0: 10 };
 
     // 사용자 시뮬레이션 상태 저장소
     const userData = {
@@ -398,6 +403,7 @@
       isTyping = true;
 
       let i = 0;
+      const intervalMs = SPEED_INTERVALS[currentSpeed] || 38;
       typingInterval = setInterval(() => {
         if (i < text.length) {
           textElem.innerHTML += text[i] === '\n' ? '<br>' : text[i];
@@ -413,7 +419,7 @@
           if (nextIndicator) nextIndicator.classList.remove('hidden');
           if (callback) callback();
         }
-      }, 20);
+      }, intervalMs);
     }
 
     // 다음 클릭 (스킵 시에도 최하단으로 자동 스크롤)
@@ -780,6 +786,15 @@
     }
     function downloadCertMock() {
       alert("✅ [김민우 님 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!");
+    }
+
+    function toggleSpeed() {
+      if (currentSpeed === 1.0) currentSpeed = 1.5;
+      else if (currentSpeed === 1.5) currentSpeed = 2.0;
+      else currentSpeed = 1.0;
+
+      const label = document.getElementById('speed-label');
+      if (label) label.innerText = `${currentSpeed.toFixed(1)}x`;
     }
 
     function toggleSound() {
