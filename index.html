@@ -165,43 +165,52 @@
     </div>
   </div>
 
-  <!-- ================= [MODAL 1: 월별 실시간 공석 캘린더] ================= -->
+  <!-- ================= [MODAL 1: 월별 실시간 공석 캘린더 (고정 크기 & 게임 HUD 로딩)] ================= -->
   <div id="calendar-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between pb-3.5 border-b border-slate-700">
-        <div class="flex items-center gap-2">
-          <div class="p-2 rounded-lg bg-blue-600/20 text-blue-400"><i data-lucide="calendar" class="w-5 h-5"></i></div>
-          <h3 id="cal-modal-title" class="font-bold text-base sm:text-lg text-white">강원지방병무청 병역판정검사 실시간 공석 달력</h3>
+    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-cyan-500/50 rounded-2xl max-w-xl w-full h-[580px] p-5 sm:p-6 shadow-[0_0_50px_rgba(34,211,238,0.25)] relative flex flex-col justify-between animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- 상단 헤더 영역 -->
+      <div>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-xl bg-cyan-600/20 text-cyan-400 border border-cyan-400/30 shadow-[0_0_12px_rgba(34,211,238,0.2)]">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <h3 id="cal-modal-title" class="font-black text-sm sm:text-base text-white tracking-wide">강원지방병무청 병역판정검사 실시간 공석 달력</h3>
+          </div>
+          <button onclick="closeCalendarModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
-        <button onclick="closeCalendarModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+
+        <!-- 월 네비게이터 -->
+        <div class="flex items-center justify-between my-3 px-1">
+          <button onclick="changeCalMonth(-1)" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1 transition">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> 이전 달
+          </button>
+          <span id="cal-current-month" class="font-black text-base text-cyan-400 tracking-wider">2026년 10월</span>
+          <button onclick="changeCalMonth(1)" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1 transition">
+            다음 달 <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 요일 헤더 -->
+        <div class="grid grid-cols-7 gap-1 text-center text-xs font-black text-slate-400 mb-1.5">
+          <div class="text-rose-400">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div class="text-blue-400">토</div>
+        </div>
       </div>
 
-      <!-- 월 네비게이터 -->
-      <div class="flex items-center justify-between my-3.5 px-1">
-        <button onclick="changeCalMonth(-1)" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition">
-          <i data-lucide="chevron-left" class="w-4 h-4"></i> 이전 달
-        </button>
-        <span id="cal-current-month" class="font-extrabold text-base text-blue-400">2026년 10월</span>
-        <button onclick="changeCalMonth(1)" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition">
-          다음 달 <i data-lucide="chevron-right" class="w-4 h-4"></i>
-        </button>
-      </div>
+      <!-- 일자 그리드 (절대 불변 고정 높이 310px) -->
+      <div id="cal-days-grid" class="grid grid-cols-7 gap-1.5 text-xs h-[310px] min-h-[310px] max-h-[310px] overflow-hidden content-start"></div>
 
-      <!-- 요일 헤더 -->
-      <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-2">
-        <div class="text-rose-400">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div class="text-blue-400">토</div>
-      </div>
-
-      <!-- 일자 그리드 -->
-      <div id="cal-days-grid" class="grid grid-cols-7 gap-1.5 text-xs"></div>
-
-      <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+      <!-- 하단 상태 바 -->
+      <div class="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
         <div class="flex items-center gap-2 text-[11px]">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 예약가능
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 ml-2"></span> 마감
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-600 ml-2"></span> 휴무
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span> <span class="text-slate-300">예약가능</span>
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 ml-2 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span> <span class="text-slate-300">마감</span>
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-600 ml-2"></span> <span class="text-slate-400">휴무</span>
         </div>
-        <p class="text-[11px] text-blue-400 font-medium">원하는 날짜를 클릭하면 즉시 확정됩니다</p>
+        <p class="text-[11px] text-cyan-300 font-bold flex items-center gap-1">
+          <i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5"></i> 날짜 클릭 시 즉시 확정
+        </p>
       </div>
     </div>
   </div>
@@ -786,10 +795,27 @@
 
       const grid = document.getElementById('cal-days-grid');
       if (!grid) return;
-      grid.innerHTML = '<div class="col-span-7 text-center py-4 text-xs text-blue-400 animate-pulse">실시간 공공데이터 공석 현황 조회 중...</div>';
 
-      // API 비동기 공석 호출
-      const slotData = (typeof MmaApiService !== 'undefined') ? await MmaApiService.getExamSlots(userData.region, `2026${mIdx + 9}`) : null;
+      // 게임 HUD 실시간 API 로딩바 표출
+      grid.innerHTML = `
+        <div class="col-span-7 h-[310px] flex flex-col items-center justify-center space-y-3.5 animate-in fade-in duration-150">
+          <div class="flex items-center gap-2 text-cyan-300 font-black text-xs tracking-wider animate-pulse">
+            <i data-lucide="radio" class="w-4 h-4 text-cyan-400"></i>
+            <span>병무청 공공데이터 Open API 실시간 공석 동기화 중...</span>
+          </div>
+          <div class="w-72 bg-slate-950 rounded-full h-3 overflow-hidden border border-cyan-500/40 p-0.5 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
+            <div class="bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 h-full rounded-full animate-pulse w-full"></div>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono tracking-widest">CONNECTING: data.go.kr / MMA_SLOT_API</span>
+        </div>
+      `;
+      lucide.createIcons();
+
+      // API 비동기 공석 호출 + 자연스러운 HUD 딜레이
+      const [slotData] = await Promise.all([
+        (typeof MmaApiService !== 'undefined') ? MmaApiService.getExamSlots(userData.region, `2026${mIdx + 9}`) : null,
+        new Promise(resolve => setTimeout(resolve, 280))
+      ]);
       grid.innerHTML = '';
 
       for (let i = 1; i <= 31; i++) {
@@ -810,15 +836,16 @@
         }
 
         const dayCard = document.createElement('div');
-        dayCard.className = `p-2 rounded-lg border flex flex-col items-center justify-between min-h-[52px] ${
-          clickable ? 'bg-slate-800 hover:bg-blue-600/40 border-slate-700 hover:border-blue-400 cursor-pointer' : 'bg-slate-950/60 border-slate-800/40 opacity-50'
+        dayCard.className = `p-1 sm:p-1.5 rounded-lg border flex flex-col items-center justify-between h-[52px] transition-all duration-100 ${
+          clickable ? 'bg-slate-900/90 hover:bg-cyan-950/80 border-slate-700/80 hover:border-cyan-400 cursor-pointer shadow hover:shadow-[0_0_12px_rgba(34,211,238,0.25)] hover:scale-105' : 'bg-slate-950/60 border-slate-800/40 opacity-45'
         }`;
         dayCard.innerHTML = `
-          <span class="font-bold ${isWeekend ? 'text-slate-500' : 'text-slate-200'}">${i}</span>
-          <span class="text-[9px]">${statusTag}</span>
+          <span class="font-black text-xs ${isWeekend ? 'text-slate-500' : 'text-slate-200'}">${i}</span>
+          <span class="text-[9px] scale-90 sm:scale-100">${statusTag}</span>
         `;
         if (clickable) {
           dayCard.onclick = () => {
+            playBeep(750, 'triangle', 0.05);
             userData.examDate = `2026년 ${mIdx + 9}월 ${i}일 (목) 오전`;
             closeCalendarModal();
             renderScene(3);
