@@ -644,19 +644,6 @@
       updateLobbyResumeButton();
     }
 
-    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API - 캐릭터별 남성 보이스)] =================
-    let availableVoices = [];
-
-    function initTTSVoices() {
-      if (!('speechSynthesis' in window)) return;
-      const load = () => {
-        availableVoices = window.speechSynthesis.getVoices() || [];
-      };
-      load();
-      if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = load;
-      }
-    }
     // ================= [AI 남성 보이스 오디오 재생 & 폴백 엔진] =================
     let currentVoiceAudio = null;
     let availableVoices = [];
