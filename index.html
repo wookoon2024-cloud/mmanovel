@@ -325,15 +325,22 @@
       if (spkName) spkName.innerText = scene.speaker;
       if (spkPlate) spkPlate.className = `px-5 py-2 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-black text-sm sm:text-base shadow-2xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
-      // 하단 API / 스토리 배지
-      const apiBadge = document.getElementById('api-source-badge');
+      // 하단 API / 법령 근거 배지 (API 또는 법령 데이터가 있을 때만 표출, 없으면 완전 숨김)
+      const apiBadgeContainer = document.getElementById('api-badge-container');
+      const apiBadgeText = document.getElementById('api-source-badge');
       const apiIcon = document.getElementById('api-icon');
       const verifyBadge = document.getElementById('api-verify-badge');
-      if (apiBadge) apiBadge.innerText = scene.apiSource;
-      if (apiIcon) apiIcon.setAttribute('data-lucide', scene.apiIcon || 'database');
-      if (verifyBadge) {
-        if (scene.isApi) verifyBadge.classList.remove('hidden');
-        else verifyBadge.classList.add('hidden');
+
+      if (apiBadgeContainer) {
+        if (scene.isApi && scene.apiSource) {
+          apiBadgeContainer.classList.remove('hidden');
+          if (apiBadgeText) apiBadgeText.innerText = scene.apiSource;
+          if (apiIcon) apiIcon.setAttribute('data-lucide', scene.apiIcon || 'database');
+          if (verifyBadge) verifyBadge.classList.remove('hidden');
+        } else {
+          apiBadgeContainer.classList.add('hidden');
+          if (verifyBadge) verifyBadge.classList.add('hidden');
+        }
       }
 
       // 상단 스텝 타이틀

@@ -25,8 +25,7 @@ const SCENARIOS = [
     speaker: "김민우 (주인공)",
     plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
     text: "드디어 올 게 왔네...\n다음 주 수요일에 검사받으러 오라는데,\n그날 대학교 중간고사 첫날이잖아? 꼭 이 날짜에 가야 하는 건가...",
-    apiSource: "스토리: 병역판정검사 통지서 수령 (민우의 자취방)",
-    apiIcon: "book-open",
+    apiSource: null,
     isApi: false,
     widgetType: null
   },
