@@ -261,8 +261,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "신체계측기 리더기에 나라사랑카드를 태그하고 발판에 올라서면 되는 건가? 삑- 키와 몸무게를 정확히 재어보자!",
-        text_en: "I tap my card on the reader and step onto the platform? Beep- let's measure my height and weight accurately!"
+        text: "신체계측 발판 위에 올라서서 정자세로 바르게 서면 되는 거군요! 키와 몸무게를 정확히 재어보자.",
+        text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       },
       {
         speaker: "의무관 NPC",
@@ -270,8 +270,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "측정 발판 위에 정자세로 바르게 서 주시면 자동으로 측정이 진행됩니다.\n\n민우 님의 신장과 체중을 확인하고 3단계 기본검사를 진행해 볼까요?",
-        text_en: "Stand straight on the platform for automated measurement.\n\nLet's check your height and weight and proceed with the 3-step basic examination!"
+        text: "발뒤꿈치를 밀착하고 턱을 가볍게 당겨주시면 자동으로 측정이 진행됩니다.\n\n민우 님의 신장과 체중을 확인하고 3단계 기본검사를 진행해 볼까요?",
+        text_en: "Keep your heels together and tuck your chin slightly for automated measurement.\n\nLet's check your height and weight and proceed with the 3-step basic examination!"
       }
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",
