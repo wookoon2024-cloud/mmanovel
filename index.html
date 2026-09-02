@@ -1395,11 +1395,98 @@
           </div>
         `;
       } else if (type === 'LAB_ROOM_CONFIRM') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Pathology/X-ray Complete ➔ Move to Biometric Lab' : '임상병리/X-ray 완료 ➔ 자동 신체계측실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
+          <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+            
+            <!-- 상단 헤더 & 진행 바 -->
+            <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="flask-conical" class="w-4 h-4 text-teal-400"></i>
+                  <span id="lab-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Urine Test Kit Received' : '1단계: 임상병리실 접수 & 소변검사 키트 수령'}</span>
+                </div>
+                <span id="lab-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 font-semibold">1단계 / 총 4단계</span>
+              </div>
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                <div id="lab-progress-bar" class="bg-teal-500 h-full w-1/4 transition-all duration-300"></div>
+              </div>
+            </div>
+
+            <!-- [LAB STAGE 1: 임상병리 접수 & 키트 수령] -->
+            <div id="lab-stage-1" class="space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="flex items-center gap-2 text-teal-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="info" class="w-4 h-4"></i> 임상병리검사실 업무 안내
+                </div>
+                <p class="text-slate-300 leading-relaxed">
+                  간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등을 정밀하게 확인하기 위해 <strong>소변검사와 혈액검사(채혈)</strong>를 실시합니다.
+                </p>
+                <div class="p-2.5 rounded-lg bg-teal-950/40 border border-teal-500/30 text-teal-200">
+                  📋 <strong>나라사랑카드 태그 완료</strong>: 소변검사용 종이컵과 스틱을 수령했습니다.
+                </div>
+              </div>
+              <button onclick="goLabStep(2)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                <span>${isEn ? 'Proceed to Restroom for Urine Sampling ➔' : '소변 채취하러 화장실로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- [LAB STAGE 2: 화장실 소변 채취 가이드] -->
+            <div id="lab-stage-2" class="hidden space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="flex items-center gap-2 text-amber-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="alert-triangle" class="w-4 h-4"></i> 올바른 소변 채취 필수 수칙 (중간뇨 채취)
+                </div>
+                <div class="space-y-1.5 text-slate-300 leading-relaxed">
+                  <p>1️⃣ <strong>첫 소변(처음 1~2초)은 변기에 버리고</strong>, 반드시 <strong>'중간 소변'을 컵의 1/3~1/2 정도</strong> 받아주세요. (요도 입구 분비물로 인한 검사 오차 방지)</p>
+                  <p>2️⃣ 채취한 소변에 검사 스틱을 살짝 적신 후, 지정된 검체 보관함에 컵과 함께 안전하게 제출합니다.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-semibold">
+                  ✓ 중간뇨 채취 완료 & 검체 보관함 제출 준비 완료!
+                </div>
+              </div>
+              <button onclick="goLabStep(3)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                <span>${isEn ? 'Urine Sample Submitted ➔ Return for Blood Test' : '소변 검체 제출 완료 ➔ 채혈실로 복귀하기'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- [LAB STAGE 3: 채혈 진행 및 지혈 주의사항] -->
+            <div id="lab-stage-3" class="hidden space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="syringe" class="w-4 h-4"></i> 채혈(혈액검사) 진행 & 필수 지혈 요령
+                </div>
+                <p class="text-slate-300 leading-relaxed">
+                  전날 밤 10시 이후 금식(혈당·지질 수치 왜곡 방지) 상태를 확인하고 안전하게 혈액 검체를 채취했습니다.
+                </p>
+                <div class="p-2.5 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-200 font-semibold leading-relaxed">
+                  ⚠️ <strong>[절대 주의]</strong> 채혈 부위의 알코올 솜을 절대 문지르지 마시고, <strong>손가락으로 5분간 꾹 눌러서 지혈</strong>해 주세요! (문지르면 혈관이 터져 피멍이 들 수 있습니다)
+                </div>
+              </div>
+              <button onclick="goLabStep(4)" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                <span>${isEn ? '5-Min Pressure Applied ➔ Move to Chest X-Ray' : '5분간 꾹 눌러 지혈 완료 ➔ 흉부 X-ray 촬영실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- [LAB STAGE 4: 흉부 X-ray 촬영 및 최종 이동] -->
+            <div id="lab-stage-4" class="hidden space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="flex items-center gap-2 text-indigo-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i> 흉부 X-ray 촬영 (영상의학)
+                </div>
+                <p class="text-slate-300 leading-relaxed">
+                  "숨을 깊게 들이마시고 참으세요! (찰칵)"<br>
+                  결핵 및 흉부 질환 유무 판독 결과, 이상 소견 없이 정상입니다.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-semibold">
+                  ✓ 소변검사, 혈액검사(채혈), 흉부 X-ray 전산 등록 완료!
+                </div>
+              </div>
+              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                <span>${isEn ? 'Pathology/X-ray Complete ➔ Move to Biometric Lab' : '임상병리/X-ray 완료 ➔ 자동 신체계측실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
           </div>
         `;
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
@@ -1564,6 +1651,54 @@
       if (submitBtn) {
         submitBtn.classList.remove('hidden');
         submitBtn.classList.add('flex');
+      }
+      lucide.createIcons();
+    }
+
+    function goLabStep(step) {
+      playBeep(650, 'triangle', 0.03);
+      const isEn = (currentLang === 'en');
+      const st1 = document.getElementById('lab-stage-1');
+      const st2 = document.getElementById('lab-stage-2');
+      const st3 = document.getElementById('lab-stage-3');
+      const st4 = document.getElementById('lab-stage-4');
+      const title = document.getElementById('lab-step-title');
+      const badge = document.getElementById('lab-step-badge');
+      const pBar = document.getElementById('lab-progress-bar');
+      const bgImg = document.getElementById('bg-image');
+
+      if (st1) st1.classList.add('hidden');
+      if (st2) st2.classList.add('hidden');
+      if (st3) st3.classList.add('hidden');
+      if (st4) st4.classList.add('hidden');
+
+      if (step === 2) {
+        if (st2) {
+          st2.classList.remove('hidden');
+          st2.classList.add('animate-in', 'fade-in');
+        }
+        if (title) title.innerText = isEn ? '2. Restroom Urine Sampling Guide' : '2단계: 화장실 이동 & 소변(중간뇨) 채취';
+        if (badge) badge.innerText = isEn ? 'Step 2 / 4 Steps' : '2단계 / 총 4단계';
+        if (pBar) pBar.style.width = '50%';
+        if (bgImg) bgImg.style.backgroundImage = "url('assets/restroom.jpg')";
+      } else if (step === 3) {
+        if (st3) {
+          st3.classList.remove('hidden');
+          st3.classList.add('animate-in', 'fade-in');
+        }
+        if (title) title.innerText = isEn ? '3. Blood Sampling & Pressure Dressing' : '3단계: 채혈실 복귀 & 혈액 검사 및 지혈 요령';
+        if (badge) badge.innerText = isEn ? 'Step 3 / 4 Steps' : '3단계 / 총 4단계';
+        if (pBar) pBar.style.width = '75%';
+        if (bgImg) bgImg.style.backgroundImage = "url('assets/lab_room.jpg')";
+      } else if (step === 4) {
+        if (st4) {
+          st4.classList.remove('hidden');
+          st4.classList.add('animate-in', 'fade-in');
+        }
+        if (title) title.innerText = isEn ? '4. Chest X-Ray Imaging Complete' : '4단계: 흉부 X-ray 촬영 (영상의학)';
+        if (badge) badge.innerText = isEn ? 'Step 4 / 4 Steps' : '4단계 / 총 4단계';
+        if (pBar) pBar.style.width = '100%';
+        if (bgImg) bgImg.style.backgroundImage = "url('assets/lab_room.jpg')";
       }
       lucide.createIcons();
     }

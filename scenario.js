@@ -152,7 +152,7 @@ const SCENARIOS = [
     widgetType: "PSYCH_TEST_UI"
   },
 
-  // [SCENE 8] 임상병리검사실 및 영상의학실 - 채혈·소변검사 & 흉부 X-ray
+  // [SCENE 8] 임상병리검사실 및 영상의학실 - 소변·혈액 채취 & 흉부 X-ray
   {
     bg: "assets/lab_room.jpg",
     char: "assets/doctor.png",
@@ -160,10 +160,10 @@ const SCENARIOS = [
     speaker: "임상병리사 NPC",
     speaker_en: "Clinical Pathologist NPC",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-    text: "간기능, 혈당, 단백뇨 등을 확인하기 위해 소변 검사와 채혈을 진행하고, 흉부 X-ray 촬영을 마쳤습니다.\n\n이제 자동 신체계측실로 이동하여\n키와 몸무게(BMI), 혈압을 측정하겠습니다.",
-    text_en: "We have collected urine and blood samples to check liver function, blood sugar, and proteinuria, and completed your chest X-ray.\n\nNow, let's move to the automated biometric measurement room to measure your height, weight (BMI), and blood pressure.",
-    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」 [별표 1] 신장·체중 판정기준",
-    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 1] Height & Weight Standards",
+    text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등 체내 주요 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n먼저 [나라사랑카드]를 리더기에 태그한 후, 소변검사 키트를 챙겨 화장실에서 소변을 채취해 오셔야 합니다.",
+    text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests to evaluate liver/kidney functions, blood glucose, proteinuria, and blood disorders.\n\nFirst, tap your [Nara Sarang Card] on the reader, receive your urine test kit, and proceed to the restroom to collect your sample!",
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
+    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
     apiIcon: "scale",
     isApi: true,
     widgetType: "LAB_ROOM_CONFIRM"
