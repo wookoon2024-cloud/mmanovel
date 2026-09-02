@@ -245,14 +245,7 @@ const MmaApiService = {
   /**
    * 3. 국가법령정보센터 질환별 구비서류 및 판정기준 조회 API
    */
-  async getLawCriteria(category) {
-    try {
-      const res = await fetch(`${MMA_API_CONFIG.BACKEND_BASE_URL}/law?category=${encodeURIComponent(category)}`, {
-        signal: AbortSignal.timeout(1500)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
-
+  getLawCriteriaSync(category) {
     const criteriaMap = {
       "정형외과 수술/치료 이력": {
         lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
@@ -276,6 +269,17 @@ const MmaApiService = {
       }
     };
     return criteriaMap[category] || criteriaMap["건강 체질"];
+  },
+
+  async getLawCriteria(category) {
+    try {
+      const res = await fetch(`${MMA_API_CONFIG.BACKEND_BASE_URL}/law?category=${encodeURIComponent(category)}`, {
+        signal: AbortSignal.timeout(1500)
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+
+    return this.getLawCriteriaSync(category);
   },
 
   /**

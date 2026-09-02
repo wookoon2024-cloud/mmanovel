@@ -424,6 +424,8 @@
     let soundEnabled = true;
     let currentSpeed = 1.0; // 기본 대사 속도 1.0x
     const SPEED_INTERVALS = { 1.0: 38, 1.5: 22, 2.0: 10 };
+    let isAnnouncement = false;
+    let pendingTransitionSceneIdx = null;
 
     // 사용자 시뮬레이션 상태 저장소
     const userData = {
@@ -737,13 +739,13 @@
       overlay.classList.remove('opacity-0', 'pointer-events-none');
       overlay.classList.add('opacity-100', 'pointer-events-auto');
 
-      // 로딩 게이지 바 2.3초 전진 애니메이션 (약 2.5초 소요)
+      // 로딩 게이지 바 0.9초 전진 애니메이션
       setTimeout(() => {
-        bar.style.transition = 'width 2.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        bar.style.transition = 'width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)';
         bar.style.width = '100%';
-      }, 50);
+      }, 30);
 
-      // 로딩 2.6초 후 씬 적용 및 페이드 아웃 (2~3초 대기)
+      // 로딩 1.1초 후 씬 적용 및 페이드 아웃
       setTimeout(() => {
         onComplete();
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
@@ -751,49 +753,24 @@
         setTimeout(() => {
           bar.style.transition = 'none';
           bar.style.width = '0%';
-        }, 400);
-      }, 2600);
+        }, 300);
+      }, 1100);
     }
 
-    // 장소 이동 전 예고 대사를 먼저 출력하고 클릭/엔터 시 실제 장소 이동 실행
-    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx, speakerKo = "힘찬이 (병무청 AI 가이드)", speakerEn = "Himchan (MMA AI Guide)") {
+    // 선택 완료 후 다음 씬으로 즉시 전환 실행
+    function transitionWithAnnouncement(announcementKo, announcementEn, nextSceneIdx) {
       playBeep(750, 'triangle', 0.05);
       
-      // 중앙 선택지 창 닫기
+      // 중앙 선택지 창 완전히 닫기 및 초기화
       const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
       }
+      if (choiceContainer) choiceContainer.innerHTML = '';
 
-      // 화자 설정
-      const spkName = document.getElementById('speaker-name');
-      const currentSpeaker = (currentLang === 'en') ? speakerEn : speakerKo;
-      if (spkName) spkName.innerText = currentSpeaker;
-
-      // 대사 포맷팅
-      const rawMsg = (currentLang === 'en') ? announcementEn : announcementKo;
-      const formattedMsg = formatSceneText(rawMsg);
-      currentDialogueList = [formattedMsg];
-      currentDialogueIdx = 0;
-
-      // TTS 음성 낭독 및 타이핑 효과 실행
-      speakDialogue(currentSpeaker, formattedMsg);
-      typewriterEffect(formattedMsg, () => {
-        const proceed = () => {
-          document.removeEventListener('click', proceed);
-          renderScene(nextSceneIdx);
-        };
-        setTimeout(() => {
-          document.addEventListener('click', proceed, { once: true });
-        }, 150);
-
-        if (autoPlay) {
-          autoPlayTimer = setTimeout(() => {
-            renderScene(nextSceneIdx);
-          }, 2400);
-        }
-      });
+      renderScene(nextSceneIdx);
     }
 
     // 실제 씬 화면 업데이트 및 대사 출력
@@ -804,10 +781,12 @@
 
       // 중앙 선택지 오버레이 숨김 초기화
       const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
       }
+      if (choiceContainer) choiceContainer.innerHTML = '';
 
       // 배경 변경
       const bgImg = document.getElementById('bg-image');
@@ -1213,8 +1192,8 @@
                 <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-yellow-500/20 cursor-pointer">
                   <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://card.kbcard.com/CRD/DVIEW/PCDCXCARDRC0064?mainCC=a&cooperationcode=09244" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-yellow-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : '공식 상세 혜택 보기 ↗'}
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-yellow-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : '나라사랑포털 혜택 안내 ↗'}
                 </a>
               </div>
             </div>
@@ -1270,8 +1249,8 @@
                 <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-500/25 cursor-pointer">
                   <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://www.ibk.co.kr/card/detail.ibk?pageId=CA01010000&prdc_cd=CR0000000343" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-blue-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : '공식 상세 혜택 보기 ↗'}
+                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-blue-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : 'IBK 공식 혜택 보기 ↗'}
                 </a>
               </div>
             </div>
@@ -1421,10 +1400,19 @@
       }
     }
 
-    async function selectHealth(val) {
+    function selectHealth(val) {
+      // 선택 즉시 오버레이 숨김
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
       userData.healthCheck = val;
       if (typeof MmaApiService !== 'undefined') {
-        const criteria = await MmaApiService.getLawCriteria(val);
+        const criteria = MmaApiService.getLawCriteriaSync ? MmaApiService.getLawCriteriaSync(val) : null;
         if (criteria) {
           userData.lawRef = criteria.lawRef;
           userData.expectedGrade = criteria.expectedGrade;
