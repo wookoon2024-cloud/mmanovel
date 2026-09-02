@@ -135,7 +135,7 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 심리검사장 (전산실) - 1차 인지능력 및 인성검사 (병무청 검사관)
+  // [SCENE 7] 심리검사장 - 1차 인지능력 및 인성검사 (병무청 검사관)
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
@@ -143,7 +143,7 @@ const SCENARIOS = [
     speaker: "병무청 검사관 NPC",
     speaker_en: "MMA Testing Officer NPC",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-    text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장(전산실)입니다.\n\n약 100여 대의 전산 컴퓨터가 마련되어 있으며, 배정받은 좌석에 착석 후 [나라사랑카드]를 모니터 앞 리더기에 태그하여 검사를 시작합니다.\n\n심리검사는 크게 2가지로 구성됩니다:\n① 1차 인지능력검사: 언어, 수리, 공간지각 등 기초 인지능력 측정\n② 1차 인성검사: 성격 특성, 정서적 안정성 및 군 복무 적합도 종합 평가\n(추가로 본인의 신체/정신건강 상태를 체크하는 질병상태문진표도 함께 작성합니다)\n\n💡 [핵심 꿀팁]: 신검 방문 전, 병무청 누리집(mwpt.mma.go.kr)이나 모바일 e-병무지갑 앱에서 [병역판정 심리검사 사전 실시]를 미리 작성하고 오시면 현장에서 검사 시간을 크게 단축하실 수 있습니다!\n\n그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
+    text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n약 100여 대의 컴퓨터가 마련되어 있으며, 배정받은 좌석에 착석 후 [나라사랑카드]를 모니터 앞 리더기에 태그하여 검사를 시작합니다.\n\n심리검사는 크게 2가지로 구성됩니다:\n① 1차 인지능력검사: 언어, 수리, 공간지각 등 기초 인지능력 측정\n② 1차 인성검사: 성격 특성, 정서적 안정성 및 군 복무 적합도 종합 평가\n(추가로 본인의 신체/정신건강 상태를 체크하는 질병상태문진표도 함께 작성합니다)\n\n💡 [핵심 꿀팁]: 신검 방문 전, 병무청 누리집(mwpt.mma.go.kr)이나 모바일 e-병무지갑 앱에서 [병역판정 심리검사 사전 실시]를 미리 작성하고 오시면 현장에서 검사 시간을 크게 단축하실 수 있습니다!\n\n그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
     text_en: "Welcome examinees! This is the Psychological Testing Hall, the first official station.\n\nWith over 100 computer terminals, take your assigned seat and tap your [Nara Sarang Card] on the card reader to begin.\n\nThe test consists of:\n① 1st Cognitive Aptitude Test: basic verbal, numerical, spatial reasoning\n② 1st Personality Test: personality traits, emotional stability, and military adaptability\n(A medical condition questionnaire is also completed)\n\n💡 [Pro Tip]: You can complete the [Pre-exam Psychological Test] online beforehand on the MMA portal (mwpt.mma.go.kr) or e-MMA Wallet app to save substantial time on-site!\n\nNow, let's solve sample questions on screen.",
     apiSource: "국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",

@@ -505,7 +505,7 @@
           "STEP 2: 맞춤형 서류 및 사전 점검",
           "STEP 3: 로비 접수 & 카드 등록",
           "STEP 4: 탈의실 환복 & 카드 지참",
-          "STEP 5: 심리검사장 (전산실)",
+          "STEP 5: 심리검사장",
           "STEP 5: 임상병리 및 영상의학",
           "STEP 5: 자동 신체계측 & 기초검사",
           "STEP 6: 과목별 전문의 정밀 진료",
@@ -725,8 +725,8 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else if (newScene.bg.includes('exam_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장(전산실)으로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "1차 인지능력 및 인성검사 (전산 PC 평가)";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장으로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "1차 인지능력 및 인성검사 (전산 평가)";
         if (icon) icon.setAttribute('data-lucide', 'brain');
       } else if (newScene.bg.includes('lab_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Pathology & Radiology Room..." : "임상병리검사실 및 영상의학실로 이동 중...";
