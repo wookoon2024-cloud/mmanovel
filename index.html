@@ -261,12 +261,12 @@
         </div>
       </div>
 
-      <!-- 메인 고정형 대화 박스 (높이 고정: 155px~175px) -->
-      <div class="relative bg-slate-950/90 backdrop-blur-2xl border border-slate-700 rounded-2xl rounded-tl-none p-4 sm:p-5 vn-box-glow h-[155px] sm:h-[175px] flex flex-col justify-between cursor-pointer" onclick="handleNextClick()">
+      <!-- 메인 고정형 대화 박스 (높이: 165px~185px) -->
+      <div class="relative bg-slate-950/92 backdrop-blur-2xl border border-slate-700/90 rounded-2xl rounded-tl-none p-4 sm:p-5 vn-box-glow h-[165px] sm:h-[185px] flex flex-col justify-between cursor-pointer" onclick="handleNextClick()">
         
-        <!-- 대사 텍스트 컨테이너 (자동 상향 스크롤) -->
+        <!-- 대사 텍스트 컨테이너 -->
         <div id="dialogue-scroll-container" class="flex-1 overflow-y-auto custom-scroll pr-1.5 scroll-smooth">
-          <div id="dialogue-box" class="text-slate-100 text-sm sm:text-base md:text-[17px] leading-relaxed tracking-normal font-normal whitespace-pre-line select-text">
+          <div id="dialogue-box" class="text-slate-100 text-sm sm:text-base md:text-[16px] leading-relaxed tracking-normal font-normal whitespace-pre-line select-text">
             <p id="dialogue-text"></p>
           </div>
         </div>
@@ -660,7 +660,7 @@
         .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
     }
 
-    // Typewriter 효과 (실시간 자동 상향 스크롤)
+    // Typewriter 효과 (상단 기준 고정 출력, 타이핑 중 강제 자동 스크롤 제거)
     function typewriterEffect(text, callback) {
       clearInterval(typingInterval);
       const textElem = document.getElementById('dialogue-text');
@@ -678,38 +678,48 @@
       typingInterval = setInterval(() => {
         if (i < text.length) {
           textElem.innerHTML += text[i] === '\n' ? '<br>' : text[i];
-          if (scrollContainer) {
-            scrollContainer.scrollTop = scrollContainer.scrollHeight;
-          }
           if (i % 3 === 0) playBeep(560, 'sine', 0.025);
           i++;
         } else {
           clearInterval(typingInterval);
           isTyping = false;
-          if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
           if (nextIndicator) nextIndicator.classList.remove('hidden');
           if (callback) callback();
         }
       }, intervalMs);
     }
 
-    // 다음 클릭 (스킵 시에도 최하단으로 자동 스크롤)
+    // 다음 클릭 (1클릭: 타이핑 즉시 완료 & 첫 줄부터 표시 / 2클릭: 긴 대사 아래로 스크롤 / 3클릭: 다음 대사로 진행)
     function handleNextClick() {
       const scrollContainer = document.getElementById('dialogue-scroll-container');
+      const scene = SCENARIOS[currentSceneIdx];
+      const textElem = document.getElementById('dialogue-text');
+      const nextIndicator = document.getElementById('next-indicator');
+
+      // 1. 타이핑 진행 중에 화면 클릭 시: 타이핑 즉시 완료하고 전체 텍스트를 상단부터 표시
       if (isTyping) {
         clearInterval(typingInterval);
-        const scene = SCENARIOS[currentSceneIdx];
-        const textElem = document.getElementById('dialogue-text');
-        const nextIndicator = document.getElementById('next-indicator');
-        if (textElem) textElem.innerHTML = formatSceneText(scene.text).replace(/\n/g, '<br>');
+        if (textElem && scene) textElem.innerHTML = formatSceneText(scene.text).replace(/\n/g, '<br>');
         isTyping = false;
-        if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        if (scrollContainer) scrollContainer.scrollTop = 0;
         if (nextIndicator) nextIndicator.classList.remove('hidden');
-        renderWidget(scene.widgetType);
+        renderWidget(scene ? scene.widgetType : null);
         return;
       }
-      const scene = SCENARIOS[currentSceneIdx];
-      if (scene && scene.widgetType) return; // 선택지 입력 대기
+
+      // 2. 타이핑 완료 후 화면 클릭 시: 만약 아래쪽에 아직 안 읽은 스크롤 내용이 남아있다면 부드럽게 아래로 스크롤
+      if (scrollContainer) {
+        const remainingScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight - scrollContainer.scrollTop;
+        if (remainingScroll > 24) {
+          scrollContainer.scrollBy({ top: scrollContainer.clientHeight * 0.7, behavior: 'smooth' });
+          return;
+        }
+      }
+
+      // 3. 더 이상 스크롤할 내용이 없고 선택지 위젯이 있다면 사용자 인터랙션 대기
+      if (scene && scene.widgetType) return;
+
+      // 4. 다음 장면으로 부드럽게 진행
       renderScene(currentSceneIdx + 1);
     }
 
