@@ -175,8 +175,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-        text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n배정받은 좌석에 착석 후 모니터 앞 리더기에 [나라사랑카드]를 태그하여 검사를 시작해 주세요.",
-        text_en: "Welcome examinees! This is the Psychological Testing Hall.\n\nPlease take your seat and tap your Nara Sarang Card on the reader to begin."
+        text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n배정받은 좌석 모니터 화면에 본인의 성명과 주민등록번호를 입력하여 로그인해 주세요.",
+        text_en: "Welcome examinees! This is the Psychological Testing Hall.\n\nPlease log in by entering your name and Resident Registration Number on your monitor screen."
       },
       {
         speaker: "김민우 (주인공)",
@@ -184,8 +184,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "모니터 앞 리더기에 나라사랑카드를 태그하면 되는 건가? 삑- 1차 인지능력검사와 인성검사 화면이 떴네!",
-        text_en: "I tap my card on the monitor reader? Beep- Cognitive and Personality test screens appeared!"
+        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나! 엔터- 1차 인지능력검사와 인성검사 화면이 떴네.",
+        text_en: "I log in by typing my name and ID number on the keyboard! Enter- Cognitive and Personality test screens appeared."
       },
       {
         speaker: "병무청 검사관 NPC",
@@ -218,8 +218,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨 등 체내 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n먼저 입구 리더기에 [나라사랑카드]를 태그해 주세요.",
-        text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests to evaluate organ functions and overall health.\n\nFirst, please tap your [Nara Sarang Card] on the card reader."
+        text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨 등 체내 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n검사실 앞 리더기에 [나라사랑카드]를 태그해 주세요.",
+        text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests. Please tap your [Nara Sarang Card] on the reader."
       },
       {
         speaker: "김민우 (주인공)",
@@ -227,8 +227,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "입구 리더기에 나라사랑카드를 태그하면 되는 건가? 삑- 접수 완료됐네!\n\n검사관님이 주신 소변검사 키트를 챙겨서 우측 화장실로 가보자.",
-        text_en: "I just tap my Nara Sarang Card on the reader? Beep- registration done!\n\nLet's take the urine test kit and head to the restroom."
+        text: "여기서부터 나라사랑카드를 태그하는 거구나! 삑- 소변검사용 종이컵과 스틱을 받았어. 화장실로 가보자.",
+        text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick. Let's head to the restroom."
       }
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",

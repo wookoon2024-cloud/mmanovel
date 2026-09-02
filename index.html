@@ -1482,9 +1482,6 @@
                 <p class="text-slate-300 leading-relaxed">
                   간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등을 정밀하게 확인하기 위해 <strong>소변검사와 혈액검사(채혈)</strong>를 실시합니다.
                 </p>
-                <div class="p-2.5 rounded-lg bg-teal-950/40 text-teal-200">
-                  📋 <strong>나라사랑카드 태그 완료</strong>: 소변검사용 종이컵과 스틱을 수령했습니다.
-                </div>
               </div>
               <button onclick="goLabStep(2)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
                 <span>${isEn ? 'Proceed to Restroom for Urine Sampling ➔' : '소변 채취하러 화장실로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -1500,9 +1497,6 @@
                 <div class="space-y-1.5 text-slate-300 leading-relaxed">
                   <p>1️⃣ <strong>첫 소변(처음 1~2초)은 변기에 버리고</strong>, 반드시 <strong>'중간 소변'을 컵의 1/3~1/2 정도</strong> 받아주세요. (요도 입구 분비물로 인한 검사 오차 방지)</p>
                   <p>2️⃣ 채취한 소변에 검사 스틱을 살짝 적신 후, 지정된 검체 보관함에 컵과 함께 안전하게 제출합니다.</p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 text-emerald-300 font-semibold">
-                  ✓ 중간뇨 채취 완료 & 검체 보관함 제출 준비 완료!
                 </div>
               </div>
               <button onclick="goLabStep(3)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
@@ -1538,9 +1532,6 @@
                   "숨을 깊게 들이마시고 참으세요! (찰칵)"<br>
                   결핵 및 흉부 질환 유무 판독 결과, 이상 소견 없이 정상입니다.
                 </p>
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 text-emerald-300 font-semibold">
-                  ✓ 소변검사, 혈액검사(채혈), 흉부 X-ray 전산 등록 완료!
-                </div>
               </div>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
                 <span>${isEn ? 'Pathology/X-ray Complete ➔ Move to Basic Exam Lab' : '임상병리/X-ray 완료 ➔ 기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -1721,7 +1712,8 @@
       const spriteImg = document.getElementById('sprite-img');
       const spriteWrap = document.getElementById('sprite-wrapper');
 
-      if (spName) spName.innerText = isEn ? (speakerEn || speaker) : speaker;
+      const targetSpeaker = isEn ? (speakerEn || speaker) : speaker;
+      if (spName) spName.innerText = targetSpeaker;
       if (spPlate) {
         spPlate.className = `px-4 py-1.5 rounded-t-xl text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide select-none bg-gradient-to-r ${plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       }
@@ -1734,7 +1726,16 @@
       }
 
       const txt = isEn ? (textEn || text) : text;
-      typeText(txt);
+      const formattedTxt = formatSceneText(txt);
+      
+      // 대사 기록 저장 및 TTS 음성 + 타이핑 실행
+      conversationHistory.push({
+        speaker: targetSpeaker,
+        text: formattedTxt,
+        step: document.getElementById('top-step-title') ? document.getElementById('top-step-title').innerText : ''
+      });
+      speakDialogue(targetSpeaker, formattedTxt);
+      typewriterEffect(formattedTxt);
     }
 
     // 기본 신체계측 3단계 순차 진행 함수
@@ -1766,8 +1767,8 @@
           "Minwoo Kim (Protagonist)",
           "from-slate-700 to-slate-900 border-slate-500/40",
           "assets/minwoo.png",
-          "자동 혈압계에 오른팔을 쑥 넣었어. 계측 중에는 말을 하거나 움직이지 말고 편안하게 호흡해야 혈압이 정확하게 측정된다고 하셨지.",
-          "Put my right arm into the automatic blood pressure monitor. I need to breathe comfortably without moving or speaking for accurate measurement."
+          "키와 몸무게 측정이 끝났네. 옆에 있는 자동 혈압계에 오른팔을 쑥 넣었어. 호흡을 편안하게 유지해야 혈압이 정확하게 측정된댔지.",
+          "Height and weight measurement done. Inserted my right arm into the automatic blood pressure monitor. Keeping calm for accurate reading."
         );
       } else if (step === 3) {
         if (st3) {
@@ -1783,8 +1784,8 @@
           "Medical Officer NPC",
           "from-teal-700 to-emerald-800 border-teal-400/40",
           "assets/doctor.png",
-          "한쪽 눈 가리개로 시력표 5m 전방을 측정했습니다. 좌 1.0 / 우 1.0 정상이며 색신 책자 판독도 정상입니다! 이제 종합 계측 결과를 확인하세요.",
-          "Measured visual acuity at 5 meters. Both eyes 1.0 normal and color vision normal! Check your comprehensive biometric results."
+          "혈압 120/80 정상입니다! 이어서 5m 전방 시력표와 색신 책자 검사를 진행했습니다. 좌 1.0 / 우 1.0 정상입니다. 이제 실시간 BMI 종합 계측 결과를 확인해 볼까요?",
+          "Blood pressure 120/80 is normal! Measured eyesight and color vision, both eyes 1.0 normal. Let's check your real-time BMI and biometric summary!"
         );
         calculateBMI();
       }
@@ -1954,7 +1955,7 @@
           "Minwoo Kim (Protagonist)",
           "from-slate-700 to-slate-900 border-slate-500/40",
           "assets/minwoo.png",
-          "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하면 되는 거지!",
+          "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하자!",
           "Arrived at the restroom. I discard the first 1-2 seconds of urine, collect the midstream urine in 1/3 of the cup, and submit it into the specimen box!"
         );
       } else if (step === 3) {
@@ -1972,8 +1973,8 @@
           "Clinical Pathologist NPC",
           "from-teal-700 to-emerald-800 border-teal-400/40",
           "assets/doctor.png",
-          "채혈이 완료되었습니다! ⚠️ 알코올 솜을 문지르면 멍이 들 수 있으니 5분간 꾹 눌러서 완전히 지혈해 주세요. 이제 영상의학실로 이동하여 흉부 X-ray를 촬영합니다.",
-          "Blood sampling complete! ⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising. Now let's move to Chest X-ray imaging."
+          "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다. ⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
+          "Urine sample confirmed! Now collecting blood sample. ⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
         );
       } else if (step === 4) {
         if (st4) {
@@ -1990,8 +1991,8 @@
           "Radiologist NPC",
           "from-teal-700 to-emerald-800 border-teal-400/40",
           "assets/doctor.png",
-          "흉부 X-ray 촬영대에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! 찰칵! 촬영이 모두 끝났습니다. 다음 검사인 신체계측실로 이동합니다.",
-          "Please place your chest firmly against the X-ray board. Deep breath in and hold it! Click! Imaging complete. Proceed to Biometric Lab."
+          "흉부 X-ray 촬영대 앞에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! (찰칵) 촬영이 모두 끝났습니다. 다음 검사인 [기본검사실]로 이동합니다.",
+          "Please stand firmly against the X-ray board. Deep breath in and hold it! (Click) Imaging complete. Proceed to the Basic Examination Room."
         );
       }
       lucide.createIcons();
