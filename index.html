@@ -107,7 +107,7 @@
   </header>
 
   <!-- ================= [LAYER 2.5: 게임 메인 타이틀 & 시나리오 선택 로비] ================= -->
-  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 overflow-y-auto custom-scroll animate-in fade-in duration-200">
+  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 overflow-y-auto custom-scroll">
     
     <!-- 로비 상단 바 -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-800 pb-4 max-w-5xl w-full mx-auto">
@@ -120,9 +120,8 @@
           <h1 class="text-base sm:text-lg font-bold text-white">병무 행정 인터랙티브 시뮬레이션</h1>
         </div>
       </div>
-      <div class="flex items-center gap-2 text-xs text-slate-300 bg-slate-900 border border-slate-700/80 px-3.5 py-1.5 rounded-full">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span>공공데이터 및 국가법령 실시간 연동</span>
+      <div class="text-xs text-slate-400">
+        공공데이터포털(data.go.kr) & 국가법령정보센터 연동
       </div>
     </div>
 
@@ -140,14 +139,14 @@
         </p>
       </div>
 
-      <!-- 에피소드 카드 2종 (직관적인 세로형 포스터 카드 레이아웃) -->
+      <!-- 에피소드 카드 2종 (정적인 세로형 포스터 카드) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-4xl w-full mx-auto pt-2">
         
         <!-- CARD 1: 제1화 병역판정검사 (정식 플레이 가능) -->
-        <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-400 overflow-hidden flex flex-col shadow-2xl transition-all duration-200 transform hover:-translate-y-2">
+        <div class="rounded-3xl bg-slate-900 border border-slate-700/80 overflow-hidden flex flex-col shadow-xl">
           <!-- 포스터 이미지 영역 (상단 세로 3:4 프레임) -->
           <div class="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-slate-950">
-            <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition duration-300 group-hover:scale-105">
+            <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40"></div>
             
             <!-- 이미지 상단 배지 -->
@@ -155,8 +154,8 @@
               <span class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
                 제1화 · 병역판정검사 편
               </span>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-500/90 text-white text-xs font-bold flex items-center gap-1.5 shadow-md">
-                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> 플레이 가능
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md">
+                <span class="w-2 h-2 rounded-full bg-white"></span> 플레이 가능
               </span>
             </div>
           </div>
@@ -164,7 +163,7 @@
           <!-- 하단 설명 및 버튼 영역 -->
           <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
             <div>
-              <h3 class="text-lg sm:text-xl font-black text-white group-hover:text-blue-300 transition tracking-tight">
+              <h3 class="text-lg sm:text-xl font-black text-white tracking-tight">
                 청춘의 첫 관문, 병역판정검사
               </h3>
               <p class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
@@ -179,17 +178,17 @@
               <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#실시간여비</span>
             </div>
 
-            <button onclick="startEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg transition transform hover:scale-[1.01] cursor-pointer">
+            <button onclick="startEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
               <i data-lucide="play" class="w-4 h-4 fill-white"></i> 시나리오 시작하기
             </button>
           </div>
         </div>
 
         <!-- CARD 2: 제2화 예비군 훈련 (준비 중) -->
-        <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-amber-500/60 overflow-hidden flex flex-col shadow-xl transition-all duration-200 opacity-85 hover:opacity-100">
+        <div class="rounded-3xl bg-slate-900/70 border border-slate-800 overflow-hidden flex flex-col shadow-lg opacity-85">
           <!-- 포스터 이미지 영역 (상단 세로 3:4 프레임) -->
           <div class="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-slate-950">
-            <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top transition duration-300 group-hover:scale-105 opacity-90">
+            <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50"></div>
             
             <!-- 이미지 상단 배지 -->
@@ -197,7 +196,7 @@
               <span class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide shadow-md">
                 제2화 · 예비군 훈련 편
               </span>
-              <span class="px-2.5 py-1 rounded-full bg-slate-800/90 border border-slate-600 text-slate-300 text-xs font-bold flex items-center gap-1.5">
+              <span class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-xs font-bold flex items-center gap-1.5">
                 <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> 오픈 준비 중
               </span>
             </div>
@@ -206,7 +205,7 @@
           <!-- 하단 설명 및 버튼 영역 -->
           <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
             <div>
-              <h3 class="text-lg sm:text-xl font-black text-slate-200 group-hover:text-amber-300 transition tracking-tight">
+              <h3 class="text-lg sm:text-xl font-black text-slate-200 tracking-tight">
                 슬기로운 예비군 훈련 생활
               </h3>
               <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
@@ -232,8 +231,8 @@
 
     <!-- 로비 하단 정보 바 -->
     <div class="text-center pt-4 border-t border-slate-800 text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span>대한민국 병무청 (MMA) 공공데이터 활용 시뮬레이션</span>
-      <span>공공데이터포털(data.go.kr) & 국가법령정보센터(law.go.kr) API 연계</span>
+      <span>대한민국 병무청 (MMA)</span>
+      <span>모의 체험 시뮬레이션 서비스</span>
     </div>
 
   </div>
