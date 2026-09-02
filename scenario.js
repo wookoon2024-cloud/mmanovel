@@ -315,22 +315,22 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 적성분류실 (병역진로설계 & 군 특기 분류) - 정상 1~2급 수검자 분기 (자신감 넘치는 민우)
+  // [SCENE 11] 적성분류실 (군 특기 및 병과 적성 분류) - 정상 1~2급 수검자 분기
   {
-    bg: "assets/career_center.jpg",
+    bg: "assets/aptitude_room.jpg",
     char: "assets/doctor.png",
-    speaker: "병역진로상담관 NPC",
-    speaker_en: "Military Career Counselor NPC",
+    speaker: "적성분류관 NPC",
+    speaker_en: "Aptitude Classification Officer NPC",
     plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
     dialogues: [
       {
-        speaker: "병역진로상담관 NPC",
-        speaker_en: "Military Career Counselor NPC",
+        speaker: "적성분류관 NPC",
+        speaker_en: "Aptitude Classification Officer NPC",
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
-        text: "김민우 님 반갑습니다! 이곳은 [적성분류실 및 병역진로설계센터]입니다.\n\n기본 신체검사 결과를 바탕으로 수검자의 전공, 보유 자격증, 적성검사 결과를 종합하여 가장 적합한 [군 특기(병과)]를 1:1로 맞춤 추천하고 분류해 드리는 곳입니다.",
-        text_en: "Welcome Minwoo Kim! This is the [Aptitude Classification & Military Career Center].\n\nWe match and recommend military specialties based on your major, licenses, and aptitude test results."
+        text: "김민우 님 반갑습니다! 이곳은 [적성분류실]입니다.\n\n수검자의 전공, 보유 자격·면허, 심리검사 결과를 종합하여 군 복무 시 가장 적합한 [군 특기(병과)]를 1:1로 맞춤 분류하고 전산에 부여해 드리는 곳입니다.",
+        text_en: "Welcome Minwoo Kim! This is the [Aptitude Classification Section].\n\nWe classify and assign your military specialty based on your college major, licenses, and aptitude test results."
       },
       {
         speaker: "김민우 (주인공)",
@@ -342,8 +342,8 @@ const SCENARIOS = [
         text_en: "I am majoring in Computer Science / Software in college. Can I serve in a military specialty related to my major?"
       },
       {
-        speaker: "병역진로상담관 NPC",
-        speaker_en: "Military Career Counselor NPC",
+        speaker: "적성분류관 NPC",
+        speaker_en: "Aptitude Classification Officer NPC",
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
@@ -351,8 +351,8 @@ const SCENARIOS = [
         text_en: "Certainly! We have classified your military aptitude for Army IT/SW Developer or Air Force Information Systems Specialist.\n\nNow, let's proceed to the Chief Adjudicator office for your final result and travel allowance settlement!"
       }
     ],
-    apiSource: "공공데이터포털: 병무청_병역진로설계 맞춤 군특기 추천 데이터",
-    apiSource_en: "Public Data Portal: MMA Military Career Design Recommended Specialties Data",
+    apiSource: "국가법령정보센터: 「병역법」 제14조의2 (적성분류 및 군특기 부여 기준)",
+    apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 14-2 (Aptitude Classification)",
     apiIcon: "database",
     isApi: true,
     widgetType: "APTITUDE_CONFIRM"

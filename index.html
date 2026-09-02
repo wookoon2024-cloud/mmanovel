@@ -510,7 +510,7 @@
           "STEP 5: 임상병리 및 영상의학",
           "STEP 5: 기본검사실 (신체계측·혈압·시력)",
           "STEP 6: 과목별 전문의 정밀 진료",
-          "STEP 6: 적성분류실 (병역진로설계)",
+          "STEP 6: 적성분류실 (군 특기 적성 분류)",
           "STEP 7: 수석판정관실 (최종 판정 & 여비)",
           "STEP 8: 탈의실 환복 & 소지품 회수",
           "STEP 9: 집 도착 & 제1화 완결"
@@ -744,8 +744,8 @@
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
-      } else if (bg.includes('career_center') || targetIdx === 11) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude & Military Career Center..." : "적성분류실 (병역진로설계)로 이동 중...";
+      } else if (bg.includes('aptitude_room') || bg.includes('career_center') || targetIdx === 11) {
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude Classification Room..." : "적성분류실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
         if (icon) icon.setAttribute('data-lucide', 'compass');
       } else if (bg.includes('adjudicator_room') || targetIdx === 12) {
@@ -1602,7 +1602,7 @@
                 <i data-lucide="compass" class="w-5 h-5"></i>
               </div>
               <div>
-                <h4 class="font-bold text-sm text-white">${isEn ? '1:1 Military Career Design Complete' : '1:1 맞춤형 병역진로설계 추천 완료'}</h4>
+                <h4 class="font-bold text-sm text-white">${isEn ? '1:1 Military Specialty Assignment Complete' : '1:1 맞춤형 군 특기 적성 분류 완료'}</h4>
                 <p class="text-xs text-slate-400">${isEn ? 'Matched specialties based on major & skills' : '전공(컴퓨터SW) 및 자격증 연계 최적 특기 부여'}</p>
               </div>
             </div>
