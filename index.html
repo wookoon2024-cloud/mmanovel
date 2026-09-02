@@ -1079,9 +1079,19 @@
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
         if (nextIndicator) nextIndicator.classList.remove('hidden');
-        if (isLastChunk) {
+        
+        // 위젯이 아직 렌더링되지 않은 경우에만 마지막 대사에서 1회 렌더링
+        const choiceOverlay = document.getElementById('center-choice-overlay');
+        const isOverlayOpen = choiceOverlay && !choiceOverlay.classList.contains('hidden');
+        if (isLastChunk && !isOverlayOpen) {
           renderWidget(scene ? scene.widgetType : null);
         }
+        return;
+      }
+
+      // 위젯이 활성화되어 열려있는 상태라면 화면 클릭으로 씬이나 대사를 넘기지 않고 위젯 버튼 인터랙션 대기
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay && !choiceOverlay.classList.contains('hidden')) {
         return;
       }
 
@@ -1811,16 +1821,16 @@
       let descText = "";
 
       if (bmi >= 18.5 && bmi < 25.0) {
-        gradeText = "신체등급 1급 (정상 체형)";
+        gradeText = "기본검사 예상: 1급";
         descText = "신장·체중 BMI 정상 범위입니다. 혈압(120/80) 및 시력(1.0/1.0) 모두 양호합니다.";
       } else if (bmi >= 25.0 && bmi < 30.0) {
-        gradeText = "신체등급 2급 (과체중 경계)";
+        gradeText = "기본검사 예상: 2급";
         descText = "과체중 2급 기준에 해당하며 혈압 및 시력 기초 건강 상태는 양호합니다.";
       } else if (bmi >= 35.0 || bmi < 16.0) {
-        gradeText = "신체등급 4급 (보충역 대상)";
+        gradeText = "기본검사 예상: 4급";
         descText = "국방부령에 따라 BMI 35 이상(고도비만)은 4급 기준이며, 100~120일 후 불시 체중 재측정 대상입니다.";
       } else {
-        gradeText = "신체등급 3급";
+        gradeText = "기본검사 예상: 3급";
         descText = "체질량지수 3급 기준에 해당합니다.";
       }
 
@@ -1828,41 +1838,63 @@
 
       const resBox = document.getElementById('bmi-result-box');
       if (resBox) {
-        // 질환 서류 보유 여부 검사 (Step 2에서 질환을 선택했는지 확실하게 플래그 검사)
         const hasDisease = (userData.hasDisease === true);
         const isEn = (currentLang === 'en');
 
-        let branchHtml = "";
+        let branchBtn = "";
         if (hasDisease) {
-          branchHtml = `
-            <div class="p-2.5 rounded-lg bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs">
-              ⚠️ <strong>[질환 서류 지참자 분기]</strong>: 민우 님이 사전 등록하신 <strong>[${userData.healthCheck || '정형외과 수술 서류'}]</strong>가 확인되었습니다. 전문의 정밀 판정을 위해 진료실로 이동합니다.
-            </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(10);" class="w-full mt-1.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>${isEn ? 'Move to Specialist Clinic' : '과목별 전문의 정밀 진료실로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          branchBtn = `
+            <button onclick="proceedFromBiometrics(10);" class="w-full mt-2 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+              <span>${isEn ? 'Proceed to Specialist Doctor Clinic' : '과목별 전문의 정밀 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
+          updateDialogueDirect(
+            "의무관 NPC",
+            "Medical Officer NPC",
+            "from-teal-700 to-emerald-800 border-teal-400/40",
+            "assets/doctor.png",
+            `기본검사 계측이 완료되었습니다. 사전에 등록하신 [${userData.healthCheck || '정형외과 수술 서류'}]의 정밀 심사를 위해 [과목별 전문의 정밀 진료실]로 이동해 주세요!`,
+            `Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your [${userData.healthCheck || 'Orthopedic Surgery Records'}].`
+          );
         } else {
-          branchHtml = `
-            <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs">
-              ✅ <strong>[정상 수검자 분기]</strong>: 기본 신체검사 결과 모든 항목이 정상(1급)입니다! 군 특기 분류 및 병역진로설계를 위해 적성분류실로 이동합니다.
-            </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full mt-1.5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>${isEn ? 'Move to Aptitude Classification Center' : '적성분류실 (군 특기 및 병역진로설계)로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          branchBtn = `
+            <button onclick="proceedFromBiometrics(11);" class="w-full mt-2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+              <span>${isEn ? 'Proceed to Aptitude Classification Center' : '적성분류실 (군 특기 및 병역진로설계)로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
+          updateDialogueDirect(
+            "의무관 NPC",
+            "Medical Officer NPC",
+            "from-teal-700 to-emerald-800 border-teal-400/40",
+            "assets/doctor.png",
+            "기본검사 결과 신장·체중(BMI), 혈압, 시력 모두 정상 1급 예상입니다! 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
+            "Basic biometric exam complete! All items normal Grade 1. Please proceed to the Aptitude Classification Center for military specialty assignment."
+          );
         }
 
         resBox.innerHTML = `
           <div class="space-y-2">
-            <div class="flex justify-between font-bold"><span class="text-teal-300">BMI: ${bmi} (혈압·시력 정상)</span><span class="text-amber-400">${gradeText}</span></div>
+            <div class="flex justify-between font-bold items-center"><span class="text-teal-300">BMI: ${bmi} (혈압·시력 정상)</span><span class="text-amber-400 font-extrabold text-xs sm:text-sm">${gradeText}</span></div>
             <p class="text-[11px] text-slate-300">${descText}</p>
-            ${branchHtml}
+            ${branchBtn}
           </div>
         `;
         resBox.classList.remove('hidden');
         lucide.createIcons();
       }
+    }
+
+    // 기본검사 완료 후 안전 이동 함수
+    function proceedFromBiometrics(targetSceneIdx) {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+      renderScene(targetSceneIdx);
     }
 
     function checkPsychQ1(choice) {
