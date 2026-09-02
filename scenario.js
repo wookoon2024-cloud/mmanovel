@@ -173,14 +173,40 @@ const SCENARIOS = [
   {
     bg: "assets/body_measure_room.jpg",
     char: "assets/doctor.png",
-    charPos: "right",
     speaker: "의무관 NPC",
     speaker_en: "Medical Officer NPC",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-    text: "측정 발판에 올라서 주세요.\n\n본인의 키와 몸무게를 입력해\n실시간 BMI 체질량지수 판정을 확인해 보세요!",
-    text_en: "Please step onto the measurement platform.\n\nEnter your height and weight to check your real-time BMI Body Mass Index evaluation!",
-    apiSource: "국가법령정보센터: 「검사규칙」 [별표 1] 및 신장·체중 불시 재측정 규정",
-    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 1] & Random Re-measurement Policy",
+    dialogues: [
+      {
+        speaker: "의무관 NPC",
+        speaker_en: "Medical Officer NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        text: "김민우 님 들어오세요! 이곳은 [자동 신체계측실]입니다.\n\n최첨단 자동 계측기를 통해 신장(키), 체중(몸무게), 혈압, 시력을 전산으로 정밀 측정하여 신체등급의 핵심 기준인 체질량지수(BMI)를 판정하는 곳입니다.",
+        text_en: "Minwoo Kim, please come in! This is the [Automated Biometric Measurement Room].\n\nWe measure your height, weight, blood pressure, and eyesight using automated precision instruments to calculate your Body Mass Index (BMI)."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "아, 여기서 키와 몸무게를 재는군요! 나라사랑카드를 먼저 모니터 리더기에 태그하면 되나요?",
+        text_en: "Ah, this is where height and weight are measured! Do I tap my Nara Sarang Card on the monitor reader first?"
+      },
+      {
+        speaker: "의무관 NPC",
+        speaker_en: "Medical Officer NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        text: "네 맞습니다! 카드를 태그하시고, 측정 발판 위에 정자세로 바르게 올라서 주세요.\n\n발뒤꿈치를 밀착하고 턱을 가볍게 당겨주시면 자동으로 측정이 진행됩니다. 민우 님의 신장과 체중을 입력해 실시간 BMI 판정을 확인해 볼까요?",
+        text_en: "That's correct! Tap your card and step onto the platform in an upright posture.\n\nKeep your heels together and tuck your chin slightly for accurate measurement. Let's check your real-time BMI evaluation!"
+      }
+    ],
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",
+    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 1] Height & Weight Standards",
     apiIcon: "scale",
     isApi: true,
     widgetType: "BMI_CALCULATOR"
@@ -190,13 +216,39 @@ const SCENARIOS = [
   {
     bg: "assets/doctor_room.jpg",
     char: "assets/doctor.png",
-    charPos: "right",
     speaker: "정형외과 전담의사 NPC",
     speaker_en: "Orthopedic Specialist Doctor NPC",
     plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-    text: "제출하신 병무용 진단서와 관절 수술기록지, 최근 MRI 영상 CD를 면밀히 검토했습니다.\n\n관절 동요도 정밀 측정 결과, 국방부령 [별표 2] 기준에 부합하여\n정형외과 4급(보충역) 소견으로 수석판정관실에 상신합니다.",
-    text_en: "I have carefully reviewed your military medical certificate, surgical records, and recent MRI/X-ray imaging disc.\n\nBased on joint instability testing conforming to Defense Ministry standards [Table 2] item 204, I am referring you to the Chief Adjudicator with a Grade 4 (Supplemental Service) recommendation.",
-    apiSource: "국가법령정보센터: 「검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
+    dialogues: [
+      {
+        speaker: "정형외과 전담의사 NPC",
+        speaker_en: "Orthopedic Specialist Doctor NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+        text: "김민우 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
+        text_en: "Welcome, Minwoo Kim. This is the [Specialist Doctor Examination Clinic].\n\nSpecialist doctors in each field review your medical certificates and clinical records and conduct precision physical examinations."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "선생님, 제가 예전에 무릎 십자인대 수술을 받았는데, 탈의실에서 챙겨온 병무용 진단서와 수술기록지, MRI 영상 CD를 여기 제출하면 될까요?",
+        text_en: "Doctor, I had cruciate ligament knee surgery in the past. Should I submit the military medical certificate, surgical records, and MRI CD I brought from the locker room?"
+      },
+      {
+        speaker: "정형외과 전담의사 NPC",
+        speaker_en: "Orthopedic Specialist Doctor NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 수석판정관실에 상신하겠습니다.",
+        text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 2] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
+      }
+    ],
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
     apiSource_en: "National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) Art. 11 & Table 2",
     apiIcon: "scale",
     isApi: true,
@@ -207,12 +259,38 @@ const SCENARIOS = [
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
-    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "김민우 님, 최종 [ {finalGrade}, {disposition} ]으로 판정되었습니다!\n\n오늘 {region} 수검에 따른 여비는 [ {fare} ]이 {cardType} 계좌로 즉시 입금 처리되었습니다.\n\n귀가하시기 전에 e-병무지갑과 병역진로설계센터 혜택을 꼭 확인하세요!",
-    text_en: "Minwoo Kim, you have received a final adjudication of [ {finalGrade}, {disposition} ]!\n\nYour travel expense of [ {fare} ] for attending {region} has been deposited into your {cardType} account.\n\nBefore you head home, be sure to check the benefits of the e-Military Wallet and Military Career Design Center!",
+    dialogues: [
+      {
+        speaker: "수석판정관 NPC",
+        speaker_en: "Chief Adjudicator NPC",
+        char: "assets/doctor.png",
+        charPos: "right",
+        plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
+        text: "김민우 님, 오늘 모든 검사를 받으시느라 대단히 고생 많으셨습니다!\n\n이곳은 신검의 최종 관문인 [수석판정관실]입니다. 오늘 진행한 심리검사, 임상병리, 신체계측(BMI), 정형외과 전문의 소견을 종합 판정하여 최종 신체등급과 병역 처분을 확정하는 곳입니다.",
+        text_en: "Minwoo Kim, thank you for completing all examinations today!\n\nThis is the [Chief Adjudicator Office]. We synthesize your psychological, laboratory, biometric, and specialist medical results to determine your final physical grade and military disposition."
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "드디어 모든 검사가 끝났군요! 저의 최종 병역 처분 결과는 어떻게 결정되었나요?",
+        text_en: "Finally, all exams are done! What is my final military service disposition?"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "민우 님, 수석판정관실 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분이 최종 확정되었습니다!\n\n오늘 {region} 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다. 최종 결과서를 확인해 보실까요?",
+        text_en: "Minwoo, your final grade is [ {finalGrade} ] with [ {disposition} ] disposition!\n\nYour travel allowance of [ {fare} ] has been deposited in real-time into your {cardType} account. Let's check your final certificate!"
+      }
+    ],
     apiSource: "공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",
     apiSource_en: "Public Data Portal: MMA Travel Allowance Standards (Real-time Calculation)",
     apiIcon: "database",

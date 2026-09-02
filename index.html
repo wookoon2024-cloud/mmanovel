@@ -886,17 +886,30 @@
         topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
       }
 
-      // 대사를 문단별(\n\n)로 분절하여 1~2줄씩 깔끔하게 끊어 출력
-      const baseSceneText = (currentLang === 'en' && scene.text_en) ? scene.text_en : scene.text;
-      const rawFullText = formatSceneText(baseSceneText);
-      currentDialogueList = rawFullText.split('\n\n').map(s => s.trim()).filter(Boolean);
-      if (currentDialogueList.length === 0) currentDialogueList = [rawFullText];
+      // 씬의 다중 화자 대사 목록(dialogues) 또는 기본 text 파싱
+      if (scene.dialogues && Array.isArray(scene.dialogues) && scene.dialogues.length > 0) {
+        currentDialogueList = scene.dialogues;
+      } else {
+        const baseSceneText = (currentLang === 'en' && scene.text_en) ? scene.text_en : scene.text;
+        const rawFullText = formatSceneText(baseSceneText);
+        const textChunks = rawFullText.split('\n\n').map(s => s.trim()).filter(Boolean);
+        currentDialogueList = (textChunks.length > 0 ? textChunks : [rawFullText]).map(txt => ({
+          speaker: scene.speaker,
+          speaker_en: scene.speaker_en,
+          char: scene.char,
+          charPos: scene.charPos || 'right',
+          plateClass: scene.plateClass,
+          text: txt,
+          text_en: txt
+        }));
+      }
       currentDialogueIdx = 0;
 
       // 대화 기록 저장
+      const firstItem = currentDialogueList[0] || {};
       conversationHistory.push({
-        speaker: currentSpeaker,
-        text: rawFullText,
+        speaker: (currentLang === 'en' && firstItem.speaker_en) ? firstItem.speaker_en : (firstItem.speaker || currentSpeaker),
+        text: formatSceneText((currentLang === 'en' && firstItem.text_en) ? firstItem.text_en : firstItem.text),
         step: topTitle ? topTitle.innerText : ''
       });
       lucide.createIcons();
@@ -906,14 +919,45 @@
       playDialogueChunk();
     }
 
-    // 현재 문단 대사 출력 함수
+    // 현재 문단 대사 출력 함수 (화자, 캐릭터 스프라이트, 이름표 동적 실시간 전환)
     function playDialogueChunk() {
       const scene = SCENARIOS[currentSceneIdx];
-      const targetText = currentDialogueList[currentDialogueIdx] || '';
+      const item = currentDialogueList[currentDialogueIdx] || {};
+      const rawText = (currentLang === 'en' && item.text_en) ? item.text_en : (item.text || '');
+      const targetText = formatSceneText(rawText);
       const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
 
-      // AI TTS 한국어 음성 낭독 실행
-      speakDialogue(scene.speaker, targetText);
+      // 화자 네임플레이트 동적 업데이트
+      const spkName = document.getElementById('speaker-name');
+      const spkPlate = document.getElementById('speaker-plate');
+      const currentSpeaker = (currentLang === 'en' && item.speaker_en) ? item.speaker_en : (item.speaker || scene.speaker);
+      if (spkName) spkName.innerText = currentSpeaker;
+      if (spkPlate) {
+        const plateCls = item.plateClass || scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40';
+        spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${plateCls}`;
+      }
+
+      // 캐릭터 스프라이트 동적 전환
+      const charImg = item.char || scene.char;
+      const charPos = item.charPos || scene.charPos || 'right';
+      const spriteWrapper = document.getElementById('sprite-wrapper');
+      const spriteImg = document.getElementById('sprite-img');
+      if (spriteImg && spriteWrapper && charImg) {
+        if (!spriteImg.src.includes(charImg)) {
+          spriteImg.src = charImg;
+        }
+        spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
+        if (charPos === 'left') {
+          spriteWrapper.classList.add('mr-auto');
+        } else if (charPos === 'center') {
+          spriteWrapper.classList.add('mx-auto');
+        } else {
+          spriteWrapper.classList.add('ml-auto');
+        }
+      }
+
+      // AI TTS 음성 낭독 실행
+      speakDialogue(currentSpeaker, targetText);
 
       typewriterEffect(targetText, () => {
         if (isLastChunk) {
@@ -927,7 +971,7 @@
           if (autoPlay) {
             autoPlayTimer = setTimeout(() => {
               handleNextClick();
-            }, 2000);
+            }, 2200);
           }
         }
       });
@@ -1008,7 +1052,9 @@
       // 1. 타이핑 진행 중에 화면 클릭 시: 현재 대사를 즉시 끝까지 출력
       if (isTyping) {
         clearInterval(typingInterval);
-        const currentText = currentDialogueList[currentDialogueIdx] || '';
+        const item = currentDialogueList[currentDialogueIdx];
+        const rawText = (typeof item === 'object') ? ((currentLang === 'en' && item.text_en) ? item.text_en : (item.text || '')) : (item || '');
+        const currentText = formatSceneText(rawText);
         if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
