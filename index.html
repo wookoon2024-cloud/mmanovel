@@ -766,16 +766,19 @@
       if (modalTitle) modalTitle.innerText = `${val} 병역판정검사 실시간 공석 달력`;
     }
 
-    // 캘린더 모달 컨트롤
-    let currentCalMonthOffset = 0;
+    // 캘린더 모달 컨트롤 (동적 연/월 이동 & 실시간 공석 연동)
+    let currentCalYear = 2026;
+    let currentCalMonth = 10;
+
     function openCalendarModal() {
       const modal = document.getElementById('calendar-modal');
       if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        renderCalendarGrid(currentCalMonthOffset);
+        renderCalendarGrid();
       }
     }
+
     function closeCalendarModal() {
       const modal = document.getElementById('calendar-modal');
       if (modal) {
@@ -783,15 +786,28 @@
         modal.classList.remove('flex');
       }
     }
-    function changeCalMonth(offset) {
-      currentCalMonthOffset += offset;
-      renderCalendarGrid(currentCalMonthOffset);
+
+    function changeCalMonth(delta) {
+      currentCalMonth += delta;
+      if (currentCalMonth > 12) {
+        currentCalYear += 1;
+        currentCalMonth = 1;
+      } else if (currentCalMonth < 1) {
+        currentCalYear -= 1;
+        currentCalMonth = 12;
+      }
+      renderCalendarGrid();
     }
-    async function renderCalendarGrid(offset) {
-      const monthNames = ["2026년 9월", "2026년 10월", "2026년 11월", "2026년 12월"];
-      const mIdx = Math.max(0, Math.min(3, 1 + offset));
+
+    function jumpToCalMonth(y, m) {
+      currentCalYear = y;
+      currentCalMonth = m;
+      renderCalendarGrid();
+    }
+
+    async function renderCalendarGrid() {
       const curMonthElem = document.getElementById('cal-current-month');
-      if (curMonthElem) curMonthElem.innerText = monthNames[mIdx];
+      if (curMonthElem) curMonthElem.innerText = `${currentCalYear}년 ${currentCalMonth}월`;
 
       const grid = document.getElementById('cal-days-grid');
       if (!grid) return;
@@ -801,7 +817,7 @@
         <div class="col-span-7 h-[310px] flex flex-col items-center justify-center space-y-3.5 animate-in fade-in duration-150">
           <div class="flex items-center gap-2 text-cyan-300 font-black text-xs tracking-wider animate-pulse">
             <i data-lucide="radio" class="w-4 h-4 text-cyan-400"></i>
-            <span>병무청 공공데이터 Open API 실시간 공석 동기화 중...</span>
+            <span>${currentCalYear}년 ${currentCalMonth}월 병무청 실시간 공석 API 동기화 중...</span>
           </div>
           <div class="w-72 bg-slate-950 rounded-full h-3 overflow-hidden border border-cyan-500/40 p-0.5 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
             <div class="bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 h-full rounded-full animate-pulse w-full"></div>
@@ -813,46 +829,75 @@
 
       // API 비동기 공석 호출 + 자연스러운 HUD 딜레이
       const [slotData] = await Promise.all([
-        (typeof MmaApiService !== 'undefined') ? MmaApiService.getExamSlots(userData.region, `2026${mIdx + 9}`) : null,
-        new Promise(resolve => setTimeout(resolve, 280))
+        (typeof MmaApiService !== 'undefined') ? MmaApiService.getExamSlots(userData.region, currentCalYear, currentCalMonth) : null,
+        new Promise(resolve => setTimeout(resolve, 250))
       ]);
       grid.innerHTML = '';
 
-      for (let i = 1; i <= 31; i++) {
-        const isWeekend = (i % 7 === 3 || i % 7 === 4);
-        let statusTag = "";
-        let clickable = true;
+      // 1. 접수 비시즌 / 해당 월 미운영 안내 화면 (12월 이후 또는 기간 외)
+      if (!slotData || slotData.isOpen === false) {
+        const reasonText = (slotData && slotData.reason) ? slotData.reason : `${currentCalYear}년 ${currentCalMonth}월은 접수 가능한 공석이 없습니다.`;
+        grid.innerHTML = `
+          <div class="col-span-7 h-[310px] flex flex-col items-center justify-center p-5 text-center space-y-3 animate-in fade-in zoom-in-95 duration-200">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]">
+              <i data-lucide="calendar-off" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-sm text-white tracking-wide">${currentCalYear}년 ${currentCalMonth}월 공석 접수 기간 아님</h4>
+              <p class="text-xs text-slate-300 mt-1.5 whitespace-pre-line leading-relaxed">${reasonText}</p>
+            </div>
+            <button onclick="playBeep(750, 'triangle', 0.05); jumpToCalMonth(2026, 10);" class="mt-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-xl text-xs font-black text-white transition flex items-center gap-1.5 shadow-lg shadow-cyan-600/30">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 2026년 10월 추천 일정으로 돌아가기
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
 
-        if (slotData && slotData.days && slotData.days[i]) {
-          const d = slotData.days[i];
-          clickable = d.available;
-          if (d.status === '휴무') statusTag = '<span class="text-slate-500">휴무</span>';
-          else if (d.status === '마감') statusTag = '<span class="text-rose-400 font-bold">마감</span>';
-          else statusTag = `<span class="text-emerald-400 font-bold">오전${d.morning}/오후${d.afternoon}</span>`;
+      const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+      // 2. 1일 시작 전 빈 칸 플레이스홀더 렌더링 (실제 요일과 정확히 일치)
+      for (let b = 0; b < slotData.firstDay; b++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = "h-[50px] opacity-0 pointer-events-none";
+        grid.appendChild(emptyCell);
+      }
+
+      // 3. 일자별 실시간 공석 카드 렌더링
+      for (let i = 1; i <= slotData.totalDays; i++) {
+        const d = slotData.days[i];
+        const isWeekend = (d.dayOfWeek === 0 || d.dayOfWeek === 6);
+        let statusTag = "";
+        let clickable = d.available;
+
+        if (d.status === '휴무') {
+          statusTag = '<span class="text-slate-500">휴무</span>';
+        } else if (d.status === '마감') {
+          statusTag = '<span class="text-rose-400 font-black">마감</span>';
         } else {
-          if (isWeekend) { statusTag = '<span class="text-slate-500">휴무</span>'; clickable = false; }
-          else if (i === 1 || i === 7) { statusTag = '<span class="text-rose-400 font-bold">마감</span>'; clickable = false; }
-          else { statusTag = '<span class="text-emerald-400">오전12/오후5</span>'; }
+          statusTag = `<span class="text-cyan-300 font-bold">오전${d.morning}/오후${d.afternoon}</span>`;
         }
 
         const dayCard = document.createElement('div');
-        dayCard.className = `p-1 sm:p-1.5 rounded-lg border flex flex-col items-center justify-between h-[52px] transition-all duration-100 ${
-          clickable ? 'bg-slate-900/90 hover:bg-cyan-950/80 border-slate-700/80 hover:border-cyan-400 cursor-pointer shadow hover:shadow-[0_0_12px_rgba(34,211,238,0.25)] hover:scale-105' : 'bg-slate-950/60 border-slate-800/40 opacity-45'
+        dayCard.className = `p-1 rounded-lg border flex flex-col items-center justify-between h-[50px] transition-all duration-100 ${
+          clickable ? 'bg-slate-900/90 hover:bg-cyan-950/80 border-slate-700/80 hover:border-cyan-400 cursor-pointer shadow hover:shadow-[0_0_12px_rgba(34,211,238,0.25)] hover:scale-105' : 'bg-slate-950/60 border-slate-800/40 opacity-40'
         }`;
         dayCard.innerHTML = `
-          <span class="font-black text-xs ${isWeekend ? 'text-slate-500' : 'text-slate-200'}">${i}</span>
-          <span class="text-[9px] scale-90 sm:scale-100">${statusTag}</span>
+          <span class="font-black text-xs ${d.dayOfWeek === 0 ? 'text-rose-400' : d.dayOfWeek === 6 ? 'text-blue-400' : 'text-slate-200'}">${i}</span>
+          <span class="text-[9px] tracking-tighter">${statusTag}</span>
         `;
         if (clickable) {
           dayCard.onclick = () => {
             playBeep(750, 'triangle', 0.05);
-            userData.examDate = `2026년 ${mIdx + 9}월 ${i}일 (목) 오전`;
+            userData.examDate = `${currentCalYear}년 ${currentCalMonth}월 ${i}일 (${dayNames[d.dayOfWeek]}) 오전`;
             closeCalendarModal();
             renderScene(3);
           };
         }
         grid.appendChild(dayCard);
       }
+      lucide.createIcons();
     }
 
     function openLogModal() {

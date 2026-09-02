@@ -60,9 +60,9 @@ const MmaApiService = {
   /**
    * 1. 병역판정검사 월별/일자별 실시간 공석 조회 API
    */
-  async getExamSlots(officeName, yearMonth) {
+  async getExamSlots(officeName, year, month) {
     try {
-      // 로컬 백엔드 프록시 확인
+      const yearMonth = `${year}${String(month).padStart(2, '0')}`;
       const res = await fetch(`${MMA_API_CONFIG.BACKEND_BASE_URL}/slots?office=${encodeURIComponent(officeName)}&month=${yearMonth}`, {
         signal: AbortSignal.timeout(1500)
       });
@@ -73,23 +73,50 @@ const MmaApiService = {
       // 오프라인 / 직접 브라우저 실행 시 실시간 알고리즘 기반 데이터 자동 생성
     }
 
-    // 실시간 날짜 기반 공석 데이터 동적 생성 (동일 날짜 일관성 보장)
+    // 검사 비시즌/기간 외 검증 (정기 검사는 2026년 2월 ~ 12월 진행)
+    const isSeason = (year === 2026 && month >= 2 && month <= 12);
+    if (!isSeason) {
+      return {
+        officeName,
+        year,
+        month,
+        isOpen: false,
+        reason: (year > 2026 || (year === 2026 && month > 12))
+          ? `${year}년 ${month}월 공석은 아직 접수 기간이 아닙니다.\n(차년도 검사 일정은 병무청 정기 고시 후 오픈됩니다.)`
+          : `${year}년 ${month}월은 병역판정검사장 시스템 점검 및 비수검 기간입니다.`
+      };
+    }
+
+    const firstDay = new Date(year, month - 1, 1).getDay(); // 0(일) ~ 6(토)
+    const totalDays = new Date(year, month, 0).getDate(); // 해당 월의 실제 마지막 일 (28/30/31)
     const days = {};
-    for (let day = 1; day <= 31; day++) {
-      const isWeekend = (day % 7 === 3 || day % 7 === 4);
+    
+    // 월별/청별 고유 시드값 (매달 완전히 다른 공석 패턴 보장)
+    const officeSeed = (officeName.charCodeAt(0) || 7) + (officeName.charCodeAt(1) || 3);
+    const monthSeed = (year * 100 + month) * 13 + officeSeed;
+
+    for (let day = 1; day <= totalDays; day++) {
+      const dayOfWeek = (firstDay + day - 1) % 7;
+      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 일요일/토요일
+
       if (isWeekend) {
-        days[day] = { status: "휴무", morning: 0, afternoon: 0, available: false };
-      } else if (day === 1 || day === 7 || day === 15) {
-        days[day] = { status: "마감", morning: 0, afternoon: 0, available: false };
-      } else if (day === 29) {
-        days[day] = { status: "예약가능", morning: 12, afternoon: 5, available: true };
+        days[day] = { day, dayOfWeek, status: "휴무", morning: 0, afternoon: 0, available: false };
       } else {
-        const morning = (day * 3) % 15 + 2;
-        const afternoon = (day * 2) % 12 + 3;
-        days[day] = { status: "예약가능", morning, afternoon, available: true };
+        // 일자별 의사결정 해시
+        const hash = (monthSeed + day * 31) % 100;
+        if (hash < 20) {
+          // 20% 조기 마감일
+          days[day] = { day, dayOfWeek, status: "마감", morning: 0, afternoon: 0, available: false };
+        } else {
+          // 매달 일자마다 다른 오전/오후 잔여석
+          const morning = ((hash * 7 + day) % 18) + 1;
+          const afternoon = ((hash * 13 + day * 3) % 15) + 1;
+          days[day] = { day, dayOfWeek, status: "예약가능", morning, afternoon, available: true };
+        }
       }
     }
-    return { officeName, yearMonth, days };
+
+    return { officeName, year, month, isOpen: true, firstDay, totalDays, days };
   },
 
   /**
