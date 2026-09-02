@@ -8,9 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- 네이버 나눔글꼴 공식 CDN (나눔스퀘어라운드 & 나눔고딕) -->
+  <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css">
+  <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-gothic.css">
   
   <style>
     * {
@@ -23,7 +23,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      font-family: 'NanumSquareRound', 'NanumGothic', -apple-system, sans-serif;
       background-color: #020617;
     }
 
@@ -32,13 +32,13 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.95);
     }
     .vn-box-glow {
-      box-shadow: 0 -10px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 -8px 35px rgba(0, 0, 0, 0.75), 0 0 20px rgba(59, 130, 246, 0.12);
     }
 
     /* 캐릭터 스프라이트 애니메이션 */
     @keyframes char-breathe {
       0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-7px) scale(1.006); }
+      50% { transform: translateY(-6px) scale(1.005); }
     }
     .char-idle {
       animation: char-breathe 4.5s infinite ease-in-out;
@@ -47,7 +47,7 @@
     /* 대화창 깜빡임 화살표 */
     @keyframes blink-arrow {
       0%, 100% { opacity: 1; transform: translateX(0); }
-      50% { opacity: 0.3; transform: translateX(5px); }
+      50% { opacity: 0.3; transform: translateX(4px); }
     }
     .blink-next {
       animation: blink-arrow 1.2s infinite;
@@ -69,32 +69,32 @@
   </div>
 
   <!-- ================= [LAYER 2: 상단 네비게이션 헤더] ================= -->
-  <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8 py-3 bg-gradient-to-b from-slate-950/95 via-slate-950/60 to-transparent">
+  <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8 py-2.5 bg-gradient-to-b from-slate-950/95 via-slate-950/60 to-transparent">
     <div class="flex items-center space-x-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/40 border border-white/20">
-        <i data-lucide="shield-check" class="w-5 h-5"></i>
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/40 border border-white/20">
+        <i data-lucide="shield-check" class="w-4 h-4"></i>
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <span class="text-sm sm:text-base font-black tracking-tight text-white vn-shadow">슬기로운 신검 라이프</span>
-          <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-500/30 text-blue-300 border border-blue-400/40 font-semibold">병무청 공공데이터 포털 연동</span>
+          <span class="text-sm sm:text-base font-extrabold tracking-tight text-white vn-shadow">슬기로운 신검 라이프</span>
+          <span class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-300 border border-blue-400/40 font-semibold">병무청 Open API</span>
         </div>
-        <p id="top-step-title" class="text-xs text-blue-200/80 font-medium">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
+        <p id="top-step-title" class="text-[11px] text-blue-200/80 font-medium">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
       </div>
     </div>
 
     <!-- 우측 인터랙션 퀵 컨트롤 버튼 -->
     <div class="flex items-center space-x-2 text-xs">
-      <button id="btn-sound" onclick="toggleSound()" class="p-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1 shadow-md" title="사운드 On/Off">
+      <button id="btn-sound" onclick="toggleSound()" class="p-1.5 sm:p-2 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1 shadow-md" title="사운드 On/Off">
         <i id="sound-icon" data-lucide="volume-2" class="w-4 h-4 text-blue-400"></i>
       </button>
-      <button id="btn-auto" onclick="toggleAuto()" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-slate-300 font-semibold shadow-md">
+      <button id="btn-auto" onclick="toggleAuto()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-slate-300 font-semibold shadow-md">
         <i data-lucide="play-circle" class="w-3.5 h-3.5 text-blue-400"></i> AUTO
       </button>
-      <button onclick="openLogModal()" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-slate-300 font-semibold shadow-md">
+      <button onclick="openLogModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-slate-300 font-semibold shadow-md">
         <i data-lucide="history" class="w-3.5 h-3.5 text-blue-400"></i> 대화기록
       </button>
-      <button onclick="restartGame()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-semibold backdrop-blur-md transition flex items-center gap-1.5 shadow-md">
+      <button onclick="restartGame()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-semibold backdrop-blur-md transition flex items-center gap-1.5 shadow-md">
         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 처음으로
       </button>
     </div>
@@ -102,29 +102,29 @@
 
   <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (바닥 완전 밀착 안착)] ================= -->
   <div id="character-layer" class="absolute inset-0 z-10 flex items-end pointer-events-none pb-0 px-8 sm:px-24">
-    <!-- 캐릭터가 화면 하단 바닥(대화창 뒤)에 자연스럽게 서 있는 스탠딩 구도 -->
-    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[72vh] sm:h-[82vh]">
+    <!-- 캐릭터가 화면 하단 바닥에 자연스럽게 안착 -->
+    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[70vh] sm:h-[78vh]">
       <!-- 캐릭터 투명 PNG 스프라이트 -->
       <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
     </div>
   </div>
 
-  <!-- ================= [LAYER 4: 하단 대화창 & 인터랙션 UI (이름표 일체형)] ================= -->
-  <div class="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-end p-3 sm:p-6 pointer-events-none">
-    <div class="w-full max-w-5xl pointer-events-auto">
+  <!-- ================= [LAYER 4: 하단 컴팩트 대화창 & 인터랙션 UI (이름표 일체형)] ================= -->
+  <div class="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-end p-3 sm:p-5 pointer-events-none">
+    <div class="w-full max-w-4xl pointer-events-auto">
       
-      <!-- 대화창과 완벽히 일체형으로 붙은 이름표 (아이콘 제거, 간격 0) -->
+      <!-- 대화창과 일체형으로 붙은 이름표 (간격 0) -->
       <div class="flex items-end pl-0">
-        <div id="speaker-plate" class="px-5 py-2 rounded-t-xl bg-slate-900 border-t border-x border-slate-600 text-white font-black text-sm sm:text-base shadow-2xl tracking-wide">
+        <div id="speaker-plate" class="px-4 py-1.5 rounded-t-xl bg-slate-900 border-t border-x border-slate-600 text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide">
           <span id="speaker-name">김민우 (주인공)</span>
         </div>
       </div>
 
-      <!-- 메인 대화 박스 (이름표와 연결된 라운딩, 시원한 폰트) -->
-      <div class="relative bg-slate-950/90 backdrop-blur-2xl border border-slate-700 rounded-2xl rounded-tl-none p-5 sm:p-7 vn-box-glow min-h-[160px] sm:min-h-[185px] flex flex-col justify-between cursor-pointer transition-all hover:border-blue-500/50" onclick="handleNextClick()">
+      <!-- 메인 컴팩트 대화 박스 (적절한 고정 높이 유지) -->
+      <div class="relative bg-slate-950/90 backdrop-blur-2xl border border-slate-700 rounded-2xl rounded-tl-none p-4 sm:p-5 vn-box-glow min-h-[110px] sm:min-h-[125px] flex flex-col justify-between cursor-pointer transition-all hover:border-blue-500/50" onclick="handleNextClick()">
         
-        <!-- 대사 텍스트 (더 크고 읽기 편한 폰트 & 넉넉한 줄간격) -->
-        <div id="dialogue-box" class="flex-1 text-slate-100 text-base sm:text-lg md:text-[19px] leading-relaxed tracking-normal font-medium whitespace-pre-line select-text">
+        <!-- 대사 텍스트 (나눔글꼴 적용) -->
+        <div id="dialogue-box" class="flex-1 text-slate-100 text-sm sm:text-base md:text-[17px] leading-relaxed tracking-normal font-normal whitespace-pre-line select-text">
           <p id="dialogue-text"></p>
         </div>
 
