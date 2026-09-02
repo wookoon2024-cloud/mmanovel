@@ -616,34 +616,47 @@
         else topTitle.innerText = "STEP 7: 최종 판정 & 실시간 여비 정산";
       }
 
-      // 스크롤 컨테이너 최상단 초기화
-      const scrollContainer = document.getElementById('dialogue-scroll-container');
-      if (scrollContainer) scrollContainer.scrollTop = 0;
+      // 대사를 문단별(\n\n)로 분절하여 1~2줄씩 깔끔하게 끊어 출력
+      const rawFullText = formatSceneText(scene.text);
+      currentDialogueList = rawFullText.split('\n\n').map(s => s.trim()).filter(Boolean);
+      if (currentDialogueList.length === 0) currentDialogueList = [rawFullText];
+      currentDialogueIdx = 0;
 
-      // 동적 대사 포맷팅 (선택된 날짜, 지역, 여비, 카드 실시간 치환)
-      const formattedText = formatSceneText(scene.text);
-
-      // Typewriter 효과 실행
-      typewriterEffect(formattedText, () => {
-        renderWidget(scene.widgetType);
-        if (scrollContainer) {
-          setTimeout(() => { scrollContainer.scrollTop = scrollContainer.scrollHeight; }, 50);
-        }
-        if (autoPlay && !scene.widgetType) {
-          autoPlayTimer = setTimeout(() => {
-            renderScene(currentSceneIdx + 1);
-          }, 2400);
-        }
-      });
-
-      // 대화 기록
+      // 대화 기록 저장
       conversationHistory.push({
         speaker: scene.speaker,
-        text: formattedText,
+        text: rawFullText,
         step: topTitle ? topTitle.innerText : ''
       });
       lucide.createIcons();
       saveGameState();
+
+      // 첫 번째 대사 문단 출력 시작
+      playDialogueChunk();
+    }
+
+    // 현재 문단 대사 출력 함수
+    function playDialogueChunk() {
+      const scene = SCENARIOS[currentSceneIdx];
+      const targetText = currentDialogueList[currentDialogueIdx] || '';
+      const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
+
+      typewriterEffect(targetText, () => {
+        if (isLastChunk) {
+          renderWidget(scene ? scene.widgetType : null);
+          if (autoPlay && !scene.widgetType) {
+            autoPlayTimer = setTimeout(() => {
+              renderScene(currentSceneIdx + 1);
+            }, 2400);
+          }
+        } else {
+          if (autoPlay) {
+            autoPlayTimer = setTimeout(() => {
+              handleNextClick();
+            }, 2000);
+          }
+        }
+      });
     }
 
     // 동적 플레이스홀더 치환 함수
@@ -660,7 +673,7 @@
         .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
     }
 
-    // Typewriter 효과 (상단 기준 고정 출력, 타이핑 중 강제 자동 스크롤 제거)
+    // Typewriter 효과 (상단 기준 고정 출력)
     function typewriterEffect(text, callback) {
       clearInterval(typingInterval);
       const textElem = document.getElementById('dialogue-text');
@@ -689,37 +702,39 @@
       }, intervalMs);
     }
 
-    // 다음 클릭 (1클릭: 타이핑 즉시 완료 & 첫 줄부터 표시 / 2클릭: 긴 대사 아래로 스크롤 / 3클릭: 다음 대사로 진행)
+    // 다음 클릭 (1클릭: 현재 대사 즉시 출력 / 2클릭: 다음 대사 문단으로 진행 / 마지막: 다음 씬 또는 선택지 표출)
     function handleNextClick() {
-      const scrollContainer = document.getElementById('dialogue-scroll-container');
       const scene = SCENARIOS[currentSceneIdx];
       const textElem = document.getElementById('dialogue-text');
+      const scrollContainer = document.getElementById('dialogue-scroll-container');
       const nextIndicator = document.getElementById('next-indicator');
+      const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
 
-      // 1. 타이핑 진행 중에 화면 클릭 시: 타이핑 즉시 완료하고 전체 텍스트를 상단부터 표시
+      // 1. 타이핑 진행 중에 화면 클릭 시: 현재 대사를 즉시 끝까지 출력
       if (isTyping) {
         clearInterval(typingInterval);
-        if (textElem && scene) textElem.innerHTML = formatSceneText(scene.text).replace(/\n/g, '<br>');
+        const currentText = currentDialogueList[currentDialogueIdx] || '';
+        if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = 0;
         if (nextIndicator) nextIndicator.classList.remove('hidden');
-        renderWidget(scene ? scene.widgetType : null);
+        if (isLastChunk) {
+          renderWidget(scene ? scene.widgetType : null);
+        }
         return;
       }
 
-      // 2. 타이핑 완료 후 화면 클릭 시: 만약 아래쪽에 아직 안 읽은 스크롤 내용이 남아있다면 부드럽게 아래로 스크롤
-      if (scrollContainer) {
-        const remainingScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight - scrollContainer.scrollTop;
-        if (remainingScroll > 24) {
-          scrollContainer.scrollBy({ top: scrollContainer.clientHeight * 0.7, behavior: 'smooth' });
-          return;
-        }
+      // 2. 현재 문단 타이핑이 끝난 상태에서 화면 클릭 시: 다음 대사 문단이 있다면 다음 문단으로 전환
+      if (!isLastChunk) {
+        currentDialogueIdx++;
+        playDialogueChunk();
+        return;
       }
 
-      // 3. 더 이상 스크롤할 내용이 없고 선택지 위젯이 있다면 사용자 인터랙션 대기
+      // 3. 마지막 대사까지 다 보았는데 화면에 선택지 위젯이 있다면 사용자 선택 대기
       if (scene && scene.widgetType) return;
 
-      // 4. 다음 장면으로 부드럽게 진행
+      // 4. 모든 대사가 끝났고 위젯이 없다면 다음 씬으로 진행
       renderScene(currentSceneIdx + 1);
     }
 
