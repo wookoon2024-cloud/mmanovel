@@ -213,20 +213,32 @@ const MmaApiService = {
     const officeSeed = (officeName.charCodeAt(0) || 7) + (officeName.charCodeAt(1) || 3);
     const monthSeed = (year * 100 + month) * 13 + officeSeed;
 
+    // 시뮬레이션 기준 현재 시점 (2026년 10월 15일) 이전 일자 및 과거 월은 접수 마감 처리
+    const simCurrentYear = 2026;
+    const simCurrentMonth = 10;
+    const simCurrentDay = 15;
+
     for (let day = 1; day <= totalDays; day++) {
       const dayOfWeek = (firstDay + day - 1) % 7;
       const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 일요일/토요일
 
+      // 과거 일자 검사
+      const isPastDate = (year < simCurrentYear) || 
+                         (year === simCurrentYear && month < simCurrentMonth) || 
+                         (year === simCurrentYear && month === simCurrentMonth && day <= simCurrentDay);
+
       if (isWeekend) {
         days[day] = { day, dayOfWeek, status: "휴무", morning: 0, afternoon: 0, available: false };
+      } else if (isPastDate) {
+        days[day] = { day, dayOfWeek, status: "마감", morning: 0, afternoon: 0, available: false };
       } else {
         const hash = (monthSeed + day * 31) % 100;
-        if (hash < 18) {
-          // 18% 마감
+        if (hash < 15) {
+          // 15% 잔여석 마감
           days[day] = { day, dayOfWeek, status: "마감", morning: 0, afternoon: 0, available: false };
         } else {
-          const morning = ((hash * 7 + day) % 16) + 2;
-          const afternoon = ((hash * 13 + day * 3) % 14) + 1;
+          const morning = ((hash * 7 + day) % 16) + 3;
+          const afternoon = ((hash * 13 + day * 3) % 14) + 2;
           days[day] = { day, dayOfWeek, status: "예약가능", morning, afternoon, available: true };
         }
       }
