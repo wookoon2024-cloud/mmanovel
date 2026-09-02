@@ -275,12 +275,12 @@
         </div>
       </div>
 
-      <!-- 메인 고정형 대화 박스 (높이: 165px~185px) -->
-      <div class="relative bg-slate-950/92 backdrop-blur-2xl border border-slate-700/90 rounded-2xl rounded-tl-none p-4 sm:p-5 vn-box-glow h-[165px] sm:h-[185px] flex flex-col justify-between cursor-pointer select-none" onclick="handleNextClick()">
+      <!-- 메인 고정형 대화 박스 (높이: 175px~205px) -->
+      <div class="relative bg-slate-950/92 backdrop-blur-2xl border border-slate-700/90 rounded-2xl rounded-tl-none p-4 sm:p-5 vn-box-glow h-[175px] sm:h-[195px] md:h-[205px] flex flex-col justify-between cursor-pointer select-none" onclick="handleNextClick()">
         
         <!-- 대사 텍스트 컨테이너 -->
         <div id="dialogue-scroll-container" class="flex-1 overflow-y-auto custom-scroll pr-1.5 scroll-smooth select-none">
-          <div id="dialogue-box" class="text-slate-100 text-sm sm:text-base md:text-[16px] leading-relaxed tracking-normal font-normal whitespace-pre-line select-none">
+          <div id="dialogue-box" class="text-slate-100 text-sm sm:text-base md:text-[16px] leading-relaxed tracking-normal font-normal whitespace-pre-line select-none pb-1">
             <p id="dialogue-text"></p>
           </div>
         </div>
@@ -947,7 +947,7 @@
         .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
     }
 
-    // Typewriter 효과 (상단 기준 고정 출력)
+    // Typewriter 효과 (타이핑에 따라 자동 스크롤 추적)
     function typewriterEffect(text, callback) {
       clearInterval(typingInterval);
       const textElem = document.getElementById('dialogue-text');
@@ -966,10 +966,16 @@
         if (i < text.length) {
           textElem.innerHTML += text[i] === '\n' ? '<br>' : text[i];
           if (i % 3 === 0) playBeep(560, 'sine', 0.025);
+          if (scrollContainer) {
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          }
           i++;
         } else {
           clearInterval(typingInterval);
           isTyping = false;
+          if (scrollContainer) {
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          }
           if (nextIndicator) nextIndicator.classList.remove('hidden');
           if (callback) callback();
         }
@@ -991,7 +997,7 @@
           const currentText = currentDialogueList[currentDialogueIdx] || '';
           if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
           isTyping = false;
-          if (scrollContainer) scrollContainer.scrollTop = 0;
+          if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
           if (nextIndicator) nextIndicator.classList.remove('hidden');
         } else {
           proceedTransition();
@@ -1005,7 +1011,7 @@
         const currentText = currentDialogueList[currentDialogueIdx] || '';
         if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
         isTyping = false;
-        if (scrollContainer) scrollContainer.scrollTop = 0;
+        if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
         if (nextIndicator) nextIndicator.classList.remove('hidden');
         if (isLastChunk) {
           renderWidget(scene ? scene.widgetType : null);
