@@ -184,8 +184,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나! 엔터- 1차 인지능력검사와 인성검사 화면이 떴네.",
-        text_en: "I log in by typing my name and ID number on the keyboard! Enter- Cognitive and Personality test screens appeared."
+        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나! 엔터-\n인지능력검사와 인성검사 화면이 떴네.",
+        text_en: "I log in by typing my name and ID number on the keyboard! Enter-\nCognitive and Personality test screens appeared."
       },
       {
         speaker: "병무청 검사관 NPC",
@@ -252,8 +252,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "김민우 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 신체등급의 기준인 체질량지수(BMI)를 판정하는 곳입니다.",
-        text_en: "Minwoo Kim, please come in! This is the [Basic Examination Room].\n\nWe measure your height, weight, blood pressure, and eyesight to evaluate your Body Mass Index (BMI) and fundamental physical condition."
+        text: "김민우 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 체질량지수(BMI)를 판정하는 곳입니다.",
+        text_en: "Minwoo Kim, please come in! This is the [Basic Examination Room].\n\nWe measure your height, weight, blood pressure, and eyesight to evaluate your Body Mass Index (BMI)."
       },
       {
         speaker: "김민우 (주인공)",
@@ -263,15 +263,6 @@ const SCENARIOS = [
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         text: "신체계측 발판 위에 올라서서 정자세로 바르게 서면 되는 거군요! 키와 몸무게를 정확히 재어보자.",
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
-      },
-      {
-        speaker: "의무관 NPC",
-        speaker_en: "Medical Officer NPC",
-        char: "assets/doctor.png",
-        charPos: "right",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "발뒤꿈치를 밀착하고 턱을 가볍게 당겨주시면 자동으로 측정이 진행됩니다.\n\n민우 님의 신장과 체중을 확인하고 3단계 기본검사를 진행해 볼까요?",
-        text_en: "Keep your heels together and tuck your chin slightly for automated measurement.\n\nLet's check your height and weight and proceed with the 3-step basic examination!"
       }
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",

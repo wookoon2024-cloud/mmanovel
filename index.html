@@ -1040,7 +1040,17 @@
           if (scrollContainer) {
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
           }
-          if (nextIndicator) nextIndicator.classList.remove('hidden');
+          const choiceOverlay = document.getElementById('center-choice-overlay');
+          const isOverlayOpen = choiceOverlay && !choiceOverlay.classList.contains('hidden');
+          const scene = SCENARIOS[currentSceneIdx];
+          const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
+          if (nextIndicator) {
+            if (isOverlayOpen || (isLastChunk && scene && scene.widgetType)) {
+              nextIndicator.classList.add('hidden');
+            } else {
+              nextIndicator.classList.remove('hidden');
+            }
+          }
           if (callback) callback();
         }
       }, intervalMs);
@@ -1078,11 +1088,18 @@
         if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
-        if (nextIndicator) nextIndicator.classList.remove('hidden');
         
-        // 위젯이 아직 렌더링되지 않은 경우에만 마지막 대사에서 1회 렌더링
         const choiceOverlay = document.getElementById('center-choice-overlay');
         const isOverlayOpen = choiceOverlay && !choiceOverlay.classList.contains('hidden');
+        if (nextIndicator) {
+          if (isOverlayOpen || (isLastChunk && scene && scene.widgetType)) {
+            nextIndicator.classList.add('hidden');
+          } else {
+            nextIndicator.classList.remove('hidden');
+          }
+        }
+        
+        // 위젯이 아직 렌더링되지 않은 경우에만 마지막 대사에서 1회 렌더링
         if (isLastChunk && !isOverlayOpen) {
           renderWidget(scene ? scene.widgetType : null);
         }
@@ -1390,6 +1407,7 @@
           </div>
         `;
       } else if (type === 'LOCKER_CHANGE_CONFIRM') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <div class="flex items-center gap-3">
@@ -1402,7 +1420,7 @@
               </div>
             </div>
             <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${(currentLang === 'en') ? 'Changing Uniform Complete ➔ Move to Psych Hall' : '검사복 환복 완료 ➔ 심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1416,7 +1434,7 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
-                  <span class="font-bold text-xs sm:text-sm text-white">${isEn ? '1st Psychological Test (PC Simulation)' : '1차 심리검사 PC 실전 테스트'}</span>
+                  <span class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Psychological Test (PC Simulation)' : '심리검사 PC 실전 테스트'}</span>
                 </div>
                 <span id="psych-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
               </div>
@@ -1458,7 +1476,7 @@
                 <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span>답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다.</span>
               </div>
               <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition items-center justify-center gap-2 shadow-md cursor-pointer animate-in fade-in">
-                <span>${isEn ? 'Psych Test Completed ➔ Move to Pathology & X-Ray' : '1차 심리검사 제출 완료 (정상 통과) ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Pathology Lab' : '임상병리검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1494,7 +1512,7 @@
                 </p>
               </div>
               <button onclick="goLabStep(2)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Proceed to Restroom for Urine Sampling ➔' : '소변 채취하러 화장실로 이동 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Restroom' : '화장실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1510,7 +1528,7 @@
                 </div>
               </div>
               <button onclick="goLabStep(3)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Urine Sample Submitted ➔ Return for Blood Test' : '소변 검체 제출 완료 ➔ 채혈실로 복귀하기'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Blood Sampling Room' : '채혈실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1528,7 +1546,7 @@
                 </div>
               </div>
               <button onclick="goLabStep(4)" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? '5-Min Pressure Applied ➔ Move to Chest X-Ray' : '5분간 꾹 눌러 지혈 완료 ➔ 흉부 X-ray 촬영실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Chest X-Ray Room' : '흉부 X-ray실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1544,7 +1562,7 @@
                 </p>
               </div>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Pathology/X-ray Complete ➔ Move to Basic Exam Lab' : '임상병리/X-ray 완료 ➔ 기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Basic Exam Lab' : '기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1555,7 +1573,7 @@
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full pointer-events-auto">
             <button onclick="goToChiefAdjudicator()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-lg cursor-pointer">
-              <span>${isEn ? 'Diagnosis Complete ➔ Move to Chief Adjudicator Office' : '전문의 진료 소견 완료 ➔ 판정보조관 & 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1564,7 +1582,7 @@
         choiceContainer.innerHTML = `
           <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full pointer-events-auto">
             <button onclick="goToChiefAdjudicator()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-lg cursor-pointer">
-              <span>${isEn ? 'Aptitude Assigned ➔ Move to Chief Adjudicator Office' : '군 특기 적성부여 완료 ➔ 판정보조관 & 수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1605,7 +1623,7 @@
                 </div>
               </div>
               <button onclick="goBiometricStep(2)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Height/Weight OK ➔ Move to Blood Pressure' : '신장·체중 계측 완료 ➔ 자동 혈압 측정으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Blood Pressure Test' : '혈압 측정으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1622,7 +1640,7 @@
                 </div>
               </div>
               <button onclick="goBiometricStep(3)" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-                <span>${isEn ? 'Blood Pressure Normal ➔ Move to Eyesight Test' : '혈압 측정 정상 ➔ 안과 시력·색신 검사로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>${isEn ? 'Move to Eyesight & Color Test' : '시력·색각 검사로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
 
@@ -1844,8 +1862,8 @@
         let branchBtn = "";
         if (hasDisease) {
           branchBtn = `
-            <button onclick="proceedFromBiometrics(10);" class="w-full mt-2 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-lg">
-              <span>${isEn ? 'Proceed to Specialist Doctor Clinic' : '과목별 전문의 정밀 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="proceedFromBiometrics(10);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-blue-400/40">
+              <span>${isEn ? 'Move to Specialist Clinic' : '전문의 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
           updateDialogueDirect(
@@ -1853,13 +1871,13 @@
             "Medical Officer NPC",
             "from-teal-700 to-emerald-800 border-teal-400/40",
             "assets/doctor.png",
-            `기본검사 계측이 완료되었습니다. 사전에 등록하신 [${userData.healthCheck || '정형외과 수술 서류'}]의 정밀 심사를 위해 [과목별 전문의 정밀 진료실]로 이동해 주세요!`,
-            `Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your [${userData.healthCheck || 'Orthopedic Surgery Records'}].`
+            `기본검사 계측이 완료되었습니다. 사전에 등록하신 [${userData.healthCheck || '정형외과 수술 서류'}]의 정밀 심사를 위해 [전문의 진료실]로 이동해 주세요!`,
+            `Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your medical documents.`
           );
         } else {
           branchBtn = `
-            <button onclick="proceedFromBiometrics(11);" class="w-full mt-2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-lg">
-              <span>${isEn ? 'Proceed to Aptitude Classification Center' : '적성분류실 (군 특기 및 병역진로설계)로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="proceedFromBiometrics(11);" class="w-full mt-3 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-xl border border-indigo-400/40">
+              <span>${isEn ? 'Move to Aptitude Center' : '적성분류실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
           updateDialogueDirect(
@@ -1868,12 +1886,12 @@
             "from-teal-700 to-emerald-800 border-teal-400/40",
             "assets/doctor.png",
             "기본검사 결과 신장·체중(BMI), 혈압, 시력 모두 정상 1급 예상입니다! 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
-            "Basic biometric exam complete! All items normal Grade 1. Please proceed to the Aptitude Classification Center for military specialty assignment."
+            "Basic biometric exam complete! All items normal Grade 1. Please proceed to the Aptitude Center for military specialty assignment."
           );
         }
 
         resBox.innerHTML = `
-          <div class="space-y-2">
+          <div class="space-y-2.5">
             <div class="flex justify-between font-bold items-center"><span class="text-teal-300">BMI: ${bmi} (혈압·시력 정상)</span><span class="text-amber-400 font-extrabold text-xs sm:text-sm">${gradeText}</span></div>
             <p class="text-[11px] text-slate-300">${descText}</p>
             ${branchBtn}
@@ -1894,6 +1912,11 @@
         choiceOverlay.classList.remove('flex');
       }
       if (choiceContainer) choiceContainer.innerHTML = '';
+      
+      const nextIndicator = document.getElementById('next-indicator');
+      if (nextIndicator) nextIndicator.classList.add('hidden');
+      
+      // 장소 이동 확실히 실행
       renderScene(targetSceneIdx);
     }
 
