@@ -1339,40 +1339,59 @@
       } else if (type === 'PSYCH_TEST_UI') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-              <div class="flex items-center gap-2">
-                <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
-                <span class="font-bold text-xs sm:text-sm text-white">${isEn ? '1st Psychological Test (PC Sample)' : '1차 심리검사 PC 실전 체험 (대표 문항)'}</span>
+          <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+            
+            <!-- 상단 헤더 & 진행 바 -->
+            <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
+                  <span class="font-bold text-xs sm:text-sm text-white">${isEn ? '1st Psychological Test (PC Simulation)' : '1차 심리검사 PC 실전 테스트'}</span>
+                </div>
+                <span id="psych-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
               </div>
-              <span class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">${isEn ? '2 Sample Items' : '체험용 2문항'}</span>
-            </div>
-
-            <!-- 문항 1: 인지능력검사 -->
-            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
-              <span class="font-bold text-slate-200 text-[11px] sm:text-xs">[문항 1 · 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?</span>
-              <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-                <button onclick="answerPsych(1, 1, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">① 군인 - 군대</button>
-                <button onclick="answerPsych(1, 2, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">② 학생 - 학교</button>
-                <button onclick="answerPsych(1, 3, this)" class="psych-q1 p-2 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-left transition text-[11px] cursor-pointer">③ 의사 - 병원</button>
-                <button onclick="answerPsych(1, 4, this)" class="psych-q1 p-2 rounded-lg bg-indigo-600/40 border border-indigo-500 text-indigo-200 text-left transition text-[11px] font-bold cursor-pointer">④ 자동차 - 도로 (선택됨)</button>
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                <div id="psych-progress-bar" class="bg-indigo-500 h-full w-1/2 transition-all duration-300"></div>
               </div>
             </div>
 
-            <!-- 문항 2: 인성검사 -->
-            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
-              <span class="font-bold text-slate-200 text-[11px] sm:text-xs">[문항 2 · 인성/적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.</span>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-0.5">
-                <button onclick="answerPsych(2, 1, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">매우 그렇다</button>
-                <button onclick="answerPsych(2, 2, this)" class="psych-q2 p-1.5 rounded-lg bg-indigo-600 text-white border border-indigo-400 text-center transition text-[11px] font-bold cursor-pointer">대체로 그렇다</button>
-                <button onclick="answerPsych(2, 3, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">보통이다</button>
-                <button onclick="answerPsych(2, 4, this)" class="psych-q2 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-[11px] cursor-pointer">그렇지 않다</button>
+            <!-- [STAGE 1] 문항 1: 인지능력검사 (정답 맞출 때까지 진행) -->
+            <div id="psych-stage-1" class="space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
+                  [문항 1 · 기초 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">① 군인 - 군대</button>
+                  <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">② 학생 - 학교</button>
+                  <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">③ 의사 - 병원</button>
+                  <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/30 hover:border-indigo-500 border border-slate-700 text-slate-300 text-left transition text-xs cursor-pointer">④ 자동차 - 도로</button>
+                </div>
               </div>
+              <div id="psych-q1-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
             </div>
 
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="w-full py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              <span>${isEn ? 'Psych Test Submitted ➔ Move to Pathology/X-ray' : '1차 심리검사 제출 완료 (정상 판정) ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
+            <!-- [STAGE 2] 문항 2: 인성 및 군 복무 적응도 검사 (기본 숨김) -->
+            <div id="psych-stage-2" class="hidden space-y-3">
+              <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+                <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
+                  [문항 2 · 인성 및 군 복무 적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                  <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">매우 그렇다</button>
+                  <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">대체로 그렇다</button>
+                  <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">보통이다</button>
+                  <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/30 border border-slate-700 text-slate-300 text-center transition text-xs cursor-pointer">그렇지 않다</button>
+                </div>
+              </div>
+              <div id="psych-q2-feedback" class="hidden p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-xs font-semibold flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span>답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다.</span>
+              </div>
+              <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition items-center justify-center gap-2 shadow-md cursor-pointer animate-in fade-in">
+                <span>${isEn ? 'Psych Test Completed ➔ Move to Pathology & X-Ray' : '1차 심리검사 제출 완료 (정상 통과) ➔ 임상병리/영상의학실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
           </div>
         `;
       } else if (type === 'LAB_ROOM_CONFIRM') {
@@ -1491,17 +1510,62 @@
       }
     }
 
-    function answerPsych(qNum, optNum, btn) {
+    function checkPsychQ1(choice) {
+      const fb = document.getElementById('psych-q1-feedback');
+      if (!fb) return;
+
+      if (choice === 4) {
+        // 정답!
+        playBeep(750, 'sine', 0.05);
+        fb.className = 'p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in';
+        fb.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span><strong>정답입니다!</strong> (④번은 사물-공간 관계 / ①②③은 사람-소속기관 관계) 1차 인지능력검사를 통과했습니다.</span>';
+        fb.classList.remove('hidden');
+        lucide.createIcons();
+
+        // 0.8초 후 다음 문항(2단계)으로 자동 전환
+        setTimeout(() => {
+          const st1 = document.getElementById('psych-stage-1');
+          const st2 = document.getElementById('psych-stage-2');
+          const pBar = document.getElementById('psych-progress-bar');
+          const pBadge = document.getElementById('psych-step-badge');
+          if (st1) st1.classList.add('hidden');
+          if (st2) {
+            st2.classList.remove('hidden');
+            st2.classList.add('animate-in', 'fade-in');
+          }
+          if (pBar) pBar.style.width = '100%';
+          if (pBadge) pBadge.innerText = (currentLang === 'en') ? 'Step 2 / 2 Items' : '2단계 / 총 2문항';
+          lucide.createIcons();
+        }, 900);
+      } else {
+        // 오답!
+        playBeep(320, 'sawtooth', 0.08);
+        fb.className = 'p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in';
+        fb.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i> <span><strong>오답입니다!</strong> 군인-군대, 학생-학교, 의사-병원은 모두 [사람과 소속 기관]의 관계입니다. 사물과 공간의 관계인 단어를 찾아 다시 풀어보세요.</span>';
+        fb.classList.remove('hidden');
+        lucide.createIcons();
+      }
+    }
+
+    function checkPsychQ2(val, btn) {
       playBeep(650, 'sine', 0.02);
-      const groupClass = qNum === 1 ? '.psych-q1' : '.psych-q2';
-      document.querySelectorAll(groupClass).forEach(b => {
-        b.classList.remove('bg-indigo-600', 'bg-indigo-600/40', 'text-white', 'text-indigo-200', 'border-indigo-400', 'border-indigo-500', 'font-bold', 'font-semibold');
+      document.querySelectorAll('.psych-q2-btn').forEach(b => {
+        b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-400', 'font-bold');
         b.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
       });
       if (btn) {
         btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
         btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-400', 'font-bold');
       }
+
+      const fb = document.getElementById('psych-q2-feedback');
+      const submitBtn = document.getElementById('psych-final-submit');
+      if (fb) fb.classList.remove('hidden');
+      if (submitBtn) {
+        submitBtn.classList.remove('hidden');
+        submitBtn.classList.add('flex');
+      }
+      lucide.createIcons();
     }
 
     function selectHealth(val) {
