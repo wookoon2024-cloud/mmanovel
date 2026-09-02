@@ -3,17 +3,18 @@
  * 📜 [병무청 비주얼 노벨 - 전체 시나리오 대본 데이터 (scenario.js)]
  * =========================================================================
  * 
- * 💡 대본 수정 가이드:
- * - bg: 사용할 배경 이미지 경로 ('assets/room.jpg', 'assets/lobby.jpg', 'assets/exam_room.jpg')
- * - char: 말하는 캐릭터 이미지 경로 ('assets/minwoo.png', 'assets/himchan.png', 'assets/doctor.png')
+ * 💡 대본 및 연출 수정 가이드:
+ * - bg: 배경 이미지 ('assets/room.jpg', 'assets/lobby.jpg', 'assets/exam_room.jpg')
+ * - char: 캐릭터 이미지 ('assets/minwoo.png', 'assets/himchan.png', 'assets/doctor.png')
+ * - charPos: 캐릭터 위치 ('right', 'left', 'center') -> 기본값 'right' (우측)
  * - speaker: 화자 이름
  * - speakerIcon: 화자 아이콘 (이모지)
  * - plateClass: 이름표 색상 그라데이션
- * - text: 출력할 대사 (엔터 줄바꿈 \n 지원)
- * - apiSource: 하단에 표출할 데이터 출처 배지 텍스트
+ * - text: 출력할 대사 (줄바꿈 \n 지원)
+ * - apiSource: 하단 데이터 출처 배지 텍스트
  * - apiIcon: 'database'(DB), 'scale'(법령), 'book-open'(스토리)
  * - isApi: true일 경우 '✓ 실시간 연동' 녹색 배지 표출
- * - widgetType: 특정 화면에 띄울 인터랙티브 UI 위젯 ID (없으면 null)
+ * - widgetType: 화면에 띄울 인터랙티브 UI 위젯 (없으면 null)
  */
 
 const SCENARIOS = [
@@ -21,6 +22,7 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/minwoo.png",
+    charPos: "right",
     speaker: "김민우 (주인공)",
     speakerIcon: "👤",
     plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -35,6 +37,7 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -49,6 +52,7 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -63,6 +67,7 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -77,6 +82,7 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -91,6 +97,7 @@ const SCENARIOS = [
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
@@ -105,6 +112,7 @@ const SCENARIOS = [
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
+    charPos: "right",
     speaker: "심리상담관 NPC",
     speakerIcon: "👨‍⚕️",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
@@ -119,6 +127,7 @@ const SCENARIOS = [
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
+    charPos: "right",
     speaker: "임상병리사 NPC",
     speakerIcon: "👨‍🔬",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
@@ -133,6 +142,7 @@ const SCENARIOS = [
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
+    charPos: "right",
     speaker: "의무관 NPC",
     speakerIcon: "👨‍⚕️",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
@@ -147,6 +157,7 @@ const SCENARIOS = [
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
+    charPos: "right",
     speaker: "정형외과 전담의사 NPC",
     speakerIcon: "🩺",
     plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
@@ -161,6 +172,7 @@ const SCENARIOS = [
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
+    charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     speakerIcon: "🐯",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",

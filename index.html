@@ -100,11 +100,12 @@
     </div>
   </header>
 
-  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (화자별 스탠딩)] ================= -->
-  <div id="character-layer" class="absolute inset-0 z-10 flex items-end justify-center pointer-events-none pb-[210px] sm:pb-[190px]">
-    <div id="sprite-wrapper" class="relative transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end justify-center h-[72vh] sm:h-[80vh] max-w-xl">
+  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (자연스러운 측면 배치)] ================= -->
+  <div id="character-layer" class="absolute inset-0 z-10 flex items-end pointer-events-none pb-[195px] sm:pb-[185px] px-8 sm:px-24">
+    <!-- 캐릭터 스프라이트 래퍼 (기본 우측 배치, 적절한 황금비율 크기 58~62vh) -->
+    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[56vh] sm:h-[64vh]">
       <!-- 캐릭터 투명 PNG 스프라이트 -->
-      <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_35px_rgba(0,0,0,0.85)] char-idle">
+      <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.8)] char-idle">
     </div>
   </div>
 
@@ -299,10 +300,21 @@
       // 배경 변경
       document.getElementById('bg-image').style.backgroundImage = `url('${scene.bg}')`;
 
-      // 캐릭터 스프라이트 제어
+      // 캐릭터 스프라이트 및 위치 제어
       const spriteWrapper = document.getElementById('sprite-wrapper');
       const spriteImg = document.getElementById('sprite-img');
       spriteImg.src = scene.char;
+      
+      // 위치 클래스 초기화 및 적용 (기본: 우측 right)
+      spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
+      if (scene.charPos === 'left') {
+        spriteWrapper.classList.add('mr-auto');
+      } else if (scene.charPos === 'center') {
+        spriteWrapper.classList.add('mx-auto');
+      } else {
+        spriteWrapper.classList.add('ml-auto'); // 기본 우측
+      }
+
       spriteWrapper.classList.remove('opacity-0', 'translate-y-8');
       spriteWrapper.classList.add('opacity-100', 'translate-y-0');
 
