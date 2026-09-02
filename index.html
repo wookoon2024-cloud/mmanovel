@@ -76,7 +76,7 @@
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <span class="text-sm sm:text-base font-extrabold tracking-tight text-white vn-shadow">슬기로운 신검 라이프</span>
+          <span class="text-sm sm:text-base font-extrabold tracking-tight text-white vn-shadow">슬기로운 병역 라이프</span>
           <span class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-300 border border-blue-400/40 font-semibold">병무청 Open API</span>
         </div>
         <p id="top-step-title" class="text-[11px] text-blue-200/80 font-medium">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -85,6 +85,9 @@
 
     <!-- 우측 인터랙션 퀵 컨트롤 버튼 -->
     <div class="flex items-center space-x-2 text-xs">
+      <button onclick="showMainMenu()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/40 text-cyan-300 font-bold backdrop-blur-md transition flex items-center gap-1.5 shadow-md" title="메인 시나리오 선택 로비로 이동">
+        <i data-lucide="home" class="w-3.5 h-3.5"></i> 메인메뉴
+      </button>
       <button id="btn-speed" onclick="toggleSpeed()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 backdrop-blur-md transition flex items-center gap-1.5 text-blue-300 font-bold shadow-md" title="대사 출력 속도 조절">
         <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> <span id="speed-label">1.0x</span>
       </button>
@@ -102,6 +105,142 @@
       </button>
     </div>
   </header>
+
+  <!-- ================= [LAYER 2.5: 게임 메인 타이틀 & 시나리오 선택 로비 오버레이] ================= -->
+  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-8 overflow-y-auto custom-scroll animate-in fade-in duration-300">
+    
+    <!-- 로비 상단 바 -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-800/80 pb-4 max-w-6xl w-full mx-auto">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(34,211,238,0.4)] border border-cyan-400/30">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-[11px] font-bold text-cyan-400 tracking-wider">REPUBLIC OF KOREA MILITARY MANPOWER ADMINISTRATION</span>
+          <h1 class="text-lg sm:text-xl font-black text-white tracking-tight">대한민국 병무청 인터랙티브 스토리 포털</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs font-bold bg-cyan-950/60 border border-cyan-500/30 px-3.5 py-1.5 rounded-full text-cyan-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>공공데이터포털(data.go.kr) & 국가법령정보 Open API 실시간 동기화 ON</span>
+      </div>
+    </div>
+
+    <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 -->
+    <div class="max-w-6xl w-full mx-auto my-6 sm:my-8 space-y-6">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-black tracking-widest uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> SELECT SCENARIO EPISODE
+        </div>
+        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight vn-shadow">
+          슬기로운 병역 라이프 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300">시뮬레이션</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto">
+          원하시는 에피소드를 선택하여 병무 행정 절차와 실시간 공공데이터 연동 시스템을 게임처럼 직접 체험해보세요.
+        </p>
+      </div>
+
+      <!-- 카드 2개 배치 (병역판정검사 & 예비군) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+        
+        <!-- CARD 1: 병역판정검사 (플레이 가능) -->
+        <div class="group relative rounded-3xl bg-gradient-to-b from-slate-900/90 via-slate-900/95 to-slate-950 border-2 border-cyan-500/60 hover:border-cyan-300 p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 transform hover:-translate-y-1.5 shadow-[0_0_35px_rgba(34,211,238,0.2)] hover:shadow-[0_0_50px_rgba(34,211,238,0.4)] backdrop-blur-xl">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-xs font-black tracking-wider flex items-center gap-1.5 shadow-[0_0_12px_rgba(34,211,238,0.3)]">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> EPISODE 01 · 플레이 가능
+              </span>
+              <span class="text-xs font-bold text-slate-400 flex items-center gap-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i> 소요시간: 약 3분
+              </span>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-cyan-300 transition tracking-tight">
+                힘찬이와 함께하는 병역판정검사의 모든 것
+              </h3>
+              <p class="text-xs sm:text-sm text-cyan-200/90 font-medium mt-1">
+                만 19세 청년 김민우의 생생한 신검 여정 & 스마트 일정 변경
+              </p>
+            </div>
+
+            <div class="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300">
+              <div class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+                <span>통지서 확인 및 14개 지방청 실시간 잔여석 달력 변경</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+                <span>개인 질환별 국방부령 법령 기준 및 구비서류 자동 점검</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+                <span>정밀 신체계측(BMI) & 나라사랑카드 선택 및 여비 자동 정산</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button onclick="startEpisode(1)" class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-black text-sm sm:text-base tracking-wide flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(34,211,238,0.4)] transition transform hover:scale-[1.01] cursor-pointer">
+              <i data-lucide="play" class="w-5 h-5 fill-white"></i> 시나리오 플레이 시작 (START)
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 2: 예비군 훈련 (준비 중) -->
+        <div class="group relative rounded-3xl bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-950/90 border-2 border-slate-700/80 hover:border-amber-500/60 p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 backdrop-blur-xl opacity-90 hover:opacity-100">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/60 text-amber-300 text-xs font-black tracking-wider flex items-center gap-1.5">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i> EPISODE 02 · 오픈 준비 중
+              </span>
+              <span class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i> 대상: 1~6년차 예비역
+              </span>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-black text-slate-200 group-hover:text-amber-300 transition tracking-tight">
+                슬기로운 예비군 훈련 생활 (동원 & 학생 예비군)
+              </h3>
+              <p class="text-xs sm:text-sm text-amber-200/80 font-medium mt-1">
+                동원훈련 소집통지서 확인부터 자율 훈련 신청 및 훈련보상비 가이드
+              </p>
+            </div>
+
+            <div class="space-y-2 bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                <span>동원/동미참/학생 예비군 훈련 유형별 소집통지서 모의 확인</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                <span>휴일 및 전국 단위 자율 훈련 일정 신청 시뮬레이션</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                <span>훈련 연기 사유서(자격증/질병) 점검 및 실시간 훈련보상비 산정</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button onclick="startEpisode(2)" class="w-full py-3.5 sm:py-4 rounded-2xl bg-slate-800 hover:bg-amber-950/60 border border-slate-700 hover:border-amber-400/60 text-slate-300 hover:text-amber-300 font-black text-sm sm:text-base tracking-wide flex items-center justify-center gap-2 transition cursor-pointer">
+              <i data-lucide="clock" class="w-5 h-5"></i> 시나리오 준비 중 (COMING SOON)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 로비 하단 정보 바 -->
+    <div class="text-center pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 max-w-6xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+      <span class="text-slate-400 font-medium">공공데이터포털(data.go.kr) & 국가법령정보센터 Open API 실시간 연계 시스템</span>
+    </div>
+
+  </div>
 
   <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (바닥 완전 밀착 안착)] ================= -->
   <div id="character-layer" class="absolute inset-0 z-10 flex items-end pointer-events-none pb-0 px-8 sm:px-24">
@@ -990,6 +1129,31 @@
         }
       }
     }
+    // 에피소드 시나리오 실행 함수
+    function startEpisode(epNum) {
+      if (epNum === 1) {
+        playBeep(880, 'sine', 0.1);
+        const menu = document.getElementById('main-menu-overlay');
+        if (menu) menu.classList.add('hidden');
+        conversationHistory.length = 0;
+        renderScene(0);
+      } else if (epNum === 2) {
+        playBeep(440, 'triangle', 0.1);
+        alert("🚧 [EPISODE 02: 슬기로운 예비군 훈련 생활]\n\n현재 동원훈련 소집통지서 확인 및 전국 단위 자율 훈련 신청, 훈련 보상비 실시간 모의 산정 시나리오를 검수·제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🎖️");
+      }
+    }
+
+    // 메인 로비 메뉴로 복귀
+    function showMainMenu() {
+      playBeep(600, 'triangle', 0.05);
+      clearInterval(typingInterval);
+      clearTimeout(autoPlayTimer);
+      isTyping = false;
+      const menu = document.getElementById('main-menu-overlay');
+      if (menu) menu.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
     function restartGame() {
       conversationHistory.length = 0;
       renderScene(0);
@@ -997,7 +1161,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
-      renderScene(0);
+      // 초기 로드 시 메인 시나리오 선택 로비 표출 (대기)
     });
   </script>
 </body>
