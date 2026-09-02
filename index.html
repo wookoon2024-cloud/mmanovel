@@ -259,7 +259,48 @@
     let autoPlay = false;
     let autoPlayTimer = null;
     let soundEnabled = true;
-    let currentSpeed = 1.0; // 기본 대사 속도 1.    // 장면 렌더링
+    let currentSpeed = 1.0; // 기본 대사 속도 1.0x
+    const SPEED_INTERVALS = { 1.0: 38, 1.5: 22, 2.0: 10 };
+
+    // 사용자 시뮬레이션 상태 저장소
+    const userData = {
+      name: "김민우",
+      region: "강원지방병무청",
+      regionName: "강원특별자치도 춘천시",
+      examDate: "2026-10-29 (목) 오전",
+      healthCheck: "정형외과 수술/치료 이력",
+      cardType: "KB국민은행 나라사랑카드",
+      height: 178,
+      weight: 72,
+      bmi: 22.7,
+      bmiGrade: "1급 (정상)",
+      specialty: "정형외과",
+      finalGrade: "4급 (보충역)",
+      disposition: "사회복무요원 소집 대상",
+      fare: "16,500원 (교통비 8,500원 + 식비 8,000원)"
+    };
+
+    const conversationHistory = [];
+
+    // 오디오 비프음 생성 (Web Audio API)
+    function playBeep(freq = 560, type = 'sine', duration = 0.03) {
+      if (!soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    // 장면 렌더링
     function renderScene(idx) {
       if (typeof SCENARIOS === 'undefined' || !SCENARIOS || idx >= SCENARIOS.length) {
         showCertModal();
