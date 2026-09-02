@@ -89,8 +89,8 @@
       <button id="btn-speed" onclick="toggleSpeed()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-800 font-bold shadow-sm cursor-pointer" title="대사 출력 속도 조절">
         <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> <span id="speed-label">1.0x</span>
       </button>
-      <button id="btn-sound" onclick="toggleSound()" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 shadow-sm cursor-pointer" title="사운드 On/Off">
-        <i id="sound-icon" data-lucide="volume-2" class="w-4 h-4 text-slate-700"></i>
+      <button id="btn-sound" onclick="toggleSound()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-700 font-bold shadow-sm cursor-pointer" title="AI 음성 TTS 낭독 & 효과음 On/Off">
+        <i id="sound-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i> <span id="sound-label" class="text-xs">TTS 음성 ON</span>
       </button>
       <button id="btn-auto" onclick="toggleAuto()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1.5 text-slate-700 font-semibold shadow-sm cursor-pointer">
         <i data-lucide="play-circle" class="w-3.5 h-3.5 text-blue-600"></i> AUTO
@@ -456,6 +456,56 @@
       } catch(e) {}
     }
 
+    // ================= [AI TTS (음성 낭독) 엔진 (Web Speech API)] =================
+    let ttsVoice = null;
+
+    function initTTSVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        ttsVoice = voices.find(v => v.lang.includes('ko') || v.lang.includes('KO')) || null;
+      };
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+    initTTSVoices();
+
+    function speakDialogue(speaker, text) {
+      if (!soundEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel(); // 이전 음성 즉시 중단
+        
+        // 읽기 전용 텍스트 정제 (특수문자, HTML 태그, 괄호 제거)
+        const cleanText = text
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        if (!cleanText) return;
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'ko-KR';
+        if (ttsVoice) utterance.voice = ttsVoice;
+
+        // 화자별 AI 음성 톤앤매너 설정
+        if (speaker && speaker.includes('힘찬이')) {
+          utterance.rate = 1.08;
+          utterance.pitch = 1.18; // 밝고 친절한 AI 어시스턴트 톤
+        } else if (speaker && speaker.includes('김민우')) {
+          utterance.rate = 1.0;
+          utterance.pitch = 0.95; // 청년 주인공의 자연스러운 톤
+        } else {
+          utterance.rate = 0.96;
+          utterance.pitch = 0.9; // 의무관/전문의의 신뢰감 있는 톤
+        }
+
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {}
+    }
+
     let currentBg = "";
 
     // 장면 렌더링 (배경 변경 감지 시 장소 이동 트랜지션 실행)
@@ -640,6 +690,9 @@
       const scene = SCENARIOS[currentSceneIdx];
       const targetText = currentDialogueList[currentDialogueIdx] || '';
       const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
+
+      // AI TTS 한국어 음성 낭독 실행
+      speakDialogue(scene.speaker, targetText);
 
       typewriterEffect(targetText, () => {
         if (isLastChunk) {
@@ -1366,7 +1419,20 @@
     function toggleSound() {
       soundEnabled = !soundEnabled;
       const icon = document.getElementById('sound-icon');
-      if (icon) icon.setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
+      const label = document.getElementById('sound-label');
+      if (soundEnabled) {
+        if (icon) icon.setAttribute('data-lucide', 'volume-2');
+        if (label) label.innerText = "TTS 음성 ON";
+        playBeep(880, 'sine', 0.05);
+        const scene = SCENARIOS[currentSceneIdx];
+        if (scene && currentDialogueList && currentDialogueList[currentDialogueIdx]) {
+          speakDialogue(scene.speaker, currentDialogueList[currentDialogueIdx]);
+        }
+      } else {
+        if (icon) icon.setAttribute('data-lucide', 'volume-x');
+        if (label) label.innerText = "음소거 OFF";
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
       lucide.createIcons();
     }
     function toggleAuto() {
