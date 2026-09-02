@@ -701,15 +701,24 @@
               <span class="font-bold text-sm text-white flex items-center gap-2">
                 <i data-lucide="building" class="w-4 h-4 text-blue-400"></i> ${userData.region} ${contact.dept || '병역판정검사과'}
               </span>
-              <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">실시간 연동</span>
+              <span class="text-[11px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">모의 체험 설정됨</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-300">
               <div class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i> ${contact.phone} (직통)</div>
               <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i> ${contact.address}</div>
             </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-md cursor-pointer">
-              선택 완료하고 구비서류 점검으로 이동 <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
+            <div class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+              <i data-lucide="info" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+              <span>실제 검사일자 본인선택(변경)은 병무청 공식 누리집(mwpt.mma.go.kr) 또는 모바일 병무청 앱에서 본인인증을 통해 정식 신청하셔야 합니다.</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl text-xs font-bold text-slate-200 transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>병무청 실제 신청 페이지</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md cursor-pointer">
+                <span>다음: 구비서류 점검</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
           </div>
         `;
       } else if (type === 'HEALTH_CHECK_CHOICE') {

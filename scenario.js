@@ -65,7 +65,7 @@ const SCENARIOS = [
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탁월한 선택입니다! 민우 님께서 직접 고르신 [ {examDate} ]으로 일정을 확정하셨네요.\n\n{region}으로 방문 일정이 안전하게 예약되었으며,\n해당 일정으로 변경하거나 궁금한 점이 있을 때\n바로 문의할 수 있는 직통 연락처를 안내해 드립니다.",
+    text: "탁월한 선택입니다! 민우 님께서 고르신 [ {examDate} ]으로 가상 수검 일정이 설정되었습니다.\n\n※ 본 게임은 절차 이해를 돕기 위한 모의 체험 시뮬레이션이며, 실제 병역판정검사 일자 변경은 병무청 공식 누리집(인터넷 민원) 또는 모바일 앱에서 본인인증 후 정식 신청하셔야 합니다.\n\n관련 문의가 필요할 때 이용할 수 있는 {region} 직통 연락처를 안내해 드릴게요.",
     apiSource: "공공데이터포털: 병무청_지방병무(지)청 조직 및 부서별 연락처 Open API",
     apiIcon: "database",
     isApi: true,
