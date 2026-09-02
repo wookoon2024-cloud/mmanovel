@@ -100,33 +100,31 @@
     </div>
   </header>
 
-  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (자연스러운 측면 배치)] ================= -->
-  <div id="character-layer" class="absolute inset-0 z-10 flex items-end pointer-events-none pb-[195px] sm:pb-[185px] px-8 sm:px-24">
-    <!-- 캐릭터 스프라이트 래퍼 (기본 우측 배치, 적절한 황금비율 크기 58~62vh) -->
-    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[56vh] sm:h-[64vh]">
+  <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (바닥 완전 밀착 안착)] ================= -->
+  <div id="character-layer" class="absolute inset-0 z-10 flex items-end pointer-events-none pb-0 px-8 sm:px-24">
+    <!-- 캐릭터가 화면 하단 바닥(대화창 뒤)에 자연스럽게 서 있는 스탠딩 구도 -->
+    <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[72vh] sm:h-[82vh]">
       <!-- 캐릭터 투명 PNG 스프라이트 -->
-      <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.8)] char-idle">
+      <img id="sprite-img" src="assets/minwoo.png" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
     </div>
   </div>
 
-  <!-- ================= [LAYER 4: 하단 대화창 & 인터랙션 UI] ================= -->
+  <!-- ================= [LAYER 4: 하단 대화창 & 인터랙션 UI (이름표 일체형)] ================= -->
   <div class="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-end p-3 sm:p-6 pointer-events-none">
     <div class="w-full max-w-5xl pointer-events-auto">
       
-      <!-- 플로팅 화자 이름표 (Speaker Nameplate) -->
-      <div class="flex items-center gap-2 mb-1.5 pl-2">
-        <div id="speaker-plate" class="px-4 py-1.5 rounded-t-xl bg-gradient-to-r from-slate-700 to-slate-900 border-t border-x border-slate-500/40 text-white font-extrabold text-sm sm:text-base shadow-xl flex items-center gap-2">
-          <span id="speaker-icon">👤</span>
+      <!-- 대화창과 완벽히 일체형으로 붙은 이름표 (아이콘 제거, 간격 0) -->
+      <div class="flex items-end pl-0">
+        <div id="speaker-plate" class="px-5 py-2 rounded-t-xl bg-slate-900 border-t border-x border-slate-600 text-white font-black text-sm sm:text-base shadow-2xl tracking-wide">
           <span id="speaker-name">김민우 (주인공)</span>
         </div>
-        <span id="typing-tag" class="text-[11px] text-blue-300/80 animate-pulse font-medium">대화 진행 중...</span>
       </div>
 
-      <!-- 메인 대화 박스 (Glassmorphism VN Box) -->
-      <div class="relative bg-slate-950/85 backdrop-blur-2xl border border-slate-700/80 rounded-2xl rounded-tl-none p-5 sm:p-6 vn-box-glow min-h-[155px] sm:min-h-[180px] flex flex-col justify-between cursor-pointer transition-all hover:border-blue-500/50" onclick="handleNextClick()">
+      <!-- 메인 대화 박스 (이름표와 연결된 라운딩, 시원한 폰트) -->
+      <div class="relative bg-slate-950/90 backdrop-blur-2xl border border-slate-700 rounded-2xl rounded-tl-none p-5 sm:p-7 vn-box-glow min-h-[160px] sm:min-h-[185px] flex flex-col justify-between cursor-pointer transition-all hover:border-blue-500/50" onclick="handleNextClick()">
         
-        <!-- 대사 텍스트 (Typewriter) -->
-        <div id="dialogue-box" class="flex-1 text-slate-100 text-sm sm:text-base md:text-[17px] leading-relaxed tracking-normal font-medium whitespace-pre-line select-text">
+        <!-- 대사 텍스트 (더 크고 읽기 편한 폰트 & 넉넉한 줄간격) -->
+        <div id="dialogue-box" class="flex-1 text-slate-100 text-base sm:text-lg md:text-[19px] leading-relaxed tracking-normal font-medium whitespace-pre-line select-text">
           <p id="dialogue-text"></p>
         </div>
 
@@ -320,8 +318,7 @@
 
       // 화자 네임플레이트
       document.getElementById('speaker-name').innerText = scene.speaker;
-      document.getElementById('speaker-icon').innerText = scene.speakerIcon;
-      document.getElementById('speaker-plate').className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-sm sm:text-base shadow-xl flex items-center gap-2 ${scene.plateClass}`;
+      document.getElementById('speaker-plate').className = `px-5 py-2 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-black text-sm sm:text-base shadow-2xl tracking-wide ${scene.plateClass}`;
       
       // 하단 API / 스토리 배지
       document.getElementById('api-source-badge').innerText = scene.apiSource;
