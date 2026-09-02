@@ -491,16 +491,32 @@
 
       // 목적지에 따른 이동 타이틀 및 안내 동적 설정
       if (newScene.bg.includes('lobby') && currentSceneIdx < 5) {
-        if (title) title.innerText = `${userData.region} 검사장으로 이동 중...`;
-        if (desc) desc.innerText = "신분증 확인 및 전용 검사복 환복";
+        if (title) title.innerText = `${userData.region} 검사장 도착`;
+        if (desc) desc.innerText = "1층 안내데스크 접수 및 나라사랑카드 금융 등록";
         if (icon) icon.setAttribute('data-lucide', 'building-2');
+      } else if (newScene.bg.includes('locker_room')) {
+        if (title) title.innerText = "1층 전용 탈의실 및 사물함실로 이동 중...";
+        if (desc) desc.innerText = "RFID 스마트 팔찌 수령 및 전용 검사복(상·하의) 환복";
+        if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else if (newScene.bg.includes('exam_room')) {
-        if (title) title.innerText = "정밀 검사장(심리/임상/신체계측)으로 이동 중...";
-        if (desc) desc.innerText = "1차 심리검사실 및 혈액/소변 검사, 신체계측실 입장";
-        if (icon) icon.setAttribute('data-lucide', 'activity');
-      } else if (newScene.bg.includes('lobby')) {
+        if (title) title.innerText = "2층 심리검사실(전산실)로 이동 중...";
+        if (desc) desc.innerText = "1차 인성 및 인지능력 컴퓨터 심리검사";
+        if (icon) icon.setAttribute('data-lucide', 'brain');
+      } else if (newScene.bg.includes('lab_room')) {
+        if (title) title.innerText = "임상병리검사실 및 영상의학실로 이동 중...";
+        if (desc) desc.innerText = "혈액·소변 검체 채취 및 흉부 X-ray 촬영";
+        if (icon) icon.setAttribute('data-lucide', 'flask-conical');
+      } else if (newScene.bg.includes('body_measure_room')) {
+        if (title) title.innerText = "자동 신체계측실로 이동 중...";
+        if (desc) desc.innerText = "신장, 체중, 체질량지수(BMI), 혈압 자동 정밀 측정";
+        if (icon) icon.setAttribute('data-lucide', 'ruler');
+      } else if (newScene.bg.includes('doctor_room')) {
+        if (title) title.innerText = "정형외과 전문의 정밀 진료실로 이동 중...";
+        if (desc) desc.innerText = "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
+        if (icon) icon.setAttribute('data-lucide', 'stethoscope');
+      } else if (newScene.bg.includes('lobby') && currentSceneIdx >= 9) {
         if (title) title.innerText = "수석판정관실 및 1층 로비로 이동 중...";
-        if (desc) desc.innerText = "최종 병역판정 결과서 수령 및 실시간 여비 정산";
+        if (desc) desc.innerText = "최종 병역처분 결과서 수령 및 실시간 여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
       } else {
         if (title) title.innerText = "다음 장소로 이동 중...";
@@ -593,9 +609,11 @@
       if (topTitle) {
         if (idx <= 3) topTitle.innerText = "STEP 1: 통지서 확인 & 스마트 일정 변경";
         else if (idx === 4) topTitle.innerText = "STEP 2: 맞춤형 서류 및 사전 점검";
-        else if (idx === 5) topTitle.innerText = "STEP 3: 검사장 접수 & 나라사랑카드";
-        else if (idx <= 8) topTitle.innerText = "STEP 4: 심리/임상/신체계측 정밀 검사";
-        else topTitle.innerText = "STEP 5: 최종 판정 & 실시간 여비 정산";
+        else if (idx === 5) topTitle.innerText = "STEP 3: 1층 로비 접수 & 카드 등록";
+        else if (idx === 6) topTitle.innerText = "STEP 4: 탈의실 환복 & 스마트 팔찌 착용";
+        else if (idx <= 9) topTitle.innerText = "STEP 5: 심리/임상/신체계측 정밀 검사";
+        else if (idx === 10) topTitle.innerText = "STEP 6: 전문의 정밀 진료 (정형외과)";
+        else topTitle.innerText = "STEP 7: 최종 판정 & 실시간 여비 정산";
       }
 
       // 스크롤 컨테이너 최상단 초기화
@@ -914,13 +932,46 @@
             </div>
           </div>
         `;
+      } else if (type === 'LOCKER_CHANGE_CONFIRM') {
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0">
+                <i data-lucide="shirt" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-sm text-white">RFID 스마트 팔찌 태그 및 환복 완료</h4>
+                <p class="text-xs text-slate-400">배정된 사물함에 소지품 보관 및 검사복(상·하의) 착용</p>
+              </div>
+            </div>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>검사복 환복 완료 ➔ 2층 심리검사실로 이동</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
       } else if (type === 'PSYCH_TEST_UI') {
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 p-5 rounded-2xl border border-slate-700 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div class="bg-slate-900/95 p-5 rounded-2xl border border-slate-700 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
             <div class="flex justify-between text-xs sm:text-sm text-slate-300 font-bold"><span>1차 심리검사 진행도 (인성 및 인지능력)</span><span class="text-emerald-400">100% 완료</span></div>
             <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800"><div class="bg-blue-500 h-full w-full"></div></div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-bold text-white transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
-              심리검사 완료 후 임상병리실로 이동 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>심리검사 완료 ➔ 임상병리/영상의학실로 이동</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'LAB_ROOM_CONFIRM') {
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>임상병리/X-ray 완료 ➔ 자동 신체계측실로 이동</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'DOCTOR_ROOM_CONFIRM') {
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(11);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <span>전문의 진료 완료 ➔ 1층 최종 수석판정관실로 이동</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -1014,7 +1065,7 @@
           <div class="space-y-1.5">
             <div class="flex justify-between font-bold"><span class="text-teal-300">BMI 지수: ${bmi}</span><span class="text-amber-400">${gradeText}</span></div>
             <p class="text-[11px] text-slate-300">${descText}</p>
-            <button onclick="renderScene(9)" class="w-full mt-2 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition">정형외과/과목별 진료실로 이동</button>
+            <button onclick="renderScene(10)" class="w-full mt-2 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-bold transition">정형외과/과목별 진료실로 이동</button>
           </div>
         `;
         resBox.classList.remove('hidden');
@@ -1403,12 +1454,14 @@
       if (!btnContainer) return;
 
       const save = getSavedGameState();
-      if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 11)) {
+      if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
         let stepText = "STEP 1: 일정 변경";
         if (save.sceneIdx === 4) stepText = "STEP 2: 구비서류 점검";
-        else if (save.sceneIdx === 5) stepText = "STEP 3: 검사장 접수";
-        else if (save.sceneIdx <= 8) stepText = "STEP 4: 정밀 신체검사";
-        else if (save.sceneIdx >= 9) stepText = "STEP 5: 최종 판정";
+        else if (save.sceneIdx === 5) stepText = "STEP 3: 1층 로비 접수";
+        else if (save.sceneIdx === 6) stepText = "STEP 4: 탈의실 환복";
+        else if (save.sceneIdx <= 9) stepText = "STEP 5: 정밀 신체검사";
+        else if (save.sceneIdx === 10) stepText = "STEP 6: 전문의 진료";
+        else if (save.sceneIdx >= 11) stepText = "STEP 7: 최종 판정";
 
         if (badgeContainer) {
           badgeContainer.innerHTML = `

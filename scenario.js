@@ -86,37 +86,51 @@ const SCENARIOS = [
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
-  // [SCENE 5] 병무청 1층 로비 - 검사장 도착 & 나라사랑카드 선택
+  // [SCENE 5] 병무청 1층 로비 - 검사장 도착 & 나라사랑카드 등록
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "드디어 검사 당일!\n{region} 1층 로비 안내데스크에서 신분증을 태그하고 전용 검사복으로 환복해 주세요.\n\n그리고 오늘 검사 여비(교통비/식비)와 군 월급을 입금받을 나라사랑카드를 등록할 차례입니다.\n혜택을 비교해 보시고 마음에 드는 카드를 선택해 보세요!",
+    text: "드디어 검사 당일!\n{region} 1층 로비 접수데스크에 도착했습니다.\n\n먼저 오늘 검사 여비(교통비/식비)와 군 복무 월급을 입금받을 나라사랑카드를 선택·등록해 주세요.",
     apiSource: "공공데이터포털: 병무청_나라사랑카드 금융연계 서비스 API",
     apiIcon: "database",
     isApi: true,
     widgetType: "NARA_CARD_CHOICE"
   },
 
-  // [SCENE 6] 검사실 전산실 - 1차 심리검사
+  // [SCENE 6] 1층 탈의실 및 사물함실 - RFID 스마트 팔찌 & 검사복 환복
+  {
+    bg: "assets/locker_room.jpg",
+    char: "assets/himchan.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    text: "탈의실로 이동했습니다!\n접수대에서 발급받은 RFID 스마트 팔찌를 배정된 사물함에 태그하고, 소지품을 보관한 뒤 전용 검사복(상·하의)으로 환복해 주세요.\n\n스마트 팔찌는 모든 검사실에 들어갈 때 전자기록 리더기에 태그하게 됩니다.\n환복을 마치셨다면 2층 심리검사실로 이동해 볼까요?",
+    apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
+    apiIcon: "scale",
+    isApi: true,
+    widgetType: "LOCKER_CHANGE_CONFIRM"
+  },
+
+  // [SCENE 7] 2층 심리검사실 (전산실) - 1차 인성 및 인지능력 검사
   {
     bg: "assets/exam_room.jpg",
     char: "assets/doctor.png",
     charPos: "right",
     speaker: "심리상담관 NPC",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-    text: "병역판정검사의 첫 순서는 '심리검사'입니다.\n\n전산실 모니터 화면에 나오는\n1차 인성 및 인지능력 검사 문항을 솔직하게 답변해 주세요.",
+    text: "병역판정검사의 본격적인 첫 순서는 '심리검사'입니다.\n\n좌석 모니터 화면에 나오는\n1차 인성 및 인지능력 검사 문항을 솔직하게 답변해 주세요.",
     apiSource: "국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
     apiIcon: "scale",
     isApi: true,
     widgetType: "PSYCH_TEST_UI"
   },
 
-  // [SCENE 7] 검사실 - 임상병리 및 영상의학
+  // [SCENE 8] 임상병리검사실 및 영상의학실 - 채혈·소변검사 & 흉부 X-ray
   {
-    bg: "assets/exam_room.jpg",
+    bg: "assets/lab_room.jpg",
     char: "assets/doctor.png",
     charPos: "right",
     speaker: "임상병리사 NPC",
@@ -125,12 +139,12 @@ const SCENARIOS = [
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」 [별표 1] 신장·체중 판정기준",
     apiIcon: "scale",
     isApi: true,
-    widgetType: null
+    widgetType: "LAB_ROOM_CONFIRM"
   },
 
-  // [SCENE 8] 검사실 - 신체계측 & BMI 계산기
+  // [SCENE 9] 자동 신체계측실 - 신장/체중/혈압 & BMI 계산기
   {
-    bg: "assets/exam_room.jpg",
+    bg: "assets/body_measure_room.jpg",
     char: "assets/doctor.png",
     charPos: "right",
     speaker: "의무관 NPC",
@@ -142,9 +156,9 @@ const SCENARIOS = [
     widgetType: "BMI_CALCULATOR"
   },
 
-  // [SCENE 9] 검사실 - 전문의 정밀 진료
+  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료
   {
-    bg: "assets/exam_room.jpg",
+    bg: "assets/doctor_room.jpg",
     char: "assets/doctor.png",
     charPos: "right",
     speaker: "정형외과 전담의사 NPC",
@@ -153,10 +167,10 @@ const SCENARIOS = [
     apiSource: "국가법령정보센터: 「검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
     apiIcon: "scale",
     isApi: true,
-    widgetType: null
+    widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 10] 1층 로비 - 최종 판정, 여비 정산 & 정책 홍보
+  // [SCENE 11] 1층 로비 및 수석판정관실 - 최종 판정, 여비 정산 & 정책 홍보
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
