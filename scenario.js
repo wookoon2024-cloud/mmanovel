@@ -419,7 +419,7 @@ const SCENARIOS = [
     widgetType: "APTITUDE_CONFIRM"
   },
 
-  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산 & 나라사랑가게 안내
+  // [SCENE 12] 판정실 - 판정보좌관 확인 ➔ 수석판정관 최종 판정 & 여비 정산 & 나라사랑가게 안내
   {
     bg: "assets/adjudicator_room.jpg",
     char: "assets/adjudicator.png",
@@ -428,12 +428,12 @@ const SCENARIOS = [
     plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
     dialogues: [
       {
-        speaker: "판정보조관 NPC",
+        speaker: "판정보좌관 NPC",
         speaker_en: "Adjudication Assistant NPC",
         char: "assets/assistant_adjudicator.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
-        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리, 체질량(BMI), 전문의 정밀진료 및 적성분류 전산 데이터를 모두 대조·검증 완료하여 수석판정관님께 최종 판정을 상신합니다.",
+        text: "안녕하십니까! 판정보좌관입니다. 김민우 님의 심리검사, 임상병리, 체질량(BMI), 전문의 정밀진료 및 적성분류 전산 데이터를 모두 대조·검증 완료하여 수석판정관님께 최종 판정을 상신합니다.",
         text_en: "Hello, I am the Adjudication Assistant. All medical and aptitude data have been verified. Submitting to Chief Adjudicator for final determination."
       },
       {
