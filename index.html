@@ -1218,12 +1218,32 @@
         topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
       }
 
-      // 씬의 다중 화자 대사 목록(dialogues) 또는 기본 text 파싱
+      // 씬의 다중 화자 대사 목록(dialogues) 또는 기본 text 파싱 (단락별 \n\n 자동 분할로 스크롤 방지 및 쾌적한 문단 넘김)
       if (scene.dialogues && Array.isArray(scene.dialogues) && scene.dialogues.length > 0) {
-        currentDialogueList = scene.dialogues;
+        const expandedList = [];
+        scene.dialogues.forEach(dlg => {
+          const textKo = dlg.text || '';
+          const textEn = dlg.text_en || textKo;
+          // \n\n 기준 단락 분할
+          const chunksKo = textKo.split('\n\n').map(s => s.trim()).filter(Boolean);
+          const chunksEn = textEn.split('\n\n').map(s => s.trim()).filter(Boolean);
+
+          if (chunksKo.length > 1) {
+            chunksKo.forEach((cKo, idx) => {
+              expandedList.push({
+                ...dlg,
+                text: cKo,
+                text_en: chunksEn[idx] || cKo
+              });
+            });
+          } else {
+            expandedList.push(dlg);
+          }
+        });
+        currentDialogueList = expandedList;
       } else {
         const baseSceneText = (currentLang === 'en' && scene.text_en) ? scene.text_en : scene.text;
-        const rawFullText = formatSceneText(baseSceneText);
+        const rawFullText = baseSceneText || '';
         const textChunks = rawFullText.split('\n\n').map(s => s.trim()).filter(Boolean);
         currentDialogueList = (textChunks.length > 0 ? textChunks : [rawFullText]).map(txt => ({
           speaker: scene.speaker,

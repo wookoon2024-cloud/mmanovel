@@ -396,7 +396,7 @@ const SCENARIOS = [
     widgetType: "APTITUDE_CONFIRM"
   },
 
-  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산 (수석판정관 & 응원하는 힘찬이)
+  // [SCENE 12] 수석판정관실 - 판정보조관 확인 ➔ 수석판정관 최종 판정 & 여비 정산 & 단락별 안내
   {
     bg: "assets/adjudicator_room.jpg",
     char: "assets/adjudicator.png",
@@ -410,8 +410,17 @@ const SCENARIOS = [
         char: "assets/assistant_adjudicator.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
-        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 기본검사(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
-        text_en: "Hello, I am the Adjudication Assistant. I have verified all data from your psychological test, lab tests, biometrics, specialist doctor evaluations, and aptitude classifications.\n\nSubmitting to Chief Adjudicator for final determination."
+        text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 기본검사(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.",
+        text_en: "Hello, I am the Adjudication Assistant. I have verified all data from your psychological test, lab tests, biometrics, specialist doctor evaluations, and aptitude classifications."
+      },
+      {
+        speaker: "판정보조관 NPC",
+        speaker_en: "Adjudication Assistant NPC",
+        char: "assets/assistant_adjudicator.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
+        text: "수석판정관님께 최종 판정을 상신합니다.",
+        text_en: "Submitting to Chief Adjudicator for final determination."
       },
       {
         speaker: "수석판정관 NPC",
@@ -419,8 +428,17 @@ const SCENARIOS = [
         char: "assets/adjudicator.png",
         charPos: "right",
         plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
-        text: "수검자 김민우 님! 오늘 오전부터 진행된 모든 검사를 무사히 마치셨습니다. 대단히 수고 많으셨습니다!\n\n종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
-        text_en: "Examinee Minwoo Kim! You have completed all exams today. Great job!\n\nYour final physical grade is [ {finalGrade} ] with [ {disposition} ] disposition."
+        text: "수검자 김민우 님! 오늘 오전부터 진행된 모든 검사를 무사히 마치셨습니다. 대단히 수고 많으셨습니다!",
+        text_en: "Examinee Minwoo Kim! You have completed all exams today. Great job!"
+      },
+      {
+        speaker: "수석판정관 NPC",
+        speaker_en: "Chief Adjudicator NPC",
+        char: "assets/adjudicator.png",
+        charPos: "right",
+        plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
+        text: "종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
+        text_en: "Your final physical grade is [ {finalGrade} ] with [ {disposition} ] disposition."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -428,8 +446,44 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님 축하드립니다! {residentAddress}에서 {region}까지의 왕복 이동거리({distanceKm})를 정밀 대조하여, 당일 대중교통비와 중식비(8,000원)를 포함한 실시간 여비 [ {fare} ]가 {cardType} 계좌로 즉시 입금 완료되었습니다!\n\n오늘 검사 받으시느라 정말 고생 많으셨으니, 방금 입금된 여비로 검사장 근처에서 맛있는 점심 든든하게 드시고 가세요!\n[병무청 나라사랑가게 API]로 현재 계신 {region} 인근의 나라사랑카드 제휴 할인 맛집과 영화관을 찾아드릴게요. 원하시는 주변 거점을 선택해 보세요!\n\n두 혜택을 확인해 보신 후, 아래 [최종 병역판정 결과서 발급 및 확인] 버튼을 눌러 정식 결과서를 열람해 보세요!",
-        text_en: "Congratulations Minwoo! Based on your distance ({distanceKm}) from {residentAddress} to {region}, your live travel allowance [ {fare} ] including transit and lunch (8,000 KRW) has been deposited into your {cardType} account!\n\nUse your travel allowance to enjoy a hearty lunch near the exam center! Through the [MMA Nara Sarang Store API], check out military discount restaurants and theaters near {region}. Select your preferred hotspot below!"
+        text: "민우 님 축하드립니다! {residentAddress}에서 {region}까지의 왕복 이동거리({distanceKm})를 정밀 대조하여, 당일 대중교통비와 중식비(8,000원)를 포함한 실시간 여비 [ {fare} ]가 {cardType} 계좌로 즉시 입금 완료되었습니다!",
+        text_en: "Congratulations Minwoo! Based on your distance ({distanceKm}) from {residentAddress} to {region}, your live travel allowance [ {fare} ] including transit and lunch (8,000 KRW) has been deposited into your {cardType} account!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "화면 상단을 보시면 검사 후 유용하게 활용할 수 있는 두 가지 핵심 서비스가 준비되어 있습니다:\n\n① 스마트 e-병무지갑: 종이 서류 없이 스마트폰 앱 하나로 병역판정결과서와 전자 병역증을 영구 보관하고, 군 장병 우대 할인 바우처를 즉시 발급받을 수 있습니다.",
+        text_en: "Above, you will see two key post-exam services:\n\n① Smart e-Military Wallet: Store your draft physical exam results & digital military ID securely on your smartphone and unlock military discount vouchers."
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "② 병역진로설계센터: 민우 님의 전공과 적성에 딱 맞는 군 특기(기술행정병 등)를 1:1 맞춤 추천받고, 전역 후 취업까지 무료로 연계 지원하는 원스톱 청년 복지 서비스입니다!",
+        text_en: "② Military Career Design Center: Receive free 1-on-1 counseling to match your major/aptitude with specialized military roles and post-discharge employment support!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "오늘 검사 받으시느라 정말 고생 많으셨으니, 방금 입금된 여비로 검사장 근처에서 맛있는 점심 든든하게 드시고 가세요!\n\n[병무청 나라사랑가게 API]로 현재 계신 {region} 인근의 나라사랑카드 제휴 할인 맛집과 영화관 거점을 선택해 보세요!",
+        text_en: "Use your travel allowance to enjoy a hearty lunch near the exam center! Through the [MMA Nara Sarang Store API], check out military discount restaurants and theaters near {region}. Select your preferred hotspot below!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "두 혜택을 확인해 보신 후, 아래 [최종 병역판정 결과서 발급 및 확인] 버튼을 눌러 정식 결과서를 열람해 보세요!",
+        text_en: "Please review these services and click the button below to view your official Certificate of Physical Examination!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 조회 서비스 & 병역의무자 여비 지급 기준 데이터 Open API",
