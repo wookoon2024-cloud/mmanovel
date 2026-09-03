@@ -104,7 +104,7 @@ def sync_scenario(openapi_res, law_res):
     bmi_app = law_res.get('bmi_appendix', 2)
 
     # SCENE 4: 질병 구비서류
-    target_s4 = re.search(r'(apiSource:\s*"국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 질병·심신장애 평가기준")', content)
+    target_s4 = re.search(r'(apiSource:\s*"(?:\[법령\]\s*)?국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 질병·심신장애 평가기준")', content)
     if target_s4:
         new_s4 = f"{target_s4.group(1)}{dis_app}{target_s4.group(2)}"
         if target_s4.group(0) != new_s4:
@@ -112,7 +112,7 @@ def sync_scenario(openapi_res, law_res):
             changes.append(f"SCENE 4 별표 번호 업데이트: 별표 {dis_app}")
 
     # SCENE 9: 신장·체중 (BMI)
-    target_s9 = re.search(r'(apiSource:\s*"국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 신장·체중에 따른 신체등급 판정기준")', content)
+    target_s9 = re.search(r'(apiSource:\s*"(?:\[법령\]\s*)?국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 신장·체중에 따른 신체등급 판정기준")', content)
     if target_s9:
         new_s9 = f"{target_s9.group(1)}{bmi_app}{target_s9.group(2)}"
         if target_s9.group(0) != new_s9:
@@ -127,7 +127,7 @@ def sync_scenario(openapi_res, law_res):
             content = content.replace(target_s10_text.group(0), new_s10_text)
             changes.append(f"SCENE 10 대사 별표 번호 업데이트: 별표 {dis_app}")
 
-    target_s10_source = re.search(r'(apiSource:\s*"국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 204호 \(관절 질환 평가기준\)")', content)
+    target_s10_source = re.search(r'(apiSource:\s*"(?:\[법령\]\s*)?국가법령정보센터: 「병역판정 신체검사 등 검사규칙」\(국방부령\) \[별표 )\d+(\] 204호 \(관절 질환 평가기준\)")', content)
     if target_s10_source:
         new_s10_source = f"{target_s10_source.group(1)}{dis_app}{target_s10_source.group(2)}"
         if target_s10_source.group(0) != new_s10_source:
