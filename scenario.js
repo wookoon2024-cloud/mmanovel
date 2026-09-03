@@ -407,7 +407,7 @@ const SCENARIOS = [
       {
         speaker: "판정보조관 NPC",
         speaker_en: "Adjudication Assistant NPC",
-        char: "assets/doctor_serious.png",
+        char: "assets/assistant_adjudicator.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
         text: "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 기본검사(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
