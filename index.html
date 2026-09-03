@@ -160,6 +160,9 @@
         <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
           병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.
         </p>
+
+        <!-- 동적 법령 및 Open API 동기화 상태 알림 배너 영역 -->
+        <div id="lobby-sync-banner-container" class="pt-2 flex justify-center"></div>
       </div>
 
       <!-- 에피소드 카드 2종 (정적인 세로형 포스터 카드) -->
@@ -261,6 +264,35 @@
       <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
     </div>
 
+  </div>
+
+  <!-- ================= [LAYER 2.8: 법령 & Open API 동기화 이상 알림 모달] ================= -->
+  <div id="sync-warning-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/50 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl space-y-5 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg">
+        <i data-lucide="alert-triangle" class="w-7 h-7 text-amber-400"></i>
+      </div>
+      <div class="space-y-2">
+        <h3 id="sync-modal-title" class="text-lg sm:text-xl font-bold text-white">법령 동기화 상태 안내</h3>
+        <div class="text-xs sm:text-sm text-slate-300 leading-relaxed text-left bg-slate-950/70 p-4 rounded-xl border border-slate-800 space-y-2">
+          <p id="sync-modal-warning" class="font-bold text-amber-400 flex items-center gap-1.5">
+            ⚠️ 현재 법령이 정상적으로 동기화되지 않았습니다.
+          </p>
+          <p id="sync-modal-desc" class="text-slate-300 text-xs leading-relaxed">
+            새벽 자동 점검 중 법제처 국가법령 Open API 또는 공공데이터포털 서버 연결에 일시적인 장애가 감지되었습니다.<br><br>
+            시나리오에 수록된 신체검사 규칙 및 별표 평가기준이 최신 개정본과 일부 다를 수 있습니다.
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+        <button id="sync-modal-btn-continue" onclick="dismissSyncWarningAndStart()" class="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm transition cursor-pointer shadow-md">
+          주의사항 확인 후 계속 진행
+        </button>
+        <button id="sync-modal-btn-cancel" onclick="closeSyncWarningModal()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs sm:text-sm transition cursor-pointer">
+          메인으로
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (화면 바닥에 자연스럽게 안착)] ================= -->
@@ -531,7 +563,15 @@
           ep2Desc: "동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드",
           startBtn: "시나리오 시작하기",
           resumeBtn: "이어서 플레이하기",
-          restartBtn: "처음부터 다시 시작하기"
+          restartBtn: "처음부터 다시 시작하기",
+          syncNormal: "법제처 국가법령 & 공공데이터 Open API 정상 연동 중",
+          syncUpdated: "[법령 개정 자동 반영] 오늘 새벽 최신 법령 개정 사항이 시나리오 대본에 자동 반영되었습니다.",
+          syncError: "[동기화 오류] 법령 및 Open API 자동 동기화에 문제가 감지되었습니다.",
+          syncModalTitle: "법령 동기화 상태 안내",
+          syncModalWarning: "⚠️ 현재 법령이 정상적으로 동기화되지 않았습니다.",
+          syncModalDesc: "새벽 자동 점검 중 법제처 국가법령 Open API 또는 공공데이터포털 서버 연결에 일시적인 장애가 감지되었습니다.<br><br>시나리오에 수록된 신체검사 규칙 및 별표 평가기준이 최신 개정본과 일부 다를 수 있습니다.",
+          syncModalContinue: "주의사항 확인 후 계속 진행",
+          syncModalCancel: "메인으로"
         }
       },
       en: {
@@ -576,7 +616,15 @@
           ep2Desc: "Interactive scenario for mobilization notices, nationwide training registration, and real-time training stipend calculation.",
           startBtn: "Start Scenario",
           resumeBtn: "Resume Play",
-          restartBtn: "Start Over from Beginning"
+          restartBtn: "Start Over from Beginning",
+          syncNormal: "MoEL National Law & Public Data Open API Connected",
+          syncUpdated: "[Law Revised] Today's dawn law revision was auto-applied to the scenario.",
+          syncError: "[Sync Error] Problem detected with Law & Open API synchronization.",
+          syncModalTitle: "Law Synchronization Notice",
+          syncModalWarning: "⚠️ The legal database is not normally synchronized.",
+          syncModalDesc: "A temporary connection issue was detected with the National Law Open API or Public Data Portal during dawn inspection.<br><br>Some examination rules and appendix criteria in the scenario may differ from the latest revisions.",
+          syncModalContinue: "Proceed Anyway",
+          syncModalCancel: "Back to Main"
         }
       }
     };
@@ -640,6 +688,7 @@
       if (ep2Desc) ep2Desc.innerText = dict.lobby.ep2Desc;
 
       updateLobbyResumeButton();
+      renderLobbySyncBanner();
     }
 
     // ================= [AI 남성 보이스 오디오 재생 & 폴백 엔진] =================
@@ -2746,6 +2795,101 @@
       } catch(e) {}
     }
 
+    // ================= [새벽 법령 & Open API 실시간 동기화 상태 감지 엔진] =================
+    let systemSyncData = null;
+    let pendingStartForceNew = false;
+    let pendingIsResume = false;
+    window._syncWarningAcknowledged = false;
+
+    async function checkSystemSyncStatus() {
+      try {
+        const res = await fetch('./sync_log.json?t=' + Date.now());
+        if (res.ok) {
+          systemSyncData = await res.json();
+          renderLobbySyncBanner();
+        }
+      } catch (e) {
+        console.log('sync_log.json fetch notice:', e);
+      }
+    }
+
+    function renderLobbySyncBanner() {
+      const container = document.getElementById('lobby-sync-banner-container');
+      if (!container || !systemSyncData) return;
+
+      const dict = (I18N[currentLang] && I18N[currentLang].lobby) ? I18N[currentLang].lobby : I18N.ko.lobby;
+      const isError = systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false) || (systemSyncData.openapi && systemSyncData.openapi.verified === false);
+      const isUpdated = systemSyncData.changed || systemSyncData.sync_status === 'UPDATED';
+
+      if (isError) {
+        container.innerHTML = `
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-rose-950/80 border border-rose-500/50 text-rose-300 text-xs font-semibold shadow-xl animate-pulse cursor-pointer" onclick="showSyncWarningModal(false, false)" title="클릭하여 상세 상태 확인">
+            <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-400 shrink-0"></i>
+            <span>${dict.syncError}</span>
+          </div>
+        `;
+      } else if (isUpdated) {
+        container.innerHTML = `
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-950/80 border border-amber-500/50 text-amber-300 text-xs font-semibold shadow-xl">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-400 shrink-0"></i>
+            <span>${dict.syncUpdated}</span>
+          </div>
+        `;
+      } else {
+        const ordInfo = (systemSyncData.law && systemSyncData.law.ordinance_info) ? systemSyncData.law.ordinance_info : "국방부령 제1139호";
+        container.innerHTML = `
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/40 text-emerald-400 text-[11px] font-medium shadow-md">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+            <span>${dict.syncNormal} (${ordInfo})</span>
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    function showSyncWarningModal(forceNew = false, isResume = false) {
+      pendingStartForceNew = forceNew;
+      pendingIsResume = isResume;
+      const modal = document.getElementById('sync-warning-modal');
+      const dict = (I18N[currentLang] && I18N[currentLang].lobby) ? I18N[currentLang].lobby : I18N.ko.lobby;
+
+      const titleEl = document.getElementById('sync-modal-title');
+      const warningEl = document.getElementById('sync-modal-warning');
+      const descEl = document.getElementById('sync-modal-desc');
+      const btnCont = document.getElementById('sync-modal-btn-continue');
+      const btnCancel = document.getElementById('sync-modal-btn-cancel');
+
+      if (titleEl) titleEl.innerText = dict.syncModalTitle;
+      if (warningEl) warningEl.innerHTML = dict.syncModalWarning;
+      if (descEl) descEl.innerHTML = dict.syncModalDesc;
+      if (btnCont) btnCont.innerText = dict.syncModalContinue;
+      if (btnCancel) btnCancel.innerText = dict.syncModalCancel;
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        lucide.createIcons();
+      }
+    }
+
+    function closeSyncWarningModal() {
+      const modal = document.getElementById('sync-warning-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function dismissSyncWarningAndStart() {
+      window._syncWarningAcknowledged = true;
+      closeSyncWarningModal();
+      if (pendingIsResume) {
+        resumeEpisode(1);
+      } else {
+        startEpisode(1, pendingStartForceNew);
+      }
+    }
+
     // 에피소드 이어보기 함수
     function resumeEpisode(epNum = 1) {
       const save = getSavedGameState();
@@ -2753,6 +2897,13 @@
         startEpisode(1, true);
         return;
       }
+
+      const isError = systemSyncData && (systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false));
+      if (isError && !window._syncWarningAcknowledged) {
+        showSyncWarningModal(false, true);
+        return;
+      }
+
       playBeep(880, 'sine', 0.1);
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.add('hidden');
@@ -2769,6 +2920,12 @@
     // 에피소드 시나리오 실행 함수 (forceNew: true일 경우 처음부터 시작)
     function startEpisode(epNum, forceNew = false) {
       if (epNum === 1) {
+        const isError = systemSyncData && (systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false));
+        if (isError && !window._syncWarningAcknowledged) {
+          showSyncWarningModal(forceNew, false);
+          return;
+        }
+
         playBeep(880, 'sine', 0.1);
         const menu = document.getElementById('main-menu-overlay');
         if (menu) menu.classList.add('hidden');
@@ -2875,6 +3032,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       updateLobbyResumeButton();
+      checkSystemSyncStatus();
       lucide.createIcons();
       // 초기 로드 시 메인 시나리오 선택 로비 표출 (대기)
     });

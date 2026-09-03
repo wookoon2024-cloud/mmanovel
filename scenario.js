@@ -97,8 +97,8 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록\n민우 님의 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n평소 앓고 계신 질환이나 수술 이력이 있으신가요?",
     text_en: "Now that the schedule is set, let's check the customized required documents tailored to your medical history so you won't have to make a wasted trip.\n\nDo you have any pre-existing medical conditions or past surgeries?",
-    apiSource: "[법령] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 질병·심신장애 평가기준",
-    apiSource_en: "[Law] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3]",
+    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 질병·심신장애 평가기준",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3]",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -159,8 +159,8 @@ const SCENARIOS = [
         text_en: "Exactly right! With your card and documents ready, let's head to the [Psychological Testing Hall]!"
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
-    apiSource_en: "[Law] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
+    apiSource: "[API] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
+    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
     apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
     apiIcon: "scale",
     isApi: true,
@@ -203,8 +203,8 @@ const SCENARIOS = [
         text_en: "Please answer calmly and honestly. Let's solve sample questions on screen!"
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
-    apiSource_en: "[Law] National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
+    apiSource: "[API] 국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
+    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
     apiSourceUrl: "https://www.law.go.kr/행정규칙/병역판정심리검사운영규정",
     apiIcon: "scale",
     isApi: true,
@@ -238,8 +238,8 @@ const SCENARIOS = [
         text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick. Let's head to the restroom."
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
-    apiSource_en: "[Law] National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
+    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -273,8 +273,8 @@ const SCENARIOS = [
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2] 신장·체중에 따른 신체등급 판정기준",
-    apiSource_en: "[Law] National Law Information Center: 「Physical Exam Rules」 [Table 2] Height & Weight Standards",
+    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2] 신장·체중에 따른 신체등급 판정기준",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」 [Table 2] Height & Weight Standards",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -317,8 +317,8 @@ const SCENARIOS = [
         text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 204호 (관절 질환 평가기준)",
-    apiSource_en: "[Law] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3] 204",
+    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 204호 (관절 질환 평가기준)",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3] 204",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -361,8 +361,8 @@ const SCENARIOS = [
         text_en: "Certainly! We have classified your military aptitude for Army IT/SW Developer or Air Force Information Systems Specialist.\n\nNow, let's proceed to the Chief Adjudicator office for your final result and travel allowance settlement!"
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역법」 제14조의2 (적성분류 및 군특기 부여 기준)",
-    apiSource_en: "[Law] National Law Information Center: 「Military Service Act」 Art. 14-2 (Aptitude Classification)",
+    apiSource: "[API] 국가법령정보센터: 「병역법」 제14조의2 (적성분류 및 군특기 부여 기준)",
+    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 Art. 14-2 (Aptitude Classification)",
     apiSourceUrl: "https://www.law.go.kr/법령/병역법/제14조의2",
     apiIcon: "scale",
     isApi: true,
@@ -440,8 +440,8 @@ const SCENARIOS = [
         text_en: "Changed clothes and packed my phone and wallet from the locker! Time to head home!"
       }
     ],
-    apiSource: "[법령] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
-    apiSource_en: "[Law] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
+    apiSource: "[API] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
+    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
     apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
     apiIcon: "scale",
     isApi: true,
