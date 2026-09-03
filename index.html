@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.0</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.1</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.0</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.1</span>
             </div>
           </div>
         </div>
@@ -173,9 +173,9 @@
           <!-- 포스터 이미지 영역 (호버 시 내부에서만 부드럽게 확장, 전체 카드 크기는 고정) -->
           <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[455px] sm:group-hover:h-[475px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <!-- 고화질 원본 포스터 스틸컷 -->
-            <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
+            <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out">
             
-            <!-- MP4 비디오 (assets/ep1_video.mp4) 호버 시 부드러운 페이드인 재생 -->
+            <!-- MP4 비디오 (assets/ep1_video.mp4) 호버 시 원본 포스터와 1:1 완벽 일치 크기로 페이드인 재생 -->
             <video id="ep1-live-video" src="assets/ep1_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 pointer-events-none"></div>
             
@@ -228,7 +228,7 @@
         <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0">
           <!-- 포스터 이미지 영역 -->
           <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[455px] sm:group-hover:h-[475px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
-            <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
+            <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
             
             <!-- 이미지 상단 배지 -->
@@ -641,9 +641,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v150"></script>
-  <script src="scenario.js?v=20260903_v150"></script>
-  <script src="tracker.js?v=20260903_v150"></script>
+  <script src="api.js?v=20260903_v151"></script>
+  <script src="scenario.js?v=20260903_v151"></script>
+  <script src="tracker.js?v=20260903_v151"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
