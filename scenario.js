@@ -97,8 +97,8 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록\n민우 님의 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n평소 앓고 계신 질환이나 수술 이력이 있으신가요?",
     text_en: "Now that the schedule is set, let's check the customized required documents tailored to your medical history so you won't have to make a wasted trip.\n\nDo you have any pre-existing medical conditions or past surgeries?",
-    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2]",
-    apiSource_en: "National Law Information Center: 「MMA Physical Examination Rules」(Defense Ministry Ordinance)",
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 질병·심신장애 평가기준",
+    apiSource_en: "National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3]",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -273,8 +273,8 @@ const SCENARIOS = [
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       }
     ],
-    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",
-    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 1] Height & Weight Standards",
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2] 신장·체중에 따른 신체등급 판정기준",
+    apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 2] Height & Weight Standards",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -313,12 +313,12 @@ const SCENARIOS = [
         char: "assets/doctor_serious.png",
         charPos: "right",
         plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
-        text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 2] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
+        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 3] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
+        text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
       }
     ],
-    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
-    apiSource_en: "National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) Art. 11 & Table 2",
+    apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 204호 (관절 질환 평가기준)",
+    apiSource_en: "National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3] 204",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
