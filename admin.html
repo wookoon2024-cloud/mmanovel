@@ -37,7 +37,6 @@
     .pulse-live {
       animation: pulse-slow 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
     }
-    /* 커스텀 스크롤바 */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0b1120; }
     ::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 4px; }
@@ -57,7 +56,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-sm sm:text-base font-extrabold text-white tracking-tight">실시간 방문자 관제 센터</h1>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-400/30 font-mono">ADMIN</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-400/30 font-mono">ADMIN LIVE</span>
           </div>
           <p class="text-[11px] text-slate-400">슬기로운 병역 라이프 · https://mmanovel.vercel.app</p>
         </div>
@@ -75,7 +74,7 @@
         <div class="flex items-center gap-1.5 bg-slate-800/70 border border-slate-700/70 px-2.5 py-1.5 rounded-xl">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-400"></i>
           <select id="refresh-interval-select" onchange="changeRefreshInterval(this.value)" class="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer">
-            <option value="3000" selected class="bg-slate-900 text-slate-100">3초 자동 갱신</option>
+            <option value="2000" selected class="bg-slate-900 text-slate-100">2초 실시간 갱신</option>
             <option value="5000" class="bg-slate-900 text-slate-100">5초 자동 갱신</option>
             <option value="10000" class="bg-slate-900 text-slate-100">10초 자동 갱신</option>
             <option value="0" class="bg-slate-900 text-slate-100">자동 갱신 끄기</option>
@@ -87,13 +86,26 @@
           <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> <span>새로고침</span>
         </button>
 
-        <!-- 웹소설 서비스 링크 -->
-        <a href="/" target="_blank" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1.5 font-bold shadow-lg shadow-blue-600/20 cursor-pointer">
-          <span>웹소설 바로가기</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        <!-- 웹소설 서비스 링크 (새 탭 테스트) -->
+        <a href="/" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1.5 font-bold shadow-lg shadow-blue-600/30 cursor-pointer hover:scale-105">
+          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> <span>웹소설 열기 (테스트)</span>
         </a>
       </div>
     </div>
   </header>
+
+  <!-- 관리자 안내 배너 -->
+  <div class="bg-blue-950/40 border-b border-blue-800/40 px-4 sm:px-6 py-2.5 text-xs text-blue-200">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
+      <div class="flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4 text-blue-400 shrink-0"></i>
+        <span><strong>관제 대상:</strong> 웹소설 본문(<code class="text-blue-300 font-mono">https://mmanovel.vercel.app/</code>)을 읽고 있는 독자를 실시간 모니터링합니다. 관리자 본인의 열람 현황을 테스트하시려면 <strong>[웹소설 열기]</strong>를 눌러 새 탭에서 소설을 띄워보세요!</span>
+      </div>
+      <button onclick="window.open('/', '_blank')" class="px-2.5 py-1 bg-blue-600/80 hover:bg-blue-600 rounded-lg text-white font-bold text-[11px] transition shrink-0 cursor-pointer flex items-center gap-1">
+        <span>새 탭에서 소설 열기</span> <i data-lucide="external-link" class="w-3 h-3"></i>
+      </button>
+    </div>
+  </div>
 
   <!-- 메인 대시보드 컨테이너 -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full space-y-6 flex-1">
@@ -101,7 +113,7 @@
     <!-- 1. 핵심 지표 KPI 카드 5종 그리드 -->
     <div class="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
       <!-- KPI 1: 현재 실시간 접속자 -->
-      <div class="bg-[#0f172a]/95 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 relative overflow-hidden shadow-xl shadow-emerald-950/20 flex flex-col justify-between">
+      <div class="bg-[#0f172a]/95 border border-emerald-500/40 rounded-2xl p-4 sm:p-5 relative overflow-hidden shadow-xl shadow-emerald-950/20 flex flex-col justify-between">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span> 현재 실시간 접속자
@@ -233,7 +245,7 @@
                 <th class="py-3 px-4">상태</th>
                 <th class="py-3 px-4">방문자 식별 (Session)</th>
                 <th class="py-3 px-4">현재 열람 화면 / 씬</th>
-                <th class="py-3 px-4">접속 지역 (도시)</th>
+                <th class="py-3 px-4">접속 지역</th>
                 <th class="py-3 px-4">접속 IP</th>
                 <th class="py-3 px-4">기기 및 브라우저</th>
                 <th class="py-3 px-4">체류 시간</th>
@@ -342,21 +354,21 @@
       <div class="bg-[#0f172a]/90 border border-slate-800/90 rounded-2xl p-6 shadow-2xl space-y-6 max-w-3xl">
         <div>
           <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="server" class="w-5 h-5 text-blue-400"></i> 현재 데이터 저장소 연동 현황
+            <i data-lucide="server" class="w-5 h-5 text-blue-400"></i> 데이터 저장소 및 실시간 통신 엔진
           </h3>
-          <p class="text-xs text-slate-400 mt-1">방문자 트래킹 백엔드 엔진 및 영구 보존 설정 상태입니다.</p>
+          <p class="text-xs text-slate-400 mt-1">실시간 방문자 감지 하이브리드 엔진 상태입니다.</p>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-slate-400">현재 활성 엔진:</span>
-            <span id="current-storage-engine" class="font-mono font-bold text-blue-400">조회 중...</span>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">실시간 다채널 엔진:</span>
+            <span class="font-mono font-bold text-emerald-400">BroadcastChannel + LocalStorage + Serverless API</span>
           </div>
-          <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center justify-between">
             <span class="text-slate-400">트래킹 엔드포인트:</span>
             <span class="font-mono text-slate-300">POST /api/track</span>
           </div>
-          <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center justify-between">
             <span class="text-slate-400">통계 집계 엔드포인트:</span>
             <span class="font-mono text-slate-300">GET /api/stats</span>
           </div>
@@ -364,11 +376,11 @@
 
         <div class="border-t border-slate-800 pt-5 space-y-3">
           <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i> Vercel KV (Upstash Redis) 1분 영구 보존 연결 팁
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i> Vercel KV (Upstash Redis) 24/7 영구 보존 연결 안내
           </h4>
           <p class="text-xs text-slate-400 leading-relaxed">
-            현재 기본 엔진(Serverless In-Memory + /tmp)으로도 실시간 관제가 즉시 정상 작동합니다.<br/>
-            서버리스 인스턴스 재시작(Cold Start)과 무관하게 과거 통계를 영구 보존하고 싶으실 경우, Vercel 대시보드에서 <strong>Storage ➔ Upstash Redis (또는 KV)</strong>를 1클릭 생성하시면 자동으로 <code>KV_REST_API_URL</code>이 주입되어 영구 클라우드 DB로 전환됩니다.
+            현재 탭 간 실시간 통신과 서버리스 메모리로 실시간 관제가 가동됩니다.<br/>
+            서버리스 인스턴스 재시작(Cold Start)과 무관하게 과거 통계를 영구 보존하고 싶으실 경우, Vercel 대시보드에서 <strong>Storage ➔ Upstash Redis (또는 KV)</strong>를 1클릭 생성하시면 자동으로 <code>KV_REST_API_URL</code>이 주입되어 영구 클라우드 DB로 자동 전환됩니다.
           </p>
         </div>
       </div>
@@ -384,10 +396,48 @@
   <!-- ================= 대시보드 로직 스크립트 ================= -->
   <script>
     let currentStatsData = null;
-    let refreshIntervalMs = 3000;
+    let refreshIntervalMs = 2000;
     let refreshTimer = null;
     let showFullIp = false;
     let currentActiveTab = 'live';
+
+    // 로컬 탭에서 실시간 전달받은 세션 캐시 (BroadcastChannel & localStorage)
+    const localActiveSessions = new Map();
+
+    // 1. BroadcastChannel 수신 (0ms 지연 시간)
+    try {
+      const bc = new BroadcastChannel('mma_visitor_presence');
+      bc.onmessage = function(ev) {
+        if (ev.data && ev.data.sessionId) {
+          if (ev.data.eventType === 'leave') {
+            localActiveSessions.delete(ev.data.sessionId);
+          } else {
+            localActiveSessions.set(ev.data.sessionId, ev.data);
+          }
+          renderCurrentData();
+        }
+      };
+    } catch(e) {}
+
+    // 2. localStorage 세션 폴링
+    function pollLocalStorageSessions() {
+      try {
+        const raw = localStorage.getItem('mma_live_sessions_cache');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const now = Date.now();
+          for (const [sid, s] of Object.entries(parsed)) {
+            if (now - s.lastSeen < 15000) {
+              localActiveSessions.set(sid, s);
+            } else {
+              delete parsed[sid];
+              localActiveSessions.delete(sid);
+            }
+          }
+          localStorage.setItem('mma_live_sessions_cache', JSON.stringify(parsed));
+        }
+      } catch(e) {}
+    }
 
     const SCENE_NAMES = [
       'SCENE 0: 통지서 확인 & 일정 변경',
@@ -409,7 +459,7 @@
 
     function toggleIpMask(checked) {
       showFullIp = checked;
-      if (currentStatsData) renderAll(currentStatsData);
+      renderCurrentData();
     }
 
     function switchTab(tabKey) {
@@ -446,14 +496,13 @@
         btn.classList.add('opacity-50');
       }
 
+      pollLocalStorageSessions();
+
       try {
         const res = await fetch('/api/stats');
         if (res.ok) {
           const data = await res.json();
           currentStatsData = data;
-          renderAll(data);
-        } else {
-          console.warn('Stats response not ok:', res.status);
         }
       } catch (e) {
         console.error('Failed to fetch stats:', e);
@@ -463,18 +512,51 @@
         }
         const syncEl = document.getElementById('last-sync-time');
         if (syncEl) syncEl.innerText = new Date().toLocaleTimeString('ko-KR');
+        renderCurrentData();
       }
     }
 
-    function renderAll(data) {
+    function renderCurrentData() {
+      const data = currentStatsData || {
+        kpi: { activeCount: 0, todayVisitors: 0, totalPageviews: 0, avgDurationFormatted: '0초', completionRate: '0%' },
+        activeVisitors: [],
+        recentLogs: [],
+        deviceBreakdown: {},
+        cityBreakdown: {},
+        sceneFunnel: {},
+        storageEngine: 'Serverless In-Memory + /tmp'
+      };
+
+      // Serverless API 데이터와 Local Tab Sync 세션 병합
+      const mergedMap = new Map();
+      (data.activeVisitors || []).forEach(v => mergedMap.set(v.sessionId, v));
+
+      const now = Date.now();
+      localActiveSessions.forEach((v, sid) => {
+        if (now - v.lastSeen < 15000) {
+          mergedMap.set(sid, {
+            ...v,
+            isLocalTab: true,
+            maskedIp: v.maskedIp || '127.0.0.1 (내 기기)',
+            city: v.city || '대한민국 서울',
+            country: 'KR',
+            durationFormatted: Math.floor((now - v.firstSeen) / 1000) + '초',
+            lastActiveAgo: Math.max(1, Math.floor((now - v.lastSeen) / 1000)) + '초 전'
+          });
+        } else {
+          localActiveSessions.delete(sid);
+        }
+      });
+
+      const mergedVisitors = Array.from(mergedMap.values()).sort((a, b) => b.lastSeen - a.lastSeen);
+      const activeCount = mergedVisitors.length;
+
       // 1. KPI 렌더링
-      const kpi = data.kpi || {};
-      const activeCount = kpi.activeCount || 0;
       document.getElementById('kpi-active-count').innerText = activeCount;
-      document.getElementById('kpi-today-visitors').innerText = kpi.todayVisitors || 0;
-      document.getElementById('kpi-total-pv').innerText = (kpi.totalPageviews || 0).toLocaleString();
-      document.getElementById('kpi-avg-duration').innerText = kpi.avgDurationFormatted || '0초';
-      document.getElementById('kpi-completion-rate').innerText = kpi.completionRate || '0%';
+      document.getElementById('kpi-today-visitors').innerText = Math.max(data.kpi.todayVisitors || 0, activeCount);
+      document.getElementById('kpi-total-pv').innerText = Math.max(data.kpi.totalPageviews || 0, activeCount).toLocaleString();
+      document.getElementById('kpi-avg-duration').innerText = data.kpi.avgDurationFormatted || '0초';
+      document.getElementById('kpi-completion-rate').innerText = data.kpi.completionRate || '0%';
       document.getElementById('tab-live-badge').innerText = activeCount;
 
       const liveText = document.getElementById('header-live-text');
@@ -482,20 +564,16 @@
         liveText.innerText = activeCount > 0 ? `실시간 ${activeCount}명 접속 중` : '접속 대기 중';
       }
 
-      // 2. 스토리지 엔진
-      const engineEl = document.getElementById('current-storage-engine');
-      if (engineEl) engineEl.innerText = data.storageEngine || 'Serverless Local';
+      // 2. 실시간 방문자 테이블
+      renderLiveVisitors(mergedVisitors);
 
-      // 3. 실시간 방문자 테이블
-      renderLiveVisitors(data.activeVisitors || []);
-
-      // 4. 최근 로그
+      // 3. 최근 로그
       renderRecentLogs(data.recentLogs || []);
 
-      // 5. 씬별 깔때기
-      renderFunnel(data.sceneFunnel || {}, data.kpi ? data.kpi.totalPageviews : 1);
+      // 4. 씬별 깔때기
+      renderFunnel(data.sceneFunnel || {}, Math.max(data.kpi.totalPageviews, 1));
 
-      // 6. 기기 및 지역
+      // 5. 기기 및 지역
       renderDevicesAndCities(data.deviceBreakdown || {}, data.cityBreakdown || {});
 
       lucide.createIcons();
@@ -506,11 +584,18 @@
       if (!visitors || visitors.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" class="py-10 text-center text-slate-500">
-              <div class="flex flex-col items-center gap-1.5">
-                <i data-lucide="user-x" class="w-6 h-6 text-slate-600"></i>
-                <span class="text-xs">현재 웹소설에 머물고 있는 실시간 방문자가 없습니다.</span>
-                <span class="text-[11px] text-slate-600">다른 탭에서 웹소설(홈)을 열면 즉시 여기에 표출됩니다.</span>
+            <td colspan="8" class="py-12 text-center text-slate-500">
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-400">
+                  <i data-lucide="user-x" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-300">현재 웹소설을 읽고 있는 독자가 없습니다.</h4>
+                  <p class="text-xs text-slate-500 mt-1">다른 브라우저 탭이나 스마트폰으로 소설에 접속하면 실시간으로 여기에 뜹니다.</p>
+                </div>
+                <button onclick="window.open('/', '_blank')" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5 cursor-pointer">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> <span>새 탭에서 웹소설 열고 실시간 반영 테스트하기</span>
+                </button>
               </div>
             </td>
           </tr>
@@ -522,12 +607,13 @@
         const ipDisplay = showFullIp ? (v.ip || '127.0.0.1') : (v.maskedIp || '***.***.***');
         const flag = v.country === 'KR' ? '🇰🇷' : (v.country === 'US' ? '🇺🇸' : '🌐');
         const deviceIcon = v.device === 'Mobile' ? 'smartphone' : (v.device === 'Tablet' ? 'tablet' : 'laptop');
+        const badgeLabel = v.isLocalTab ? '열람 중 (내 탭)' : '열람 중';
         
         return `
           <tr class="hover:bg-slate-800/40 transition duration-150">
             <td class="py-3 px-4">
-              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> 열람 중
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> ${badgeLabel}
               </span>
             </td>
             <td class="py-3 px-4 font-mono text-slate-200 text-xs font-semibold">
@@ -551,11 +637,11 @@
             <td class="py-3 px-4 text-slate-300">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="${deviceIcon}" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>${escapeHtml(v.os)} · ${escapeHtml(v.browser)}</span>
+                <span>${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}</span>
               </div>
             </td>
             <td class="py-3 px-4 text-slate-300 font-mono">
-              ${escapeHtml(v.durationFormatted || '0초')}
+              ${escapeHtml(v.durationFormatted || (v.durationSeconds + '초') || '0초')}
             </td>
             <td class="py-3 px-4 text-right text-slate-400 font-mono text-[11px]">
               ${escapeHtml(v.lastActiveAgo || '방금 전')}
@@ -584,7 +670,7 @@
             <td class="py-2.5 px-4 text-slate-200 font-medium">${escapeHtml(item.sceneTitle || 'SCENE ' + item.sceneIdx)}</td>
             <td class="py-2.5 px-4 text-slate-300">${flag} ${escapeHtml(item.city || '대한민국')}</td>
             <td class="py-2.5 px-4 font-mono text-slate-400 text-[11px]">${escapeHtml(ipDisplay)}</td>
-            <td class="py-2.5 px-4 text-slate-300">${escapeHtml(item.os)} / ${escapeHtml(item.browser)}</td>
+            <td class="py-2.5 px-4 text-slate-300">${escapeHtml(item.clientEnv || (item.os + ' / ' + item.browser))}</td>
             <td class="py-2.5 px-4 text-slate-400 truncate max-w-xs">${escapeHtml(item.referrer || '직접 접속 (Direct)')}</td>
           </tr>
         `;
@@ -614,7 +700,6 @@
     }
 
     function renderDevicesAndCities(devices, cities) {
-      // 기기 분류
       const dTotal = (devices.Desktop || 0) + (devices.Mobile || 0) + (devices.Tablet || 0) || 1;
       const devContainer = document.getElementById('device-breakdown-container');
       devContainer.innerHTML = `
@@ -643,7 +728,6 @@
         </div>
       `;
 
-      // 도시 순위
       const cityContainer = document.getElementById('city-breakdown-container');
       const sortedCities = Object.entries(cities).sort((a, b) => b[1] - a[1]);
       if (sortedCities.length === 0) {
@@ -678,9 +762,9 @@
         alert('내보낼 로그 데이터가 없습니다.');
         return;
       }
-      let csv = 'Timestamp,Event,SceneTitle,City,Country,IP,Device,OS,Browser,Referrer\n';
+      let csv = 'Timestamp,Event,SceneTitle,City,Country,IP,Device,ClientEnv,Referrer\n';
       currentStatsData.recentLogs.forEach(l => {
-        csv += `"${l.timestamp || ''}","${l.eventType || ''}","${l.sceneTitle || ''}","${l.city || ''}","${l.country || ''}","${l.ip || ''}","${l.device || ''}","${l.os || ''}","${l.browser || ''}","${l.referrer || ''}"\n`;
+        csv += `"${l.timestamp || ''}","${l.eventType || ''}","${l.sceneTitle || ''}","${l.city || ''}","${l.country || ''}","${l.ip || ''}","${l.device || ''}","${l.clientEnv || ''}","${l.referrer || ''}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -695,7 +779,7 @@
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // 초기 시작
+    // 시작
     fetchStats();
     refreshTimer = setInterval(fetchStats, refreshIntervalMs);
   </script>

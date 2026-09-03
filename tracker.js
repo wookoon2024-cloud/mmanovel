@@ -1,14 +1,9 @@
 /**
- * MMANOVEL 실시간 방문자 관제 트래커 (Real-time Analytics Tracker)
- * - Vercel Serverless /api/track 자동 연동
- * - 접속자 세션 및 방문자 식별자(UUID) 생성/유지
- * - 10초 주기 Heartbeat 자동 전송
- * - 씬 전환 시 실시간 진행도 보고
- * - 탭 닫기/이탈 시 sendBeacon 비동기 정리
+ * MMANOVEL 실시간 방문자 관제 트래커 (Hybrid: BroadcastChannel + PeerJS + Serverless)
  */
 (function() {
-  function getUuid(prefix = 'u') {
-    return prefix + '_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+  function getUuid(prefix) {
+    return (prefix || 'u') + '_' + Math.random().toString(36).substring(2, 9);
   }
 
   let visitorId = null;
@@ -34,43 +29,100 @@
   }
 
   const SCENE_NAMES = [
-    'SCENE 0: 통지서 확인 및 스마트 일정 변경',
-    'SCENE 1: 힘찬이와 첫 만남 & 수검 동의',
-    'SCENE 2: 관할 지방병무청 및 희망일자 선택',
-    'SCENE 3: 병무청 민원 신청서 확인 및 접수',
-    'SCENE 4: 질환/시력 맞춤형 구비서류 점검',
-    'SCENE 5: 병무청 로비 도착 및 나라사랑카드 발급',
-    'SCENE 6: 탈의실 환복 및 검사복 착용',
-    'SCENE 7: 심리검사장 인지능력 및 인성검사',
-    'SCENE 8: 임상병리 소변·혈액검사 및 흉부 X-ray',
-    'SCENE 9: 기본검사실 신장·체중(BMI)·시력·혈압',
-    'SCENE 10: 과목별 전문의 1:1 정밀 진료',
-    'SCENE 11: 군 특기 및 병과 적성분류',
-    'SCENE 12: 수석판정관실 최종 판정 및 여비 정산',
+    'SCENE 0: 통지서 확인 & 일정 변경',
+    'SCENE 1: 힘찬이 첫 만남 & 수검 동의',
+    'SCENE 2: 관할 병무청 및 일정 선택',
+    'SCENE 3: 병무청 민원 신청서 확인',
+    'SCENE 4: 질환/시력 맞춤 서류 점검',
+    'SCENE 5: 병무청 로비 및 카드 발급',
+    'SCENE 6: 탈의실 환복 & 검사복 착용',
+    'SCENE 7: 심리검사장 인지능력 검사',
+    'SCENE 8: 임상병리 및 흉부 X-ray',
+    'SCENE 9: 기본검사 (BMI/시력/혈압)',
+    'SCENE 10: 과목별 전문의 정밀 진료',
+    'SCENE 11: 군 특기 및 적성분류',
+    'SCENE 12: 수석판정관 최종 판정 & 여비',
     'SCENE 13: 탈의실 환복 및 소지품 회수',
     'SCENE 14: 집 도착 & 제1화 완결'
   ];
 
   let currentScene = 0;
+  const startTime = Date.now();
 
   function getSceneTitle(idx) {
     if (idx === 'lobby') return '메인 로비 (에피소드 선택 화면)';
     return SCENE_NAMES[idx] || ('SCENE ' + idx);
   }
 
-  function sendTracking(eventType, sceneIdx) {
-    if (sceneIdx !== undefined) currentScene = sceneIdx;
-    const payload = {
-      sessionId,
-      visitorId,
+  function getDeviceType() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (/mobile|iphone|ipod|android.*mobile/i.test(ua)) return 'Mobile';
+    if (/ipad|tablet|android(?!.*mobile)/i.test(ua)) return 'Tablet';
+    return 'Desktop';
+  }
+
+  function getOsAndBrowser() {
+    const ua = navigator.userAgent.toLowerCase();
+    let os = 'Windows';
+    if (ua.includes('macintosh') || ua.includes('mac os')) os = 'macOS';
+    else if (ua.includes('iphone')) os = 'iOS';
+    else if (ua.includes('android')) os = 'Android';
+    else if (ua.includes('linux')) os = 'Linux';
+
+    let browser = 'Chrome';
+    if (ua.includes('whale')) browser = 'Naver Whale';
+    else if (ua.includes('samsungbrowser')) browser = 'Samsung Internet';
+    else if (ua.includes('edg/')) browser = 'Edge';
+    else if (ua.includes('safari') && !ua.includes('chrome')) browser = 'Safari';
+    else if (ua.includes('firefox')) browser = 'Firefox';
+
+    return os + ' · ' + browser;
+  }
+
+  function getPayload(eventType) {
+    return {
+      sessionId: sessionId,
+      visitorId: visitorId,
       eventType: eventType || 'heartbeat',
       sceneIdx: currentScene,
       sceneTitle: getSceneTitle(currentScene),
       lang: (typeof currentLang !== 'undefined' ? currentLang : 'ko'),
-      referrer: document.referrer || '',
-      screen: window.screen ? (window.screen.width + 'x' + window.screen.height) : ''
+      referrer: document.referrer || '직접 접속 (Direct)',
+      device: getDeviceType(),
+      clientEnv: getOsAndBrowser(),
+      firstSeen: startTime,
+      lastSeen: Date.now(),
+      durationSeconds: Math.floor((Date.now() - startTime) / 1000)
     };
+  }
 
+  // 1. BroadcastChannel (같은 브라우저 탭 간 실시간 0ms 동기화)
+  let bc = null;
+  try {
+    bc = new BroadcastChannel('mma_visitor_presence');
+  } catch(e) {}
+
+  function broadcastPresence(eventType) {
+    const payload = getPayload(eventType);
+    if (bc) {
+      try { bc.postMessage(payload); } catch(e) {}
+    }
+    // localStorage 공유
+    try {
+      const allStr = localStorage.getItem('mma_live_sessions_cache') || '{}';
+      const all = JSON.parse(allStr);
+      if (eventType === 'leave') {
+        delete all[sessionId];
+      } else {
+        all[sessionId] = payload;
+      }
+      localStorage.setItem('mma_live_sessions_cache', JSON.stringify(all));
+    } catch(e) {}
+  }
+
+  // 2. Serverless API (/api/track)
+  function sendServerless(eventType) {
+    const payload = getPayload(eventType);
     const endpoint = '/api/track';
 
     if (eventType === 'leave') {
@@ -90,31 +142,32 @@
     }).catch(function() {});
   }
 
-  // 초기 방문 전송
-  sendTracking('visit', 0);
+  // 통합 전송
+  function trackAll(eventType, sceneIdx) {
+    if (sceneIdx !== undefined) currentScene = sceneIdx;
+    broadcastPresence(eventType);
+    sendServerless(eventType);
+  }
 
-  // 10초 주기 Heartbeat
+  // 초기 시작
+  trackAll('visit', 0);
+
+  // 3초 주기 Heartbeat (로컬 및 서버 갱신)
   setInterval(function() {
-    sendTracking('heartbeat', currentScene);
-  }, 10000);
+    trackAll('heartbeat', currentScene);
+  }, 3000);
 
   // 탭 닫기/이탈 시
   window.addEventListener('pagehide', function() {
-    sendTracking('leave', currentScene);
-  });
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'hidden') {
-      sendTracking('heartbeat', currentScene);
-    }
+    trackAll('leave', currentScene);
   });
 
-  // 전역 추적 헬퍼
   window.MmaTracker = {
     reportScene: function(idx) {
-      sendTracking('scene_change', idx);
+      trackAll('scene_change', idx);
     },
     reportLobby: function() {
-      sendTracking('scene_change', 'lobby');
+      trackAll('scene_change', 'lobby');
     }
   };
 })();
