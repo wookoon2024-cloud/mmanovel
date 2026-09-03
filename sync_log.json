@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-09-03 13:18:36",
+  "last_sync": "2026-09-03 13:32:22",
   "sync_status": "OK",
   "changed": false,
   "changes": [],
@@ -7,7 +7,7 @@
     "url": "https://www.data.go.kr/data/3064321/openapi.do",
     "title": "병무청 병역판정 신체검사 정보",
     "status": "ACTIVE",
-    "checked_at": "2026-09-03 13:18:35",
+    "checked_at": "2026-09-03 13:32:21",
     "verified": true,
     "bmi_range": "18.5 ~ 35.0"
   },
@@ -15,7 +15,7 @@
     "api_type": "DRF_OFFICIAL_OPEN_API",
     "oc": "westock",
     "law_name": "병역판정 신체검사 등 검사규칙",
-    "checked_at": "2026-09-03 13:18:35",
+    "checked_at": "2026-09-03 13:32:21",
     "bmi_appendix": 2,
     "disease_appendix": 3,
     "verified": true,

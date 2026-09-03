@@ -295,6 +295,169 @@
     </div>
   </div>
 
+  <!-- ================= [LAYER 2.9: Open API & 법령 실시간 연동 내역 상세 작업 팝업] ================= -->
+  <div id="api-sync-detail-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 sm:p-7 max-w-2xl w-full shadow-2xl space-y-4 my-auto">
+      
+      <!-- 모달 헤더 -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3.5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shadow shrink-0">
+            <i data-lucide="radio" class="w-5 h-5 text-emerald-400 animate-pulse"></i>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+              <span id="modal-sync-main-title">Open API & 실시간 법령 연동 내역</span>
+              <span id="modal-sync-badge-status" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[11px] font-bold border border-emerald-500/30">실시간 연동 정상</span>
+            </h3>
+            <p class="text-xs text-slate-400" id="sync-detail-last-time">
+              매일 새벽 04:00 자동 검증 수행 (최근 점검: 2026-09-03 13:32:22)
+            </p>
+          </div>
+        </div>
+        <button onclick="closeApiSyncDetailModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer" title="닫기">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 연동 API 목록 카드 나열 영역 -->
+      <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+        
+        <!-- API CARD 1: 법제처 국가법령정보 Open API (DRF) -->
+        <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition space-y-2.5">
+          <div class="flex items-start justify-between gap-2">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[11px] font-bold border border-blue-500/30">
+                  법제처 DRF API
+                </span>
+                <span class="text-xs font-bold text-white">병역판정 신체검사 등 검사규칙</span>
+              </div>
+              <p class="text-xs text-emerald-400 font-medium flex items-center gap-1.5" id="sync-detail-law-ordinance">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>국방부령 제1139호 (시행 2024.02.01)</span>
+              </p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold shrink-0">
+              연동 정상
+            </span>
+          </div>
+
+          <!-- 세부 연동 별표 규정 나열 -->
+          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1.5 border border-slate-800/80">
+            <div class="text-[11px] text-slate-400 font-bold tracking-wide">🔗 연동 및 자동 검증 별표 규정:</div>
+            <div class="flex items-start gap-1.5 text-slate-300">
+              <span class="text-cyan-400 font-bold shrink-0">[별표 1]</span>
+              <span>신체검사 분담업무의 구분 및 담당자 (제4조제1항 관련)</span>
+            </div>
+            <div class="flex items-start gap-1.5 text-slate-300">
+              <span class="text-cyan-400 font-bold shrink-0">[별표 2]</span>
+              <span>신장ㆍ체중에 따른 신체등급 판정기준 (제10조제1항, BMI 기준)</span>
+            </div>
+            <div class="flex items-start gap-1.5 text-slate-300">
+              <span class="text-cyan-400 font-bold shrink-0">[별표 3]</span>
+              <span>질병ㆍ심신장애의 정도 및 평가기준 (제11조·20조·21조 관련, 411개 질환)</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+            <span>인증 식별자: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">westock</code> | 법령 MST: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">260145</code></span>
+            <a href="https://www.law.go.kr/법령/병역판정신체검사등검사규칙" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold">
+              <span>법령 원문 확인</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- API CARD 2: 공공데이터포털 병무청 병역판정 신체검사 정보 Open API -->
+        <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition space-y-2.5">
+          <div class="flex items-start justify-between gap-2">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[11px] font-bold border border-indigo-500/30">
+                  공공데이터포털 REST API
+                </span>
+                <span class="text-xs font-bold text-white">병무청_병역판정 신체검사 정보</span>
+              </div>
+              <p class="text-xs text-emerald-400 font-medium flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>정상 수신 상태 (ACTIVE)</span>
+              </p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold shrink-0">
+              연동 정상
+            </span>
+          </div>
+
+          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1.5 border border-slate-800/80">
+            <div class="text-[11px] text-slate-400 font-bold tracking-wide">🔗 실시간 활용 데이터 세트:</div>
+            <div class="flex items-center gap-2 text-slate-300">
+              <span class="text-indigo-400 font-bold shrink-0">✔ 실시간 기준:</span>
+              <span id="sync-detail-bmi-range">신장·체중 BMI 정상 및 감면 범위 (18.5 ~ 35.0 기준치 실시간 비교)</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-300">
+              <span class="text-indigo-400 font-bold shrink-0">✔ 검사장 운영:</span>
+              <span>전국 14개 지방병무청 병역판정검사장 일자별 수검 정원 및 희망일자 배정</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+            <span>데이터셋 ID: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">3064321</code></span>
+            <a href="https://www.data.go.kr/data/3064321/openapi.do" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold">
+              <span>Open API 명세</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- API CARD 3: 행정규칙 및 병역법령 자동 검증 체계 -->
+        <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition space-y-2.5">
+          <div class="flex items-start justify-between gap-2">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[11px] font-bold border border-purple-500/30">
+                  법령·훈령 연계
+                </span>
+                <span class="text-xs font-bold text-white">병역법 & 병역판정검사 규정(병무청 훈령)</span>
+              </div>
+              <p class="text-xs text-slate-400">
+                심리검사(제21조), 이의신청(제14조의2), 여비지급 규정 등 14개 전 씬 연동
+              </p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold shrink-0">
+              검증 완료
+            </span>
+          </div>
+
+          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1 border border-slate-800/80">
+            <div class="flex items-center gap-2">
+              <span class="text-purple-400 font-bold shrink-0">・심리검사:</span>
+              <span>「병역판정검사 규정」 제21조 (인지능력·인성검사 및 정밀의뢰)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-purple-400 font-bold shrink-0">・여비지급:</span>
+              <span>「병역의무자 여비지급 규정」 및 나라사랑포털 전자지갑 연동</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 모달 하단 액션 버튼 -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+        <button onclick="refreshSyncDataInModal()" id="btn-modal-refresh-sync" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span id="btn-modal-refresh-text">지금 즉시 동기화 재점검</span>
+        </button>
+
+        <button onclick="closeApiSyncDetailModal()" class="py-2.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition cursor-pointer shadow-md">
+          확인
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ================= [LAYER 3: 캐릭터 스프라이트 레이어 (화면 바닥에 자연스럽게 안착)] ================= -->
   <div id="character-layer" class="fixed inset-0 z-10 flex items-end pointer-events-none pb-0 px-2 sm:px-24">
     <!-- 캐릭터가 화면 하단 바닥에 자연스럽게 안착 -->
@@ -2813,35 +2976,99 @@
       }
     }
 
+    function openApiSyncDetailModal() {
+      const modal = document.getElementById('api-sync-detail-modal');
+      if (!modal) return;
+      playBeep(880, 'triangle', 0.05);
+
+      if (systemSyncData) {
+        const timeEl = document.getElementById('sync-detail-last-time');
+        const ordEl = document.getElementById('sync-detail-law-ordinance');
+        const bmiEl = document.getElementById('sync-detail-bmi-range');
+        const statusBadge = document.getElementById('modal-sync-badge-status');
+
+        if (timeEl && systemSyncData.last_sync) {
+          timeEl.innerText = `매일 새벽 04:00 자동 검증 수행 (최근 점검: ${systemSyncData.last_sync})`;
+        }
+        if (ordEl && systemSyncData.law && systemSyncData.law.ordinance_info) {
+          ordEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>${systemSyncData.law.ordinance_info}</span>`;
+        }
+        if (bmiEl && systemSyncData.openapi && systemSyncData.openapi.bmi_range) {
+          bmiEl.innerText = `신장·체중 BMI 정상 및 감면 범위 (${systemSyncData.openapi.bmi_range} 기준치 실시간 비교)`;
+        }
+        if (statusBadge) {
+          if (systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false)) {
+            statusBadge.className = "px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 text-[11px] font-bold border border-rose-500/30";
+            statusBadge.innerText = "동기화 이상 감지";
+          } else {
+            statusBadge.className = "px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[11px] font-bold border border-emerald-500/30";
+            statusBadge.innerText = "실시간 연동 정상";
+          }
+        }
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeApiSyncDetailModal() {
+      const modal = document.getElementById('api-sync-detail-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function refreshSyncDataInModal() {
+      const textEl = document.getElementById('btn-modal-refresh-text');
+      if (textEl) textEl.innerText = "연동 상태 확인 중...";
+      playBeep(660, 'sine', 0.05);
+
+      await checkSystemSyncStatus();
+
+      setTimeout(() => {
+        if (textEl) textEl.innerText = "지금 즉시 동기화 재점검";
+        playBeep(990, 'sine', 0.08);
+      }, 500);
+    }
+
     function renderLobbySyncBanner() {
       const container = document.getElementById('lobby-sync-banner-container');
       if (!container || !systemSyncData) return;
 
-      const dict = (I18N[currentLang] && I18N[currentLang].lobby) ? I18N[currentLang].lobby : I18N.ko.lobby;
       const isError = systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false) || (systemSyncData.openapi && systemSyncData.openapi.verified === false);
       const isUpdated = systemSyncData.changed || systemSyncData.sync_status === 'UPDATED';
 
       if (isError) {
         container.innerHTML = `
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-rose-950/80 border border-rose-500/50 text-rose-300 text-xs font-semibold shadow-xl animate-pulse cursor-pointer" onclick="showSyncWarningModal(false, false)" title="클릭하여 상세 상태 확인">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-950/90 hover:bg-rose-900 border border-rose-500/50 hover:border-rose-400 text-rose-300 text-xs font-semibold shadow-xl transition cursor-pointer animate-pulse" title="클릭하여 연동 내역 및 점검 상태 확인">
             <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-400 shrink-0"></i>
-            <span>${dict.syncError}</span>
-          </div>
+            <span>[⚠️ 법령 동기화 오류 감지]</span>
+            <span class="text-[11px] text-rose-200 group-hover:text-white transition flex items-center gap-0.5 ml-1">
+              내역 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </button>
         `;
       } else if (isUpdated) {
         container.innerHTML = `
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-950/80 border border-amber-500/50 text-amber-300 text-xs font-semibold shadow-xl">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-950/90 hover:bg-amber-900 border border-amber-500/50 hover:border-amber-400 text-amber-300 text-xs font-semibold shadow-xl transition cursor-pointer" title="클릭하여 연동 내역 및 점검 상태 확인">
             <i data-lucide="bell" class="w-4 h-4 text-amber-400 shrink-0"></i>
-            <span>${dict.syncUpdated}</span>
-          </div>
+            <span>[📢 최신 법령 개정 반영 완료]</span>
+            <span class="text-[11px] text-amber-200 group-hover:text-white transition flex items-center gap-0.5 ml-1">
+              내역 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </button>
         `;
       } else {
-        const ordInfo = (systemSyncData.law && systemSyncData.law.ordinance_info) ? systemSyncData.law.ordinance_info : "국방부령 제1139호";
         container.innerHTML = `
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/40 text-emerald-400 text-[11px] font-medium shadow-md">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-400 text-emerald-400 text-xs font-medium shadow-md transition cursor-pointer" title="클릭하여 연동된 API 및 날짜·명칭 상세 확인">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
-            <span>${dict.syncNormal} (${ordInfo})</span>
-          </div>
+            <span class="font-bold">[API] 실시간 법령 & 공공데이터 연동 현황</span>
+            <span class="text-[11px] text-slate-400 group-hover:text-emerald-300 transition flex items-center gap-0.5 ml-1">
+              내역 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </button>
         `;
       }
       lucide.createIcons();
