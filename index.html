@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.4.0</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.4.1</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.4.0</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.4.1</span>
             </div>
           </div>
         </div>
@@ -627,9 +627,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v140"></script>
-  <script src="scenario.js?v=20260903_v140"></script>
-  <script src="tracker.js?v=20260903_v140"></script>
+  <script src="api.js?v=20260903_v141"></script>
+  <script src="scenario.js?v=20260903_v141"></script>
+  <script src="tracker.js?v=20260903_v141"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -914,6 +914,13 @@
 
       if (audioKey) {
         audioPath = `assets/audio/${audioKey}_${langCode}.mp3`;
+      } else if (currentSceneIdx === 10) {
+        let clinicKey = 'normal';
+        const hc = userData.healthCheck || '';
+        if (hc.includes('내과') || hc.includes('천식') || hc.includes('복용약')) clinicKey = 'internal';
+        else if (hc.includes('정형외과') || hc.includes('무릎') || hc.includes('척추')) clinicKey = 'ortho';
+        else if (hc.includes('안과') || hc.includes('망막') || hc.includes('각막')) clinicKey = 'eye';
+        audioPath = `assets/audio/voice_10_${currentDialogueIdx}_${clinicKey}_${langCode}.mp3`;
       } else if (typeof currentSceneIdx === 'number' && typeof currentDialogueIdx === 'number') {
         audioPath = `assets/audio/voice_${currentSceneIdx}_${currentDialogueIdx}_${langCode}.mp3`;
       }
@@ -1073,8 +1080,20 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압, 시력 정밀 측정";
         if (icon) icon.setAttribute('data-lucide', 'ruler');
       } else if (targetIdx === 10 || bg.includes('doctor_room')) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
+        const hc = userData.healthCheck || '';
+        if (hc.includes('내과') || hc.includes('천식') || hc.includes('복용약')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Internal Medicine Specialist Clinic..." : "내과 전문의 정밀 진료실로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Bronchial Asthma & 6-Month Medication Records Review" : "기관지 천식 폐기능검사(PFT) 및 6개월 투약 기록 정밀 심사";
+        } else if (hc.includes('정형외과') || hc.includes('무릎') || hc.includes('척추')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "정형외과 전문의 정밀 진료실로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
+        } else if (hc.includes('안과') || hc.includes('망막') || hc.includes('각막')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Ophthalmology Specialist Clinic..." : "안과 전문의 정밀 진료실로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Corneal/Retinal Disease & Fundus Precision Exam" : "기질적 안과 질환 의무기록 및 안저 정밀 검진";
+        } else {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Specialist Doctor Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Comprehensive Physical Exam & Lab Review" : "기본검사 및 임상병리 종합 판독";
+        }
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
       } else if (targetIdx === 11 || bg.includes('aptitude_room') || bg.includes('career_center')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude Classification Room..." : "적성분류실로 이동 중...";
@@ -1242,6 +1261,20 @@
       if (topTitle) {
         const stepList = I18N[currentLang].steps;
         topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
+      }
+
+      // SCENE 10 진료과목 동적 분기 (내과/천식, 정형외과, 안과, 일반종합)
+      if (idx === 10 && scene.clinicProfiles) {
+        let clinicKey = 'normal';
+        const hc = userData.healthCheck || '';
+        if (hc.includes('내과') || hc.includes('천식') || hc.includes('복용약')) clinicKey = 'internal';
+        else if (hc.includes('정형외과') || hc.includes('무릎') || hc.includes('척추')) clinicKey = 'orthopedic';
+        else if (hc.includes('안과') || hc.includes('망막') || hc.includes('각막')) clinicKey = 'ophthalmology';
+
+        const profile = scene.clinicProfiles[clinicKey] || scene.clinicProfiles.normal;
+        scene.speaker = profile.speaker;
+        scene.speaker_en = profile.speaker_en;
+        scene.dialogues = profile.dialogues;
       }
 
       // 씬의 다중 화자 대사 목록(dialogues) 또는 기본 text 파싱 (단락별 \n\n 자동 분할로 스크롤 방지 및 쾌적한 문단 넘김)

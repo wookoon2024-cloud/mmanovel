@@ -333,42 +333,148 @@ const SCENARIOS = [
     widgetType: "BMI_CALCULATOR"
   },
 
-  // [SCENE 10] 전문의 정밀 진료실 - 정형외과 세부 진료 (진지한 전문의 & 긴장한 민우)
+  // [SCENE 10] 전문의 정밀 진료실 - 사전 선택 질환(내과/천식, 정형외과, 안과, 일반) 맞춤형 정밀 진료
   {
     bg: "assets/doctor_room.jpg",
     char: "assets/doctor_serious.png",
-    speaker: "정형외과 전담의사 NPC",
-    speaker_en: "Orthopedic Specialist Doctor NPC",
+    speaker: "과목별 전담의사 NPC",
+    speaker_en: "Specialist Doctor NPC",
     plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-    dialogues: [
-      {
+    clinicProfiles: {
+      internal: {
+        speaker: "내과 전담의사 NPC",
+        speaker_en: "Internal Medicine Specialist Doctor NPC",
+        dialogues: [
+          {
+            speaker: "내과 전담의사 NPC",
+            speaker_en: "Internal Medicine Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "김민우 님 어서 오세요. 이곳은 [내과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 내과 의무기록과 투약 처방전, 폐기능검사 및 알레르기 유발검사 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
+            text_en: "Welcome, Minwoo Kim. This is the [Internal Medicine Specialist Clinic].\n\nWe review your clinical records, medication prescriptions, pulmonary function test (PFT) and allergy test results."
+          },
+          {
+            speaker: "김민우 (주인공)",
+            speaker_en: "Minwoo Kim (Protagonist)",
+            char: "assets/minwoo_nervous.png",
+            charPos: "right",
+            plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+            text: "선생님, 제가 평소 기관지 천식으로 6개월 이상 지속 투약 치료를 받아왔는데, 사전에 챙겨온 병무용 진단서와 의무기록사본, 투약 처방전을 여기 제출하면 될까요?",
+            text_en: "Doctor, I have been taking medication for bronchial asthma for over 6 months. Should I submit my military medical certificate, clinical records, and prescriptions here?"
+          },
+          {
+            speaker: "내과 전담의사 NPC",
+            speaker_en: "Internal Medicine Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "네! 6개월 이상의 꾸준한 치료 경과와 폐기능 검사(PFT) 결과지를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 의무기록과 기관지 확장제 반응 검사 결과를 면밀히 판독했습니다.\n\n국방부령 [별표 3] 내과 137호(기관지 천식) 기준에 부합하여 [내과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
+            text_en: "Yes! You brought thorough 6-month treatment records and pulmonary function test (PFT) results.\n\nBased on your bronchial responsiveness records and Defense Ministry standards [Table 3] Item 137 (Asthma), I am referring you with an Internal Medicine Grade 4 recommendation."
+          }
+        ]
+      },
+      orthopedic: {
         speaker: "정형외과 전담의사 NPC",
         speaker_en: "Orthopedic Specialist Doctor NPC",
-        char: "assets/doctor_serious.png",
-        charPos: "right",
-        plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-        text: "김민우 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
-        text_en: "Welcome, Minwoo Kim. This is the [Specialist Doctor Examination Clinic].\n\nSpecialist doctors in each field review your medical certificates and clinical records and conduct precision physical examinations."
+        dialogues: [
+          {
+            speaker: "정형외과 전담의사 NPC",
+            speaker_en: "Orthopedic Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "김민우 님 어서 오세요. 이곳은 [정형외과 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
+            text_en: "Welcome, Minwoo Kim. This is the [Orthopedic Specialist Clinic].\n\nSpecialist doctors review your medical certificates and clinical records and conduct precision physical examinations."
+          },
+          {
+            speaker: "김민우 (주인공)",
+            speaker_en: "Minwoo Kim (Protagonist)",
+            char: "assets/minwoo_nervous.png",
+            charPos: "right",
+            plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+            text: "선생님, 제가 예전에 무릎 십자인대 수술을 받았는데, 사전에 챙겨온 병무용 진단서와 수술기록지, MRI 영상 CD를 여기 제출하면 될까요?",
+            text_en: "Doctor, I had cruciate ligament knee surgery in the past. Should I submit the military medical certificate, surgical records, and MRI CD I brought from the locker room?"
+          },
+          {
+            speaker: "정형외과 전담의사 NPC",
+            speaker_en: "Orthopedic Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 3] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
+            text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
+          }
+        ]
       },
-      {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
-        char: "assets/minwoo_nervous.png",
-        charPos: "right",
-        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "선생님, 제가 예전에 무릎 십자인대 수술을 받았는데, 탈의실에서 챙겨온 병무용 진단서와 수술기록지, MRI 영상 CD를 여기 제출하면 될까요?",
-        text_en: "Doctor, I had cruciate ligament knee surgery in the past. Should I submit the military medical certificate, surgical records, and MRI CD I brought from the locker room?"
+      ophthalmology: {
+        speaker: "안과 전담의사 NPC",
+        speaker_en: "Ophthalmology Specialist Doctor NPC",
+        dialogues: [
+          {
+            speaker: "안과 전담의사 NPC",
+            speaker_en: "Ophthalmology Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "김민우 님 어서 오세요. 이곳은 [안과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 안과 의무기록과 수술기록지, 정밀 굴절 검사 및 안저 촬영 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
+            text_en: "Welcome, Minwoo Kim. This is the [Ophthalmology Specialist Clinic].\n\nWe review your clinical records, refractive tests, and fundus photography results."
+          },
+          {
+            speaker: "김민우 (주인공)",
+            speaker_en: "Minwoo Kim (Protagonist)",
+            char: "assets/minwoo_nervous.png",
+            charPos: "right",
+            plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+            text: "선생님, 제가 기질적 각막 또는 망막 질환 수술 이력이 있는데, 사전에 챙겨온 병무용 진단서와 안과 수술기록사본을 여기 제출하면 될까요?",
+            text_en: "Doctor, I had corneal or retinal surgery in the past. Should I submit my ophthalmology medical records here?"
+          },
+          {
+            speaker: "안과 전담의사 NPC",
+            speaker_en: "Ophthalmology Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "네! 안과 정밀 진단서와 의무기록을 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 서류와 현장 안저 정밀 검사 결과를 종합 판독했습니다.\n\n국방부령 [별표 3] 안과 285호 기준에 부합하여 [안과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
+            text_en: "Yes! You brought thorough ophthalmology records.\n\nAfter comprehensive evaluation, meeting Defense Ministry standards [Table 3] Item 285, I am referring you with an Ophthalmology Grade 4 recommendation."
+          }
+        ]
       },
-      {
-        speaker: "정형외과 전담의사 NPC",
-        speaker_en: "Orthopedic Specialist Doctor NPC",
-        char: "assets/doctor_serious.png",
-        charPos: "right",
-        plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-        text: "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 3] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
-        text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
+      normal: {
+        speaker: "일반종합 전담의사 NPC",
+        speaker_en: "General Medicine Specialist Doctor NPC",
+        dialogues: [
+          {
+            speaker: "일반종합 전담의사 NPC",
+            speaker_en: "General Medicine Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "김민우 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n기본검사 및 임상병리 검사 결과를 종합하여 전반적인 신체 건강 상태를 최종 확인하는 곳입니다.",
+            text_en: "Welcome, Minwoo Kim. This is the [Specialist Clinic].\n\nWe verify your overall health results from basic biometrics and clinical pathology."
+          },
+          {
+            speaker: "김민우 (주인공)",
+            speaker_en: "Minwoo Kim (Protagonist)",
+            char: "assets/minwoo.png",
+            charPos: "right",
+            plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+            text: "선생님, 저는 평소 특이질환이나 수술 이력 없이 건강한 편인데, 오늘 검사 결과에 특이사항이 있을까요?",
+            text_en: "Doctor, I don't have any specific medical history. Are my exam results all normal?"
+          },
+          {
+            speaker: "일반종합 전담의사 NPC",
+            speaker_en: "General Medicine Specialist Doctor NPC",
+            char: "assets/doctor_serious.png",
+            charPos: "right",
+            plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
+            text: "네! 앞서 진행한 심리검사, 혈액·소변검사, 흉부 X-ray, 신장·체중(BMI), 혈압 모두 완벽하게 정상입니다.\n\n국방부령 [별표 1, 2] 기준에 부합하여 [신체등급 1급(현역)] 소견으로 적성분류실에 안내해 드리겠습니다.",
+            text_en: "Yes! All test results including biometrics, blood/urine, chest X-ray, and blood pressure are completely normal. Meeting standards, referring you with Grade 1 (Active Duty) to Aptitude Classification."
+          }
+        ]
       }
-    ],
+    },
+    dialogues: [],
     apiSource: null,
     apiSource_en: null,
     isApi: false,
