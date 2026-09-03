@@ -203,9 +203,9 @@ const SCENARIOS = [
         text_en: "Please answer calmly and honestly. Let's solve sample questions on screen!"
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
-    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
-    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역판정심리검사운영규정",
+    apiSource: "[API] 국가법령정보센터: 「병역판정검사 규정」(병무청 훈령) 제21조(심리검사)",
+    apiSource_en: "[API] National Law Information Center: 「Draft Physical Exam Regulations」(MMA Directive) Art. 21",
+    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역판정검사규정/제21조",
     apiIcon: "scale",
     isApi: true,
     widgetType: "PSYCH_TEST_UI"
