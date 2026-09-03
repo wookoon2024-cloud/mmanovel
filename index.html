@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.7.3</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.7.4</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.7.3</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.7.4</span>
             </div>
           </div>
         </div>
@@ -671,10 +671,10 @@
 
       <!-- 성명 입력 폼 -->
       <div class="w-full mt-6 space-y-2 text-left">
-        <label for="protagonist-name-input" class="text-xs font-bold text-slate-300 ml-1">수검자 성명 (주인공)</label>
+        <label for="protagonist-name-input" class="text-xs font-bold text-slate-300 ml-1">성명 (주인공)</label>
         <div class="relative">
           <input type="text" id="protagonist-name-input" value="김민우" maxlength="10" 
-                 class="w-full px-4 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-600 text-white font-bold text-base focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition shadow-inner placeholder-slate-500"
+                 class="w-full px-12 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-600 text-white font-bold text-base text-center focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition shadow-inner placeholder-slate-500 tracking-wider"
                  placeholder="이름 입력 (예: 김민우)"
                  onkeydown="if(event.key==='Enter') submitProtagonistName()">
           <span class="absolute right-3.5 top-3.5 text-xs text-slate-400 font-mono">만 19세</span>
@@ -802,13 +802,13 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v173"></script>
-  <script src="scenario.js?v=20260903_v173"></script>
-  <script src="tracker.js?v=20260903_v173"></script>
+  <script src="api.js?v=20260903_v174"></script>
+  <script src="scenario.js?v=20260903_v174"></script>
+  <script src="tracker.js?v=20260903_v174"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260903_v173';
+    const ASSET_VER = '20260903_v174';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
