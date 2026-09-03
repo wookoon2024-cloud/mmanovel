@@ -2079,7 +2079,7 @@
                   <p class="text-[11px] text-slate-300 leading-relaxed">국방 전산망 및 군용 소프트웨어 개발 실무 담당 · <strong class="text-blue-300">전역 후 IT 취업 시 개발 경력 100% 공식 인정</strong></p>
                   <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
                     <span>지원자격: 1~2급 현역 + 컴공 2년 이상 (적격 충족)</span>
-                    <span class="text-emerald-400 font-bold">지원 가능</span>
+                    <span class="text-emerald-400 font-bold">지원 자격 충족</span>
                   </div>
                 </div>
 
@@ -2098,7 +2098,7 @@
                   <p class="text-[11px] text-slate-300 leading-relaxed">공군 비행단 전산실 서버·네트워크 운영 관리 · <strong class="text-cyan-300">쾌적한 실내 인프라 & 풍부한 자기계발 환경</strong></p>
                   <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
                     <span>지원자격: 1~3급 현역 + 전공자 (적격 충족)</span>
-                    <span class="text-cyan-400 font-bold">합격 유력</span>
+                    <span class="text-cyan-400 font-bold">지원 자격 충족</span>
                   </div>
                 </div>
 
@@ -2116,21 +2116,20 @@
                   </div>
                   <div class="flex items-center justify-between text-[10px] text-slate-400">
                     <span>지휘통신망 및 네트워크 장비 운용</span>
-                    <span class="text-emerald-400 font-bold">합격 안정권</span>
+                    <span class="text-emerald-400 font-bold">지원 자격 충족</span>
                   </div>
                 </div>
               </div>
 
-              <!-- 가산점 모의 시뮬레이터 -->
-              <div class="p-3 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-2">
-                <div class="flex items-center justify-between">
-                  <label class="flex items-center gap-2 cursor-pointer select-none">
-                    <input type="checkbox" id="chk-license-bonus" onchange="toggleLicenseBonus(this.checked)" class="rounded border-slate-700 bg-slate-800 text-blue-500 focus:ring-0 w-4 h-4 cursor-pointer" />
-                    <span class="text-white font-bold">가산점 시뮬레이터: 정보처리기능사/산업기사 자격증 (+15점)</span>
-                  </label>
+              <!-- 공식 자격증 가산점 인정 기준 안내 (체크박스/확률 제거하고 공식 행정 기준 안내로 정돈) -->
+              <div class="p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-1.5">
+                <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="award" class="w-4 h-4 text-blue-400"></i>
+                  <span>모집병 국가기술자격증 가산점 기준 안내</span>
                 </div>
-                <div id="bonus-prediction-box" class="text-[11px] text-blue-200">
-                  체크 시 자격증 배점(+15점)이 합산되어 실시간 합격 확률이 시뮬레이션됩니다.
+                <div class="text-[11px] text-slate-300 leading-relaxed space-y-1">
+                  <div>• <strong>국가기술자격증(정보처리기능사/산업기사)</strong> 소지 시 기술행정병 1차 서류 전형에서 <strong>직무 가산점(+15점)</strong>이 부여됩니다.</div>
+                  <div>• 전공(컴퓨터·SW 2년) 기본 배점과 합산되어 공식 선발 전형 기준에 반영됩니다. (※ 최종 선발 여부는 병무청 정규 전형 심사에 따라 결정됩니다)</div>
                 </div>
               </div>
             </div>
@@ -2999,24 +2998,7 @@
       }
     }
 
-    
-    // [신규 API] 가산점 모의 시뮬레이터 토글
-    function toggleLicenseBonus(isChecked) {
-      const box = document.getElementById('bonus-prediction-box');
-      if (!box) return;
-      if (isChecked) {
-        box.innerHTML = `
-          <div class="flex items-center justify-between text-emerald-300 font-bold">
-            <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 정보처리기능사 자격증 가산점 +15점 적용 완료!</span>
-            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[11px]">합격 확률 98% (확실)</span>
-          </div>
-          <p class="text-[10px] text-slate-400 mt-1">공군 정보체계운영병 및 육군 IT/SW개발병 1차 서류 전형 배점 100점 만점 중 95점 확보로 <strong>합격 안정권</strong>입니다.</p>
-        `;
-      } else {
-        box.innerHTML = `체크 시 자격증 배점(+15점)이 합산되어 실시간 합격 확률이 시뮬레이션됩니다.`;
-      }
-      lucide.createIcons();
-    }
+
 
     // [신규 API] 관할 병무청 인근 나라사랑가게 핫스팟 및 가맹점 렌더링
     function renderHotspots(hotspots, activeIdx) {
