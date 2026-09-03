@@ -59,8 +59,8 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "예를 들어 민우 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!\n\n또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
     text_en: "For example, if your resident registration address is [{residentAddress}],\nyou can immediately select the real-time vacancy calendar and preferred date for your regional office ({region})!\n\nAlso, your round-trip travel allowance ({fare}) will be automatically calculated live based on actual distance ({distanceKm}).",
-    apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 일자 및 장소 본인선택 공석 데이터 Open API",
-    apiSource_en: "[API] Public Data Portal: MMA Draft Exam Schedule Selection Open API",
+    apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 공석 데이터 & 법제처: 「병역의무자 여비지급 규정」 Open API",
+    apiSource_en: "[API] Public Data Portal: MMA Draft Exam Vacancies & Law Center: Military Service Travel Allowance Regulations Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
     isApi: true,
@@ -393,8 +393,8 @@ const SCENARIOS = [
         text_en: "Congratulations! Live travel allowance [ {fare} ] for actual distance ({distanceKm}) has been deposited into your {cardType} account! Explore e-Military Wallet benefits and pick a nearby restaurant hotspot via the Nara Sarang Store API below!"
       }
     ],
-    apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 및 할인혜택 Open API",
-    apiSource_en: "[API] Public Data Portal: MMA Nara Sarang Partner Store & Travel Standards Open API",
+    apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 & 법제처: 「병역의무자 여비지급 규정」 Open API",
+    apiSource_en: "[API] Public Data Portal: MMA Nara Sarang Store & Law Center: Military Service Travel Allowance Regulations Open API",
     apiSourceUrl: "https://www.data.go.kr",
     apiIcon: "database",
     isApi: true,
