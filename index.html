@@ -820,9 +820,20 @@
       if (btnLang) btnLang.title = dict.langBtnTitle;
       if (labelHome) labelHome.innerText = dict.mainMenu;
       if (labelLog) labelLog.innerText = dict.log;
-      if (labelRestart) labelRestart.innerText = dict.restart;
       if (soundLabel) soundLabel.innerText = soundEnabled ? dict.soundOn : dict.soundOff;
-      if (nextIndicatorSpan) nextIndicatorSpan.innerText = dict.clickToNext;
+      const btnSound = document.getElementById('btn-sound');
+      const soundIcon = document.getElementById('sound-icon');
+      if (btnSound && soundIcon) {
+        if (soundEnabled) {
+          soundIcon.setAttribute('data-lucide', 'volume-2');
+          soundIcon.className = "w-3.5 h-3.5 text-blue-600";
+          btnSound.className = "px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1 text-blue-700 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs";
+        } else {
+          soundIcon.setAttribute('data-lucide', 'volume-x');
+          soundIcon.className = "w-3.5 h-3.5 text-slate-400";
+          btnSound.className = "px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-500 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs";
+        }
+      }
       if (verifyBadge) verifyBadge.innerText = dict.verified;
 
       // 로비 텍스트 갱신
@@ -890,7 +901,10 @@
     }
 
     function speakDialogue(speaker, text, audioKey = null) {
-      if (!soundEnabled) return;
+      if (!soundEnabled) {
+        stopVoiceAudio();
+        return;
+      }
       stopVoiceAudio();
 
       const langCode = (currentLang === 'en') ? 'en' : 'ko';
@@ -906,9 +920,16 @@
         const audio = new Audio(audioPath);
         currentVoiceAudio = audio;
         audio.play().then(() => {
-          // 실제 Neural 남성 AI 오디오 MP3 재생 성공!
+          // 오디오 로딩/재생 중 음소거가 눌렸을 경우 즉각 정지
+          if (!soundEnabled) {
+            try {
+              audio.pause();
+              audio.currentTime = 0;
+            } catch (e) {}
+            if (currentVoiceAudio === audio) currentVoiceAudio = null;
+          }
         }).catch(() => {
-          // 오디오 로드 실패 시 Web Speech API 폴백 실행
+          if (!soundEnabled) return;
           speakWithWebSpeech(speaker, text);
         });
         return;
@@ -3116,20 +3137,41 @@
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btn-sound');
       const icon = document.getElementById('sound-icon');
       const label = document.getElementById('sound-label');
+      const isEn = (currentLang === 'en');
+      const dict = I18N[currentLang] || I18N.ko;
+
       if (soundEnabled) {
-        if (icon) icon.setAttribute('data-lucide', 'volume-2');
-        if (label) label.innerText = "TTS 음성 ON";
+        if (icon) {
+          icon.setAttribute('data-lucide', 'volume-2');
+          icon.className = "w-3.5 h-3.5 text-blue-600";
+        }
+        if (label) label.innerText = dict.soundOn || (isEn ? "TTS Voice ON" : "TTS 음성 ON");
+        if (btn) {
+          btn.className = "px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1 text-blue-700 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs";
+        }
         playBeep(880, 'sine', 0.05);
-        const scene = SCENARIOS[currentSceneIdx];
-        if (scene && currentDialogueList && currentDialogueList[currentDialogueIdx]) {
-          speakDialogue(scene.speaker, currentDialogueList[currentDialogueIdx]);
+        
+        // 현재 활성화된 대사 즉시 음성 재생
+        if (currentDialogueList && currentDialogueList[currentDialogueIdx]) {
+          const item = currentDialogueList[currentDialogueIdx];
+          const rawText = typeof item === 'string' ? item : (isEn ? item.text_en : item.text);
+          const spk = (item && (isEn ? item.speaker_en : item.speaker)) || (SCENARIOS[currentSceneIdx] && (isEn ? SCENARIOS[currentSceneIdx].speaker_en : SCENARIOS[currentSceneIdx].speaker)) || '';
+          speakDialogue(spk, rawText);
         }
       } else {
-        if (icon) icon.setAttribute('data-lucide', 'volume-x');
-        if (label) label.innerText = "음소거 OFF";
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        // 음소거 OFF: 재생 중인 모든 오디오(MP3 및 Web Speech) 즉각 완벽 정지!
+        stopVoiceAudio();
+        if (icon) {
+          icon.setAttribute('data-lucide', 'volume-x');
+          icon.className = "w-3.5 h-3.5 text-slate-400";
+        }
+        if (label) label.innerText = dict.soundOff || (isEn ? "Mute OFF" : "음소거 OFF");
+        if (btn) {
+          btn.className = "px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-500 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs";
+        }
       }
       lucide.createIcons();
     }
