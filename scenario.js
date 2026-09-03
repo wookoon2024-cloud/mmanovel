@@ -95,10 +95,10 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록\n민우 님의 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n평소 앓고 계신 질환이나 수술 이력이 있으신가요?",
-    text_en: "Now that the schedule is set, let's check the customized required documents tailored to your medical history so you won't have to make a wasted trip.\n\nDo you have any pre-existing medical conditions or past surgeries?",
-    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 질병·심신장애 평가기준",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3]",
+    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. 민우 님은 해당사항이 있으신가요?",
+    text_en: "Now that your schedule is set, let's check the required documents tailored to your medical history.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?",
+    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 분담업무 및 [별표 3] 질병·심신장애 평가기준",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 1 & 3]",
     apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
@@ -325,9 +325,9 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 적성분류실 (군 특기 및 병과 적성 분류) - 정상 1~2급 수검자 분기
+  // [SCENE 11] 적성분류 (군 특기 및 병과 적성분류) - 1~2급 현역 대상 특기 매칭 (적성분류관 & 민우)
   {
-    bg: "assets/aptitude_room.jpg",
+    bg: "assets/career_center.jpg",
     char: "assets/doctor.png",
     speaker: "적성분류관 NPC",
     speaker_en: "Aptitude Classification Officer NPC",
@@ -401,8 +401,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님 축하드립니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n최종 결과서를 확인하신 후, 탈의실로 이동하여 평상복으로 환복해 주세요!",
-        text_en: "Minwoo, congratulations! Your travel allowance of [ {fare} ] has been deposited into your {cardType} account.\n\nAfter checking your final certificate, please proceed to the locker room to change into your normal clothes!"
+        text: "민우 님 축하드립니다! 오늘 모든 검사를 훌륭하게 마치셨고, 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n화면 상단을 보시면 검사 후 유용하게 활용할 수 있는 두 가지 핵심 서비스가 준비되어 있습니다:\n\n① 스마트 e-병무지갑: 종이 서류 없이 스마트폰 앱 하나로 병역판정결과서와 전자 병역증을 영구 보관하고, 군 장병·청년 우대 할인 바우처를 즉시 발급받을 수 있습니다.\n\n② 병역진로설계센터: 민우 님의 전공과 적성에 딱 맞는 군 특기(기술행정병 등)를 1:1 맞춤 추천받고, 전역 후 취업까지 무료로 연계 지원하는 원스톱 청년 복지 서비스입니다!\n\n두 혜택을 확인해 보신 후, 아래 [최종 병역판정 결과서 발급 및 확인] 버튼을 눌러 정식 결과서를 열람해 보세요!",
+        text_en: "Congratulations Minwoo! You have completed all exams and your travel allowance of [ {fare} ] has been deposited into your {cardType} account.\n\nAbove, you will see two key post-exam services:\n\n① Smart e-Military Wallet: Store your draft physical exam results & digital military ID securely on your smartphone and unlock military discount vouchers.\n\n② Military Career Design Center: Receive free 1-on-1 counseling to match your major/aptitude with specialized military roles and post-discharge employment support!\n\nPlease review these services and click the button below to view your official Certificate of Physical Examination!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",

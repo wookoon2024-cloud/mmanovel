@@ -643,10 +643,10 @@
     // 사용자 시뮬레이션 상태 저장소
     const userData = {
       name: "김민우",
-      region: "강원지방병무청",
-      regionName: "강원특별자치도 춘천시",
-      examDate: "2026-10-29 (목) 오전",
-      healthCheck: "특이 질환 없음 (정상 수검)",
+      region: "서울지방병무청",
+      regionName: "서울특별시 영등포구 여의대방로43길 13",
+      examDate: "2026-10-22 (목) 오전",
+      healthCheck: "특이질환 없음",
       hasDisease: false,
       cardType: "KB국민은행 나라사랑카드",
       height: 178,
@@ -1593,27 +1593,41 @@
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-2xl w-full">
               <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <span class="font-bold text-sm text-white flex items-center gap-2">
-                  <i data-lucide="calendar-check-2" class="w-4 h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 29일 (목) 오전'} 예약 가능
+                  <i data-lucide="calendar-check-2" class="w-4 h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 22일 (목) 오전'} 예약 가능
                 </span>
                 <span class="text-[11px] px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-semibold">실시간 잔여석 확인됨</span>
               </div>
 
-              <!-- 자동 정리된 민원 신청 정보 박스 -->
-              <div class="bg-slate-950/90 rounded-xl p-3.5 border border-slate-800 space-y-2.5 text-xs">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-slate-200 flex items-center gap-1.5 text-xs">
-                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-400"></i> 병무청 민원 신청서 자동 기입 양식
-                  </span>
-                  <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2.5 py-1 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
-                    <i data-lucide="copy" class="w-3 h-3"></i> <span id="copy-btn-text">신청 내용 복사</span>
+              <!-- 병무청 전자민원 신청서 공문서 양식 -->
+              <div class="bg-slate-950/95 rounded-xl p-4 border border-slate-800 space-y-3 text-xs">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <div>
+                    <span class="text-[10px] text-blue-400 font-bold uppercase tracking-wider block">병역법 시행령 제11조 [별지 제1호 서식]</span>
+                    <h4 class="font-extrabold text-white text-xs sm:text-sm">병역판정검사 일자 및 장소 본인선택(변경) 신청서</h4>
+                  </div>
+                  <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2.5 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span id="copy-btn-text">신청 내용 복사</span>
                   </button>
                 </div>
-                
-                <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300 space-y-1 leading-relaxed">
-                  <div><span class="text-slate-400">수검 희망일시:</span> <span class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 29일 (목) 오전'}</span></div>
-                  <div><span class="text-slate-400">수검 희망기관:</span> <span class="text-slate-200 font-semibold">${userData.region} (${contact.dept || '병역판정검사과'})</span></div>
-                  <div><span class="text-slate-400">검사장 주소:</span> <span class="text-slate-300">${contact.address}</span></div>
-                  <div><span class="text-slate-400">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
+
+                <!-- 신청인 인적사항 & 접수현황 -->
+                <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-2.5 rounded-lg text-[11px]">
+                  <div><span class="text-slate-400">신청인(성명):</span> <strong class="text-slate-200">${userData.name}</strong></div>
+                  <div><span class="text-slate-400">생년월일:</span> <span class="text-slate-200">2007. 10. 15 (만 19세)</span></div>
+                  <div><span class="text-slate-400">접수번호:</span> <span class="text-emerald-400 font-mono font-bold">2026-MMA-847219</span></div>
+                  <div><span class="text-slate-400">신청사유:</span> <span class="text-blue-300 font-semibold">학사일정 중복 본인선택</span></div>
+                </div>
+
+                <!-- 수검 희망 검사장 내역 -->
+                <div class="p-3 rounded-lg bg-slate-900/80 space-y-1.5 text-[11px] leading-relaxed">
+                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 22일 (목) 오전'}</strong></div>
+                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망기관:</span> <strong class="text-white">${userData.region} (${contact.dept || '병역판정검사과'})</strong></div>
+                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">검사장 소재지:</span> <span class="text-slate-300">${contact.address}</span></div>
+                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
+                  <div class="pt-1.5 border-t border-slate-800/80 text-[10px] text-slate-400 flex items-center gap-1">
+                    <i data-lucide="info" class="w-3 h-3 text-blue-400 shrink-0"></i>
+                    <span>지참물: 주민등록증·운전면허증·여권 등 공인 신분증 필수 (지참 시 신속 수검)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1632,34 +1646,50 @@
       } else if (type === 'HEALTH_CHECK_CHOICE') {
         choiceContainer.innerHTML = `
           <div class="flex flex-col gap-2.5 w-full animate-in fade-in zoom-in-95 duration-150">
+            <!-- 1. 특이질환 없음 (단순 시력저하·안경 포함) -->
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('특이질환 없음');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-emerald-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-lg bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                <div>
+                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-emerald-300">특이질환 없음 (단순 시력저하·안경 착용 포함)</p>
+                  <p class="text-xs text-slate-400 mt-0.5">서류 제출 불필요 · 병무청 자체 장비로 현장 정밀 측정 (신분증만 지참)</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-emerald-300 transition"></i>
+            </button>
+
+            <!-- 2. 정형외과 질환 및 수술 -->
             <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('정형외과 수술/치료 이력');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
               <div class="flex items-center gap-3">
-                <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">1</span>
-                <div><p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">무릎 / 발목 / 척추 질환 및 수술 이력</p><p class="text-xs text-slate-400 mt-0.5">병무용진단서 + 수술기록지 + MRI 영상 CD 필수</p></div>
-              </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
-            </button>
-
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('시력/안과 질환');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
-              <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">2</span>
-                <div><p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">시력 교정술 및 안과 질환</p><p class="text-xs text-slate-400 mt-0.5">최근 안과 소견서 / 의무기록사본 지참</p></div>
+                <div>
+                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">무릎 / 발목 / 척추 질환 및 수술 이력</p>
+                  <p class="text-xs text-slate-400 mt-0.5">병무용진단서 + 수술기록지 + MRI/CT 영상 CD 필수 지참</p>
+                </div>
               </div>
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
             </button>
 
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+            <!-- 3. 기질적 안과 질환 및 수술 -->
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('기질적 안과 질환/수술');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">3</span>
-                <div><p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">천식 / 피부질환 / 만성 투약 질환</p><p class="text-xs text-slate-400 mt-0.5">처방전 및 6개월 이상 지속 복용기록</p></div>
+                <div>
+                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">기질적 안과 질환(망막·각막·녹내장 등) 수술·치료 이력</p>
+                  <p class="text-xs text-slate-400 mt-0.5">병무용진단서 + 의무기록사본 지참 (※단순 근시·원시·난시는 서류 불필요)</p>
+                </div>
               </div>
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
             </button>
 
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('특이 질환 없음 (정상 수검)');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+            <!-- 4. 내과 / 만성 질환 -->
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">4</span>
-                <div><p class="font-bold text-xs sm:text-sm text-slate-200 group-hover:text-blue-300">특이 질환 없음 (신체 건강)</p><p class="text-xs text-slate-500 mt-0.5">신분증만 지참하고 당일 참석</p></div>
+                <div>
+                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">천식 / 피부질환 / 만성 질환 투약 이력 (6개월 이상)</p>
+                  <p class="text-xs text-slate-400 mt-0.5">6개월 이상 지속 치료 의무기록사본 및 처방전 지참</p>
+                </div>
               </div>
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
             </button>
@@ -2573,7 +2603,7 @@
       if (choiceContainer) choiceContainer.innerHTML = '';
 
       userData.healthCheck = val;
-      userData.hasDisease = !val.includes('특이 질환 없음');
+      userData.hasDisease = !(val.includes('특이질환') || val.includes('특이 질환'));
       if (userData.hasDisease) {
         userData.finalGrade = "4급 (보충역)";
         userData.disposition = "사회복무요원 소집 대상";
@@ -2635,15 +2665,24 @@
 
     // 병무청 민원 신청서 작성용 필수 정보 원클릭 복사
     function copyApplicationInfo() {
-      const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)", dept: "병역판정검사과" };
-      const textToCopy = `[병무청 병역판정검사 일자 및 장소 본인선택 신청 정보]
-• 수검 희망일시: ${userData.examDate || '2026-10-29 (목) 오전'}
+      const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "02-820-4241", address: "서울특별시 영등포구 여의대방로43길 13 (신길역/대방역)", dept: "병역판정검사과" };
+      const textToCopy = `[별지 제1호 서식] 병역판정검사 일자 및 장소 본인선택(변경) 신청서
+■ 신청인 정보
+• 성명: ${userData.name}
+• 생년월일: 2007년 10월 15일 (만 19세)
+• 접수번호: 2026-MMA-847219
+• 신청구분: 병역판정검사 일자 및 장소 본인선택 (학사일정 중복 사유)
+
+■ 수검 희망 검사장 내역
+• 수검 희망일시: ${userData.examDate || '2026년 10월 22일 (목) 오전'}
 • 수검 희망기관: ${userData.region} (${contact.dept || '병역판정검사과'})
-• 검사장 주소: ${contact.address}
+• 검사장 소재지: ${contact.address}
 • 직통 문의전화: ${contact.phone}
-• 지참 준비물: 주민등록증/운전면허증/여권 등 공인 신분증
-• 공식 신청 사이트: 병무청 누리집 민원포털 (https://mwpt.mma.go.kr)
-※ 위 내용을 복사하여 병무청 누리집 [병역판정검사 본인선택] 신청서 작성 시 참고하세요.`;
+
+■ 근거 법령 및 유의사항
+• 관련법령: 「병역법 시행령」 제11조 및 「병역판정검사 규정」 제14조
+• 지참준비물: 주민등록증, 운전면허증, 여권 등 사진이 부착된 공인 신분증 필수
+• 온라인 접수처: 병무청 누리집 민원포털 (https://mwpt.mma.go.kr)`;
 
       navigator.clipboard.writeText(textToCopy).then(() => {
         const btnText = document.getElementById('copy-btn-text');

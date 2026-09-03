@@ -5,3 +5,6 @@ test_*.js
 fix_audio.py
 build_all_voice_audio.py
 scenario.json
+
+__pycache__/
+*.pyc
