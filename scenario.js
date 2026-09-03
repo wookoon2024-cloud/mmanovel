@@ -45,7 +45,7 @@ const SCENARIOS = [
     text_en: "Salute! Hello Minwoo, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
     apiSource: "공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "Public Data Portal: MMA Draft Physical Exam Info Open API",
-    apiSourceUrl: "https://www.data.go.kr/data/15058728/openapi.do",
+    apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "CHOICE_SCHEDULE_CONSENT"
@@ -61,9 +61,9 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "거주하고 계신 지역을 선택하시면,\n해당 지방병무청의 실시간 잔여석 달력을 바로 띄워드릴게요!",
     text_en: "Select the region you reside in, and I will immediately open the real-time vacancy calendar for your regional Military Manpower Administration!",
-    apiSource: "공공데이터포털: 병무청_병역판정검사 일자 및 장소 본인선택 공석 데이터",
+    apiSource: "공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "Public Data Portal: MMA Draft Exam Schedule Selection Vacancy Data",
-    apiSourceUrl: "https://www.data.go.kr/data/15058729/openapi.do",
+    apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "REGION_CALENDAR_PICKER"
@@ -79,9 +79,9 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "탁월한 선택입니다! 민우 님께서 고르신 [ {examDate} ]은 현재 실시간 잔여석이 있어 실제 예약이 가능한 일정입니다.\n\n실제 예약을 위해 병무청 민원포털로 이동하시기 전, 민원 신청서에 기입할 신청 내용을 자동으로 정리해 드릴까요?\n\n원클릭으로 복사하여 병무청 누리집(mwpt.mma.go.kr)에 그대로 붙여넣으시면 매우 편리합니다!",
     text_en: "Excellent choice! The date you selected [ {examDate} ] currently has real-time vacancies available for actual reservation.\n\nBefore heading to the MMA portal to make the real reservation, would you like me to organize your application details automatically?\n\nYou can copy it with a single click and paste it directly into the MMA website (mwpt.mma.go.kr) for convenience!",
-    apiSource: "공공데이터포털: 병무청_지방병무(지)청 조직 및 부서별 연락처 Open API",
+    apiSource: "공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "Public Data Portal: MMA Regional Offices & Contact Info Open API",
-    apiSourceUrl: "https://www.data.go.kr/data/15058730/openapi.do",
+    apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "CONTACT_CARD"

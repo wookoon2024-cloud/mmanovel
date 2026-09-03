@@ -1278,53 +1278,57 @@
         `;
       } else if (type === 'DEFAULT_REGION_PICKER') {
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span class="text-sm font-bold text-white flex items-center gap-2">
-                <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 확인 & 선택
-              </span>
-              <span class="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">기본 통지 일정 적용</span>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <!-- 팝업 본문 카드 -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl w-full">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-sm font-bold text-white flex items-center gap-2">
+                  <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 확인 & 선택
+                </span>
+                <span class="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">기본 통지 일정 적용</span>
+              </div>
+              
+              <p class="text-xs text-slate-300 leading-relaxed">
+                수검을 받으실 <strong class="text-blue-300">주민등록 주소지 관할 지방병무청</strong>을 선택해 주세요.
+              </p>
+
+              <select id="default-region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
+                <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
+                  <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
+                  <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
+                  <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
+                </optgroup>
+                <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
+                  <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
+                  <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
+                </optgroup>
+                <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
+                  <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
+                </optgroup>
+                <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
+                  <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
+                </optgroup>
+                <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
+                  <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
+                </optgroup>
+                <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
+                </optgroup>
+              </select>
+
+              <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
+                <div><span class="text-slate-400">통지 일시:</span> <span class="text-emerald-400 font-semibold">2026-10-21 (수) 오전 08:00 (기본 지정일)</span></div>
+                <div><span class="text-slate-400">지참 서류:</span> <span>주민등록증 / 운전면허증 / 여권 등 공인 신분증 필수</span></div>
+              </div>
             </div>
-            
-            <p class="text-xs text-slate-300 leading-relaxed">
-              수검을 받으실 <strong class="text-blue-300">주민등록 주소지 관할 지방병무청</strong>을 선택해 주세요.
-            </p>
 
-            <select id="default-region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
-              <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
-                <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
-                <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
-                <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
-              </optgroup>
-              <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
-                <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
-                <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
-              </optgroup>
-              <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
-                <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
-              </optgroup>
-              <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
-                <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
-              </optgroup>
-              <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
-                <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
-              </optgroup>
-              <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
-              </optgroup>
-            </select>
-
-            <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
-              <div><span class="text-slate-400">통지 일시:</span> <span class="text-emerald-400 font-semibold">2026-10-21 (수) 오전 08:00 (기본 지정일)</span></div>
-              <div><span class="text-slate-400">지참 서류:</span> <span>주민등록증 / 운전면허증 / 여권 등 공인 신분증 필수</span></div>
-            </div>
-
-            <button onclick="confirmDefaultSchedule()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xl transition cursor-pointer">
+            <!-- 팝업 아래에 깔끔하게 분리된 이동 버튼 -->
+            <button onclick="confirmDefaultSchedule()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer">
               <span>관할 지방병무청 확정 및 다음 단계로</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1332,82 +1336,90 @@
         lucide.createIcons();
       } else if (type === 'REGION_CALENDAR_PICKER') {
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span class="text-sm font-bold text-white flex items-center gap-2">
-                <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 선택
-              </span>
-              <span class="text-xs text-slate-400 font-medium">전국 14개 청 실시간 연동</span>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <!-- 팝업 본문 카드 -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl w-full">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-sm font-bold text-white flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 선택
+                </span>
+                <span class="text-xs text-slate-400 font-medium">전국 14개 청 실시간 연동</span>
+              </div>
+              <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
+                <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
+                  <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
+                  <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
+                  <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
+                </optgroup>
+                <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
+                  <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
+                  <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
+                </optgroup>
+                <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
+                  <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
+                </optgroup>
+                <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
+                  <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
+                </optgroup>
+                <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
+                  <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
+                </optgroup>
+                <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
+                  <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
+                </optgroup>
+              </select>
             </div>
-            <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
-              <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
-                <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
-                <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
-                <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
-              </optgroup>
-              <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
-                <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
-                <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
-              </optgroup>
-              <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
-                <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
-              </optgroup>
-              <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
-                <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
-              </optgroup>
-              <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
-                <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
-              </optgroup>
-              <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
-              </optgroup>
-            </select>
-            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
-              <i data-lucide="calendar" class="w-4 h-4"></i> 실시간 월별 잔여석 달력 열기
+
+            <!-- 팝업 아래에 분리된 달력 열기 버튼 -->
+            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer">
+              <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 월별 잔여석 달력 열기</span>
             </button>
           </div>
         `;
       } else if (type === 'CONTACT_CARD') {
         const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)", dept: "병역판정검사과" };
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span class="font-bold text-sm text-white flex items-center gap-2">
-                <i data-lucide="calendar-check-2" class="w-4 h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 29일 (목) 오전'} 예약 가능
-              </span>
-              <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">실시간 잔여석 확인됨</span>
-            </div>
-
-            <!-- 자동 정리된 민원 신청 정보 박스 -->
-            <div class="bg-slate-950/90 rounded-xl p-3.5 border border-slate-800 space-y-2.5 text-xs">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-slate-200 flex items-center gap-1.5 text-xs">
-                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-400"></i> 병무청 민원 신청서 자동 기입 양식
+          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
+            <!-- 팝업 본문 카드 -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-2xl w-full">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="font-bold text-sm text-white flex items-center gap-2">
+                  <i data-lucide="calendar-check-2" class="w-4 h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 29일 (목) 오전'} 예약 가능
                 </span>
-                <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2.5 py-1 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
-                  <i data-lucide="copy" class="w-3 h-3"></i> <span id="copy-btn-text">신청 내용 복사</span>
-                </button>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">실시간 잔여석 확인됨</span>
               </div>
-              
-              <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300 space-y-1 leading-relaxed">
-                <div><span class="text-slate-400">수검 희망일시:</span> <span class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 29일 (목) 오전'}</span></div>
-                <div><span class="text-slate-400">수검 희망기관:</span> <span class="text-slate-200 font-semibold">${userData.region} (${contact.dept || '병역판정검사과'})</span></div>
-                <div><span class="text-slate-400">검사장 주소:</span> <span class="text-slate-300">${contact.address}</span></div>
-                <div><span class="text-slate-400">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
+
+              <!-- 자동 정리된 민원 신청 정보 박스 -->
+              <div class="bg-slate-950/90 rounded-xl p-3.5 border border-slate-800 space-y-2.5 text-xs">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-200 flex items-center gap-1.5 text-xs">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-400"></i> 병무청 민원 신청서 자동 기입 양식
+                  </span>
+                  <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2.5 py-1 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
+                    <i data-lucide="copy" class="w-3 h-3"></i> <span id="copy-btn-text">신청 내용 복사</span>
+                  </button>
+                </div>
+                
+                <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300 space-y-1 leading-relaxed">
+                  <div><span class="text-slate-400">수검 희망일시:</span> <span class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 29일 (목) 오전'}</span></div>
+                  <div><span class="text-slate-400">수검 희망기관:</span> <span class="text-slate-200 font-semibold">${userData.region} (${contact.dept || '병역판정검사과'})</span></div>
+                  <div><span class="text-slate-400">검사장 주소:</span> <span class="text-slate-300">${contact.address}</span></div>
+                  <div><span class="text-slate-400">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
+                </div>
               </div>
             </div>
 
-            <!-- 버튼 영역: 실제 병무청 민원 바로가기 & 계속 진행 -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-              <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <!-- 팝업 아래에 분리된 버튼 영역 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+              <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-emerald-400/30 cursor-pointer">
                 <i data-lucide="external-link" class="w-4 h-4"></i> <span>${(currentLang === 'en') ? 'Go to MMA Portal' : '병무청 민원포털 예약하기'}</span>
               </a>
-              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-2.5 px-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer">
                 <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
@@ -1567,17 +1579,19 @@
       } else if (type === 'LOCKER_CHANGE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-3.5 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                <i data-lucide="credit-card" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
-                <p class="text-xs text-slate-400">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="credit-card" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
+                  <p class="text-xs text-slate-400">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
+                </div>
               </div>
             </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
               <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1729,17 +1743,19 @@
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full pointer-events-auto space-y-4">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                <i data-lucide="stethoscope" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-sm text-white">${isEn ? 'Specialist Medical Evaluation' : '과목별 전문의 정밀 진료 완료'}</h4>
-                <p class="text-xs text-slate-400">${isEn ? 'Medical records & imaging review completed' : '제출 진단서 및 정밀 신체 검진 소견 상신'}</p>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="stethoscope" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">${isEn ? 'Specialist Medical Evaluation' : '과목별 전문의 정밀 진료 완료'}</h4>
+                  <p class="text-xs text-slate-400">${isEn ? 'Medical records & imaging review completed' : '제출 진단서 및 정밀 신체 검진 소견 상신'}</p>
+                </div>
               </div>
             </div>
-            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-xl border border-blue-400/40 cursor-pointer">
+            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01]">
               <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1747,35 +1763,37 @@
       } else if (type === 'APTITUDE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full space-y-4 pointer-events-auto">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-              <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center shrink-0">
-                <i data-lucide="compass" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full space-y-4">
+              <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">${isEn ? '1:1 Military Specialty Assignment Complete' : '1:1 맞춤형 군 특기 적성 분류 완료'}</h4>
+                  <p class="text-xs text-slate-400">${isEn ? 'Matched specialties based on major & skills' : '전공(컴퓨터SW) 및 자격증 연계 최적 특기 부여'}</p>
+                </div>
               </div>
-              <div>
-                <h4 class="font-bold text-sm text-white">${isEn ? '1:1 Military Specialty Assignment Complete' : '1:1 맞춤형 군 특기 적성 분류 완료'}</h4>
-                <p class="text-xs text-slate-400">${isEn ? 'Matched specialties based on major & skills' : '전공(컴퓨터SW) 및 자격증 연계 최적 특기 부여'}</p>
+
+              <div class="space-y-2">
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2 text-slate-200 font-semibold">
+                    <span class="p-1 rounded-lg bg-blue-500/20 text-blue-400 text-sm">💻</span>
+                    <span>육군 정보통신 / SW개발병</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[11px]">적성 1순위</span>
+                </div>
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2 text-slate-200 font-semibold">
+                    <span class="p-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm">🌐</span>
+                    <span>공군 정보체계운영병</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">적성 2순위</span>
+                </div>
               </div>
             </div>
 
-            <div class="space-y-2">
-              <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 text-slate-200 font-semibold">
-                  <span class="p-1 rounded-lg bg-blue-500/20 text-blue-400 text-sm">💻</span>
-                  <span>육군 정보통신 / SW개발병</span>
-                </div>
-                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[11px]">적성 1순위</span>
-              </div>
-              <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 text-slate-200 font-semibold">
-                  <span class="p-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm">🌐</span>
-                  <span>공군 정보체계운영병</span>
-                </div>
-                <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">적성 2순위</span>
-              </div>
-            </div>
-
-            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-xl border border-purple-400/40 cursor-pointer">
+            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01]">
               <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1783,29 +1801,31 @@
       } else if (type === 'LOCKER_RETURN_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150 max-w-lg w-full space-y-4 pointer-events-auto">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                <i data-lucide="check-check" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full space-y-4">
+              <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="check-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">${isEn ? 'Locker Check & Uniform Return' : '소지품 회수 및 환복 완료'}</h4>
+                  <p class="text-xs text-slate-400">${isEn ? 'Belongings collected & locker key returned' : '사물함 소지품 회수 및 검사복 반납 완료'}</p>
+                </div>
               </div>
-              <div>
-                <h4 class="font-bold text-sm text-white">${isEn ? 'Locker Check & Uniform Return' : '소지품 회수 및 환복 완료'}</h4>
-                <p class="text-xs text-slate-400">${isEn ? 'Belongings collected & locker key returned' : '사물함 소지품 회수 및 검사복 반납 완료'}</p>
+
+              <div class="space-y-2 text-xs text-slate-300">
+                <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                  <span>스마트폰, 지갑, 개인 소지품 회수 완료</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                  <span>사물함 전자키 반납함 투입 완료</span>
+                </div>
               </div>
             </div>
 
-            <div class="space-y-2 text-xs text-slate-300">
-              <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                <span>스마트폰, 지갑, 개인 소지품 회수 완료</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                <span>사물함 전자키 반납함 투입 완료</span>
-              </div>
-            </div>
-
-            <button onclick="goToScene(14);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-xl border border-blue-400/40 cursor-pointer">
+            <button onclick="goToScene(14);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01]">
               <span>${isEn ? 'Head Home' : '집으로 귀가하기'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
