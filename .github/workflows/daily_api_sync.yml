@@ -22,6 +22,8 @@ jobs:
           python-version: '3.10'
 
       - name: Run Legal & Open API Sync Script
+        env:
+          LAW_API_OC: westock
         run: |
           python scripts/sync_legal_api.py
 

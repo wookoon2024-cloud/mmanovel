@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-병역판정검사 비주얼 노벨 - 공공데이터포털 Open API & 국가법령 자동 동기화 스크립트
-(매일 새벽 자동 실행되어 최신 개정 법령 별표 번호 및 Open API 상태를 대본에 자동 반영)
+병역판정검사 비주얼 노벨 - 공공데이터포털 Open API & 법제처 국가법령정보 Open API (DRF) 자동 동기화 스크립트
+(매일 새벽 자동 실행되어 법제처 공식 API를 통해 최신 개정 법령 별표 번호 및 Open API 상태를 대본에 자동 반영)
 """
 
 import os
@@ -15,6 +15,7 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCENARIO_PATH = os.path.join(BASE_DIR, 'scenario.js')
 LOG_PATH = os.path.join(BASE_DIR, 'sync_log.json')
+LAW_API_OC = os.environ.get('LAW_API_OC', 'westock')
 
 def fetch_url(url, timeout=15):
     headers = {
@@ -47,17 +48,91 @@ def check_openapi():
         result['error'] = str(e)
     return result
 
+def check_national_law_drf_api(oc=LAW_API_OC):
+    """법제처 국가법령정보공동활용 공식 Open API (DRF) 연동"""
+    query = urllib.parse.quote('병역판정신체검사등검사규칙')
+    search_url = f'https://www.law.go.kr/DRF/lawSearch.do?OC={oc}&target=law&type=JSON&query={query}'
+    
+    result = {
+        'api_type': 'DRF_OFFICIAL_OPEN_API',
+        'oc': oc,
+        'law_name': '병역판정 신체검사 등 검사규칙',
+        'checked_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'bmi_appendix': 2,
+        'disease_appendix': 3,
+        'verified': False
+    }
+
+    try:
+        search_raw = fetch_url(search_url)
+        search_data = json.loads(search_raw)
+        laws = search_data.get('LawSearch', {}).get('law', [])
+        if isinstance(laws, dict):
+            laws = [laws]
+        
+        if not laws:
+            raise ValueError("No law returned from DRF search API")
+
+        target_law = laws[0]
+        mst = target_law.get('법령일련번호') or target_law.get('일련번호')
+        if not mst and '법령상세링크' in target_law:
+            m_mst = re.search(r'MST=(\d+)', target_law['법령상세링크'])
+            if m_mst:
+                mst = m_mst.group(1)
+
+        prom_num = str(target_law.get('공포번호', '')).lstrip('0')
+        ef_date = target_law.get('시행일자', '')
+        law_gubun = target_law.get('법령구분명', '국방부령')
+
+        result['mst'] = mst
+        result['ordinance_info'] = f"{law_gubun} 제{prom_num}호 (시행 {ef_date})"
+
+        # 상세 법령 본문 및 별표 단위 JSON 조회
+        service_url = f'https://www.law.go.kr/DRF/lawService.do?OC={oc}&target=law&MST={mst}&type=JSON'
+        service_raw = fetch_url(service_url)
+        service_data = json.loads(service_raw)
+        
+        appendix_units = service_data.get('법령', {}).get('별표', {}).get('별표단위', [])
+        if isinstance(appendix_units, dict):
+            appendix_units = [appendix_units]
+
+        found_appendices = []
+        for app in appendix_units:
+            num_str = str(app.get('별표번호', '')).lstrip('0')
+            num = int(num_str) if num_str.isdigit() else 0
+            title = app.get('별표제목', '')
+            found_appendices.append({'number': num, 'title': title})
+
+            if '신장' in title and '체중' in title:
+                result['bmi_appendix'] = num
+            elif '질병' in title and '심신장애' in title:
+                result['disease_appendix'] = num
+
+        result['appendices'] = found_appendices
+        result['verified'] = True
+        return result
+    except Exception as e:
+        result['error'] = str(e)
+        return result
+
 def check_national_law():
-    """국가법령정보센터 「병역판정 신체검사 등 검사규칙」 개정 현황 및 별표 체계 확인"""
+    """국가법령 확인 (공식 DRF API 우선 호출, 실패 시 웹 스크래핑 백업)"""
+    drf_res = check_national_law_drf_api(LAW_API_OC)
+    if drf_res.get('verified'):
+        return drf_res
+
+    print(f"[WARNING] DRF API 호출 실패 ({drf_res.get('error')}), 웹 대체 파싱 진행...")
     main_url = 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%B3%91%EC%97%AD%ED%8C%90%EC%A0%95%EC%8B%A0%EC%B2%B4%EA%B2%80%EC%82%AC%EB%93%B1%EA%B2%80%EC%82%AC%EA%B7%9C%EC%B9%99'
     result = {
+        'api_type': 'WEB_FALLBACK_SCRAPING',
         'url': main_url,
         'law_name': '병역판정 신체검사 등 검사규칙',
         'checked_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'bmi_appendix': 2,       # 기본: 별표 2 (신장·체중)
-        'disease_appendix': 3,   # 기본: 별표 3 (질병·심신장애)
+        'bmi_appendix': 2,
+        'disease_appendix': 3,
+        'verified': False
     }
-    
+
     try:
         html = fetch_url(main_url)
         iframe_match = re.search(r'src="(/LSW//?lsInfoP\.do\?[^"]+)"', html)
@@ -80,12 +155,9 @@ def check_national_law():
                     result['disease_appendix'] = int(m_dis.group(1))
                     
             result['verified'] = True
-        else:
-            result['verified'] = True
     except Exception as e:
-        result['verified'] = False
         result['error'] = str(e)
-        
+
     return result
 
 def sync_scenario(openapi_res, law_res):
@@ -161,7 +233,7 @@ def sync_scenario(openapi_res, law_res):
     return has_changed
 
 def main():
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 법령 및 공공데이터 Open API 대본 자동 점검 시작...")
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 법제처 DRF Open API (OC: {LAW_API_OC}) & 공공데이터 대본 자동 점검 시작...")
     openapi_res = check_openapi()
     law_res = check_national_law()
     changed = sync_scenario(openapi_res, law_res)
