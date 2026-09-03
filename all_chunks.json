@@ -36,48 +36,56 @@
     "dialogueIdx": 0,
     "speaker": "힘찬이 (병무청 AI 가이드)",
     "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "거주하고 계신 지역을 선택하시면,\n해당 지방병무청의 실시간 잔여석 달력을 바로 띄워드릴게요!",
-    "text_en": "Select the region you reside in, and I will immediately open the real-time vacancy calendar for your regional Military Manpower Administration!"
+    "text_ko": "예를 들어 민우 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!",
+    "text_en": "For example, if your resident registration address is [{residentAddress}],\nyou can immediately select the real-time vacancy calendar and preferred date for your regional office ({region})!"
+  },
+  {
+    "sceneIdx": 2,
+    "dialogueIdx": 1,
+    "speaker": "힘찬이 (병무청 AI 가이드)",
+    "speaker_en": "Himchan (MMA AI Guide)",
+    "text_ko": "또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
+    "text_en": "Also, your round-trip travel allowance ({fare}) will be automatically calculated live based on actual distance ({distanceKm})."
   },
   {
     "sceneIdx": 3,
     "dialogueIdx": 0,
     "speaker": "힘찬이 (병무청 AI 가이드)",
     "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "탁월한 선택입니다! 민우 님께서 고르신 [ {examDate} ]은 현재 실시간 잔여석이 있어 실제 예약이 가능한 일정입니다.",
-    "text_en": "Excellent choice! The date you selected [ {examDate} ] currently has real-time vacancies available for actual reservation."
+    "text_ko": "탁월한 선택입니다! [ {examDate} ] 잔여석 확인 및 주민등록 주소지({residentAddress}) 기준 편도 실거리({distanceKm})에 따른 실시간 여비 [ {fare} ] 산출이 완료되었습니다!",
+    "text_en": "Excellent choice! Real-time vacancies confirmed for [ {examDate} ]. Live travel allowance [ {fare} ] calculated for distance ({distanceKm}) from your registered address ({residentAddress})!"
   },
   {
     "sceneIdx": 3,
     "dialogueIdx": 1,
     "speaker": "힘찬이 (병무청 AI 가이드)",
     "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "실제 예약을 위해 병무청 민원포털로 이동하시기 전, 민원 신청서에 기입할 신청 내용을 자동으로 정리해 드릴까요?",
-    "text_en": "Before heading to the MMA portal to make the real reservation, would you like me to organize your application details automatically?"
+    "text_ko": "아래 정식 민원 신청서 내용을 복사하여 병무청 민원포털에 바로 신청해 보세요!",
+    "text_en": "Copy the official application details below to apply on the MMA portal!"
   },
   {
-    "sceneIdx": 3,
+    "sceneIdx": 4,
+    "dialogueIdx": 0,
+    "speaker": "힘찬이 (병무청 AI 가이드)",
+    "speaker_en": "Himchan (MMA AI Guide)",
+    "text_ko": "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?",
+    "text_en": "Now that your schedule is set, let's check the required documents tailored to your medical history."
+  },
+  {
+    "sceneIdx": 4,
+    "dialogueIdx": 1,
+    "speaker": "힘찬이 (병무청 AI 가이드)",
+    "speaker_en": "Himchan (MMA AI Guide)",
+    "text_ko": "많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)",
+    "text_en": "Many ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!"
+  },
+  {
+    "sceneIdx": 4,
     "dialogueIdx": 2,
     "speaker": "힘찬이 (병무청 AI 가이드)",
     "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "원클릭으로 복사하여 병무청 누리집(mwpt.mma.go.kr)에 그대로 붙여넣으시면 매우 편리합니다!",
-    "text_en": "You can copy it with a single click and paste it directly into the MMA website (mwpt.mma.go.kr) for convenience!"
-  },
-  {
-    "sceneIdx": 4,
-    "dialogueIdx": 0,
-    "speaker": "힘찬이 (병무청 AI 가이드)",
-    "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록\n민우 님의 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?",
-    "text_en": "Now that the schedule is set, let's check the customized required documents tailored to your medical history so you won't have to make a wasted trip."
-  },
-  {
-    "sceneIdx": 4,
-    "dialogueIdx": 1,
-    "speaker": "힘찬이 (병무청 AI 가이드)",
-    "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "평소 앓고 계신 질환이나 수술 이력이 있으신가요?",
-    "text_en": "Do you have any pre-existing medical conditions or past surgeries?"
+    "text_ko": "반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. 민우 님은 해당사항이 있으신가요?",
+    "text_en": "However, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?"
   },
   {
     "sceneIdx": 5,
@@ -228,56 +236,56 @@
     "dialogueIdx": 2,
     "speaker": "정형외과 전담의사 NPC",
     "speaker_en": "Orthopedic Specialist Doctor NPC",
-    "text_ko": "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 2] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
-    "text_en": "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 2] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
+    "text_ko": "네! 서류를 아주 꼼꼼하게 잘 챙겨오셨군요.\n\n제출하신 수술기록지와 최근 MRI 영상을 면밀히 판독하고, 관절 동요도 정밀 측정을 진행했습니다.\n\n국방부령 [별표 3] 204호 기준에 부합하여 [정형외과 4급(보충역)] 소견으로 병역판정관실에 상신하겠습니다.",
+    "text_en": "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
   },
   {
     "sceneIdx": 11,
     "dialogueIdx": 0,
     "speaker": "적성분류관 NPC",
     "speaker_en": "Aptitude Classification Officer NPC",
-    "text_ko": "김민우 님 반갑습니다! 이곳은 [적성분류실]입니다.\n\n수검자의 전공, 보유 자격·면허, 심리검사 결과를 종합하여 군 복무 시 가장 적합한 [군 특기(병과)]를 1:1로 맞춤 분류하고 전산에 부여해 드리는 곳입니다.",
-    "text_en": "Welcome Minwoo Kim! This is the [Aptitude Classification Section].\n\nWe classify and assign your military specialty based on your college major, licenses, and aptitude test results."
+    "text_ko": "김민우 수검자님 반갑습니다! 1급 현역 판정을 축하드립니다. 대학교에서 컴퓨터소프트웨어공학을 전공 중이시니 전공 경력을 100% 살릴 수 있는 [모집병(기술행정병)] 지원을 추천합니다.",
+    "text_en": "Welcome Minwoo Kim! Congratulations on your Grade 1 active duty result. As a CS major, I recommend applying for specialized recruit roles (Technical Administrative Soldier) to maximize your tech career."
   },
   {
     "sceneIdx": 11,
     "dialogueIdx": 1,
     "speaker": "김민우 (주인공)",
     "speaker_en": "Minwoo Kim (Protagonist)",
-    "text_ko": "제가 대학교에서 컴퓨터/소프트웨어를 전공하고 있는데, 제 전공을 살릴 수 있는 군 특기로 복무할 수 있나요?",
-    "text_en": "I am majoring in Computer Science / Software in college. Can I serve in a military specialty related to my major?"
+    "text_ko": "제 전공을 살릴 수 있는 추천 모집병 특기와 실시간 지원 경쟁률은 어떻게 되나요?",
+    "text_en": "What specialized military roles match my major, and what are their current real-time application competition rates?"
   },
   {
     "sceneIdx": 11,
     "dialogueIdx": 2,
-    "speaker": "적성분류관 NPC",
-    "speaker_en": "Aptitude Classification Officer NPC",
-    "text_ko": "물론입니다! 전공과 자격증 연계를 통해 [육군 정보통신/SW개발병] 또는 [공군 정보체계운영병] 특기로 적극 지원하실 수 있도록 적성을 부여했습니다.\n\n이제 최종 판정서 수령과 여비 정산을 위해 [수석판정관실]로 이동하겠습니다!",
-    "text_en": "Certainly! We have classified your military aptitude for Army IT/SW Developer or Air Force Information Systems Specialist.\n\nNow, let's proceed to the Chief Adjudicator office for your final result and travel allowance settlement!"
+    "speaker": "힘찬이 (병무청 AI 가이드)",
+    "speaker_en": "Himchan (MMA AI Guide)",
+    "text_ko": "병무청 [모집병 지원가능 정보 & 실시간 접수현황 API] 조회 완료! [육군 IT/SW개발병(3.1:1)]과 [공군 정보체계운영병(2.4:1)] 추천 카드 및 가산점 시뮬레이터를 아래에 띄워드렸습니다!",
+    "text_en": "MMA Live Recruit Specialty & Application API query complete! We've displayed Army IT/SW Developer (3.1:1) and Air Force Info Systems (2.4:1) cards and the bonus point simulator below!"
   },
   {
     "sceneIdx": 12,
     "dialogueIdx": 0,
     "speaker": "판정보조관 NPC",
     "speaker_en": "Adjudication Assistant NPC",
-    "text_ko": "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리검사, 기본검사(BMI), 전문의 정밀 진료 및 적성분류 전산 데이터를 모두 대조·검증 완료했습니다.\n\n수석판정관님께 최종 판정을 상신합니다.",
-    "text_en": "Hello, I am the Adjudication Assistant. I have verified all data from your psychological test, lab tests, biometrics, specialist doctor evaluations, and aptitude classifications.\n\nSubmitting to Chief Adjudicator for final determination."
+    "text_ko": "안녕하십니까! 판정보조관입니다. 김민우 님의 심리검사, 임상병리, 체질량(BMI), 전문의 정밀진료 및 적성분류 전산 데이터를 모두 대조·검증 완료하여 수석판정관님께 최종 판정을 상신합니다.",
+    "text_en": "Hello, I am the Adjudication Assistant. All medical and aptitude data have been verified. Submitting to Chief Adjudicator for final determination."
   },
   {
     "sceneIdx": 12,
     "dialogueIdx": 1,
     "speaker": "수석판정관 NPC",
     "speaker_en": "Chief Adjudicator NPC",
-    "text_ko": "수검자 김민우 님! 오늘 오전부터 진행된 모든 검사를 무사히 마치셨습니다. 대단히 수고 많으셨습니다!\n\n종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
-    "text_en": "Examinee Minwoo Kim! You have completed all exams today. Great job!\n\nYour final physical grade is [ {finalGrade} ] with [ {disposition} ] disposition."
+    "text_ko": "수검자 김민우 님 수고 많으셨습니다! 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
+    "text_en": "Examinee Minwoo Kim, great job! Your final physical grade is confirmed as [ {finalGrade} ] with [ {disposition} ] disposition."
   },
   {
     "sceneIdx": 12,
     "dialogueIdx": 2,
     "speaker": "힘찬이 (병무청 AI 가이드)",
     "speaker_en": "Himchan (MMA AI Guide)",
-    "text_ko": "민우 님 축하드립니다! 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n최종 결과서를 확인하신 후, 탈의실로 이동하여 평상복으로 환복해 주세요!",
-    "text_en": "Minwoo, congratulations! Your travel allowance of [ {fare} ] has been deposited into your {cardType} account.\n\nAfter checking your final certificate, please proceed to the locker room to change into your normal clothes!"
+    "text_ko": "축하드립니다! 실거리({distanceKm})를 반영한 당일 실시간 여비 [ {fare} ]가 {cardType} 계좌로 입금되었습니다! 아래 화면에서 스마트 e-병무지갑과 병역진로설계 혜택을 확인하시고, [나라사랑가게 API]로 검사장 주변 맛집 거점을 선택해 보세요!",
+    "text_en": "Congratulations! Live travel allowance [ {fare} ] for actual distance ({distanceKm}) has been deposited into your {cardType} account! Explore e-Military Wallet benefits and pick a nearby restaurant hotspot via the Nara Sarang Store API below!"
   },
   {
     "sceneIdx": 13,
