@@ -160,9 +160,6 @@
         <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
           병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.
         </p>
-
-        <!-- 동적 법령 및 Open API 동기화 상태 알림 배너 영역 -->
-        <div id="lobby-sync-banner-container" class="pt-2 flex justify-center"></div>
       </div>
 
       <!-- 에피소드 카드 2종 (정적인 세로형 포스터 카드) -->
@@ -264,6 +261,9 @@
       <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
     </div>
 
+    <!-- 우측 맨 하단: 실시간 법령 & Open API 연동현황 버튼 -->
+    <div id="lobby-sync-banner-container" class="fixed bottom-5 right-6 z-30 pointer-events-auto"></div>
+
   </div>
 
   <!-- ================= [LAYER 2.8: 법령 & Open API 동기화 이상 알림 모달] ================= -->
@@ -344,7 +344,7 @@
           </div>
 
           <!-- 세부 연동 별표 규정 나열 -->
-          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1.5 border border-slate-800/80">
+          <div class="bg-slate-900/80 rounded-xl p-3 text-xs text-slate-300 space-y-1.5">
             <div class="text-[11px] text-slate-400 font-bold tracking-wide">🔗 연동 및 자동 검증 별표 규정:</div>
             <div class="flex items-start gap-1.5 text-slate-300">
               <span class="text-cyan-400 font-bold shrink-0">[별표 1]</span>
@@ -361,7 +361,7 @@
           </div>
 
           <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-            <span>인증 식별자: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">westock</code> | 법령 MST: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">260145</code></span>
+            <span>법령 일련번호(MST): <code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono">260145</code></span>
             <a href="https://www.law.go.kr/법령/병역판정신체검사등검사규칙" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold">
               <span>법령 원문 확인</span>
               <i data-lucide="external-link" class="w-3 h-3"></i>
@@ -389,7 +389,7 @@
             </span>
           </div>
 
-          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1.5 border border-slate-800/80">
+          <div class="bg-slate-900/80 rounded-xl p-3 text-xs text-slate-300 space-y-1.5">
             <div class="text-[11px] text-slate-400 font-bold tracking-wide">🔗 실시간 활용 데이터 세트:</div>
             <div class="flex items-center gap-2 text-slate-300">
               <span class="text-indigo-400 font-bold shrink-0">✔ 실시간 기준:</span>
@@ -402,7 +402,7 @@
           </div>
 
           <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-            <span>데이터셋 ID: <code class="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">3064321</code></span>
+            <span>데이터셋 ID: <code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono">3064321</code></span>
             <a href="https://www.data.go.kr/data/3064321/openapi.do" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold">
               <span>Open API 명세</span>
               <i data-lucide="external-link" class="w-3 h-3"></i>
@@ -429,7 +429,7 @@
             </span>
           </div>
 
-          <div class="bg-slate-900/90 rounded-xl p-3 text-xs text-slate-300 space-y-1 border border-slate-800/80">
+          <div class="bg-slate-900/80 rounded-xl p-3 text-xs text-slate-300 space-y-1">
             <div class="flex items-center gap-2">
               <span class="text-purple-400 font-bold shrink-0">・심리검사:</span>
               <span>「병역판정검사 규정」 제21조 (인지능력·인성검사 및 정밀의뢰)</span>
