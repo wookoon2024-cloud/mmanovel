@@ -302,13 +302,14 @@
 
         <!-- 하단 데이터 출처 & 다음 버튼 바 (박스 테두리 없는 클린 플랫 스타일) -->
         <div class="mt-1 pt-1 flex items-center justify-between gap-1 text-[10px] sm:text-xs shrink-0">
-          <!-- 실시간 API 출처 (테두리 없는 깔끔한 텍스트 & 아이콘) -->
+          <!-- 실시간 API 출처 (클릭 시 공공데이터포털/법령정보센터 원문 새창 이동) -->
           <div class="flex items-center gap-2 text-blue-400/90 font-medium truncate max-w-[280px] sm:max-w-none">
-            <span id="api-badge-container" class="flex items-center gap-1 text-[11px] text-blue-400 truncate">
-              <i id="api-icon" data-lucide="book-open" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
+            <a id="api-badge-container" href="https://www.data.go.kr" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-[11px] text-blue-400 hover:text-cyan-300 hover:underline transition truncate cursor-pointer" title="공식 공공데이터포털 / 국가법령정보센터 원문 확인하기">
+              <i id="api-icon" data-lucide="database" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
               <span id="api-source-badge" class="truncate">출처: 공공데이터포털 Open API</span>
-            </span>
-            <span id="api-verify-badge" class="hidden sm:inline text-[11px] text-emerald-400 font-semibold">
+              <i data-lucide="external-link" class="w-3 h-3 text-cyan-400/70 shrink-0"></i>
+            </a>
+            <span id="api-verify-badge" class="hidden sm:inline text-[11px] text-emerald-400 font-semibold shrink-0">
               • 실시간 연동
             </span>
           </div>
@@ -977,7 +978,7 @@
       if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
-      // 하단 API / 법령 근거 배지 (API 또는 법령 데이터가 있을 때만 표출, 없으면 완전 숨김)
+      // 하단 API / 법령 근거 배지 (API 또는 법령 데이터가 있을 때만 표출, 클릭 시 원문 링크 이동)
       const apiBadgeContainer = document.getElementById('api-badge-container');
       const apiBadgeText = document.getElementById('api-source-badge');
       const apiIcon = document.getElementById('api-icon');
@@ -987,14 +988,17 @@
         const sourceVal = (currentLang === 'en' && scene.apiSource_en) ? scene.apiSource_en : scene.apiSource;
         if (scene.isApi && sourceVal) {
           apiBadgeContainer.classList.remove('hidden');
+          apiBadgeContainer.style.display = 'flex';
           if (apiBadgeText) apiBadgeText.innerText = sourceVal;
           if (apiIcon) apiIcon.setAttribute('data-lucide', scene.apiIcon || 'database');
+          apiBadgeContainer.href = scene.apiSourceUrl || (sourceVal.includes('법령') || sourceVal.includes('규칙') || sourceVal.includes('법') ? "https://www.law.go.kr" : "https://www.data.go.kr");
           if (verifyBadge) {
-            verifyBadge.innerText = (currentLang === 'en') ? "✓ Live Synced" : "✓ 실시간 연동";
+            verifyBadge.innerText = (currentLang === 'en') ? "• Live Synced" : "• 실시간 연동";
             verifyBadge.classList.remove('hidden');
           }
         } else {
           apiBadgeContainer.classList.add('hidden');
+          apiBadgeContainer.style.display = 'none';
           if (verifyBadge) verifyBadge.classList.add('hidden');
         }
       }
