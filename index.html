@@ -626,6 +626,7 @@
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="api.js"></script>
   <script src="scenario.js"></script>
+  <script src="tracker.js"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -1147,6 +1148,7 @@
       isAnnouncement = false;
       pendingTransitionSceneIdx = null;
       currentSceneIdx = idx;
+      if (window.MmaTracker) window.MmaTracker.reportScene(idx);
       const scene = SCENARIOS[idx];
       currentBg = scene.bg;
 
@@ -3209,6 +3211,7 @@
 
     // 메인 로비 메뉴로 복귀
     function openLobby() {
+      if (window.MmaTracker) window.MmaTracker.reportLobby();
       showMainMenu();
     }
     function showMainMenu() {
