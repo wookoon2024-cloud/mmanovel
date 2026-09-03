@@ -268,7 +268,7 @@ const SCENARIOS = [
   // [SCENE 9] 기본검사실 - 신장/체중/혈압/시력 3단계 측정 & BMI 판정
   {
     bg: "assets/body_measure_room.jpg",
-    char: "assets/doctor.png",
+    char: "assets/medical_officer.png",
     speaker: "의무관 NPC",
     speaker_en: "Medical Officer NPC",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
@@ -276,7 +276,7 @@ const SCENARIOS = [
       {
         speaker: "의무관 NPC",
         speaker_en: "Medical Officer NPC",
-        char: "assets/doctor.png",
+        char: "assets/medical_officer.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
         text: "김민우 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 체질량지수(BMI)를 판정하는 곳입니다.",
@@ -306,7 +306,7 @@ const SCENARIOS = [
         speaker: "의무관 NPC",
         speaker_en: "Medical Officer NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/doctor.png",
+        char: "assets/medical_officer.png",
         text: "혈압 120/80 정상입니다! 이어서 5m 전방 시력표와 색신 책자 검사를 진행했습니다. 좌 1.0 / 우 1.0 정상입니다. 이제 기본검사 계측 결과를 확인해 볼까요?",
         text_en: "Blood pressure 120/80 is normal! Measured eyesight and color vision, both eyes 1.0 normal. Let's check your biometric measurement results!"
       },
@@ -314,7 +314,7 @@ const SCENARIOS = [
         speaker: "의무관 NPC",
         speaker_en: "Medical Officer NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/doctor.png",
+        char: "assets/medical_officer.png",
         text: "기본검사 계측이 완료되었습니다. 사전에 등록하신 [{healthCheck}]의 정밀 심사를 위해 [전문의 진료실]로 이동해 주세요!",
         text_en: "Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your medical documents."
       },
@@ -322,7 +322,7 @@ const SCENARIOS = [
         speaker: "의무관 NPC",
         speaker_en: "Medical Officer NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/doctor.png",
+        char: "assets/medical_officer.png",
         text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 적성을 고려한 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
         text_en: "Basic biometric exam complete! Please proceed to the Aptitude Center for military specialty assignment."
       }
