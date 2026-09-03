@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.9</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.6.0</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.9</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.6.0</span>
             </div>
           </div>
         </div>
@@ -169,9 +169,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-4xl w-full mx-auto pt-2">
         
         <!-- CARD 1: 제1화 병역판정검사 (정식 플레이 가능) -->
-        <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
-          <!-- 포스터 이미지 영역 (호버 시 적정 비율 확장으로 하단 버튼이 짤리지 않고 완벽 안착) -->
-          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[390px] sm:group-hover:h-[405px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+        <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-[575px] sm:h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
+          <!-- 포스터 이미지 영역 (평상시 265px로 하단 텍스트·해시태그·2개 버튼 모두 여유 있게 수용, 호버 시 405px로 시네마틱 확장) -->
+          <div class="relative w-full h-[265px] sm:h-[285px] group-hover:h-[405px] sm:group-hover:h-[420px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <!-- 고화질 원본 포스터 스틸컷 -->
             <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
             
@@ -196,7 +196,7 @@
           </div>
 
           <!-- 하단 설명 및 버튼 영역 (전체 박스 높이는 고정된 채 텍스트만 부드럽게 닫힘) -->
-          <div class="p-5 sm:p-6 group-hover:p-4 sm:group-hover:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+          <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
             <!-- 마우스 오버 시 닫히는 텍스트 & 해시태그 영역 -->
             <div class="space-y-3 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
               <div>
@@ -225,9 +225,9 @@
         </div>
 
         <!-- CARD 2: 제2화 예비군 훈련 (준비 중) -->
-        <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0">
+        <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-[575px] sm:h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0">
           <!-- 포스터 이미지 영역 -->
-          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[390px] sm:group-hover:h-[405px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+          <div class="relative w-full h-[265px] sm:h-[285px] group-hover:h-[405px] sm:group-hover:h-[420px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
             
@@ -243,7 +243,7 @@
           </div>
 
           <!-- 하단 설명 및 버튼 영역 -->
-          <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+          <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
             <div class="space-y-3 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
               <div>
                 <h3 id="ep2-title-text" class="text-lg sm:text-xl font-black text-slate-200 tracking-tight">
@@ -641,9 +641,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v159"></script>
-  <script src="scenario.js?v=20260903_v159"></script>
-  <script src="tracker.js?v=20260903_v159"></script>
+  <script src="api.js?v=20260903_v160"></script>
+  <script src="scenario.js?v=20260903_v160"></script>
+  <script src="tracker.js?v=20260903_v160"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
