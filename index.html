@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.3.8</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.3.9</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.3.8</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.3.9</span>
             </div>
           </div>
         </div>
@@ -627,9 +627,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v138"></script>
-  <script src="scenario.js?v=20260903_v138"></script>
-  <script src="tracker.js?v=20260903_v138"></script>
+  <script src="api.js?v=20260903_v139"></script>
+  <script src="scenario.js?v=20260903_v139"></script>
+  <script src="tracker.js?v=20260903_v139"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -1051,44 +1051,44 @@
 
       const bg = newScene && newScene.bg ? newScene.bg : '';
 
-      // 목적지에 따른 이동 타이틀 및 안내 동적 설정
-      if (bg.includes('lobby') && currentSceneIdx < 5) {
-        if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 가상 검사장 도착`;
-        if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk & Nara Sarang Card Registration" : "로비 접수데스크 도착 및 나라사랑카드 금융 등록";
-        if (icon) icon.setAttribute('data-lucide', 'building-2');
-      } else if (bg.includes('locker_room') && currentSceneIdx < 10) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실 및 사물함실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
-        if (icon) icon.setAttribute('data-lucide', 'shirt');
-      } else if (bg.includes('exam_room')) {
+      // 목적지에 따른 이동 타이틀 및 안내 동적 설정 (targetIdx 기준 우선 매칭)
+      if (targetIdx === 7 || bg.includes('exam_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장으로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "인지능력 및 인성검사";
         if (icon) icon.setAttribute('data-lucide', 'brain');
-      } else if (bg.includes('lab_room')) {
+      } else if (targetIdx === 5 || (bg.includes('lobby') && targetIdx <= 5)) {
+        if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 가상 검사장 도착`;
+        if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk & Nara Sarang Card Registration" : "로비 접수데스크 도착 및 나라사랑카드 금융 등록";
+        if (icon) icon.setAttribute('data-lucide', 'building-2');
+      } else if (targetIdx === 6 || (bg.includes('locker_room') && targetIdx < 10)) {
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실 및 사물함실로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
+        if (icon) icon.setAttribute('data-lucide', 'shirt');
+      } else if (targetIdx === 8 || bg.includes('lab_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Pathology & Radiology Room..." : "임상병리검사실 및 영상의학실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Blood/Urine Sampling & Chest X-Ray Imaging" : "혈액·소변 검체 채취 및 흉부 X-ray 촬영";
         if (icon) icon.setAttribute('data-lucide', 'flask-conical');
-      } else if (bg.includes('body_measure_room')) {
+      } else if (targetIdx === 9 || bg.includes('body_measure_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Basic Examination Room..." : "기본검사실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Height, Weight, Body Mass Index (BMI), Blood Pressure" : "신장, 체중, 체질량지수(BMI), 혈압, 시력 정밀 측정";
         if (icon) icon.setAttribute('data-lucide', 'ruler');
-      } else if (bg.includes('doctor_room')) {
+      } else if (targetIdx === 10 || bg.includes('doctor_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Orthopedic Specialist Clinic..." : "과목별 전문의 정밀 진료실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Medical Records & MRI/X-Ray Precision Diagnosis" : "제출 진단서 및 MRI/X-ray 영상 판독 정밀 검진";
         if (icon) icon.setAttribute('data-lucide', 'stethoscope');
-      } else if (bg.includes('aptitude_room') || bg.includes('career_center') || targetIdx === 11) {
+      } else if (targetIdx === 11 || bg.includes('aptitude_room') || bg.includes('career_center')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Aptitude Classification Room..." : "적성분류실로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
         if (icon) icon.setAttribute('data-lucide', 'compass');
-      } else if (bg.includes('adjudicator_room') || targetIdx === 12) {
+      } else if (targetIdx === 12 || bg.includes('adjudicator_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Adjudication Hall (Assistant & Chief Adjudicator)..." : "판정실(판정보좌관 ➔ 수석판정관)로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Assistant Adjudicator Verification & Chief Adjudicator Final Disposition" : "판정보좌관 종합 전산 검증 ➔ 수석판정관 최종 병역처분 확정";
         if (icon) icon.setAttribute('data-lucide', 'award');
-      } else if (bg.includes('locker_room') || targetIdx === 13) {
+      } else if (targetIdx === 13 || (bg.includes('locker_room') && targetIdx >= 13)) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실(사물함실)로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Changing into Normal Clothes & Collecting Belongings" : "검사복 환복, 소지품 회수 및 전자키 반납";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
-      } else if (bg.includes('room.jpg') || targetIdx === 14) {
+      } else if (targetIdx === 14) {
         if (title) title.innerText = (currentLang === 'en') ? "Arrived Back Home..." : "집 도착 & 귀가 완료";
         if (desc) desc.innerText = (currentLang === 'en') ? "Checking Travel Allowance & Completing Episode 1" : "지급여비 입금 확인 및 제1화 시뮬레이션 완주";
         if (icon) icon.setAttribute('data-lucide', 'home');
@@ -1868,7 +1868,7 @@
                 </div>
               </div>
             </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(7);" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
+            <button onclick="playBeep(750, 'triangle', 0.05); goToScene(7);" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer hover:scale-[1.01]">
               <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>

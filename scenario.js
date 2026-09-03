@@ -165,7 +165,7 @@ const SCENARIOS = [
 
   // [SCENE 7] 심리검사장 - PC 1:1 인지능력 및 인성검사 (심리검사관 & 민우)
   {
-    bg: "assets/psych_test_room.jpg",
+    bg: "assets/exam_room.jpg",
     char: "assets/psychologist.png",
     speaker: "심리검사관 NPC",
     speaker_en: "Psychological Examiner NPC",
