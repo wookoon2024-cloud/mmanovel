@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.8</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.9</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.8</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.9</span>
             </div>
           </div>
         </div>
@@ -170,8 +170,8 @@
         
         <!-- CARD 1: 제1화 병역판정검사 (정식 플레이 가능) -->
         <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
-          <!-- 포스터 이미지 영역 (호버 시 내부에서만 부드럽게 확장, 전체 카드 크기는 고정) -->
-          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[455px] sm:group-hover:h-[475px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+          <!-- 포스터 이미지 영역 (호버 시 적정 비율 확장으로 하단 버튼이 짤리지 않고 완벽 안착) -->
+          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[390px] sm:group-hover:h-[405px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <!-- 고화질 원본 포스터 스틸컷 -->
             <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
             
@@ -196,7 +196,7 @@
           </div>
 
           <!-- 하단 설명 및 버튼 영역 (전체 박스 높이는 고정된 채 텍스트만 부드럽게 닫힘) -->
-          <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+          <div class="p-5 sm:p-6 group-hover:p-4 sm:group-hover:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
             <!-- 마우스 오버 시 닫히는 텍스트 & 해시태그 영역 -->
             <div class="space-y-3 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
               <div>
@@ -227,7 +227,7 @@
         <!-- CARD 2: 제2화 예비군 훈련 (준비 중) -->
         <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0">
           <!-- 포스터 이미지 영역 -->
-          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[455px] sm:group-hover:h-[475px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+          <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[390px] sm:group-hover:h-[405px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
             
@@ -641,9 +641,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v158"></script>
-  <script src="scenario.js?v=20260903_v158"></script>
-  <script src="tracker.js?v=20260903_v158"></script>
+  <script src="api.js?v=20260903_v159"></script>
+  <script src="scenario.js?v=20260903_v159"></script>
+  <script src="tracker.js?v=20260903_v159"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -3540,12 +3540,12 @@
         }
 
         btnContainer.innerHTML = `
-          <div class="space-y-2">
-            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
-              <i data-lucide="play-circle" class="w-4 h-4 fill-white"></i> ${dict.lobby.resumeBtn} (${stepText})
+          <div class="space-y-2 w-full pb-1">
+            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-3 px-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30">
+              <i data-lucide="play-circle" class="w-4 h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
             </button>
-            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> ${dict.lobby.restartBtn}
+            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 shrink-0"></i> <span>${dict.lobby.restartBtn}</span>
             </button>
           </div>
         `;
@@ -3559,7 +3559,7 @@
           `;
         }
         btnContainer.innerHTML = `
-          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-3 sm:py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
             <i data-lucide="play" class="w-4 h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
