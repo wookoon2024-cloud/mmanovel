@@ -1,0 +1,22 @@
+{
+  "last_sync": "2026-09-03 11:48:06",
+  "changed": false,
+  "changes": [],
+  "openapi": {
+    "url": "https://www.data.go.kr/data/3064321/openapi.do",
+    "title": "병무청 병역판정 신체검사 정보",
+    "status": "ACTIVE",
+    "checked_at": "2026-09-03 11:48:05",
+    "verified": true,
+    "bmi_range": "18.5 ~ 35.0"
+  },
+  "law": {
+    "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%B3%91%EC%97%AD%ED%8C%90%EC%A0%95%EC%8B%A0%EC%B2%B4%EA%B2%80%EC%82%AC%EB%93%B1%EA%B2%80%EC%82%AC%EA%B7%9C%EC%B9%99",
+    "law_name": "병역판정 신체검사 등 검사규칙",
+    "checked_at": "2026-09-03 11:48:05",
+    "bmi_appendix": 2,
+    "disease_appendix": 3,
+    "ordinance_info": "국방부령 제1139호, 2024. 2. 1., 일부개정",
+    "verified": true
+  }
+}

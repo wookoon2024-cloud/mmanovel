@@ -1,0 +1,38 @@
+name: Daily Legal & Open API Sync
+
+on:
+  schedule:
+    # 매일 새벽 04:00 KST (19:00 UTC) 자동 실행
+    - cron: '0 19 * * *'
+  workflow_dispatch: # 수동 즉시 실행 지원
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Legal & Open API Sync Script
+        run: |
+          python scripts/sync_legal_api.py
+
+      - name: Commit and Push Changes if Any
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add scenario.js sync_log.json
+          if git diff --staged --quiet; then
+            echo "No changes detected. Law and Open API references are completely up-to-date."
+          else
+            git commit -m "[Auto-Sync] 매일 새벽 법령 및 Open API 대본 자동 업데이트"
+            git push origin main
+          fi
