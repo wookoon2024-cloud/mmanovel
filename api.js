@@ -630,30 +630,34 @@ const MmaApiService = {
   /**
    * 3. 국가법령정보센터 질환별 구비서류 및 판정기준 조회 API
    */
-  getLawCriteriaSync(category) {
-    const criteriaMap = {
-      "특이질환 없음": {
-        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신체검사 분담업무 및 [별표 2] 신장·체중·시력 기준",
-        docs: ["주민등록증 / 운전면허증 등 사진 부착 공인 신분증 필수", "※ 단순 시력(근시·원시·난시) 및 신장·체중(BMI)은 병무청 자체 장비로 현장 정밀 측정하므로 진단서 불필요"],
-        expectedGrade: "1급 (현역)"
-      },
-      "정형외과 수술/치료 이력": {
-        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 3] 정형외과 평가기준",
+  getLawCriteriaSync(category = "") {
+    const cat = String(category);
+    if (cat.includes('천식') || cat.includes('내과') || cat.includes('복용약')) {
+      return {
+        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 내과 137호(기관지 천식) 및 만성질환 평가기준",
+        docs: ["6개월 이상 연속 투약 증명 처방전", "폐기능검사(PFT) 결과지 및 병원 발행 의무기록사본"],
+        expectedGrade: "4급 (보충역)"
+      };
+    }
+    if (cat.includes('정형외과') || cat.includes('무릎') || cat.includes('척추')) {
+      return {
+        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 3] 204호 정형외과 평가기준",
         docs: ["병무용 진단서 (최근 3개월 이내 발급)", "수술기록지 및 경과기록지", "최근 6개월 이내 MRI/CT/X-ray 영상 CD"],
         expectedGrade: "4급 (보충역)"
-      },
-      "기질적 안과 질환/수술": {
-        lawRef: "「검사규칙」(국방부령) [별표 3] 안과 질환(망막·각막·녹내장 등) 평가기준",
+      };
+    }
+    if (cat.includes('안과') || cat.includes('망막') || cat.includes('각막')) {
+      return {
+        lawRef: "「검사규칙」(국방부령) [별표 3] 안과 285호(망막·각막·녹내장 등) 평가기준",
         docs: ["병무용 진단서", "최근 3개월 이내 안과 의무기록사본 및 수술기록지 (※단순 근시·원시·난시는 서류 불필요)"],
-        expectedGrade: "3급 또는 4급"
-      },
-      "내과/복용약": {
-        lawRef: "「검사규칙」(국방부령) [별표 3] 만성 내과/피부/정신건강 질환 평가기준",
-        docs: ["6개월 이상 연속 투약 증명 처방전", "병원 발행 의무기록사본 및 경과기록지"],
-        expectedGrade: "3급 또는 4급"
-      }
+        expectedGrade: "4급 (보충역)"
+      };
+    }
+    return {
+      lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신체검사 분담업무 및 [별표 2] 신장·체중·시력 기준",
+      docs: ["주민등록증 / 운전면허증 등 사진 부착 공인 신분증 필수", "※ 단순 시력(근시·원시·난시) 및 신장·체중(BMI)은 병무청 자체 장비로 현장 정밀 측정하므로 진단서 불필요"],
+      expectedGrade: "1급 (현역)"
     };
-    return criteriaMap[category] || criteriaMap["특이질환 없음"];
   },
 
   async getLawCriteria(category) {
