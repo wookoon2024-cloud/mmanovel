@@ -113,9 +113,11 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "드디어 가상 {region} 로비 접수데스크에 도착했습니다!\n\n가장 먼저 본인 확인 후 [나라사랑카드]를 발급·등록해야 하는데요, 이 카드가 왜 검사의 시작이자 필수인지 아시나요?\n\n① 검사장 전자신분증: 환복 후 이 카드를 주머니에 넣고 다니며, 모든 검사실(심리, 임상병리, 신체계측, 의사 진료) 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n\n② 실시간 여비 지급: 오늘 검사가 끝나면 왕복 교통비와 식비가 당일 이 계좌로 즉시 자동 입금됩니다.\n\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 군 생활 전 기간 동안 핵심 혜택 카드로 쭉 사용하게 됩니다!\n\n두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
     text_en: "We've arrived at the virtual {region} reception lobby!\n\nFirst, you will register your [Nara Sarang Card]. Why is this card essential?\n\n① Exam Electronic ID: You will carry this card in your pocket and tap it at readers before entering every exam room (psychology, pathology, biometrics, doctor clinic) to record results in real-time.\n\n② Real-time Travel Allowance: Transit and meal allowances are directly deposited into this account on the same day.\n\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nCompare the benefits and select your preferred Nara Sarang Card.",
-    apiSource: null,
-    apiSource_en: null,
-    isApi: false,
+    apiSource: "[공식출처] 나라사랑포털(군인공제회C&C) & KB국민·IBK기업 공식 금융 혜택 공시 데이터",
+    apiSource_en: "[Official Source] Nara Sarang Portal & Official Bank Benefits Disclosure Data",
+    apiSourceUrl: "https://www.narasarang.or.kr",
+    apiIcon: "globe",
+    isApi: true,
     widgetType: "NARA_CARD_CHOICE"
   },
 
