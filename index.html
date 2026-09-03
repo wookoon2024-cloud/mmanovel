@@ -108,8 +108,8 @@
         <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span id="lang-label">EN</span>
       </button>
       <!-- 음성 TTS On/Off -->
-      <button id="btn-sound" onclick="toggleSound()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-700 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs" title="TTS 음성 On/Off">
-        <i id="sound-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i> <span id="sound-label" class="hidden md:inline text-xs">TTS ON</span>
+      <button id="btn-sound" onclick="toggleSound()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-500 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs" title="TTS 음성 On/Off">
+        <i id="sound-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-slate-400"></i> <span id="sound-label" class="hidden md:inline text-xs">음소거 OFF</span>
       </button>
       <!-- 배속 조절 -->
       <button id="btn-speed" onclick="toggleSpeed()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs" title="재생 속도">
@@ -638,7 +638,7 @@
     let typingInterval = null;
     let autoPlay = false;
     let autoPlayTimer = null;
-    let soundEnabled = true;
+    let soundEnabled = false;
     let currentSpeed = 1.0; // 기본 대사 속도 1.0x
     const SPEED_INTERVALS = { 1.0: 38, 1.5: 22, 2.0: 10 };
     let isAnnouncement = false;
