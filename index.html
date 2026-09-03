@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.6.2</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.6.3</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.6.2</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.6.3</span>
             </div>
           </div>
         </div>
@@ -480,7 +480,7 @@
     <!-- 캐릭터가 화면 하단 바닥에 자연스럽게 안착 -->
     <div id="sprite-wrapper" class="relative ml-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 flex items-end h-[60vh] sm:h-[75vh] md:h-[85vh] max-h-[88vh]">
       <!-- 캐릭터 투명 PNG 스프라이트 -->
-      <img id="sprite-img" src="assets/minwoo.png?v=20260903_v162" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
+      <img id="sprite-img" src="assets/minwoo.png?v=20260903_v163" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
     </div>
   </div>
 
@@ -532,6 +532,51 @@
 
       </div>
 
+    </div>
+  </div>
+
+  <!-- ================= [CINEMATIC MODAL: 시나리오 시작 전 주인공 이름 설정 검은 화면] ================= -->
+  <div id="name-input-overlay" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-4 sm:p-6 text-center hidden opacity-0 transition-opacity duration-300 ease-in-out">
+    <div class="max-w-md w-full bg-slate-900/90 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- 상단 병무청 마크 & 배지 -->
+      <div class="p-3 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.3)] mb-4">
+        <img src="assets/mma_logo_original.png" alt="대한민국 병무청" class="h-8 sm:h-9 w-auto object-contain">
+      </div>
+      <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-950 text-blue-400 border border-blue-800/60 mb-2">
+        대한민국 병무청 · 병역판정검사 시뮬레이션
+      </span>
+      <h2 id="name-modal-title" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+        주인공 이름 설정
+      </h2>
+      <p id="name-modal-desc" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+        병역판정검사 여정을 함께할<br><strong class="text-blue-400">주인공(수검 대상자)의 이름</strong>을 입력해 주세요.
+      </p>
+
+      <!-- 성명 입력 폼 -->
+      <div class="w-full mt-6 space-y-2 text-left">
+        <label for="protagonist-name-input" class="text-xs font-bold text-slate-300 ml-1">수검자 성명 (주인공)</label>
+        <div class="relative">
+          <input type="text" id="protagonist-name-input" value="김민우" maxlength="10" 
+                 class="w-full px-4 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-600 text-white font-bold text-base focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition shadow-inner placeholder-slate-500"
+                 placeholder="이름 입력 (예: 김민우)"
+                 onkeydown="if(event.key==='Enter') submitProtagonistName()">
+          <span class="absolute right-3.5 top-3.5 text-xs text-slate-400 font-mono">만 19세</span>
+        </div>
+        <p class="text-[11px] text-slate-400 ml-1 leading-relaxed">
+          * 입력하신 이름은 통지서, 검사결과표, 대화창 및 대본 전반에 실시간 반영됩니다.
+        </p>
+      </div>
+
+      <!-- 진행하기 버튼 영역 -->
+      <div class="w-full mt-6 flex gap-3">
+        <button onclick="closeNameInputOverlay()" class="flex-1 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm transition cursor-pointer">
+          취소
+        </button>
+        <button onclick="submitProtagonistName()" class="flex-[2] py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]">
+          <span>진행하기</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -641,17 +686,65 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v162"></script>
-  <script src="scenario.js?v=20260903_v162"></script>
-  <script src="tracker.js?v=20260903_v162"></script>
+  <script src="api.js?v=20260903_v163"></script>
+  <script src="scenario.js?v=20260903_v163"></script>
+  <script src="tracker.js?v=20260903_v163"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260903_v162';
+    const ASSET_VER = '20260903_v163';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
       return url + '?v=' + ASSET_VER;
+    }
+
+    // 캐릭터 스프라이트 교체 시 이전 캐릭터 잔상/깜빡임 완전 차단 컨트롤러
+    function updateCharacterSprite(charPath, charPos = 'right', instant = false) {
+      const spriteWrapper = document.getElementById('sprite-wrapper');
+      const spriteImg = document.getElementById('sprite-img');
+      if (!spriteWrapper || !spriteImg) return;
+
+      function setPosition(pos) {
+        spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
+        if (pos === 'left') spriteWrapper.classList.add('mr-auto');
+        else if (pos === 'center') spriteWrapper.classList.add('mx-auto');
+        else spriteWrapper.classList.add('ml-auto');
+      }
+
+      if (!charPath) {
+        spriteWrapper.style.transition = instant ? 'none' : 'opacity 0.15s ease-out';
+        spriteWrapper.style.opacity = '0';
+        return;
+      }
+
+      const targetSrc = getAssetUrl(charPath);
+
+      // 이미 같은 스프라이트가 정상 표시 중인 경우 위치만 갱신
+      if (spriteImg.src.includes(charPath) && spriteWrapper.style.opacity === '1') {
+        setPosition(charPos);
+        return;
+      }
+
+      // 1. 이전 캐릭터를 즉시 숨겨 이전 장면 잔상/깜빡임 완전 차단
+      spriteWrapper.style.transition = instant ? 'none' : 'opacity 0.12s ease-out';
+      spriteWrapper.style.opacity = '0';
+
+      // 2. 새 캐릭터 이미지가 완전히 로딩 완료된 후에만 부드럽게 등장
+      const preloader = new Image();
+      preloader.onload = () => {
+        spriteImg.src = targetSrc;
+        setPosition(charPos);
+        spriteWrapper.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
+        spriteWrapper.style.opacity = '1';
+        spriteWrapper.style.transform = 'translateY(0)';
+      };
+      preloader.onerror = () => {
+        spriteImg.src = targetSrc;
+        setPosition(charPos);
+        spriteWrapper.style.opacity = '1';
+      };
+      preloader.src = targetSrc;
     }
 
     let currentSceneIdx = 0;
@@ -1145,6 +1238,13 @@
       overlay.classList.remove('opacity-0', 'pointer-events-none');
       overlay.classList.add('opacity-100', 'pointer-events-auto');
 
+      // 전환 시작 즉시 이전 캐릭터를 완전 은닉하여 잔상/깜빡임 완전 원천 차단
+      const spriteWrapper = document.getElementById('sprite-wrapper');
+      if (spriteWrapper) {
+        spriteWrapper.style.transition = 'none';
+        spriteWrapper.style.opacity = '0';
+      }
+
       // 로딩 게이지 바 0.9초 전진 애니메이션
       setTimeout(() => {
         bar.style.transition = 'width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)';
@@ -1233,27 +1333,17 @@
       const bgImg = document.getElementById('bg-image');
       if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl(scene.bg)}')`;
 
-      // 캐릭터 스프라이트 및 위치 제어
-      const spriteWrapper = document.getElementById('sprite-wrapper');
-      const spriteImg = document.getElementById('sprite-img');
-      if (spriteImg && spriteWrapper) {
-        spriteImg.src = getAssetUrl(scene.char);
-        spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
-        if (scene.charPos === 'left') {
-          spriteWrapper.classList.add('mr-auto');
-        } else if (scene.charPos === 'center') {
-          spriteWrapper.classList.add('mx-auto');
-        } else {
-          spriteWrapper.classList.add('ml-auto');
-        }
-        spriteWrapper.classList.remove('opacity-0', 'translate-y-8');
-        spriteWrapper.classList.add('opacity-100', 'translate-y-0');
-      }
+      // 캐릭터 스프라이트 및 위치 제어 (이전 캐릭터 잔상/깜빡임 완전 차단)
+      updateCharacterSprite(scene.char, scene.charPos, true);
 
       // 화자 네임플레이트
       const spkName = document.getElementById('speaker-name');
       const spkPlate = document.getElementById('speaker-plate');
-      const currentSpeaker = (currentLang === 'en' && scene.speaker_en) ? scene.speaker_en : scene.speaker;
+      let currentSpeaker = (currentLang === 'en' && scene.speaker_en) ? scene.speaker_en : scene.speaker;
+      if (currentSpeaker) {
+        currentSpeaker = currentSpeaker.replace(/김민우/g, userData.name || '김민우')
+                                       .replace(/Minwoo/g, userData.name || '김민우');
+      }
       if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
@@ -1362,32 +1452,21 @@
       // 화자 네임플레이트 동적 업데이트
       const spkName = document.getElementById('speaker-name');
       const spkPlate = document.getElementById('speaker-plate');
-      const currentSpeaker = (currentLang === 'en' && item.speaker_en) ? item.speaker_en : (item.speaker || scene.speaker);
+      let currentSpeaker = (currentLang === 'en' && item.speaker_en) ? item.speaker_en : (item.speaker || scene.speaker);
+      if (currentSpeaker) {
+        currentSpeaker = currentSpeaker.replace(/김민우/g, userData.name || '김민우')
+                                       .replace(/Minwoo/g, userData.name || '김민우');
+      }
       if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) {
         const plateCls = item.plateClass || scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40';
         spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${plateCls}`;
       }
 
-      // 캐릭터 스프라이트 동적 전환
+      // 캐릭터 스프라이트 동적 전환 (이전 캐릭터 잔상/깜빡임 완전 차단)
       const charImg = item.char || scene.char;
       const charPos = item.charPos || scene.charPos || 'right';
-      const spriteWrapper = document.getElementById('sprite-wrapper');
-      const spriteImg = document.getElementById('sprite-img');
-      if (spriteImg && spriteWrapper && charImg) {
-        const targetSrc = getAssetUrl(charImg);
-        if (!spriteImg.src.includes(charImg)) {
-          spriteImg.src = targetSrc;
-        }
-        spriteWrapper.classList.remove('ml-auto', 'mr-auto', 'mx-auto');
-        if (charPos === 'left') {
-          spriteWrapper.classList.add('mr-auto');
-        } else if (charPos === 'center') {
-          spriteWrapper.classList.add('mx-auto');
-        } else {
-          spriteWrapper.classList.add('ml-auto');
-        }
-      }
+      updateCharacterSprite(charImg, charPos, false);
 
       // AI TTS 음성 낭독 실행
       speakDialogue(currentSpeaker, targetText);
@@ -1414,6 +1493,9 @@
     function formatSceneText(rawText) {
       if (!rawText) return '';
       return rawText
+        .replace(/\{name\}/g, userData.name || '김민우')
+        .replace(/김민우/g, userData.name || '김민우')
+        .replace(/Minwoo/g, userData.name || '김민우')
         .replace(/\{examDate\}/g, userData.examDate || '2026-10-29 (목) 오전')
         .replace(/\{region\}/g, userData.region || '서울지방병무청')
         .replace(/\{residentAddress\}/g, userData.residentAddress || '서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)')
@@ -3461,7 +3543,56 @@
       }
     }
 
-    // 에피소드 시나리오 실행 함수 (forceNew: true일 경우 처음부터 시작)
+    // ================= [주인공 이름 설정 오버레이 제어] =================
+    function openNameInputOverlay(epNum = 1, forceNew = true) {
+      const overlay = document.getElementById('name-input-overlay');
+      const input = document.getElementById('protagonist-name-input');
+      if (!overlay) {
+        startEpisodeDirect(epNum, forceNew);
+        return;
+      }
+      if (input) {
+        input.value = userData.name || "김민우";
+      }
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 20);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function submitProtagonistName() {
+      const input = document.getElementById('protagonist-name-input');
+      let enteredName = input ? input.value.trim() : "";
+      if (!enteredName) enteredName = "김민우";
+      userData.name = enteredName;
+
+      playBeep(880, 'sine', 0.1);
+      const overlay = document.getElementById('name-input-overlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
+      startEpisodeDirect(1, true);
+    }
+
+    function closeNameInputOverlay() {
+      const overlay = document.getElementById('name-input-overlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    // 에피소드 시나리오 실행 함수 (시작하기 누르면 검은화면 이름 설정부터 진행)
     function startEpisode(epNum, forceNew = false) {
       if (epNum === 1) {
         const isError = systemSyncData && (systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false));
@@ -3470,19 +3601,25 @@
           return;
         }
 
-        playBeep(880, 'sine', 0.1);
-        const menu = document.getElementById('main-menu-overlay');
-        if (menu) menu.classList.add('hidden');
-        if (forceNew) {
-          clearSaveGameState();
-          conversationHistory.length = 0;
-          currentBg = "";
-        }
-        renderScene(0);
+        // 새 게임 시작 시 검은화면의 주인공 이름 설정 팝업 먼저 띄우기
+        openNameInputOverlay(1, forceNew);
       } else if (epNum === 2) {
         playBeep(440, 'triangle', 0.1);
         alert("🚧 [EPISODE 02: 슬기로운 예비군 훈련 생활]\n\n현재 동원훈련 소집통지서 확인 및 전국 단위 자율 훈련 신청, 훈련 보상비 실시간 모의 산정 시나리오를 검수·제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🎖️");
       }
+    }
+
+    // 이름 설정 후 실제 씬 시작
+    function startEpisodeDirect(epNum, forceNew = false) {
+      playBeep(880, 'sine', 0.1);
+      const menu = document.getElementById('main-menu-overlay');
+      if (menu) menu.classList.add('hidden');
+      if (forceNew) {
+        clearSaveGameState();
+        conversationHistory.length = 0;
+        currentBg = "";
+      }
+      renderScene(0);
     }
 
     // 메인 로비 메뉴로 복귀
@@ -3586,8 +3723,8 @@
       const transitionOverlay = document.getElementById('scene-transition-overlay');
       if (transitionOverlay && !transitionOverlay.classList.contains('pointer-events-none')) return;
 
-      // 3. 모달 팝업(캘린더, 점검 모달, 로그 등)이 열려있으면 무시
-      const modals = ['calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal', 'log-modal'];
+      // 3. 모달 팝업(이름 설정, 캘린더, 점검 모달, 로그 등)이 열려있으면 무시
+      const modals = ['name-input-overlay', 'calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal', 'log-modal'];
       for (const id of modals) {
         const m = document.getElementById(id);
         if (m && !m.classList.contains('hidden')) return;
