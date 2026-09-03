@@ -195,7 +195,7 @@
                 청춘의 첫 관문, 병역판정검사
               </h3>
               <p id="ep1-desc-text" class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
-                통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 실시간 여비 정산까지 완벽 시뮬레이션!
+                통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!
               </p>
             </div>
 
@@ -607,7 +607,7 @@
       <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 mx-auto flex items-center justify-center text-white mb-2 sm:mb-3 shadow-lg shadow-blue-500/40 shrink-0">
         <i data-lucide="award" class="w-7 h-7 sm:w-9 sm:h-9"></i>
       </div>
-      <h2 class="text-lg sm:text-2xl font-black text-white tracking-tight">병역판정검사 결과 요약서</h2>
+      <h2 class="text-lg sm:text-2xl font-black text-white tracking-tight">가상 병역판정검사 결과 요약서</h2>
       <p class="text-[11px] sm:text-xs text-blue-300/80 mt-0.5">대한민국 병무청 공공데이터 포털 & 국가법령정보 실시간 검증</p>
 
       <div class="bg-slate-900/90 rounded-xl p-3 sm:p-4 my-3 sm:my-4 text-left space-y-2 text-xs sm:text-sm border border-slate-800">
@@ -615,7 +615,7 @@
         <div class="flex justify-between items-center"><span class="text-slate-400">수검 장소:</span><span id="res-location" class="font-bold text-white">강원지방병무청 병역판정검사장</span></div>
         <div class="flex justify-between items-center"><span class="text-slate-400">신체등급 판정:</span><span id="res-grade" class="font-black text-amber-400 text-sm sm:text-base">1급 (현역)</span></div>
         <div class="flex justify-between items-center"><span class="text-slate-400">병역 처분:</span><span id="res-disp" class="font-bold text-blue-400">현역병 입영 대상</span></div>
-        <div class="flex justify-between items-center pt-2 border-t border-slate-800"><span class="text-slate-400">실시간 지급 여비:</span><span id="res-pay" class="font-bold text-emerald-400">16,500원 (나라사랑카드 입금)</span></div>
+        <div class="flex justify-between items-center pt-2 border-t border-slate-800"><span class="text-slate-400">지급여비:</span><span id="res-pay" class="font-bold text-emerald-400">16,500원 (나라사랑카드 입금)</span></div>
       </div>
 
       <div class="mt-2">
@@ -726,7 +726,7 @@
           sub: "병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.",
           ep1Badge: "제1화 · 병역판정검사 편",
           ep1Title: "청춘의 첫 관문, 병역판정검사",
-          ep1Desc: "통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 실시간 여비 정산까지 완벽 시뮬레이션!",
+          ep1Desc: "통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!",
           ep2Badge: "제2화 · 예비군 훈련 편",
           ep2Title: "슬기로운 예비군 훈련 생활",
           ep2Desc: "동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드",
@@ -1080,7 +1080,7 @@
         if (icon) icon.setAttribute('data-lucide', 'compass');
       } else if (bg.includes('adjudicator_room') || targetIdx === 12) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "수석판정관실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 실시간 여비 정산";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 지급여비 정산";
         if (icon) icon.setAttribute('data-lucide', 'award');
       } else if (bg.includes('locker_room') || targetIdx === 13) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실(사물함실)로 이동 중...";
@@ -1088,7 +1088,7 @@
         if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else if (bg.includes('room.jpg') || targetIdx === 14) {
         if (title) title.innerText = (currentLang === 'en') ? "Arrived Back Home..." : "집 도착 & 귀가 완료";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Checking Travel Allowance & Completing Episode 1" : "실시간 여비 입금 확인 및 제1화 시뮬레이션 완주";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Checking Travel Allowance & Completing Episode 1" : "지급여비 입금 확인 및 제1화 시뮬레이션 완주";
         if (icon) icon.setAttribute('data-lucide', 'home');
       } else {
         if (title) title.innerText = (currentLang === 'en') ? "Changing Location..." : "다음 장소로 이동 중...";
@@ -2318,7 +2318,7 @@
 
             <!-- 3. 최종 결과서 발급 버튼 -->
             <button onclick="showCertModal()" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40">
-              <i data-lucide="award" class="w-5 h-5"></i> 최종 병역판정 결과서 발급 및 확인
+              <i data-lucide="award" class="w-5 h-5"></i> 가상 병역판정검사 결과 확인
             </button>
           </div>
         `;
@@ -3073,7 +3073,7 @@
       }
     }
     function downloadCertMock() {
-      alert("✅ [김민우 님 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!");
+      alert("✅ [김민우 님 가상 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!");
     }
 
     function toggleSpeed() {
