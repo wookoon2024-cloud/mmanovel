@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.4.8</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.4.9</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.4.8</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.4.9</span>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-4xl w-full mx-auto pt-2">
         
         <!-- CARD 1: 제1화 병역판정검사 (정식 플레이 가능) -->
-        <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="startEpisode(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
+        <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-[570px] sm:h-[590px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
           <!-- 포스터 이미지 영역 (호버 시 내부에서만 부드럽게 확장, 전체 카드 크기는 고정) -->
           <div class="relative w-full h-[320px] sm:h-[340px] group-hover:h-[455px] sm:group-hover:h-[475px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
             <!-- 고화질 원본 포스터 스틸컷 -->
@@ -641,9 +641,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v148"></script>
-  <script src="scenario.js?v=20260903_v148"></script>
-  <script src="tracker.js?v=20260903_v148"></script>
+  <script src="api.js?v=20260903_v149"></script>
+  <script src="scenario.js?v=20260903_v149"></script>
+  <script src="tracker.js?v=20260903_v149"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -3446,6 +3446,27 @@
       }
     }
 
+    // 시나리오 카드(화면 전체) 클릭 시 실행
+    function handleCardClick(epNum) {
+      if (epNum === 1) {
+        const save = getSavedGameState();
+        const hasSave = save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12);
+        if (hasSave) {
+          // 이어하기가 있을 때는 임의로 시작하지 않고 하단의 둘 중 하나를 선택하도록 버튼 영역 포커스/강조
+          const btnContainer = document.getElementById('ep1-action-buttons');
+          if (btnContainer) {
+            btnContainer.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2', 'ring-offset-slate-900', 'rounded-2xl');
+            setTimeout(() => {
+              btnContainer.classList.remove('ring-2', 'ring-blue-400', 'ring-offset-2', 'ring-offset-slate-900');
+            }, 1200);
+          }
+          return;
+        }
+        // 이어하기가 없을 때는 카드 화면 어디를 클릭해도 바로 시나리오 시작!
+        startEpisode(1);
+      }
+    }
+
     // 에피소드 시나리오 실행 함수 (forceNew: true일 경우 처음부터 시작)
     function startEpisode(epNum, forceNew = false) {
       if (epNum === 1) {
@@ -3534,10 +3555,10 @@
 
         btnContainer.innerHTML = `
           <div class="space-y-2">
-            <button onclick="resumeEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
               <i data-lucide="play-circle" class="w-4 h-4 fill-white"></i> ${dict.lobby.resumeBtn} (${stepText})
             </button>
-            <button onclick="startEpisode(1, true)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer">
               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> ${dict.lobby.restartBtn}
             </button>
           </div>
@@ -3552,7 +3573,7 @@
           `;
         }
         btnContainer.innerHTML = `
-          <button onclick="startEpisode(1, true)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
             <i data-lucide="play" class="w-4 h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
