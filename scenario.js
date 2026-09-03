@@ -327,7 +327,7 @@ const SCENARIOS = [
 
   // [SCENE 11] 적성분류 (군 특기 및 병과 적성분류) - 전공 맞춤 모집병 API 실시간 연계 (적성분류관, 민우, 힘찬이)
   {
-    bg: "assets/career_center.jpg",
+    bg: "assets/aptitude_room.jpg",
     char: "assets/doctor.png",
     speaker: "적성분류관 NPC",
     speaker_en: "Aptitude Classification Officer NPC",
