@@ -1660,15 +1660,6 @@
                   </button>
                 </div>
 
-                <!-- 신청인 인적사항 & 접수현황 -->
-                <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-2.5 rounded-lg text-[11px]">
-                  <div><span class="text-slate-400">신청인(성명):</span> <strong class="text-slate-200">${userData.name}</strong></div>
-                  <div><span class="text-slate-400">생년월일:</span> <span class="text-slate-200">2007. 10. 15 (만 19세)</span></div>
-                  <div class="col-span-2"><span class="text-slate-400">주민등록 주소지:</span> <strong class="text-slate-200">${userData.residentAddress}</strong></div>
-                  <div><span class="text-slate-400">접수번호:</span> <span class="text-emerald-400 font-mono font-bold">2026-MMA-847219</span></div>
-                  <div><span class="text-slate-400">신청사유:</span> <span class="text-blue-300 font-semibold">학사일정 중복 본인선택</span></div>
-                </div>
-
                 <!-- 수검 희망 검사장 내역 -->
                 <div class="p-3 rounded-lg bg-slate-900/80 space-y-1.5 text-[11px] leading-relaxed">
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 22일 (목) 오전'}</strong></div>
@@ -2822,13 +2813,6 @@
     function copyApplicationInfo() {
       const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "02-820-4241", address: "서울특별시 영등포구 여의대방로43길 13 (신길역/대방역)", dept: "병역판정검사과" };
       const textToCopy = `[별지 제1호 서식] 병역판정검사 일자 및 장소 본인선택(변경) 신청서
-■ 신청인 정보
-• 성명: ${userData.name}
-• 생년월일: 2007년 10월 15일 (만 19세)
-• 주민등록 주소지: ${userData.residentAddress}
-• 접수번호: 2026-MMA-847219
-• 신청구분: 병역판정검사 일자 및 장소 본인선택 (학사일정 중복 사유)
-
 ■ 수검 희망 검사장 내역
 • 수검 희망일시: ${userData.examDate || '2026년 10월 22일 (목) 오전'}
 • 수검 희망기관: ${userData.region} (${contact.dept || '병역판정검사과'})
