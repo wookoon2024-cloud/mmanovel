@@ -43,11 +43,9 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "충성! 안녕하십니까 민우 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면\n통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n민우 님 지역 관할 병무청의 [월별 실시간 잔여석 달력]을 확인해 보시겠습니까?",
     text_en: "Salute! Hello Minwoo, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
-    apiSource: "[API] 공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
-    apiSource_en: "[API] Public Data Portal: MMA Draft Physical Exam Info Open API",
-    apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
-    apiIcon: "database",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "CHOICE_SCHEDULE_CONSENT"
   },
 
@@ -61,8 +59,8 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "예를 들어 민우 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!\n\n또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
     text_en: "For example, if your resident registration address is [{residentAddress}],\nyou can immediately select the real-time vacancy calendar and preferred date for your regional office ({region})!\n\nAlso, your round-trip travel allowance ({fare}) will be automatically calculated live based on actual distance ({distanceKm}).",
-    apiSource: "[API] 공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
-    apiSource_en: "[API] Public Data Portal: MMA Draft Exam Schedule Selection Vacancy Data",
+    apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 일자 및 장소 본인선택 공석 데이터 Open API",
+    apiSource_en: "[API] Public Data Portal: MMA Draft Exam Schedule Selection Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
     isApi: true,
@@ -79,7 +77,7 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "탁월한 선택입니다! [ {examDate} ] 잔여석 확인 및 주민등록 주소지({residentAddress}) 기준 편도 실거리({distanceKm})에 따른 실시간 여비 [ {fare} ] 산출이 완료되었습니다!\n\n아래 정식 민원 신청서 내용을 복사하여 병무청 민원포털에 바로 신청해 보세요!",
     text_en: "Excellent choice! Real-time vacancies confirmed for [ {examDate} ]. Live travel allowance [ {fare} ] calculated for distance ({distanceKm}) from your registered address ({residentAddress})!\n\nCopy the official application details below to apply on the MMA portal!",
-    apiSource: "[API] 공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
+    apiSource: "[API] 공공데이터포털: 병무청_지방병무(지)청 조직 및 연락처 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Regional Offices & Contact Info Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
@@ -97,11 +95,9 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. 민우 님은 해당사항이 있으신가요?",
     text_en: "Now that your schedule is set, let's check the required documents tailored to your medical history.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?",
-    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 분담업무 및 [별표 3] 질병·심신장애 평가기준",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 1 & 3]",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
@@ -115,11 +111,9 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "드디어 가상 {region} 로비 접수데스크에 도착했습니다!\n\n가장 먼저 본인 확인 후 [나라사랑카드]를 발급·등록해야 하는데요, 이 카드가 왜 검사의 시작이자 필수인지 아시나요?\n\n① 검사장 전자신분증: 환복 후 이 카드를 주머니에 넣고 다니며, 모든 검사실(심리, 임상병리, 신체계측, 의사 진료) 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n\n② 실시간 여비 지급: 오늘 검사가 끝나면 왕복 교통비와 식비가 당일 이 계좌로 즉시 자동 입금됩니다.\n\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 군 생활 전 기간 동안 핵심 혜택 카드로 쭉 사용하게 됩니다!\n\n두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
     text_en: "We've arrived at the virtual {region} reception lobby!\n\nFirst, you will register your [Nara Sarang Card]. Why is this card essential?\n\n① Exam Electronic ID: You will carry this card in your pocket and tap it at readers before entering every exam room (psychology, pathology, biometrics, doctor clinic) to record results in real-time.\n\n② Real-time Travel Allowance: Transit and meal allowances are directly deposited into this account on the same day.\n\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nCompare the benefits and select your preferred Nara Sarang Card.",
-    apiSource: "[홈페이지] 나라사랑포털(군인공제회C&C) & 병무청 협약 금융기관 공식 데이터",
-    apiSource_en: "[Portal] Nara Sarang Portal & MMA Partner Financial Institutions Official Data",
-    apiSourceUrl: "https://www.narasarang.or.kr",
-    apiIcon: "globe",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "NARA_CARD_CHOICE"
   },
 
@@ -159,11 +153,9 @@ const SCENARIOS = [
         text_en: "Exactly right! With your card and documents ready, let's head to the [Psychological Testing Hall]!"
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
-    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
@@ -203,11 +195,9 @@ const SCENARIOS = [
         text_en: "Please answer calmly and honestly. Let's solve sample questions on screen!"
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역판정검사 규정」(병무청 훈령) 제21조(심리검사)",
-    apiSource_en: "[API] National Law Information Center: 「Draft Physical Exam Regulations」(MMA Directive) Art. 21",
-    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역판정검사규정/제21조",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "PSYCH_TEST_UI"
   },
 
@@ -238,11 +228,9 @@ const SCENARIOS = [
         text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick. Let's head to the restroom."
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "LAB_ROOM_CONFIRM"
   },
 
@@ -273,11 +261,9 @@ const SCENARIOS = [
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2] 신장·체중에 따른 신체등급 판정기준",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」 [Table 2] Height & Weight Standards",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "BMI_CALCULATOR"
   },
 
@@ -317,11 +303,9 @@ const SCENARIOS = [
         text_en: "Yes! You prepared your documents thoroughly.\n\nAfter reviewing your surgical records and recent MRI imaging, and measuring joint instability, you meet Defense Ministry standards [Table 3] item 204. I am referring you with a Grade 4 (Supplemental Service) recommendation."
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 204호 (관절 질환 평가기준)",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 3] 204",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
@@ -361,7 +345,7 @@ const SCENARIOS = [
         text_en: "MMA Live Recruit Specialty & Application API query complete! We've displayed Army IT/SW Developer (3.1:1) and Air Force Info Systems (2.4:1) cards and the bonus point simulator below!"
       }
     ],
-    apiSource: "[API] 병무청: 모집병 군별/특기별 지원가능 정보 & 실시간 군지원 접수현황 Open API",
+    apiSource: "[API] 공공데이터포털: 병무청_모집분야별 지원자격 및 실시간 군지원 접수현황 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Recruit Specialty Eligibility & Live Competition Rate Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
     apiIcon: "database",
@@ -405,7 +389,7 @@ const SCENARIOS = [
         text_en: "Congratulations! Live travel allowance [ {fare} ] for actual distance ({distanceKm}) has been deposited into your {cardType} account! Explore e-Military Wallet benefits and pick a nearby restaurant hotspot via the Nara Sarang Store API below!"
       }
     ],
-    apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 조회 서비스 & 병역의무자 여비 지급 기준 데이터 Open API",
+    apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 및 할인혜택 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Nara Sarang Partner Store & Travel Standards Open API",
     apiSourceUrl: "https://www.data.go.kr",
     apiIcon: "database",
@@ -440,11 +424,9 @@ const SCENARIOS = [
         text_en: "Changed clothes and packed my phone and wallet from the locker! Time to head home!"
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
-    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
-    apiIcon: "scale",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "LOCKER_RETURN_CONFIRM"
   },
 
@@ -484,11 +466,9 @@ const SCENARIOS = [
         text_en: "Experiencing the entire process virtually was truly worth it. As a proud young Korean, I now have the confidence to fulfill my military duty!"
       }
     ],
-    apiSource: "[홈페이지] 병무청 공식: 병역판정검사 종합 안내 포털 (mma.go.kr)",
-    apiSource_en: "[Portal] MMA Official: Draft Physical Examination Comprehensive Portal (mma.go.kr)",
-    apiSourceUrl: "https://www.mma.go.kr/contents.do?mc=mma0003346",
-    apiIcon: "globe",
-    isApi: true,
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
     widgetType: "EPISODE_COMPLETE"
   }
 ];
