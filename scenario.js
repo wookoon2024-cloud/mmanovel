@@ -59,8 +59,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "거주하고 계신 지역을 선택하시면,\n해당 지방병무청의 실시간 잔여석 달력을 바로 띄워드릴게요!",
-    text_en: "Select the region you reside in, and I will immediately open the real-time vacancy calendar for your regional Military Manpower Administration!",
+    text: "민우 님의 현재 주민등록 주소지({residentAddress}) 기준 관할 병무청과 희망 수검일정을 선택해 보세요!\n\n선택하신 지방병무청과의 실거리({distanceKm})에 따라 검사 당일 정산되는 실시간 여비(교통비+식비)가 자동 산출됩니다!",
+    text_en: "Select your regional MMA and preferred exam date based on your registered address ({residentAddress})!\n\nYour travel allowance will be automatically calculated based on the actual distance ({distanceKm}) to the exam center!",
     apiSource: "[API] 공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Draft Exam Schedule Selection Vacancy Data",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -77,8 +77,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탁월한 선택입니다! 민우 님께서 고르신 [ {examDate} ]은 현재 실시간 잔여석이 있어 실제 예약이 가능한 일정입니다.\n\n실제 예약을 위해 병무청 민원포털로 이동하시기 전, 민원 신청서에 기입할 신청 내용을 자동으로 정리해 드릴까요?\n\n원클릭으로 복사하여 병무청 누리집(mwpt.mma.go.kr)에 그대로 붙여넣으시면 매우 편리합니다!",
-    text_en: "Excellent choice! The date you selected [ {examDate} ] currently has real-time vacancies available for actual reservation.\n\nBefore heading to the MMA portal to make the real reservation, would you like me to organize your application details automatically?\n\nYou can copy it with a single click and paste it directly into the MMA website (mwpt.mma.go.kr) for convenience!",
+    text: "탁월한 선택입니다! 민우 님께서 고르신 [ {examDate} ]은 현재 실시간 잔여석이 있어 실제 예약이 가능한 일정입니다.\n\n주민등록 주소지({residentAddress})에서 {region}까지의 편도 실거리({distanceKm}) 전산 대조를 거쳐 검사 당일 지급될 실시간 여비 [ {fare} ] 산출도 완료되었습니다!\n\n실제 예약을 위해 병무청 민원포털로 이동하시기 전, 민원 신청서에 기입할 신청 내용을 자동으로 정리해 드릴까요? 원클릭으로 복사하여 병무청 누리집(mwpt.mma.go.kr)에 그대로 붙여넣으시면 매우 편리합니다!",
+    text_en: "Excellent choice! The date you selected [ {examDate} ] currently has real-time vacancies available for reservation.\n\nBased on your distance ({distanceKm}) from {residentAddress} to {region}, your live travel allowance [ {fare} ] has been calculated!\n\nWould you like me to organize your application details so you can paste them into the MMA website?",
     apiSource: "[API] 공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Regional Offices & Contact Info Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -325,7 +325,7 @@ const SCENARIOS = [
     widgetType: "DOCTOR_ROOM_CONFIRM"
   },
 
-  // [SCENE 11] 적성분류 (군 특기 및 병과 적성분류) - 1~2급 현역 대상 특기 매칭 (적성분류관 & 민우)
+  // [SCENE 11] 적성분류 (군 특기 및 병과 적성분류) - 전공 맞춤 모집병 API 실시간 연계 (적성분류관, 민우, 힘찬이)
   {
     bg: "assets/career_center.jpg",
     char: "assets/doctor.png",
@@ -339,8 +339,8 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
-        text: "김민우 님 반갑습니다! 이곳은 [적성분류실]입니다.\n\n수검자의 전공, 보유 자격·면허, 심리검사 결과를 종합하여 군 복무 시 가장 적합한 [군 특기(병과)]를 1:1로 맞춤 분류하고 전산에 부여해 드리는 곳입니다.",
-        text_en: "Welcome Minwoo Kim! This is the [Aptitude Classification Section].\n\nWe classify and assign your military specialty based on your college major, licenses, and aptitude test results."
+        text: "김민우 수검자님 반갑습니다! 오늘 1급 현역 판정을 진심으로 축하드립니다. 이곳은 [적성분류실]입니다.\n\n김민우 수검자님은 대학교에서 컴퓨터소프트웨어공학을 전공 중이시네요. 일반 징집병으로 입영 날짜를 기다리면 무작위 보병이나 포병 등으로 갈 수 있지만, 본인 전공을 살려서 [모집병(기술행정병)]으로 직접 지원하시는 것을 강력히 추천합니다.",
+        text_en: "Welcome Minwoo Kim! Congratulations on your Grade 1 active duty result. This is the [Aptitude Classification Section].\n\nYou are majoring in Computer Software Engineering. Rather than waiting for a random draft assignment, I strongly recommend applying directly for a specialized recruit role (Technical Administrative Soldier) that matches your major."
       },
       {
         speaker: "김민우 (주인공)",
@@ -348,8 +348,35 @@ const SCENARIOS = [
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "제가 대학교에서 컴퓨터/소프트웨어를 전공하고 있는데, 제 전공을 살릴 수 있는 군 특기로 복무할 수 있나요?",
-        text_en: "I am majoring in Computer Science / Software in college. Can I serve in a military specialty related to my major?"
+        text: "제 소프트웨어 전공을 살려서 복무할 수 있는 모집병에는 구체적으로 어떤 특기들이 있나요?",
+        text_en: "What specialized military roles can I serve in that match my software major?"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "잠시만요! 병무청 [모집병 군별/특기별 지원가능 정보 API]를 전산망에서 실시간 호출해 드릴게요! 삐빅-!\n\n민우 님의 전공(컴공)과 1급 신체등급 기준, [육군 IT/SW개발병]과 [공군 정보체계운영병] 지원 자격이 즉시 활성화되었습니다!",
+        text_en: "Hold on! Let me query the MMA Recruit Specialty Eligibility API in real time! Beep-!\n\nBased on your major (CS) and Grade 1 status, you are directly eligible for [Army IT/SW Developer] and [Air Force Information Systems Specialist]!"
+      },
+      {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        char: "assets/minwoo_happy.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "오! 혹시 지금 이번 달 실시간 지원 접수 경쟁률도 전산으로 알 수 있나요?",
+        text_en: "Oh! Can we also see the real-time application competition rates for this month?"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "네! [모집병 실시간 접수현황 API] 조회 결과, 공군 정보체계운영병은 이번 달 2.4:1, 육군 IT/SW개발병은 3.1:1입니다!\n\n민우 님이 정보처리기능사 자격증 하나만 가산점으로 더 챙기시면 합격 안정권이에요!",
+        text_en: "Yes! According to the Live Application API, Air Force Information Systems is 2.4:1 and Army IT/SW Developer is 3.1:1!\n\nIf you add an Information Processing Technician license for bonus points, you will be well within the safe acceptance range!"
       },
       {
         speaker: "적성분류관 NPC",
@@ -357,14 +384,14 @@ const SCENARIOS = [
         char: "assets/doctor.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
-        text: "물론입니다! 전공과 자격증 연계를 통해 [육군 정보통신/SW개발병] 또는 [공군 정보체계운영병] 특기로 적극 지원하실 수 있도록 적성을 부여했습니다.\n\n이제 최종 판정서 수령과 여비 정산을 위해 [수석판정관실]로 이동하겠습니다!",
-        text_en: "Certainly! We have classified your military aptitude for Army IT/SW Developer or Air Force Information Systems Specialist.\n\nNow, let's proceed to the Chief Adjudicator office for your final result and travel allowance settlement!"
+        text: "훌륭합니다! 군 복무 18개월이 단순한 시간 공백이 아니라 민우 님의 진짜 소프트웨어 개발 실무 경력이 되도록 전산에 해당 특기 적성을 공식 등록해 드렸습니다!\n\n아래 화면에서 실시간 모집병 지원 자격과 경쟁률을 확인해 보신 후, 최종 판정서 수령과 여비 정산을 위해 [수석판정관실]로 이동하겠습니다!",
+        text_en: "Wonderful! We have officially registered your aptitude code so your 18 months of service become recognized real-world software engineering experience!\n\nPlease check the live recruitment card below, and then let's move to the Chief Adjudicator room!"
       }
     ],
-    apiSource: "[API] 국가법령정보센터: 「병역법」 제14조의2 (적성분류 및 군특기 부여 기준)",
-    apiSource_en: "[API] National Law Information Center: 「Military Service Act」 Art. 14-2 (Aptitude Classification)",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제14조의2",
-    apiIcon: "scale",
+    apiSource: "[API] 병무청: 모집병 군별/특기별 지원가능 정보 & 실시간 군지원 접수현황 Open API",
+    apiSource_en: "[API] Public Data Portal: MMA Recruit Specialty Eligibility & Live Competition Rate Open API",
+    apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
+    apiIcon: "database",
     isApi: true,
     widgetType: "APTITUDE_CONFIRM"
   },
@@ -401,13 +428,13 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님 축하드립니다! 오늘 모든 검사를 훌륭하게 마치셨고, 오늘 수검에 따른 실시간 여비 [ {fare} ]도 {cardType} 계좌로 즉시 입금 완료되었습니다.\n\n화면 상단을 보시면 검사 후 유용하게 활용할 수 있는 두 가지 핵심 서비스가 준비되어 있습니다:\n\n① 스마트 e-병무지갑: 종이 서류 없이 스마트폰 앱 하나로 병역판정결과서와 전자 병역증을 영구 보관하고, 군 장병·청년 우대 할인 바우처를 즉시 발급받을 수 있습니다.\n\n② 병역진로설계센터: 민우 님의 전공과 적성에 딱 맞는 군 특기(기술행정병 등)를 1:1 맞춤 추천받고, 전역 후 취업까지 무료로 연계 지원하는 원스톱 청년 복지 서비스입니다!\n\n두 혜택을 확인해 보신 후, 아래 [최종 병역판정 결과서 발급 및 확인] 버튼을 눌러 정식 결과서를 열람해 보세요!",
-        text_en: "Congratulations Minwoo! You have completed all exams and your travel allowance of [ {fare} ] has been deposited into your {cardType} account.\n\nAbove, you will see two key post-exam services:\n\n① Smart e-Military Wallet: Store your draft physical exam results & digital military ID securely on your smartphone and unlock military discount vouchers.\n\n② Military Career Design Center: Receive free 1-on-1 counseling to match your major/aptitude with specialized military roles and post-discharge employment support!\n\nPlease review these services and click the button below to view your official Certificate of Physical Examination!"
+        text: "민우 님 축하드립니다! {residentAddress}에서 {region}까지의 왕복 이동거리({distanceKm})를 정밀 대조하여, 당일 대중교통비와 중식비(8,000원)를 포함한 실시간 여비 [ {fare} ]가 {cardType} 계좌로 즉시 입금 완료되었습니다!\n\n오늘 검사 받으시느라 정말 고생 많으셨으니, 방금 입금된 여비로 검사장 근처에서 맛있는 점심 든든하게 드시고 가세요!\n[병무청 나라사랑가게 API]로 현재 계신 {region} 인근의 나라사랑카드 제휴 할인 맛집과 영화관을 찾아드릴게요. 원하시는 주변 거점을 선택해 보세요!\n\n두 혜택을 확인해 보신 후, 아래 [최종 병역판정 결과서 발급 및 확인] 버튼을 눌러 정식 결과서를 열람해 보세요!",
+        text_en: "Congratulations Minwoo! Based on your distance ({distanceKm}) from {residentAddress} to {region}, your live travel allowance [ {fare} ] including transit and lunch (8,000 KRW) has been deposited into your {cardType} account!\n\nUse your travel allowance to enjoy a hearty lunch near the exam center! Through the [MMA Nara Sarang Store API], check out military discount restaurants and theaters near {region}. Select your preferred hotspot below!"
       }
     ],
-    apiSource: "[API] 공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",
-    apiSource_en: "[API] Public Data Portal: MMA Travel Allowance Standards (Real-time Calculation)",
-    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역의무자여비지급규정",
+    apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 조회 서비스 & 병역의무자 여비 지급 기준 데이터 Open API",
+    apiSource_en: "[API] Public Data Portal: MMA Nara Sarang Partner Store & Travel Standards Open API",
+    apiSourceUrl: "https://www.data.go.kr",
     apiIcon: "database",
     isApi: true,
     widgetType: "FINAL_SUMMARY_CARDS"

@@ -646,6 +646,8 @@
       name: "김민우",
       region: "서울지방병무청",
       regionName: "서울특별시 영등포구 여의대방로43길 13",
+      residentAddress: "서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)",
+      distanceKm: "5.8 km (7호선 12분 소요)",
       examDate: "2026-10-22 (목) 오전",
       healthCheck: "특이질환 없음",
       hasDisease: false,
@@ -1313,11 +1315,13 @@
       return rawText
         .replace(/\{examDate\}/g, userData.examDate || '2026-10-29 (목) 오전')
         .replace(/\{region\}/g, userData.region || '서울지방병무청')
-        .replace(/\{healthCheck\}/g, userData.healthCheck || '건강 체질')
-        .replace(/\{cardType\}/g, userData.cardType || '나라사랑카드')
+        .replace(/\{residentAddress\}/g, userData.residentAddress || '서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)')
+        .replace(/\{distanceKm\}/g, userData.distanceKm || '5.8 km (7호선 12분 소요)')
+        .replace(/\{healthCheck\}/g, userData.healthCheck || '특이질환 없음')
+        .replace(/\{cardType\}/g, userData.cardType || 'KB국민은행 나라사랑카드')
         .replace(/\{bmi\}/g, userData.bmi || '22.7')
-        .replace(/\{finalGrade\}/g, userData.finalGrade || '4급 (보충역)')
-        .replace(/\{disposition\}/g, userData.disposition || '사회복무요원 소집 대상')
+        .replace(/\{finalGrade\}/g, userData.finalGrade || '1급 (현역)')
+        .replace(/\{disposition\}/g, userData.disposition || '현역병 입영 대상')
         .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
     }
 
@@ -1616,6 +1620,7 @@
                 <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-2.5 rounded-lg text-[11px]">
                   <div><span class="text-slate-400">신청인(성명):</span> <strong class="text-slate-200">${userData.name}</strong></div>
                   <div><span class="text-slate-400">생년월일:</span> <span class="text-slate-200">2007. 10. 15 (만 19세)</span></div>
+                  <div class="col-span-2"><span class="text-slate-400">주민등록 주소지:</span> <strong class="text-slate-200">${userData.residentAddress}</strong></div>
                   <div><span class="text-slate-400">접수번호:</span> <span class="text-emerald-400 font-mono font-bold">2026-MMA-847219</span></div>
                   <div><span class="text-slate-400">신청사유:</span> <span class="text-blue-300 font-semibold">학사일정 중복 본인선택</span></div>
                 </div>
@@ -2007,38 +2012,96 @@
       } else if (type === 'APTITUDE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full space-y-4">
-              <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center shrink-0">
-                  <i data-lucide="compass" class="w-5 h-5"></i>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-xs sm:text-sm text-white">병무청 모집병 군별/특기별 실시간 지원가능 API 연동</h4>
+                    <p class="text-[11px] text-slate-400">전공(컴퓨터SW) 및 1급 신체등급 연계 추천 특기 & 실시간 경쟁률</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 class="font-bold text-sm text-white">${isEn ? '1:1 Military Specialty Assignment Complete' : '1:1 맞춤형 군 특기 적성 분류 완료'}</h4>
-                  <p class="text-xs text-slate-400">${isEn ? 'Matched specialties based on major & skills' : '전공(컴퓨터SW) 및 자격증 연계 최적 특기 부여'}</p>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">실시간 T.O 연동</span>
+              </div>
+
+              <!-- 모집병 추천 3종 카드 -->
+              <div class="space-y-2.5">
+                <!-- 1. 육군 IT/SW개발병 -->
+                <div class="p-3 bg-slate-950/90 rounded-xl border border-blue-500/30 space-y-2 text-xs">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-extrabold text-[10px]">육군</span>
+                      <strong class="text-white text-xs sm:text-sm">IT/SW개발병 (전문특기병)</strong>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-xs">3.1 : 1</span>
+                    </div>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-relaxed">국방 전산망 및 군용 소프트웨어 개발 실무 담당 · <strong class="text-blue-300">전역 후 IT 취업 시 개발 경력 100% 공식 인정</strong></p>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
+                    <span>지원자격: 1~2급 현역 + 컴공 2년 이상 (적격 충족)</span>
+                    <span class="text-emerald-400 font-bold">지원 가능</span>
+                  </div>
+                </div>
+
+                <!-- 2. 공군 정보체계운영병 -->
+                <div class="p-3 bg-slate-950/90 rounded-xl border border-cyan-500/30 space-y-2 text-xs">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-cyan-600 text-white font-extrabold text-[10px]">공군</span>
+                      <strong class="text-white text-xs sm:text-sm">정보체계운영병 (IT특기)</strong>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-xs">2.4 : 1</span>
+                    </div>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-relaxed">공군 비행단 전산실 서버·네트워크 운영 관리 · <strong class="text-cyan-300">쾌적한 실내 인프라 & 풍부한 자기계발 환경</strong></p>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
+                    <span>지원자격: 1~3급 현역 + 전공자 (적격 충족)</span>
+                    <span class="text-cyan-400 font-bold">합격 유력</span>
+                  </div>
+                </div>
+
+                <!-- 3. 육군 정보통신운용병 -->
+                <div class="p-3 bg-slate-950/90 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-extrabold text-[10px]">육군</span>
+                      <strong class="text-slate-200">정보통신운용병 (기술행정병)</strong>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-xs">1.8 : 1</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span>지휘통신망 및 네트워크 장비 운용</span>
+                    <span class="text-emerald-400 font-bold">합격 안정권</span>
+                  </div>
                 </div>
               </div>
 
-              <div class="space-y-2">
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                  <div class="flex items-center gap-2 text-slate-200 font-semibold">
-                    <span class="p-1 rounded-lg bg-blue-500/20 text-blue-400 text-sm">💻</span>
-                    <span>육군 정보통신 / SW개발병</span>
-                  </div>
-                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[11px]">적성 1순위</span>
+              <!-- 가산점 모의 시뮬레이터 -->
+              <div class="p-3 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="chk-license-bonus" onchange="toggleLicenseBonus(this.checked)" class="rounded border-slate-700 bg-slate-800 text-blue-500 focus:ring-0 w-4 h-4 cursor-pointer" />
+                    <span class="text-white font-bold">가산점 시뮬레이터: 정보처리기능사/산업기사 자격증 (+15점)</span>
+                  </label>
                 </div>
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                  <div class="flex items-center gap-2 text-slate-200 font-semibold">
-                    <span class="p-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm">🌐</span>
-                    <span>공군 정보체계운영병</span>
-                  </div>
-                  <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">적성 2순위</span>
+                <div id="bonus-prediction-box" class="text-[11px] text-blue-200">
+                  체크 시 자격증 배점(+15점)이 합산되어 실시간 합격 확률이 시뮬레이션됩니다.
                 </div>
               </div>
             </div>
 
             <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01]">
-              <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>수석판정관실로 이동 (최종 판정 및 여비 정산)</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -2159,32 +2222,70 @@
       } else if (type === 'FINAL_SUMMARY_CARDS') {
         const isEn = (currentLang === 'en');
         // 여비 자동 계산 API 연동
-        const fareData = (typeof MmaApiService !== 'undefined') ? MmaApiService.calculateFare(userData.region) : { formattedText: "16,500원 (교통비 8,500원 + 식비 8,000원)" };
+        const fareData = (typeof MmaApiService !== 'undefined') 
+          ? MmaApiService.calculateFare(userData.region) 
+          : { formattedText: "16,500원 (교통비 8,500원 + 식비 8,000원)", distanceKm: "5.8 km (7호선 12분 소요)", residentAddress: "서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)" };
         userData.fare = fareData.formattedText;
+        userData.distanceKm = fareData.distanceKm;
+        userData.residentAddress = fareData.residentAddress;
+
+        const hotspots = (typeof MmaApiService !== 'undefined') ? MmaApiService.getHotspots(userData.region) : [];
 
         choiceContainer.innerHTML = `
-          <div class="space-y-3 animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+          <div class="space-y-3.5 animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+            <!-- 1. 핵심 서비스 2종 (e-병무지갑 & 진로설계) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="p-4 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
+              <div class="p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
                 <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="smartphone" class="w-4 h-4 text-blue-400"></i> 스마트 e-병무지갑</p>
-                <p class="text-xs text-slate-400">검사 결과서 모바일 저장 & 군 장병 할인 바우처</p>
-                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0003346', '_blank')" class="mt-1 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
-                  <span>e-병무지갑 공식 안내</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <p class="text-[11px] text-slate-400">결과서 모바일 저장 & 군장병 할인 바우처</p>
+                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0003346', '_blank')" class="mt-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+                  <span>e-병무지갑 안내</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
-              <div class="p-4 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
+              <div class="p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
                 <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="compass" class="w-4 h-4 text-emerald-400"></i> 병역진로설계센터</p>
-                <p class="text-xs text-slate-400">1:1 전문 상담관과 군 특기 및 취업 무료 연계</p>
-                <button onclick="window.open('https://www.mma.go.kr/byjr/01/index.do', '_blank')" class="mt-1 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
-                  <span>1:1 맞춤상담 공식 페이지</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <p class="text-[11px] text-slate-400">1:1 맞춤 군특기 추천 & 취업 무료 연계</p>
+                <button onclick="window.open('https://www.mma.go.kr/byjr/01/index.do', '_blank')" class="mt-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+                  <span>1:1 맞춤상담</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
             </div>
-            <button onclick="showCertModal()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm font-bold shadow-xl flex items-center justify-center gap-2 transition cursor-pointer">
+
+            <!-- 2. [신규] 병무청_나라사랑가게 조회 서비스 (검사장 인근 거점 선택) -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="utensils" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5">
+                      <span>${userData.region} 주변 나라사랑가게 맛집·문화 할인</span>
+                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">API 실시간</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-400">지급된 여비로 검사장 주변에서 든든하게 점심 드실 거점을 선택해 보세요!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 거점 3곳 선택 탭 -->
+              <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="hotspot-tabs-container">
+                <!-- JS 동적 주입 -->
+              </div>
+
+              <!-- 선택된 거점의 할인 가맹점 목록 -->
+              <div id="hotspot-stores-container" class="space-y-2">
+                <!-- JS 동적 주입 -->
+              </div>
+            </div>
+
+            <!-- 3. 최종 결과서 발급 버튼 -->
+            <button onclick="showCertModal()" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40">
               <i data-lucide="award" class="w-5 h-5"></i> 최종 병역판정 결과서 발급 및 확인
             </button>
           </div>
         `;
+        renderHotspots(hotspots, 0);
       } else if (type === 'EPISODE_COMPLETE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
@@ -2661,6 +2762,14 @@
 
     function updateRegion(val) {
       userData.region = val;
+      if (typeof MmaApiService !== 'undefined') {
+        const fareData = MmaApiService.calculateFare(val);
+        userData.residentAddress = fareData.residentAddress;
+        userData.distanceKm = fareData.distanceKm;
+        userData.fare = fareData.formattedText;
+        const contact = MmaApiService.getOfficeContact(val);
+        userData.regionName = contact.address || val;
+      }
       const modalTitle = document.getElementById('cal-modal-title');
       if (modalTitle) modalTitle.innerText = `${val} 병역판정검사 실시간 공석 달력`;
     }
@@ -2672,6 +2781,7 @@
 ■ 신청인 정보
 • 성명: ${userData.name}
 • 생년월일: 2007년 10월 15일 (만 19세)
+• 주민등록 주소지: ${userData.residentAddress}
 • 접수번호: 2026-MMA-847219
 • 신청구분: 병역판정검사 일자 및 장소 본인선택 (학사일정 중복 사유)
 
@@ -2680,6 +2790,7 @@
 • 수검 희망기관: ${userData.region} (${contact.dept || '병역판정검사과'})
 • 검사장 소재지: ${contact.address}
 • 직통 문의전화: ${contact.phone}
+• 편도 이동거리 및 산정여비: ${userData.distanceKm} ➔ ${userData.fare}
 
 ■ 근거 법령 및 유의사항
 • 관련법령: 「병역법 시행령」 제11조 및 「병역판정검사 규정」 제14조
@@ -2874,6 +2985,63 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
+    }
+
+    
+    // [신규 API] 가산점 모의 시뮬레이터 토글
+    function toggleLicenseBonus(isChecked) {
+      const box = document.getElementById('bonus-prediction-box');
+      if (!box) return;
+      if (isChecked) {
+        box.innerHTML = `
+          <div class="flex items-center justify-between text-emerald-300 font-bold">
+            <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 정보처리기능사 자격증 가산점 +15점 적용 완료!</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[11px]">합격 확률 98% (확실)</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">공군 정보체계운영병 및 육군 IT/SW개발병 1차 서류 전형 배점 100점 만점 중 95점 확보로 <strong>합격 안정권</strong>입니다.</p>
+        `;
+      } else {
+        box.innerHTML = `체크 시 자격증 배점(+15점)이 합산되어 실시간 합격 확률이 시뮬레이션됩니다.`;
+      }
+      lucide.createIcons();
+    }
+
+    // [신규 API] 관할 병무청 인근 나라사랑가게 핫스팟 및 가맹점 렌더링
+    function renderHotspots(hotspots, activeIdx) {
+      const tabsContainer = document.getElementById('hotspot-tabs-container');
+      const storesContainer = document.getElementById('hotspot-stores-container');
+      if (!tabsContainer || !storesContainer || !hotspots || hotspots.length === 0) return;
+
+      tabsContainer.innerHTML = hotspots.map((h, idx) => {
+        const isActive = (idx === activeIdx);
+        const btnClass = isActive 
+          ? 'px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0 shadow transition cursor-pointer'
+          : 'px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs shrink-0 transition cursor-pointer';
+        return `<button onclick="renderHotspots(MmaApiService.getHotspots(userData.region), ${idx})" class="${btnClass}">${h.name}</button>`;
+      }).join('');
+
+      const targetHotspot = hotspots[activeIdx] || hotspots[0];
+      storesContainer.innerHTML = targetHotspot.stores.map(s => {
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between gap-2 text-xs hover:border-slate-700 transition">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+                <i data-lucide="${s.icon || 'utensils'}" class="w-3.5 h-3.5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <strong class="text-slate-200 text-xs">${s.name}</strong>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${s.category}</span>
+                </div>
+                <p class="text-[11px] text-emerald-400 font-medium">${s.benefit}</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold shrink-0">카드 할인</span>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
     }
 
     function showCertModal() {
