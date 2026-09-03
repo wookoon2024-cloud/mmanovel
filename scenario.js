@@ -95,9 +95,11 @@ const SCENARIOS = [
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. 민우 님은 해당사항이 있으신가요?",
     text_en: "Now that your schedule is set, let's check the required documents tailored to your medical history.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?",
-    apiSource: null,
-    apiSource_en: null,
-    isApi: false,
+    apiSource: "[API] 법제처 국가법령정보: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1·3] Open API",
+    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 1 & 3] Open API",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
+    apiIcon: "scale",
+    isApi: true,
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
