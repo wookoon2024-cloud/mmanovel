@@ -389,8 +389,8 @@ const SCENARIOS = [
         char: "assets/aptitude_officer.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
-        text: "김민우 수검자님 반갑습니다! 1급 현역 판정을 축하드립니다. 대학교에서 컴퓨터소프트웨어공학을 전공 중이시니 전공 경력을 100% 살릴 수 있는 [모집병(기술행정병)] 지원을 추천합니다.",
-        text_en: "Welcome Minwoo Kim! Congratulations on your Grade 1 active duty result. As a CS major, I recommend applying for specialized recruit roles (Technical Administrative Soldier) to maximize your tech career."
+        text: "김민우 수검자님 반갑습니다! 이곳은 전공, 자격증, 적성을 종합하여 본인에게 가장 적합한 군 특기 및 병과를 분류하는 [적성분류실]입니다.\n\n전산 기록을 보니 대학교에서 컴퓨터소프트웨어공학을 전공 중이시네요! 전공 역량을 살려 복무할 수 있는 맞춤 특기 분야를 추천해 드리겠습니다.",
+        text_en: "Welcome examinee Minwoo Kim! This is the [Aptitude Classification Room], where we analyze your major, licenses, and aptitudes to recommend the best military specialties.\n\nLooking at your records, you are majoring in Computer Software Engineering! Let me recommend tailored specialties that match your tech skills."
       },
       {
         speaker: "김민우 (주인공)",
