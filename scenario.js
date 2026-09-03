@@ -247,8 +247,8 @@ const SCENARIOS = [
         speaker_en: "Clinical Pathologist NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
         char: "assets/lab_officer.png",
-        text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다. ⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
-        text_en: "Urine sample confirmed! Now collecting blood sample. ⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
+        text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다.\n\n⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
+        text_en: "Urine sample confirmed! Now collecting blood sample.\n\n⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
       },
       step4: {
         speaker: "영상의학 방사선사 NPC",
