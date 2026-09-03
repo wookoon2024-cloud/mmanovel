@@ -90,7 +90,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.6</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.5.7</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -141,7 +141,7 @@
           <div class="border-l border-slate-300 pl-3">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.6</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.5.7</span>
             </div>
           </div>
         </div>
@@ -503,7 +503,7 @@
       </div>
 
       <!-- 메인 고정형 대화 박스 (높이: 모바일 135px / PC 195px, 완벽한 다크 배경 & 선명한 화이트 텍스트) -->
-      <div class="relative bg-slate-950/98 backdrop-blur-3xl border-2 border-slate-700/90 rounded-2xl rounded-tl-none p-2.5 sm:p-5 vn-box-glow h-[135px] sm:h-[185px] md:h-[205px] flex flex-col justify-between cursor-pointer select-none shadow-[0_20px_50px_rgba(0,0,0,0.95)]" onclick="handleNextClick()">
+      <div id="main-dialogue-card" class="relative bg-slate-950/98 backdrop-blur-3xl border-2 border-slate-700/90 rounded-2xl rounded-tl-none p-2.5 sm:p-5 vn-box-glow h-[135px] sm:h-[185px] md:h-[205px] flex flex-col justify-between cursor-pointer select-none shadow-[0_20px_50px_rgba(0,0,0,0.95)]">
         
         <!-- 대사 텍스트 컨테이너 -->
         <div id="dialogue-scroll-container" class="flex-1 overflow-y-auto custom-scroll pr-1 scroll-smooth select-none">
@@ -641,9 +641,9 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260903_v156"></script>
-  <script src="scenario.js?v=20260903_v156"></script>
-  <script src="tracker.js?v=20260903_v156"></script>
+  <script src="api.js?v=20260903_v157"></script>
+  <script src="scenario.js?v=20260903_v157"></script>
+  <script src="tracker.js?v=20260903_v157"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
@@ -3566,6 +3566,58 @@
       }
       lucide.createIcons();
     }
+
+    // ================= [화면 전체 클릭 & 터치 및 키보드로 대사 진행] =================
+    // 정통 비주얼 노벨 엔진: 화면 배경, 캐릭터, 대화창 등 아무 곳이나 클릭/터치하거나 스페이스/엔터 키를 눌러도 대사 진행
+    function handleGlobalScreenClick(e) {
+      // 1. 메인 로비 메뉴(시나리오 선택 창)가 열려있을 때는 무시
+      const lobby = document.getElementById('main-menu-overlay');
+      if (lobby && !lobby.classList.contains('hidden')) return;
+
+      // 2. 씬 전환 연출(페이드아웃/로딩) 진행 중일 때는 무시
+      const transitionOverlay = document.getElementById('scene-transition-overlay');
+      if (transitionOverlay && !transitionOverlay.classList.contains('pointer-events-none')) return;
+
+      // 3. 모달 팝업(캘린더, 점검 모달, 로그 등)이 열려있으면 무시
+      const modals = ['calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal', 'log-modal'];
+      for (const id of modals) {
+        const m = document.getElementById(id);
+        if (m && !m.classList.contains('hidden')) return;
+      }
+
+      // 4. 중앙 선택지 오버레이가 활성화되어 있으면 무시 (버튼 선택 대기)
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay && !choiceOverlay.classList.contains('hidden')) return;
+
+      // 5. 상단 헤더 메뉴 바 및 인터랙티브 UI(버튼, 링크, 인풋, 셀렉트 등) 클릭 시 무시
+      if (e.target.closest('header, button, a, input, select, textarea, label, [role="button"]')) return;
+
+      // 6. 대화창 내부의 API 출처 외부 링크 클릭 시 무시
+      if (e.target.closest('#api-badge-container')) return;
+
+      // 7. 화면 전체 클릭/터치 시 다음 대사 출력 또는 다음 씬으로 즉시 진행
+      handleNextClick();
+    }
+
+    document.addEventListener('click', handleGlobalScreenClick);
+
+    // 스페이스바 / 엔터 키 입력 시에도 동일하게 대사 진행
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        const lobby = document.getElementById('main-menu-overlay');
+        if (lobby && !lobby.classList.contains('hidden')) return;
+        const choiceOverlay = document.getElementById('center-choice-overlay');
+        if (choiceOverlay && !choiceOverlay.classList.contains('hidden')) return;
+        if (e.target.closest('input, select, textarea, button')) return;
+        const modals = ['calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal', 'log-modal'];
+        for (const id of modals) {
+          const m = document.getElementById(id);
+          if (m && !m.classList.contains('hidden')) return;
+        }
+        e.preventDefault();
+        handleNextClick();
+      }
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       updateLobbyResumeButton();
