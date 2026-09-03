@@ -232,6 +232,33 @@ const SCENARIOS = [
         text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick. Let's head to the restroom."
       }
     ],
+    // [인터랙션 단계별 세부 대사 - 통합 일원화]
+    stepDialogues: {
+      step2: {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        char: "assets/minwoo.png",
+        text: "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하자!",
+        text_en: "Arrived at the restroom. I discard the first 1-2 seconds of urine, collect the midstream urine in 1/3 of the cup, and submit it into the specimen box!"
+      },
+      step3: {
+        speaker: "임상병리사 NPC",
+        speaker_en: "Clinical Pathologist NPC",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        char: "assets/doctor.png",
+        text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다. ⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
+        text_en: "Urine sample confirmed! Now collecting blood sample. ⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
+      },
+      step4: {
+        speaker: "영상의학 방사선사 NPC",
+        speaker_en: "Radiologist NPC",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        char: "assets/doctor.png",
+        text: "흉부 X-ray 촬영대 앞에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! (찰칵) 촬영이 모두 끝났습니다.\n다음 검사인 [기본검사실]로 이동합니다.",
+        text_en: "Please stand firmly against the X-ray board. Deep breath in and hold it! (Click) Imaging complete.\nProceed to the Basic Examination Room."
+      }
+    },
     apiSource: null,
     apiSource_en: null,
     isApi: false,
@@ -265,6 +292,41 @@ const SCENARIOS = [
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       }
     ],
+    // [인터랙션 단계별 세부 대사 - 통합 일원화]
+    stepDialogues: {
+      step2: {
+        speaker: "김민우 (주인공)",
+        speaker_en: "Minwoo Kim (Protagonist)",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        char: "assets/minwoo.png",
+        text: "키와 몸무게 측정이 끝났네. 옆에 있는 자동 혈압계에 오른팔을 쑥 넣었어. 호흡을 편안하게 유지해야 혈압이 정확하게 측정된댔지.",
+        text_en: "Height and weight measurement done. Inserted my right arm into the automatic blood pressure monitor. Keeping calm for accurate reading."
+      },
+      step3: {
+        speaker: "의무관 NPC",
+        speaker_en: "Medical Officer NPC",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        char: "assets/doctor.png",
+        text: "혈압 120/80 정상입니다! 이어서 5m 전방 시력표와 색신 책자 검사를 진행했습니다. 좌 1.0 / 우 1.0 정상입니다. 이제 기본검사 계측 결과를 확인해 볼까요?",
+        text_en: "Blood pressure 120/80 is normal! Measured eyesight and color vision, both eyes 1.0 normal. Let's check your biometric measurement results!"
+      },
+      calcDisease: {
+        speaker: "의무관 NPC",
+        speaker_en: "Medical Officer NPC",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        char: "assets/doctor.png",
+        text: "기본검사 계측이 완료되었습니다. 사전에 등록하신 [{healthCheck}]의 정밀 심사를 위해 [전문의 진료실]로 이동해 주세요!",
+        text_en: "Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your medical documents."
+      },
+      calcNormal: {
+        speaker: "의무관 NPC",
+        speaker_en: "Medical Officer NPC",
+        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+        char: "assets/doctor.png",
+        text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 적성을 고려한 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
+        text_en: "Basic biometric exam complete! Please proceed to the Aptitude Center for military specialty assignment."
+      }
+    },
     apiSource: null,
     apiSource_en: null,
     isApi: false,
