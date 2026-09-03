@@ -407,8 +407,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "병무청 [모집병 지원가능 정보 & 실시간 접수현황 API] 조회 완료! [육군 IT/SW개발병(3.1:1)]과 [공군 정보체계운영병(2.4:1)] 추천 카드 및 국가기술자격 가산점 기준을 아래에 띄워드렸습니다!",
-        text_en: "MMA Live Recruit Specialty & Application API query complete! We've displayed Army IT/SW Developer (3.1:1) and Air Force Info Systems (2.4:1) cards and national technical qualification bonus point criteria below!"
+        text: "병무청 [모집병 지원가능 정보 & 실시간 접수현황 API] 조회 완료!\n\n[육군 IT/SW개발병(3.1:1)]과 [공군 정보체계운영병(2.4:1)] 추천 카드 및 국가기술자격 가산점 기준을 아래에 띄워드렸습니다!",
+        text_en: "MMA Live Recruit Specialty & Application API query complete!\n\nWe've displayed Army IT/SW Developer (3.1:1) and Air Force Info Systems (2.4:1) cards and national technical qualification bonus point criteria below!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_모집분야별 지원자격 및 실시간 군지원 접수현황 Open API",
