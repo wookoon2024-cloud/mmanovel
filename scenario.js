@@ -378,7 +378,7 @@ const SCENARIOS = [
   // [SCENE 11] 적성분류 (군 특기 및 병과 적성분류) - 전공 맞춤 모집병 API 실시간 연계 (적성분류관, 민우, 힘찬이)
   {
     bg: "assets/aptitude_room.jpg",
-    char: "assets/doctor.png",
+    char: "assets/aptitude_officer.png",
     speaker: "적성분류관 NPC",
     speaker_en: "Aptitude Classification Officer NPC",
     plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
@@ -386,7 +386,7 @@ const SCENARIOS = [
       {
         speaker: "적성분류관 NPC",
         speaker_en: "Aptitude Classification Officer NPC",
-        char: "assets/doctor.png",
+        char: "assets/aptitude_officer.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
         text: "김민우 수검자님 반갑습니다! 1급 현역 판정을 축하드립니다. 대학교에서 컴퓨터소프트웨어공학을 전공 중이시니 전공 경력을 100% 살릴 수 있는 [모집병(기술행정병)] 지원을 추천합니다.",
