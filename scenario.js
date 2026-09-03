@@ -528,8 +528,8 @@ const SCENARIOS = [
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "가상 시뮬레이션으로 전 과정을 직접 체험해 보길 정말 잘했어. 대한민국 청년으로서 멋지게 당당하게 병역을 마주할 자신감이 생겼다!",
-        text_en: "Experiencing the entire process virtually was truly worth it. As a proud young Korean, I now have the confidence to fulfill my military duty!"
+        text: "처음엔 병역판정검사라 해서 막연하고 긴장도 많이 됐는데, 미리 일정과 서류도 잘 챙기고 차근차근 검사를 직접 마치고 나니 정말 뿌듯하다! 대한민국 청년으로서 당당하게 국방의 의무를 마주할 자신감이 생겼어!",
+        text_en: "At first, I was so nervous about my draft physical exam, but having prepared my schedule and documents thoroughly and completed the entire process today, I feel truly proud! As a young Korean, I now have full confidence to face my military duty proudly!"
       }
     ],
     apiSource: null,
