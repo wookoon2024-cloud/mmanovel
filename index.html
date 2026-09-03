@@ -2539,9 +2539,9 @@
             </button>
           `;
           const cData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[9] && SCENARIOS[9].stepDialogues && SCENARIOS[9].stepDialogues.calcNormal) || {
-            speaker: "의무관 NPC", speaker_en: "Medical Officer NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/doctor.png",
-            text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 적성을 고려한 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
-            text_en: "Basic biometric exam complete! Please proceed to the Aptitude Center for military specialty assignment."
+            speaker: "의무관 NPC", speaker_en: "Medical Officer NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/medical_officer.png",
+            text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 자격을 고려한 군 특기 적성 분류를 위해 [적성분류실]로 이동해 주세요!",
+            text_en: "Basic biometric exam complete! Please proceed to the Aptitude Classification Room for military specialty assignment."
           };
           updateDialogueDirect(cData.speaker, cData.speaker_en, cData.plateClass, cData.char, isEn ? (cData.text_en || cData.text) : cData.text, cData.text_en, "direct_bmi_calc_normal");
         }

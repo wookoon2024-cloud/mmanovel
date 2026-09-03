@@ -323,8 +323,8 @@ const SCENARIOS = [
         speaker_en: "Medical Officer NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
         char: "assets/medical_officer.png",
-        text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 적성을 고려한 군 특기 분류 및 병역진로설계를 위해 [적성분류실]로 이동해 주세요!",
-        text_en: "Basic biometric exam complete! Please proceed to the Aptitude Center for military specialty assignment."
+        text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 자격을 고려한 군 특기 적성 분류를 위해 [적성분류실]로 이동해 주세요!",
+        text_en: "Basic biometric exam complete! Please proceed to the Aptitude Classification Room for military specialty assignment."
       }
     },
     apiSource: null,
@@ -451,8 +451,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "축하드립니다! 주소지 기준 실거리({distanceKm})를 반영한 당일 여비 [ {fare} ]가 {cardType} 계좌로 입금되었습니다!\n아래 화면에서 스마트 e-병무지갑과 병역진로설계 혜택을 확인하시고, 검사장 근처 나라사랑가게 할인 맛집과 편의시설도 함께 안내해 드릴 테니 귀가길에 참고해 보세요!",
-        text_en: "Congratulations! Travel allowance [ {fare} ] based on actual distance ({distanceKm}) has been deposited into your {cardType} account!\nCheck out your e-Military Wallet benefits and military career planning below. We've also provided nearby Nara Sarang partner restaurants and amenities for your reference on your way home!"
+        text: "축하드립니다! 주소지 기준 실거리({distanceKm})를 반영한 당일 여비 [ {fare} ]가 {cardType} 계좌로 입금되었습니다!\n아래 화면에서 스마트 e-병무지갑을 확인하시고, 검사장 근처 나라사랑가게 할인 맛집과 편의시설도 함께 안내해 드릴 테니 귀가길에 참고해 보세요!",
+        text_en: "Congratulations! Travel allowance [ {fare} ] based on actual distance ({distanceKm}) has been deposited into your {cardType} account!\nCheck out your e-Military Wallet benefits below. We've also provided nearby Nara Sarang partner restaurants and amenities for your reference on your way home!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 & 법제처: 「병역의무자 여비지급 규정」 Open API",
