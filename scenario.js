@@ -195,8 +195,8 @@ const SCENARIOS = [
         char: "assets/psychologist.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-        text: "차분하고 솔직하게 문항을 풀어주세요. 그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
-        text_en: "Please answer calmly and honestly. Let's solve sample questions on screen!"
+        text: "차분하고 솔직하게 문항을 풀어주세요. 그럼 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
+        text_en: "Please answer calmly and honestly. Let's solve sample questions on the computer screen!"
       }
     ],
     apiSource: null,
