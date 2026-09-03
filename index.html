@@ -1081,8 +1081,8 @@
         if (desc) desc.innerText = (currentLang === 'en') ? "Major/Licenses Linkage & Military Specialty Assignment" : "전공·자격증 연계 맞춤 군 특기 추천 및 적성 부여";
         if (icon) icon.setAttribute('data-lucide', 'compass');
       } else if (bg.includes('adjudicator_room') || targetIdx === 12) {
-        if (title) title.innerText = (currentLang === 'en') ? "Moving to Chief Adjudicator Office..." : "수석판정관실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Adjudication Verification & Final Travel Allowance" : "전산 검증, 최종 병역처분 확정 및 지급여비 정산";
+        if (title) title.innerText = (currentLang === 'en') ? "Moving to Adjudication Hall (Assistant & Chief Adjudicator)..." : "판정실(판정보좌관 ➔ 수석판정관)로 이동 중...";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Assistant Adjudicator Verification & Chief Adjudicator Final Disposition" : "판정보좌관 종합 전산 검증 ➔ 수석판정관 최종 병역처분 확정";
         if (icon) icon.setAttribute('data-lucide', 'award');
       } else if (bg.includes('locker_room') || targetIdx === 13) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실(사물함실)로 이동 중...";
@@ -2040,8 +2040,8 @@
                 </div>
               </div>
             </div>
-            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01]">
-              <span>${isEn ? 'Move to Chief Adjudicator Office' : '수석판정관실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="goToScene(11);" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01]">
+              <span>${isEn ? 'Move to Aptitude Classification Room' : '적성분류실로 이동 (군 특기 분류)'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -2140,7 +2140,7 @@
             </div>
 
             <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01]">
-              <span>수석판정관실로 이동 (최종 판정 및 여비 정산)</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Adjudication Room (Assistant & Chief Adjudicator)' : '판정실로 이동 (판정보좌관 사전확인 ➔ 수석판정관 최종 판정)'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
