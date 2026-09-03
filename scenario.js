@@ -45,6 +45,7 @@ const SCENARIOS = [
     text_en: "Salute! Hello Minwoo, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
     apiSource: "공공데이터포털: 병무청_병역판정 신체검사 정보 Open API",
     apiSource_en: "Public Data Portal: MMA Draft Physical Exam Info Open API",
+    apiSourceUrl: "https://www.data.go.kr/data/15058728/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "CHOICE_SCHEDULE_CONSENT"
@@ -62,6 +63,7 @@ const SCENARIOS = [
     text_en: "Select the region you reside in, and I will immediately open the real-time vacancy calendar for your regional Military Manpower Administration!",
     apiSource: "공공데이터포털: 병무청_병역판정검사 일자 및 장소 본인선택 공석 데이터",
     apiSource_en: "Public Data Portal: MMA Draft Exam Schedule Selection Vacancy Data",
+    apiSourceUrl: "https://www.data.go.kr/data/15058729/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "REGION_CALENDAR_PICKER"
@@ -79,6 +81,7 @@ const SCENARIOS = [
     text_en: "Excellent choice! The date you selected [ {examDate} ] currently has real-time vacancies available for actual reservation.\n\nBefore heading to the MMA portal to make the real reservation, would you like me to organize your application details automatically?\n\nYou can copy it with a single click and paste it directly into the MMA website (mwpt.mma.go.kr) for convenience!",
     apiSource: "공공데이터포털: 병무청_지방병무(지)청 조직 및 부서별 연락처 Open API",
     apiSource_en: "Public Data Portal: MMA Regional Offices & Contact Info Open API",
+    apiSourceUrl: "https://www.data.go.kr/data/15058730/openapi.do",
     apiIcon: "database",
     isApi: true,
     widgetType: "CONTACT_CARD"
@@ -96,6 +99,7 @@ const SCENARIOS = [
     text_en: "Now that the schedule is set, let's check the customized required documents tailored to your medical history so you won't have to make a wasted trip.\n\nDo you have any pre-existing medical conditions or past surgeries?",
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 2]",
     apiSource_en: "National Law Information Center: 「MMA Physical Examination Rules」(Defense Ministry Ordinance)",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
     widgetType: "HEALTH_CHECK_CHOICE"
@@ -113,6 +117,7 @@ const SCENARIOS = [
     text_en: "We've arrived at the virtual {region} reception lobby!\n\nFirst, you will register your [Nara Sarang Card]. Why is this card essential?\n\n① Exam Electronic ID: You will carry this card in your pocket and tap it at readers before entering every exam room (psychology, pathology, biometrics, doctor clinic) to record results in real-time.\n\n② Real-time Travel Allowance: Transit and meal allowances are directly deposited into this account on the same day.\n\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nCompare the benefits and select your preferred Nara Sarang Card.",
     apiSource: "나라사랑포털(군인공제회C&C) & 병무청 협약 금융기관(KB·IBK) 공식 데이터",
     apiSource_en: "Nara Sarang Portal & MMA Partner Financial Institutions Official Data",
+    apiSourceUrl: "https://www.narasarang.or.kr",
     apiIcon: "database",
     isApi: true,
     widgetType: "NARA_CARD_CHOICE"
@@ -156,6 +161,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
     apiIcon: "scale",
     isApi: true,
     widgetType: "LOCKER_CHANGE_CONFIRM"
@@ -199,6 +205,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역법」 제11조 및 병역판정 심리검사 운영 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 11 & Psychological Testing Regulations",
+    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역판정심리검사운영규정",
     apiIcon: "scale",
     isApi: true,
     widgetType: "PSYCH_TEST_UI"
@@ -233,6 +240,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 임상병리검사 기준",
     apiSource_en: "National Law Information Center: 「Physical Exam Rules」 Clinical Pathology Standards",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
     widgetType: "LAB_ROOM_CONFIRM"
@@ -267,6 +275,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1] 신장·체중 판정기준",
     apiSource_en: "National Law Information Center: 「Physical Exam Rules」 [Table 1] Height & Weight Standards",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
     widgetType: "BMI_CALCULATOR"
@@ -310,6 +319,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역판정 신체검사 등 검사규칙」(국방부령) 제11조 및 [별표 2] 204호",
     apiSource_en: "National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) Art. 11 & Table 2",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
     apiIcon: "scale",
     isApi: true,
     widgetType: "DOCTOR_ROOM_CONFIRM"
@@ -353,6 +363,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역법」 제14조의2 (적성분류 및 군특기 부여 기준)",
     apiSource_en: "National Law Information Center: 「Military Service Act」 Art. 14-2 (Aptitude Classification)",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제14조의2",
     apiIcon: "database",
     isApi: true,
     widgetType: "APTITUDE_CONFIRM"
@@ -396,6 +407,7 @@ const SCENARIOS = [
     ],
     apiSource: "공공데이터포털: 병무청_병역의무자 여비 지급 기준 데이터 (실시간 산정)",
     apiSource_en: "Public Data Portal: MMA Travel Allowance Standards (Real-time Calculation)",
+    apiSourceUrl: "https://www.law.go.kr/행정규칙/병역의무자여비지급규정",
     apiIcon: "database",
     isApi: true,
     widgetType: "FINAL_SUMMARY_CARDS"
@@ -430,6 +442,7 @@ const SCENARIOS = [
     ],
     apiSource: "국가법령정보센터: 「병역법」 및 병역판정검사 수검 절차 규정",
     apiSource_en: "National Law Information Center: 「Military Service Act」 & Physical Exam Procedures",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역법/제11조",
     apiIcon: "shirt",
     isApi: true,
     widgetType: "LOCKER_RETURN_CONFIRM"
@@ -473,6 +486,7 @@ const SCENARIOS = [
     ],
     apiSource: "병무청 공식: 병역판정검사 종합 안내 포털 (mma.go.kr)",
     apiSource_en: "MMA Official: Draft Physical Examination Comprehensive Portal (mma.go.kr)",
+    apiSourceUrl: "https://www.mma.go.kr/contents.do?mc=mma0003346",
     apiIcon: "check-circle",
     isApi: true,
     widgetType: "EPISODE_COMPLETE"
