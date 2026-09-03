@@ -163,18 +163,18 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 심리검사장 - 인지능력 및 인성검사 (병무청 검사관)
+  // [SCENE 7] 심리검사장 - PC 1:1 인지능력 및 인성검사 (심리검사관 & 민우)
   {
-    bg: "assets/exam_room.jpg",
-    char: "assets/doctor.png",
-    speaker: "병무청 검사관 NPC",
-    speaker_en: "MMA Testing Officer NPC",
+    bg: "assets/psych_test_room.jpg",
+    char: "assets/psychologist.png",
+    speaker: "심리검사관 NPC",
+    speaker_en: "Psychological Examiner NPC",
     plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
     dialogues: [
       {
-        speaker: "병무청 검사관 NPC",
-        speaker_en: "MMA Testing Officer NPC",
-        char: "assets/doctor.png",
+        speaker: "심리검사관 NPC",
+        speaker_en: "Psychological Examiner NPC",
+        char: "assets/psychologist.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
         text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n배정받은 좌석 모니터 화면에 본인의 성명과 주민등록번호를 입력하여 로그인해 주세요.",
@@ -190,9 +190,9 @@ const SCENARIOS = [
         text_en: "I log in by typing my name and ID number on the keyboard!\nCognitive and Personality test screens appeared."
       },
       {
-        speaker: "병무청 검사관 NPC",
-        speaker_en: "MMA Testing Officer NPC",
-        char: "assets/doctor.png",
+        speaker: "심리검사관 NPC",
+        speaker_en: "Psychological Examiner NPC",
+        char: "assets/psychologist.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
         text: "차분하고 솔직하게 문항을 풀어주세요. 그럼 실제 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
@@ -208,7 +208,7 @@ const SCENARIOS = [
   // [SCENE 8] 임상병리검사실 및 영상의학실 - 소변·혈액 채취 & 흉부 X-ray
   {
     bg: "assets/lab_room.jpg",
-    char: "assets/doctor.png",
+    char: "assets/lab_officer.png",
     speaker: "임상병리사 NPC",
     speaker_en: "Clinical Pathologist NPC",
     plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
@@ -216,7 +216,7 @@ const SCENARIOS = [
       {
         speaker: "임상병리사 NPC",
         speaker_en: "Clinical Pathologist NPC",
-        char: "assets/doctor.png",
+        char: "assets/lab_officer.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
         text: "안녕하십니까! 이곳은 [임상병리검사실]입니다.\n\n간기능, 신장기능, 혈당, 단백뇨 등 체내 건강 상태를 정밀하게 확인하기 위해 소변검사와 채혈(혈액검사)을 진행합니다.\n\n검사실 앞 리더기에 [나라사랑카드]를 태그해 주세요.",
@@ -246,7 +246,7 @@ const SCENARIOS = [
         speaker: "임상병리사 NPC",
         speaker_en: "Clinical Pathologist NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/doctor.png",
+        char: "assets/lab_officer.png",
         text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다. ⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
         text_en: "Urine sample confirmed! Now collecting blood sample. ⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
       },
@@ -254,7 +254,7 @@ const SCENARIOS = [
         speaker: "영상의학 방사선사 NPC",
         speaker_en: "Radiologist NPC",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/doctor.png",
+        char: "assets/lab_officer.png",
         text: "흉부 X-ray 촬영대 앞에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! (찰칵) 촬영이 모두 끝났습니다.\n다음 검사인 [기본검사실]로 이동합니다.",
         text_en: "Please stand firmly against the X-ray board. Deep breath in and hold it! (Click) Imaging complete.\nProceed to the Basic Examination Room."
       }
