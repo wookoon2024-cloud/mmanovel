@@ -510,8 +510,8 @@ const SCENARIOS = [
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "후아~ 드디어 집에 도착했다! 오늘 하루 병역판정검사 풀코스를 무사히 마치고 나니 마음이 정말 홀가분하고 뿌듯하네.\n\n스마트폰에 [나라사랑카드 여비 {fare} 입금 완료] 알림 문자랑 e-병무지갑 결과서도 바로 도착했어!",
-        text_en: "Phew~ Finally back home! Having completed the full physical exam course, I feel relieved and proud.\n\nReceived the SMS notification for travel allowance [{fare}] deposit and the e-military wallet certificate on my phone!"
+        text: "후아~ 드디어 집에 도착했다! 오늘 하루 병역판정검사 풀코스를 무사히 마치고 나니 마음이 정말 홀가분하고 뿌듯하네.\n\n스마트폰에 [나라사랑카드 여비 {fare} 입금 완료] 문자 알림도 딱 와 있고, 아까 안내받은 스마트 e-병무지갑 앱을 설치했더니 결과서도 스마트폰으로 바로 편하게 조회할 수 있어서 정말 좋은걸!",
+        text_en: "Phew~ Finally back home! Having completed the full physical exam course, I feel relieved and proud.\n\nI just got the SMS notification for my travel allowance [{fare}] deposit, and having installed the e-Military Wallet app, being able to check my digital exam certificate directly on my phone is so convenient!"
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
