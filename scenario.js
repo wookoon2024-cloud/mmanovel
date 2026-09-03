@@ -451,8 +451,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "축하드립니다! 실거리({distanceKm})를 반영한 당일 실시간 여비 [ {fare} ]가 {cardType} 계좌로 입금되었습니다! 아래 화면에서 스마트 e-병무지갑과 병역진로설계 혜택을 확인하시고, [나라사랑가게 API]로 검사장 주변 맛집 거점을 선택해 보세요!",
-        text_en: "Congratulations! Live travel allowance [ {fare} ] for actual distance ({distanceKm}) has been deposited into your {cardType} account! Explore e-Military Wallet benefits and pick a nearby restaurant hotspot via the Nara Sarang Store API below!"
+        text: "축하드립니다! 주소지 기준 실거리({distanceKm})를 반영한 당일 여비 [ {fare} ]가 {cardType} 계좌로 입금되었습니다!\n아래 화면에서 스마트 e-병무지갑과 병역진로설계 혜택을 확인하시고, 검사장 근처 나라사랑가게 할인 맛집과 편의시설도 함께 안내해 드릴 테니 귀가길에 참고해 보세요!",
+        text_en: "Congratulations! Travel allowance [ {fare} ] based on actual distance ({distanceKm}) has been deposited into your {cardType} account!\nCheck out your e-Military Wallet benefits and military career planning below. We've also provided nearby Nara Sarang partner restaurants and amenities for your reference on your way home!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 & 법제처: 「병역의무자 여비지급 규정」 Open API",
