@@ -711,8 +711,7 @@ const MmaApiService = {
           applied: 78,
           requirements: "신체등급 1~2급, 컴퓨터·SW 관련 전공 2년 이상 또는 자격증 보유자",
           strengths: "국방 전산망 및 군사 소프트웨어 개발 실무, 전역 후 IT 취업 시 개발 경력 100% 인정",
-          status: "접수 중",
-          eligibility: "지원 자격 충족"
+          status: "접수 중"
         },
         {
           branch: "공군",
@@ -724,8 +723,7 @@ const MmaApiService = {
           applied: 96,
           requirements: "신체등급 1~3급, 컴퓨터/전산/정보통신 전공 또는 정보처리기능사",
           strengths: "공군 비행단 전산실 근무, 쾌적한 실내 서버 인프라 관리, 풍부한 자기계발 환경",
-          status: "접수 중",
-          eligibility: "지원 자격 충족"
+          status: "접수 중"
         },
         {
           branch: "육군",
@@ -737,8 +735,7 @@ const MmaApiService = {
           applied: 108,
           requirements: "신체등급 1~3급, 통신/전산 기초 소양",
           strengths: "네트워크 장비 및 지휘통신망 운용",
-          status: "접수 중",
-          eligibility: "지원 자격 충족"
+          status: "접수 중"
         }
       ]
     };
