@@ -164,7 +164,7 @@ module.exports = async (req, res) => {
   }).sort((a, b) => b.lastSeen - a.lastSeen);
 
   // Funnel & Scene Counts
-  const sceneCounts = {};
+  const sceneCounts = { lobby: 0 };
   for (let i = 0; i <= 14; i++) sceneCounts[i] = 0;
 
   // Device Breakdown
@@ -172,7 +172,9 @@ module.exports = async (req, res) => {
   const cityCounts = {};
 
   activeVisitors.forEach(v => {
-    if (v.sceneIdx !== undefined && sceneCounts[v.sceneIdx] !== undefined) {
+    if (v.sceneIdx === 'lobby' || (typeof v.sceneIdx === 'string' && v.sceneIdx.startsWith('lobby'))) {
+      sceneCounts.lobby = (sceneCounts.lobby || 0) + 1;
+    } else if (v.sceneIdx !== undefined && sceneCounts[v.sceneIdx] !== undefined) {
       sceneCounts[v.sceneIdx]++;
     }
     if (deviceCounts[v.device] !== undefined) {

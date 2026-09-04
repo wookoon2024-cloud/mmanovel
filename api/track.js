@@ -155,8 +155,8 @@ module.exports = async (req, res) => {
   const sessionId = body.sessionId || req.headers['x-session-id'] || ('anon_' + Math.random().toString(36).substring(2, 9));
   const visitorId = body.visitorId || 'v_' + Math.random().toString(36).substring(2, 9);
   const eventType = body.eventType || 'heartbeat';
-  const sceneIdx = body.sceneIdx !== undefined ? body.sceneIdx : 0;
-  const sceneTitle = body.sceneTitle || 'SCENE 0: 통지서 확인';
+  const sceneIdx = body.sceneIdx !== undefined ? body.sceneIdx : 'lobby';
+  const sceneTitle = body.sceneTitle || (sceneIdx === 'lobby' || String(sceneIdx).startsWith('lobby') ? '메인 로비 (시나리오 선택 중)' : 'SCENE 0: 통지서 확인');
   const lang = body.lang || 'ko';
   const referrer = body.referrer || '';
   const screen = body.screen || '';

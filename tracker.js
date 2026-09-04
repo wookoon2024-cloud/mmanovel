@@ -46,7 +46,7 @@
     'SCENE 14: 집 도착 & 제1화 완결'
   ];
 
-  let currentScene = 0;
+  let currentScene = 'lobby';
   const startTime = Date.now();
 
   let clientRealIp = '';
@@ -78,7 +78,11 @@
   }
 
   function getSceneTitle(idx) {
-    if (idx === 'lobby') return '메인 로비 (에피소드 선택 화면)';
+    if (idx === 'lobby' || idx === 'main' || idx === -1) return '메인 로비 (시나리오 선택 중)';
+    if (typeof idx === 'string' && idx.startsWith('lobby_ep')) {
+      const ep = idx.replace('lobby_ep', '');
+      return `메인 로비 (제${ep}화 시나리오 선택 중)`;
+    }
     return SCENE_NAMES[idx] || ('SCENE ' + idx);
   }
 
@@ -244,8 +248,8 @@
     sendServerless(eventType);
   }
 
-  // 초기 시작
-  trackAll('visit', 0);
+  // 초기 시작 (로비 진입)
+  trackAll('visit', 'lobby');
 
   // 3초 주기 Heartbeat (로컬 및 서버 갱신)
   setInterval(function() {
@@ -267,8 +271,9 @@
     reportScene: function(idx) {
       trackAll('scene_change', idx);
     },
-    reportLobby: function() {
-      trackAll('scene_change', 'lobby');
+    reportLobby: function(epNum) {
+      const key = (epNum !== undefined && epNum !== null) ? ('lobby_ep' + epNum) : 'lobby';
+      trackAll('scene_change', key);
     }
   };
 })();
