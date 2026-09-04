@@ -709,24 +709,42 @@
       }
 
       // 2. 실시간 방문자 테이블
-      renderLiveVisitors(mergedVisitors);
+      try {
+        renderLiveVisitors(mergedVisitors);
+      } catch (e) {
+        console.error('renderLiveVisitors error:', e);
+      }
 
       // 3. 최근 로그 (로컬스토리지 보관 로그와 API 로그 병합)
-      const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
-      const combinedLogsMap = new Map();
-      (data.recentLogs || []).forEach(l => combinedLogsMap.set(l.sessionId + '_' + (l.timestamp || l.lastSeen), l));
-      savedLogs.forEach(l => combinedLogsMap.set(l.sessionId + '_' + (l.timestamp || l.lastSeen), l));
-      const finalLogs = Array.from(combinedLogsMap.values())
-        .sort((a, b) => new Date(b.timestamp || b.lastSeen).getTime() - new Date(a.timestamp || a.lastSeen).getTime());
-      renderRecentLogs(finalLogs.slice(0, 100));
+      try {
+        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
+        const combinedLogsMap = new Map();
+        (data.recentLogs || []).forEach(l => combinedLogsMap.set(l.sessionId + '_' + (l.timestamp || l.lastSeen), l));
+        savedLogs.forEach(l => combinedLogsMap.set(l.sessionId + '_' + (l.timestamp || l.lastSeen), l));
+        const finalLogs = Array.from(combinedLogsMap.values())
+          .sort((a, b) => new Date(b.timestamp || b.lastSeen).getTime() - new Date(a.timestamp || a.lastSeen).getTime());
+        renderRecentLogs(finalLogs.slice(0, 100));
+      } catch (e) {
+        console.error('renderRecentLogs error:', e);
+      }
 
       // 4. 씬별 깔때기
-      renderFunnel(data.sceneFunnel || {}, Math.max(data.kpi.totalPageviews, 1));
+      try {
+        renderFunnel(data.sceneFunnel || {}, Math.max(data.kpi.totalPageviews, 1));
+      } catch (e) {
+        console.error('renderFunnel error:', e);
+      }
 
       // 5. 기기 및 지역
-      renderDevicesAndCities(data.deviceBreakdown || {}, data.cityBreakdown || {});
+      try {
+        renderDevicesAndCities(data.deviceBreakdown || {}, data.cityBreakdown || {});
+      } catch (e) {
+        console.error('renderDevicesAndCities error:', e);
+      }
 
-      lucide.createIcons();
+      try {
+        lucide.createIcons();
+      } catch (e) {}
     }
 
     function renderLiveVisitors(visitors) {
@@ -759,16 +777,18 @@
         const ipDisplay = showFullIp ? rawIp : maskedIp;
         const flag = v.country === 'KR' ? '🇰🇷' : (v.country === 'US' ? '🇺🇸' : '🌐');
         const isMobile = v.device === 'Mobile';
-        const badgeLabel = isMobile ? '📱 모바일' : (v.device === 'Tablet' ? '📟 태블릿' : (v.isLocalTab ? '내 탭' : '실시간'));
+        const isTablet = v.device === 'Tablet';
+        const deviceIcon = isMobile ? 'smartphone' : (isTablet ? 'tablet' : 'monitor');
+        const badgeLabel = isMobile ? '📱 모바일' : (isTablet ? '📟 태블릿' : (v.isLocalTab ? '내 탭' : '실시간'));
         const badgeColor = isMobile 
           ? 'bg-purple-500/20 text-purple-300 border-purple-500/40' 
-          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+          : (isTablet ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30');
         
         return `
           <tr class="hover:bg-slate-800/40 transition duration-150">
             <td class="py-3 px-4">
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeColor} border">
-                <span class="w-1.5 h-1.5 rounded-full ${isMobile ? 'bg-purple-400' : 'bg-emerald-400'} pulse-live"></span> ${badgeLabel}
+                <span class="w-1.5 h-1.5 rounded-full ${isMobile ? 'bg-purple-400' : (isTablet ? 'bg-amber-400' : 'bg-emerald-400')} pulse-live"></span> ${badgeLabel}
               </span>
             </td>
             <td class="py-3 px-4 font-mono text-slate-200 text-xs font-semibold">
@@ -792,7 +812,7 @@
             <td class="py-3 px-4 text-slate-300">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="${deviceIcon}" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}</span>
+                <span>${escapeHtml(v.clientEnv || ((v.os || '기기') + ' · ' + (v.browser || '브라우저')))}</span>
               </div>
             </td>
             <td class="py-3 px-4 text-slate-300 font-mono">
