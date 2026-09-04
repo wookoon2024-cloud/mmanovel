@@ -807,13 +807,13 @@
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
-  <script src="api.js?v=20260904_v190"></script>
-  <script src="scenario.js?v=20260904_v190"></script>
-  <script src="tracker.js?v=20260904_v190"></script>
+  <script src="api.js?v=20260904_v191"></script>
+  <script src="scenario.js?v=20260904_v191"></script>
+  <script src="tracker.js?v=20260904_v191"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260904_v190';
+    const ASSET_VER = '20260904_v191';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
@@ -1248,7 +1248,7 @@
             utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.08;
             utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.75;
-          } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
+          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
             utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.60;
@@ -1270,7 +1270,7 @@
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
             utterance.rate = 1.08;
             utterance.pitch = 1.15;
-          } else if (spk.includes('김민우') || spk.includes('Minwoo')) {
+          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
             utterance.rate = 0.98;
             utterance.pitch = 0.95;
           } else {
@@ -1428,7 +1428,15 @@
 
       // 화자 설정
       const spkName = document.getElementById('speaker-name');
-      const currentSpeaker = (currentLang === 'en') ? speakerEn : speakerKo;
+      let currentSpeaker = (currentLang === 'en') ? speakerEn : speakerKo;
+      if (currentSpeaker) {
+        const uName = userData.name || '김민우';
+        currentSpeaker = currentSpeaker.replace(/\{name\}/g, uName)
+                                       .replace(/김민우/g, uName)
+                                       .replace(/(?<![가-힣a-zA-Z0-9])민우/g, uName)
+                                       .replace(/Minwoo Kim/gi, uName)
+                                       .replace(/Minwoo/gi, uName);
+      }
       if (spkName) spkName.innerText = currentSpeaker;
 
       // 안내 대사 포맷팅
@@ -1491,8 +1499,12 @@
       const spkPlate = document.getElementById('speaker-plate');
       let currentSpeaker = (currentLang === 'en' && scene.speaker_en) ? scene.speaker_en : scene.speaker;
       if (currentSpeaker) {
-        currentSpeaker = currentSpeaker.replace(/김민우/g, userData.name || '김민우')
-                                       .replace(/Minwoo/g, userData.name || '김민우');
+        const uName = userData.name || '김민우';
+        currentSpeaker = currentSpeaker.replace(/\{name\}/g, uName)
+                                       .replace(/김민우/g, uName)
+                                       .replace(/(?<![가-힣a-zA-Z0-9])민우/g, uName)
+                                       .replace(/Minwoo Kim/gi, uName)
+                                       .replace(/Minwoo/gi, uName);
       }
       if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
@@ -1604,8 +1616,12 @@
       const spkPlate = document.getElementById('speaker-plate');
       let currentSpeaker = (currentLang === 'en' && item.speaker_en) ? item.speaker_en : (item.speaker || scene.speaker);
       if (currentSpeaker) {
-        currentSpeaker = currentSpeaker.replace(/김민우/g, userData.name || '김민우')
-                                       .replace(/Minwoo/g, userData.name || '김민우');
+        const uName = userData.name || '김민우';
+        currentSpeaker = currentSpeaker.replace(/\{name\}/g, uName)
+                                       .replace(/김민우/g, uName)
+                                       .replace(/(?<![가-힣a-zA-Z0-9])민우/g, uName)
+                                       .replace(/Minwoo Kim/gi, uName)
+                                       .replace(/Minwoo/gi, uName);
       }
       if (spkName) spkName.innerText = currentSpeaker;
       if (spkPlate) {
@@ -1642,10 +1658,13 @@
     // 동적 플레이스홀더 치환 함수
     function formatSceneText(rawText) {
       if (!rawText) return '';
+      const userName = userData.name || '김민우';
       let text = rawText
-        .replace(/\{name\}/g, userData.name || '김민우')
-        .replace(/김민우/g, userData.name || '김민우')
-        .replace(/Minwoo/g, userData.name || '김민우')
+        .replace(/\{name\}/g, userName)
+        .replace(/김민우/g, userName)
+        .replace(/Minwoo Kim/gi, userName)
+        .replace(/Minwoo/gi, userName)
+        .replace(/(?<![가-힣a-zA-Z0-9])민우/g, userName)
         .replace(/\{examDate\}/g, userData.examDate || '2026-10-29 (목) 오전')
         .replace(/\{region\}/g, userData.region || '서울지방병무청')
         .replace(/\{residentAddress\}/g, userData.residentAddress || '서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)')
@@ -2687,7 +2706,15 @@
       const spriteImg = document.getElementById('sprite-img');
       const spriteWrap = document.getElementById('sprite-wrapper');
 
-      const targetSpeaker = isEn ? (speakerEn || speaker) : speaker;
+      let targetSpeaker = isEn ? (speakerEn || speaker) : speaker;
+      if (targetSpeaker) {
+        const uName = userData.name || '김민우';
+        targetSpeaker = targetSpeaker.replace(/\{name\}/g, uName)
+                                     .replace(/김민우/g, uName)
+                                     .replace(/(?<![가-힣a-zA-Z0-9])민우/g, uName)
+                                     .replace(/Minwoo Kim/gi, uName)
+                                     .replace(/Minwoo/gi, uName);
+      }
       if (spName) spName.innerText = targetSpeaker;
       if (spPlate) {
         spPlate.className = `px-4 py-1.5 rounded-t-xl text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide select-none bg-gradient-to-r ${plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
@@ -3075,8 +3102,8 @@
         }
       }
       transitionWithAnnouncement(
-        "좋습니다! 맞춤형 구비서류 점검까지 완벽하게 마쳤습니다.\n\n민우 님, 실제 검사 당일 긴장하거나 당황하지 않도록 지금 저와 함께 [가상 병역판정검사장]으로 이동해서 실제 신검 전 과정을 시뮬레이션 체험해 볼까요?",
-        "Great! Tailored documents checked.\n\nMinwoo, to make sure you won't be nervous on exam day, shall we head to the [Virtual MMA Exam Center] and simulate the entire process together?",
+        "좋습니다! 맞춤형 구비서류 점검까지 완벽하게 마쳤습니다.\n\n{name} 님, 실제 검사 당일 긴장하거나 당황하지 않도록 지금 저와 함께 [가상 병역판정검사장]으로 이동해서 실제 신검 전 과정을 시뮬레이션 체험해 볼까요?",
+        "Great! Tailored documents checked.\n\n{name}, to make sure you won't be nervous on exam day, shall we head to the [Virtual MMA Exam Center] and simulate the entire process together?",
         5,
         "힘찬이 (병무청 AI 가이드)",
         "Himchan (MMA AI Guide)",
@@ -3407,7 +3434,7 @@
       }
     }
     function downloadCertMock() {
-      alert("✅ [김민우 님 가상 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!");
+      alert(`✅ [${userData.name || '김민우'} 님 가상 병역판정검사 결과 요약서.pdf] 다운로드가 완료되었습니다!`);
     }
 
     function toggleSpeed() {

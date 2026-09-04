@@ -22,8 +22,8 @@ const SCENARIOS = [
     bg: "assets/room.jpg",
     char: "assets/minwoo_nervous.png",
     charPos: "right",
-    speaker: "김민우 (주인공)",
-    speaker_en: "Minwoo Kim (Protagonist)",
+    speaker: "{name} (주인공)",
+    speaker_en: "{name} (Protagonist)",
     plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
     text: "드디어 올 게 왔네...\n다음 주 수요일에 검사받으러 오라는데,\n그날 대학교 중간고사 첫날이잖아? 꼭 이 날짜에 가야 하는 건가...",
     text_en: "It's finally here...\nIt says I have to take the draft physical exam next Wednesday, but isn't that the first day of university midterms? Do I really have to go on this exact date...?",
@@ -41,8 +41,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "충성! 안녕하십니까 민우 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면\n통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n민우 님 지역 관할 병무청의 [월별 실시간 잔여석 달력]을 확인해 보시겠습니까?",
-    text_en: "Salute! Hello Minwoo, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
+    text: "충성! 안녕하십니까 {name} 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면\n통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n{name} 님 지역 관할 병무청의 [월별 실시간 잔여석 달력]을 확인해 보시겠습니까?",
+    text_en: "Salute! Hello {name}, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
     apiSource: null,
     apiSource_en: null,
     isApi: false,
@@ -57,7 +57,7 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "예를 들어 민우 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!\n\n또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
+    text: "예를 들어 {name} 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!\n\n또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
     text_en: "For example, if your resident registration address is [{residentAddress}],\nyou can immediately select the real-time vacancy calendar and preferred date for your regional office ({region})!\n\nAlso, your round-trip travel allowance ({fare}) will be automatically calculated live based on actual distance ({distanceKm}).",
     apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 공석 데이터 & 법제처: 「병역의무자 여비지급 규정」 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Draft Exam Vacancies & Law Center: Military Service Travel Allowance Regulations Open API",
@@ -93,7 +93,7 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. 민우 님은 해당사항이 있으신가요?",
+    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. {name} 님은 해당사항이 있으신가요?",
     text_en: "Now that your schedule is set, let's check the required documents tailored to your medical history.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?",
     apiSource: "[API] 법제처 국가법령정보: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1·3] Open API",
     apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 1 & 3] Open API",
@@ -139,8 +139,8 @@ const SCENARIOS = [
         text_en: "We've moved to the locker room!\n\nPlease store all personal belongings in your locker and change into the examination uniform."
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -153,7 +153,7 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "정확합니다 민우 님! 카드와 서류를 주머니에 챙기셨다면 첫 번째 검사인 [심리검사장]으로 출발해 볼까요?",
+        text: "정확합니다 {name} 님! 카드와 서류를 주머니에 챙기셨다면 첫 번째 검사인 [심리검사장]으로 출발해 볼까요?",
         text_en: "Exactly right! With your card and documents ready, let's head to the [Psychological Testing Hall]!"
       }
     ],
@@ -181,8 +181,8 @@ const SCENARIOS = [
         text_en: "Welcome examinees! This is the Psychological Testing Hall.\n\nPlease log in by entering your name and Resident Registration Number on your monitor screen."
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -223,8 +223,8 @@ const SCENARIOS = [
         text_en: "Welcome! This is the Clinical Pathology Lab.\n\nWe perform urine and blood tests. Please tap your [Nara Sarang Card] on the reader."
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -235,8 +235,8 @@ const SCENARIOS = [
     // [인터랙션 단계별 세부 대사 - 통합 일원화]
     stepDialogues: {
       step2: {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         char: "assets/minwoo.png",
         text: "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하자!",
@@ -279,12 +279,12 @@ const SCENARIOS = [
         char: "assets/medical_officer.png",
         charPos: "right",
         plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        text: "김민우 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 체질량지수(BMI)를 판정하는 곳입니다.",
-        text_en: "Minwoo Kim, please come in! This is the [Basic Examination Room].\n\nWe measure your height, weight, blood pressure, and eyesight to evaluate your Body Mass Index (BMI)."
+        text: "{name} 님 들어오세요! 이곳은 [기본검사실]입니다.\n\n신장(키), 체중(몸무게), 혈압, 시력 등 기초 건강 상태를 정밀 계측하여 체질량지수(BMI)를 판정하는 곳입니다.",
+        text_en: "{name}, please come in! This is the [Basic Examination Room].\n\nWe measure your height, weight, blood pressure, and eyesight to evaluate your Body Mass Index (BMI)."
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -295,8 +295,8 @@ const SCENARIOS = [
     // [인터랙션 단계별 세부 대사 - 통합 일원화]
     stepDialogues: {
       step2: {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
         char: "assets/minwoo.png",
         text: "키와 몸무게 측정이 끝났네. 옆에 있는 자동 혈압계에 오른팔을 쑥 넣었어. 호흡을 편안하게 유지해야 혈압이 정확하게 측정된댔지.",
@@ -351,12 +351,12 @@ const SCENARIOS = [
             char: "assets/doctor_serious.png",
             charPos: "right",
             plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-            text: "김민우 님 어서 오세요. 이곳은 [내과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 내과 의무기록과 투약 처방전, 폐기능검사 및 알레르기 유발검사 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
-            text_en: "Welcome, Minwoo Kim. This is the [Internal Medicine Specialist Clinic].\n\nWe review your clinical records, medication prescriptions, pulmonary function test (PFT) and allergy test results."
+            text: "{name} 님 어서 오세요. 이곳은 [내과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 내과 의무기록과 투약 처방전, 폐기능검사 및 알레르기 유발검사 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
+            text_en: "Welcome, {name}. This is the [Internal Medicine Specialist Clinic].\n\nWe review your clinical records, medication prescriptions, pulmonary function test (PFT) and allergy test results."
           },
           {
-            speaker: "김민우 (주인공)",
-            speaker_en: "Minwoo Kim (Protagonist)",
+            speaker: "{name} (주인공)",
+            speaker_en: "{name} (Protagonist)",
             char: "assets/minwoo_nervous.png",
             charPos: "right",
             plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -384,12 +384,12 @@ const SCENARIOS = [
             char: "assets/doctor_serious.png",
             charPos: "right",
             plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-            text: "김민우 님 어서 오세요. 이곳은 [정형외과 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
-            text_en: "Welcome, Minwoo Kim. This is the [Orthopedic Specialist Clinic].\n\nSpecialist doctors review your medical certificates and clinical records and conduct precision physical examinations."
+            text: "{name} 님 어서 오세요. 이곳은 [정형외과 전문의 정밀 진료실]입니다.\n\n각 진료과목별 전문의 의사가 1:1로 배치되어, 수검자가 제출한 병무용 진단서와 의무기록을 면밀히 검토하고 정밀 신체 검진을 진행하는 곳입니다.",
+            text_en: "Welcome, {name}. This is the [Orthopedic Specialist Clinic].\n\nSpecialist doctors review your medical certificates and clinical records and conduct precision physical examinations."
           },
           {
-            speaker: "김민우 (주인공)",
-            speaker_en: "Minwoo Kim (Protagonist)",
+            speaker: "{name} (주인공)",
+            speaker_en: "{name} (Protagonist)",
             char: "assets/minwoo_nervous.png",
             charPos: "right",
             plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -417,12 +417,12 @@ const SCENARIOS = [
             char: "assets/doctor_serious.png",
             charPos: "right",
             plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-            text: "김민우 님 어서 오세요. 이곳은 [안과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 안과 의무기록과 수술기록지, 정밀 굴절 검사 및 안저 촬영 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
-            text_en: "Welcome, Minwoo Kim. This is the [Ophthalmology Specialist Clinic].\n\nWe review your clinical records, refractive tests, and fundus photography results."
+            text: "{name} 님 어서 오세요. 이곳은 [안과 전문의 정밀 진료실]입니다.\n\n수검자가 제출한 안과 의무기록과 수술기록지, 정밀 굴절 검사 및 안저 촬영 결과를 면밀히 검토하고 정밀 진료를 진행하는 곳입니다.",
+            text_en: "Welcome, {name}. This is the [Ophthalmology Specialist Clinic].\n\nWe review your clinical records, refractive tests, and fundus photography results."
           },
           {
-            speaker: "김민우 (주인공)",
-            speaker_en: "Minwoo Kim (Protagonist)",
+            speaker: "{name} (주인공)",
+            speaker_en: "{name} (Protagonist)",
             char: "assets/minwoo_nervous.png",
             charPos: "right",
             plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -450,12 +450,12 @@ const SCENARIOS = [
             char: "assets/doctor_serious.png",
             charPos: "right",
             plateClass: "from-blue-800 to-indigo-900 border-blue-400/40",
-            text: "김민우 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n기본검사 및 임상병리 검사 결과를 종합하여 전반적인 신체 건강 상태를 최종 확인하는 곳입니다.",
-            text_en: "Welcome, Minwoo Kim. This is the [Specialist Clinic].\n\nWe verify your overall health results from basic biometrics and clinical pathology."
+            text: "{name} 님 어서 오세요. 이곳은 [과목별 전문의 정밀 진료실]입니다.\n\n기본검사 및 임상병리 검사 결과를 종합하여 전반적인 신체 건강 상태를 최종 확인하는 곳입니다.",
+            text_en: "Welcome, {name}. This is the [Specialist Clinic].\n\nWe verify your overall health results from basic biometrics and clinical pathology."
           },
           {
-            speaker: "김민우 (주인공)",
-            speaker_en: "Minwoo Kim (Protagonist)",
+            speaker: "{name} (주인공)",
+            speaker_en: "{name} (Protagonist)",
             char: "assets/minwoo.png",
             charPos: "right",
             plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -495,12 +495,12 @@ const SCENARIOS = [
         char: "assets/aptitude_officer.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
-        text: "김민우 수검자님 반갑습니다! 이곳은 전공, 자격증, 적성을 종합하여 본인에게 가장 적합한 군 특기 및 병과를 분류하는 [적성분류실]입니다.\n\n전산 기록을 보니 대학교에서 컴퓨터소프트웨어공학을 전공 중이시네요! 전공 역량을 살려 복무할 수 있는 맞춤 특기 분야를 추천해 드리겠습니다.",
-        text_en: "Welcome examinee Minwoo Kim! This is the [Aptitude Classification Room], where we analyze your major, licenses, and aptitudes to recommend the best military specialties.\n\nLooking at your records, you are majoring in Computer Software Engineering! Let me recommend tailored specialties that match your tech skills."
+        text: "{name} 수검자님 반갑습니다! 이곳은 전공, 자격증, 적성을 종합하여 본인에게 가장 적합한 군 특기 및 병과를 분류하는 [적성분류실]입니다.\n\n전산 기록을 보니 대학교에서 컴퓨터소프트웨어공학을 전공 중이시네요! 전공 역량을 살려 복무할 수 있는 맞춤 특기 분야를 추천해 드리겠습니다.",
+        text_en: "Welcome examinee {name}! This is the [Aptitude Classification Room], where we analyze your major, licenses, and aptitudes to recommend the best military specialties.\n\nLooking at your records, you are majoring in Computer Software Engineering! Let me recommend tailored specialties that match your tech skills."
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -539,7 +539,7 @@ const SCENARIOS = [
         char: "assets/assistant_adjudicator.png",
         charPos: "right",
         plateClass: "from-slate-700 to-blue-900 border-slate-400/40",
-        text: "안녕하십니까! 판정보좌관입니다. 김민우 님의 심리검사, 임상병리, 체질량(BMI), 전문의 정밀진료 및 적성분류 전산 데이터를 모두 대조·검증 완료하여 수석판정관님께 최종 판정을 상신합니다.",
+        text: "안녕하십니까! 판정보좌관입니다. {name} 님의 심리검사, 임상병리, 체질량(BMI), 전문의 정밀진료 및 적성분류 전산 데이터를 모두 대조·검증 완료하여 수석판정관님께 최종 판정을 상신합니다.",
         text_en: "Hello, I am the Adjudication Assistant. All medical and aptitude data have been verified. Submitting to Chief Adjudicator for final determination."
       },
       {
@@ -548,8 +548,8 @@ const SCENARIOS = [
         char: "assets/adjudicator.png",
         charPos: "right",
         plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
-        text: "수검자 김민우 님 수고 많으셨습니다! 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
-        text_en: "Examinee Minwoo Kim, great job! Your final physical grade is confirmed as [ {finalGrade} ] with [ {disposition} ] disposition."
+        text: "수검자 {name} 님 수고 많으셨습니다! 종합 판정 결과 신체등급 [ {finalGrade} ] 판정 및 [ {disposition} ] 처분으로 최종 확정합니다.",
+        text_en: "Examinee {name}, great job! Your final physical grade is confirmed as [ {finalGrade} ] with [ {disposition} ] disposition."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -583,12 +583,12 @@ const SCENARIOS = [
         char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님, 검사복을 벗고 사물함에서 본인 옷으로 편안하게 환복해 주세요.\n\n사물함에 보관했던 스마트폰, 지갑, 챙겨온 서류 등 소지품을 빠짐없이 챙기시고 전자키를 반납함에 넣으시면 검사장의 모든 일정이 끝납니다!",
-        text_en: "Minwoo, please change from your exam uniform back into your normal clothes.\n\nMake sure to take all belongings from your locker and return your key to finish the exam center schedule!"
+        text: "{name} 님, 검사복을 벗고 사물함에서 본인 옷으로 편안하게 환복해 주세요.\n\n사물함에 보관했던 스마트폰, 지갑, 챙겨온 서류 등 소지품을 빠짐없이 챙기시고 전자키를 반납함에 넣으시면 검사장의 모든 일정이 끝납니다!",
+        text_en: "{name}, please change from your exam uniform back into your normal clothes.\n\nMake sure to take all belongings from your locker and return your key to finish the exam center schedule!"
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -606,13 +606,13 @@ const SCENARIOS = [
   {
     bg: "assets/room.jpg",
     char: "assets/minwoo_happy.png",
-    speaker: "김민우 (주인공)",
-    speaker_en: "Minwoo Kim (Protagonist)",
+    speaker: "{name} (주인공)",
+    speaker_en: "{name} (Protagonist)",
     plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
     dialogues: [
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
@@ -625,12 +625,12 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "민우 님, 오늘 하루 정말 수고 많으셨습니다!\n\n첫 병역판정검사부터 군 특기 설계, 그리고 앞으로의 병역 이행까지 대한민국 청춘의 모든 여정에 병무청이 항상 든든하게 함께하겠습니다!",
-        text_en: "Minwoo, wonderful job today!\n\nFrom your first exam to career planning and future service, MMA will always stand firmly by your side!"
+        text: "{name} 님, 오늘 하루 정말 수고 많으셨습니다!\n\n첫 병역판정검사부터 군 특기 설계, 그리고 앞으로의 병역 이행까지 대한민국 청춘의 모든 여정에 병무청이 항상 든든하게 함께하겠습니다!",
+        text_en: "{name}, wonderful job today!\n\nFrom your first exam to career planning and future service, MMA will always stand firmly by your side!"
       },
       {
-        speaker: "김민우 (주인공)",
-        speaker_en: "Minwoo Kim (Protagonist)",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
