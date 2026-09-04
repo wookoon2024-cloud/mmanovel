@@ -67,10 +67,12 @@
       animation: blink-arrow 1.2s infinite;
     }
 
-    /* 커스텀 스크롤바 */
+    /* 커스텀 스크롤바 & 스크롤바 숨김 */
     .custom-scroll::-webkit-scrollbar { width: 5px; }
     .custom-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
+    .no-scrollbar::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+    .no-scrollbar { -ms-overflow-style: none !important; scrollbar-width: none !important; }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden text-white bg-slate-950">
@@ -83,49 +85,49 @@
   </div>
 
   <!-- ================= [LAYER 2: 상단 네비게이션 헤더 (모바일 반응형 최적화)] ================= -->
-  <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-2.5 sm:px-8 py-1.5 sm:py-2 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-    <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+  <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-2 sm:px-8 py-1.5 sm:py-2 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm select-none">
+    <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
       <button onclick="showMainMenu()" class="cursor-pointer hover:opacity-80 active:scale-95 transition flex items-center shrink-0 focus:outline-none" title="메인 메뉴(로비)로 이동">
         <img src="assets/mma_logo_original.png" alt="대한민국 병무청" class="h-6 sm:h-8 w-auto object-contain">
       </button>
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
-          <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.0</span>
+          <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.0</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
-        <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
+        <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
       </div>
     </div>
 
-    <!-- 우측 인터랙션 퀵 컨트롤 버튼 (모바일 가로 스크롤 / 컴팩트 배열) -->
-    <div class="flex items-center space-x-1 sm:space-x-2 text-xs overflow-x-auto no-scrollbar py-0.5">
+    <!-- 우측 인터랙션 퀵 컨트롤 버튼 (모바일 컴팩트 배열 & 가로 스크롤바 완전 제거) -->
+    <div class="flex items-center space-x-1 sm:space-x-1.5 text-xs py-0.5 shrink-0">
       <!-- 메인메뉴 -->
       <button onclick="showMainMenu()" id="btn-home" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1 shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="메인 메뉴">
-        <i data-lucide="home" class="w-3.5 h-3.5"></i> <span id="label-home" class="hidden xs:inline">메뉴</span>
+        <i data-lucide="home" class="w-3.5 h-3.5"></i> <span id="label-home" class="hidden sm:inline">메뉴</span>
       </button>
       <!-- 언어 전환 -->
-      <button id="btn-lang" onclick="toggleLanguage()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="언어 변경">
+      <button id="btn-lang" onclick="toggleLanguage()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="언어 변경">
         <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span id="lang-label">EN</span>
       </button>
       <!-- 음성 TTS On/Off -->
-      <button id="btn-sound" onclick="toggleSound()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-600 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="TTS 음성 On/Off">
+      <button id="btn-sound" onclick="toggleSound()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-600 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="TTS 음성 On/Off">
         <i id="sound-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-slate-400"></i> <span id="sound-label" class="hidden md:inline text-xs">음소거 OFF</span>
       </button>
       <!-- 배속 조절 -->
-      <button id="btn-speed" onclick="toggleSpeed()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="재생 속도">
+      <button id="btn-speed" onclick="toggleSpeed()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="재생 속도">
         <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> <span id="speed-label">1.0x</span>
       </button>
-      <!-- AUTO 모드 -->
+      <!-- AUTO 모드 (PC 화면에서만) -->
       <button id="btn-auto" onclick="toggleAuto()" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition items-center gap-1 text-slate-700 font-semibold shadow-sm cursor-pointer shrink-0 text-xs focus:outline-none" title="자동 대사 진행 On/Off">
         <i id="btn-auto-icon" data-lucide="play-circle" class="w-3.5 h-3.5 text-blue-600"></i> <span id="btn-auto-label" class="text-slate-700 font-semibold">AUTO</span>
       </button>
-      <!-- 대화기록 -->
-      <button id="btn-log" onclick="openLogModal()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-700 font-semibold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="대화 기록">
+      <!-- 대화기록 (태블릿/PC에서만 또는 버튼 컴팩트화) -->
+      <button id="btn-log" onclick="openLogModal()" class="hidden xs:flex px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition items-center gap-1 text-slate-700 font-semibold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="대화 기록">
         <i data-lucide="history" class="w-3.5 h-3.5 text-blue-600"></i> <span id="label-log" class="hidden md:inline">기록</span>
       </button>
       <!-- 처음으로 -->
-      <button id="btn-restart" onclick="restartGame()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-semibold transition flex items-center gap-1 shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="처음으로 다시하기">
+      <button id="btn-restart" onclick="restartGame()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-semibold transition flex items-center gap-1 shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="처음으로 다시하기">
         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
       </button>
     </div>
@@ -155,15 +157,15 @@
     </div>
 
     <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 -->
-    <div class="max-w-5xl w-full mx-auto my-auto py-6 space-y-6">
+    <div class="max-w-5xl w-full mx-auto my-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4 sm:space-y-6">
       <div class="text-center space-y-2">
         <span class="text-xs font-bold text-blue-400 tracking-wide uppercase">
           Scenario Episodes
         </span>
-        <h2 id="lobby-select-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 id="lobby-select-title" class="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
           체험할 시나리오를 선택해 주세요
         </h2>
-        <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+        <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto break-keep leading-relaxed px-2">
           병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.
         </p>
       </div>
@@ -399,13 +401,11 @@
       </div>
     </div>
 
-    <!-- 로비 하단 정보 바 -->
-    <div class="text-center pt-4 border-t border-slate-800 text-xs text-slate-500 max-w-5xl w-full mx-auto flex items-center justify-center">
+    <!-- 로비 하단 정보 바 & 실시간 법령/OpenAPI 연동 배지 -->
+    <div class="pt-3 sm:pt-4 border-t border-slate-800 text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 px-4 shrink-0 pb-2">
       <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+      <div id="lobby-sync-banner-container" class="pointer-events-auto flex items-center justify-center"></div>
     </div>
-
-    <!-- 우측 맨 하단: 실시간 법령 & Open API 연동현황 버튼 -->
-    <div id="lobby-sync-banner-container" class="fixed bottom-5 right-6 z-30 pointer-events-auto"></div>
 
   </div>
 
@@ -628,12 +628,12 @@
         </div>
       </div>
 
-      <!-- 메인 고정형 대화 박스 (높이: 모바일 135px / PC 195px, 완벽한 다크 배경 & 선명한 화이트 텍스트) -->
-      <div id="main-dialogue-card" class="relative bg-slate-950/98 backdrop-blur-3xl border-2 border-slate-700/90 rounded-2xl rounded-tl-none p-2.5 sm:p-5 vn-box-glow h-[135px] sm:h-[185px] md:h-[205px] flex flex-col justify-between cursor-pointer select-none shadow-[0_20px_50px_rgba(0,0,0,0.95)]">
+      <!-- 메인 고정형 대화 박스 (높이: 모바일 148px / PC 195px, 완벽한 다크 배경 & 선명한 화이트 텍스트) -->
+      <div id="main-dialogue-card" class="relative bg-slate-950/98 backdrop-blur-3xl border-2 border-slate-700/90 rounded-2xl rounded-tl-none p-3 sm:p-5 vn-box-glow h-[148px] sm:h-[185px] md:h-[205px] flex flex-col justify-between cursor-pointer select-none shadow-[0_20px_50px_rgba(0,0,0,0.95)]">
         
-        <!-- 대사 텍스트 컨테이너 -->
-        <div id="dialogue-scroll-container" class="flex-1 overflow-y-auto custom-scroll pr-1 scroll-smooth select-none">
-          <div id="dialogue-box" class="text-white text-[13px] sm:text-base md:text-[16px] leading-relaxed tracking-normal font-medium whitespace-pre-line select-none pb-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <!-- 대사 텍스트 컨테이너 (모바일에서 깔끔한 연속 문장 자동 개행) -->
+        <div id="dialogue-scroll-container" class="flex-1 overflow-y-auto no-scrollbar custom-scroll pr-1 scroll-smooth select-none">
+          <div id="dialogue-box" class="text-white text-[14px] sm:text-base md:text-[16px] leading-relaxed tracking-normal font-medium whitespace-normal sm:whitespace-pre-line break-keep select-none pb-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" style="word-break: keep-all; overflow-wrap: break-word;">
             <p id="dialogue-text"></p>
           </div>
         </div>
@@ -1638,7 +1638,7 @@
     // 동적 플레이스홀더 치환 함수
     function formatSceneText(rawText) {
       if (!rawText) return '';
-      return rawText
+      let text = rawText
         .replace(/\{name\}/g, userData.name || '김민우')
         .replace(/김민우/g, userData.name || '김민우')
         .replace(/Minwoo/g, userData.name || '김민우')
@@ -1652,6 +1652,13 @@
         .replace(/\{finalGrade\}/g, userData.finalGrade || '1급 (현역)')
         .replace(/\{disposition\}/g, userData.disposition || '현역병 입영 대상')
         .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
+
+      // 모바일 환경에서는 <br>이나 인위적인 강제 줄바꿈(\n) 없이 문장이 화면 너비에 맞춰 자연스럽게 쭉 이어져서 나오도록 처리
+      const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        text = text.replace(/\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      }
+      return text;
     }
 
     // Typewriter 효과 (타이핑에 따라 자동 스크롤 추적)
@@ -1667,11 +1674,15 @@
       if (nextIndicator) nextIndicator.classList.add('hidden');
       isTyping = true;
 
+      const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const processedText = isMobile ? text.replace(/\n+/g, ' ').replace(/\s{2,}/g, ' ').trim() : text;
+
       let i = 0;
       const intervalMs = SPEED_INTERVALS[currentSpeed] || 38;
       typingInterval = setInterval(() => {
-        if (i < text.length) {
-          textElem.innerHTML += text[i] === '\n' ? '<br>' : text[i];
+        if (i < processedText.length) {
+          const ch = processedText[i];
+          textElem.innerHTML += (ch === '\n' && !isMobile) ? '<br>' : (ch === '\n' ? ' ' : ch);
           if (i % 3 === 0) playBeep(560, 'sine', 0.025);
           if (scrollContainer) {
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
@@ -1712,7 +1723,8 @@
         if (isTyping) {
           clearInterval(typingInterval);
           const currentText = currentDialogueList[currentDialogueIdx] || '';
-          if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
+          const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+          if (textElem) textElem.innerHTML = isMobile ? currentText.replace(/\n+/g, ' ').trim() : currentText.replace(/\n/g, '<br>');
           isTyping = false;
           if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
           if (nextIndicator) nextIndicator.classList.remove('hidden');
@@ -1728,7 +1740,8 @@
         const item = currentDialogueList[currentDialogueIdx];
         const rawText = (typeof item === 'object') ? ((currentLang === 'en' && item.text_en) ? item.text_en : (item.text || '')) : (item || '');
         const currentText = formatSceneText(rawText);
-        if (textElem) textElem.innerHTML = currentText.replace(/\n/g, '<br>');
+        const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        if (textElem) textElem.innerHTML = isMobile ? currentText.replace(/\n+/g, ' ').trim() : currentText.replace(/\n/g, '<br>');
         isTyping = false;
         if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
         
