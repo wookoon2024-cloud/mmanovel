@@ -2036,108 +2036,108 @@
       } else if (type === 'NARA_CARD_CHOICE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-w-2xl max-h-[78vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-w-2xl max-h-[85vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
             
-            <!-- 1. KB국민 나라사랑카드 (좌측 세로형 카드) -->
-            <div class="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-yellow-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-2.5 sm:space-y-4 relative overflow-hidden group">
-              <div class="absolute -top-10 -right-10 w-28 h-28 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- 1. KB국민 나라사랑카드 -->
+            <div class="p-2.5 sm:p-5 rounded-xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-yellow-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-2 sm:space-y-4 relative overflow-hidden group">
+              <div class="absolute -top-10 -right-10 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none"></div>
               
-              <div class="space-y-2 sm:space-y-3">
-                <div class="flex items-center justify-between">
-                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/15 flex items-center justify-center text-yellow-400">
-                    <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+              <div class="space-y-1.5 sm:space-y-3">
+                <!-- 상단 아이콘 + 타이틀 (모바일 가로 1열 배치로 세로 공간 대폭 절약) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-yellow-500/15 flex items-center justify-center text-yellow-400 shrink-0">
+                    <i data-lucide="credit-card" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-black text-xs sm:text-lg text-white tracking-tight leading-tight truncate">
+                      ${isEn ? 'KB Kookmin Card' : 'KB국민 나라사랑카드'}
+                    </h4>
+                    <p class="text-[9px] sm:text-xs text-yellow-400/90 font-medium truncate">
+                      ${isEn ? 'KB Card · MMA Partner' : 'KB국민카드 · 병역 맞춤형 혜택'}
+                    </p>
                   </div>
                 </div>
 
-                <div>
-                  <h4 class="font-black text-sm sm:text-lg text-white tracking-tight flex items-center gap-1.5">
-                    ${isEn ? 'KB Kookmin Nara Sarang' : 'KB국민 나라사랑카드'}
-                  </h4>
-                  <p class="text-[10px] sm:text-xs text-yellow-400/90 font-medium mt-0.5">
-                    ${isEn ? 'KB Card · MMA Partner' : 'KB국민카드 · 병역 맞춤형 혜택'}
-                  </p>
-                </div>
-
-                <!-- 핵심 혜택 리스트 -->
-                <div class="space-y-1 sm:space-y-2 pt-0.5 text-[10px] sm:text-xs text-slate-300">
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Public Transit:' : '전국 대중교통:'}</strong> ${isEn ? '20% billing discount' : '20% 청구할인 (버스/지하철)'}</span>
+                <!-- 핵심 혜택 리스트 (모바일 2열 콤팩트 그리드로 2줄 압축) -->
+                <div class="grid grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-1 sm:space-y-1.5 sm:gap-y-0 text-[9.5px] sm:text-xs text-slate-300 pt-0.5">
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Transit:' : '대중교통:'}</strong> ${isEn ? '20% off' : '20% 청구할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Military PX:' : '군마트 PX / 편의점:'}</strong> ${isEn ? 'Max 20% cashback' : '최대 20% 환급할인'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'PX/Store:' : '군마트 PX:'}</strong> ${isEn ? 'Max 20%' : '최대 20% 환급'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Starbucks Coffee:' : '스타벅스 커피:'}</strong> ${isEn ? '15% cashback' : '15% 환급할인'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Starbucks:' : '스타벅스:'}</strong> ${isEn ? '15% off' : '15% 환급할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Theme Parks:' : '에버랜드/롯데월드:'}</strong> ${isEn ? '50% discount' : '50% 현장할인'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Theme Park:' : '놀이공원:'}</strong> ${isEn ? '50% off' : '50% 현장할인'}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-1.5 sm:space-y-2 pt-1">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="w-full py-2.5 sm:py-3 px-3 rounded-xl sm:rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-yellow-500/20 cursor-pointer">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}
+              <!-- 카드 하단 액션 버튼 영역 (모바일 가로 1열 나란히 배치) -->
+              <div class="flex items-center gap-1.5 sm:flex-col sm:space-y-2 sm:gap-0 pt-0.5 sm:pt-1">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="flex-1 sm:w-full py-2 sm:py-3 px-2 sm:px-3 rounded-lg sm:rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-[11px] sm:text-sm font-black flex items-center justify-center gap-1 transition shadow-md cursor-pointer shrink-0">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span>${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}</span>
                 </button>
-                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> ${isEn ? 'Official Benefits ↗' : '나라사랑포털 혜택 안내 ↗'}
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[9.5px] sm:text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 sm:w-full">
+                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '혜택 안내 ↗'}</span>
                 </a>
               </div>
             </div>
 
-            <!-- 2. IBK기업 나라사랑카드 (우측 세로형 카드) -->
-            <div class="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-2.5 sm:space-y-4 relative overflow-hidden group">
-              <div class="absolute -top-10 -right-10 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- 2. IBK기업 나라사랑카드 -->
+            <div class="p-2.5 sm:p-5 rounded-xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-2 sm:space-y-4 relative overflow-hidden group">
+              <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-              <div class="space-y-2 sm:space-y-3">
-                <div class="flex items-center justify-between">
-                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-400">
-                    <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+              <div class="space-y-1.5 sm:space-y-3">
+                <!-- 상단 아이콘 + 타이틀 (모바일 가로 1열 배치) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-400 shrink-0">
+                    <i data-lucide="credit-card" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-black text-xs sm:text-lg text-white tracking-tight leading-tight truncate">
+                      ${isEn ? 'IBK Industrial Card' : 'IBK기업 나라사랑카드'}
+                    </h4>
+                    <p class="text-[9px] sm:text-xs text-blue-400/90 font-medium truncate">
+                      ${isEn ? 'IBK Bank · Life Benefits' : 'IBK기업은행 · 실속형 복지 혜택'}
+                    </p>
                   </div>
                 </div>
 
-                <div>
-                  <h4 class="font-black text-sm sm:text-lg text-white tracking-tight flex items-center gap-1.5">
-                    ${isEn ? 'IBK Industrial Nara Sarang' : 'IBK기업 나라사랑카드'}
-                  </h4>
-                  <p class="text-[10px] sm:text-xs text-blue-400/90 font-medium mt-0.5">
-                    ${isEn ? 'IBK Bank · Life Benefits' : 'IBK기업은행 · 실속형 복지 혜택'}
-                  </p>
-                </div>
-
-                <!-- 핵심 혜택 리스트 -->
-                <div class="space-y-1 sm:space-y-2 pt-0.5 text-[10px] sm:text-xs text-slate-300">
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Convenience:' : '편의점 CU·GS25:'}</strong> ${isEn ? '10% unlimited' : '10% 무제한 할인'}</span>
+                <!-- 핵심 혜택 리스트 (모바일 2열 콤팩트 그리드로 2줄 압축) -->
+                <div class="grid grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-1 sm:space-y-1.5 sm:gap-y-0 text-[9.5px] sm:text-xs text-slate-300 pt-0.5">
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Convenience:' : '편의점 CU:'}</strong> ${isEn ? '10% off' : '10% 무제한'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Train/Bus:' : 'KTX / SRT / 고속버스:'}</strong> ${isEn ? '5% discount' : '5% 청구할인'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Train/Bus:' : 'KTX/고속버스:'}</strong> ${isEn ? '5% off' : '5% 청구할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'TOEIC Exam:' : 'TOEIC 어학시험:'}</strong> ${isEn ? '2,000 KRW discount' : '2,000원 할인 (월 1회)'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'TOEIC:' : 'TOEIC:'}</strong> ${isEn ? '2,000 KRW' : '2,000원 할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'CGV Cinema:' : 'CGV 영화관:'}</strong> ${isEn ? 'Max 3,000 KRW' : '최대 3,000원 할인'}</span>
+                  <div class="flex items-center gap-1 sm:gap-2">
+                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="truncate"><strong>${isEn ? 'Cinema:' : 'CGV 영화관:'}</strong> ${isEn ? '3,000 KRW' : '최대 3,000원'}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-1.5 sm:space-y-2 pt-1">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="w-full py-2.5 sm:py-3 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-500/25 cursor-pointer">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}
+              <!-- 카드 하단 액션 버튼 영역 (모바일 가로 1열 나란히 배치) -->
+              <div class="flex items-center gap-1.5 sm:flex-col sm:space-y-2 sm:gap-0 pt-0.5 sm:pt-1">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="flex-1 sm:w-full py-2 sm:py-3 px-2 sm:px-3 rounded-lg sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] sm:text-sm font-black flex items-center justify-center gap-1 transition shadow-md cursor-pointer shrink-0">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span>${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}</span>
                 </button>
-                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> ${isEn ? 'Official Benefits ↗' : 'IBK 공식 혜택 보기 ↗'}
+                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[9.5px] sm:text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 sm:w-full">
+                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '공식 혜택 ↗'}</span>
                 </a>
               </div>
             </div>
