@@ -243,18 +243,24 @@
 
             <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
                 <div class="relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
+                  <video id="ep2-live-video" src="assets/ep2_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
                   
                   <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
                     <span id="ep2-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       제2화 · 예비군 훈련 편
                     </span>
-                    <span id="ep2-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
-                      <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
-                    </span>
+                    <div id="ep2-saved-badge">
+                      <span class="group-hover:hidden px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
+                        <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
+                      </span>
+                      <span class="hidden group-hover:flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[9px] sm:text-xs font-bold items-center gap-1 shadow-lg border border-blue-300/40 animate-pulse">
+                        <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-300"></span> AI 비디오
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -3731,6 +3737,7 @@
       playBeep(880, 'sine', 0.1);
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.add('hidden');
+      syncLobbyVideos();
 
       // 저장된 사용자 상태 및 대화 기록 복원
       if (save.userData) {
@@ -3753,6 +3760,7 @@
 
     // 로비 시나리오 카드 마우스 오버 비디오 재생 제어
     function playEpVideo(id) {
+      if (isMobileLobby()) return; // 모바일에서는 슬라이더 활성화 상태에 따라 자동 제어
       const v = document.getElementById(id);
       if (v) {
         v.currentTime = 0;
@@ -3761,9 +3769,72 @@
     }
 
     function pauseEpVideo(id) {
+      if (isMobileLobby()) return;
       const v = document.getElementById(id);
       if (v) {
         v.pause();
+      }
+    }
+
+    // 모바일/PC 로비 비디오 동기화 제어
+    function syncLobbyVideos() {
+      const menu = document.getElementById('main-menu-overlay');
+      const isLobbyVisible = menu && !menu.classList.contains('hidden');
+      const v1 = document.getElementById('ep1-live-video');
+      const v2 = document.getElementById('ep2-live-video');
+
+      if (!isLobbyVisible) {
+        if (v1) v1.pause();
+        if (v2) v2.pause();
+        return;
+      }
+
+      if (isMobileLobby()) {
+        // 모바일: 마우스오버를 할 수 없으므로 현재 슬라이더에 노출 중인 시나리오의 mp4 비디오를 자동 재생 및 화면에 표출
+        if (v1) {
+          if (currentEpisodePage === 0) {
+            v1.style.opacity = '1';
+            tryPlayLobbyVideo(v1);
+          } else {
+            v1.style.opacity = '0';
+            v1.pause();
+          }
+        }
+        if (v2) {
+          if (currentEpisodePage === 1) {
+            v2.style.opacity = '1';
+            tryPlayLobbyVideo(v2);
+          } else {
+            v2.style.opacity = '0';
+            v2.pause();
+          }
+        }
+      } else {
+        // 데스크톱(PC): 마우스오버(hover)로 재생되도록 인라인 opacity를 제거하여 Tailwind hover 클래스에 위임
+        if (v1) {
+          v1.style.opacity = '';
+        }
+        if (v2) {
+          v2.style.opacity = '';
+        }
+      }
+    }
+
+    function tryPlayLobbyVideo(v) {
+      if (!v) return;
+      const p = v.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          const onFirstInteraction = () => {
+            if (isMobileLobby() && v.style.opacity === '1') {
+              v.play().catch(() => {});
+            }
+            window.removeEventListener('touchstart', onFirstInteraction);
+            window.removeEventListener('click', onFirstInteraction);
+          };
+          window.addEventListener('touchstart', onFirstInteraction, { once: true, passive: true });
+          window.addEventListener('click', onFirstInteraction, { once: true, passive: true });
+        });
       }
     }
 
@@ -3883,6 +3954,7 @@
         }
       }
 
+      syncLobbyVideos();
       if (window.lucide) lucide.createIcons();
     }
 
@@ -4028,6 +4100,7 @@
       playBeep(880, 'sine', 0.1);
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.add('hidden');
+      syncLobbyVideos();
       if (forceNew) {
         clearSaveGameState();
         conversationHistory.length = 0;
