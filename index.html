@@ -759,7 +759,7 @@
       <!-- 하단 상태 바 -->
       <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] sm:text-xs text-slate-400 shrink-0">
         <div class="flex items-center gap-2">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span> <span class="text-slate-300">예약가능</span>
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span> <span class="text-slate-300">예약가능<span class="sm:hidden text-[9.5px] text-slate-400 font-medium"> (오전/오후)</span></span>
           <span class="inline-block w-2 h-2 rounded-full bg-rose-500 ml-1 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span> <span class="text-slate-300">마감</span>
           <span class="inline-block w-2 h-2 rounded-full bg-slate-600 ml-1"></span> <span class="text-slate-400">휴무</span>
         </div>
@@ -3309,16 +3309,16 @@
         } else if (d.status === '마감') {
           statusTag = '<span class="text-rose-400 font-bold">마감</span>';
         } else {
-          statusTag = `<span class="text-emerald-400 font-bold">오전${d.morning}/오후${d.afternoon}</span>`;
+          statusTag = `<span class="sm:hidden text-emerald-400 font-bold text-[10px] tracking-tighter whitespace-nowrap">${d.morning}/${d.afternoon}</span><span class="hidden sm:inline text-emerald-400 font-bold text-[9px] tracking-tight whitespace-nowrap">오전${d.morning}/오후${d.afternoon}</span>`;
         }
 
         const dayCard = document.createElement('div');
-        dayCard.className = `p-1 rounded-xl border flex flex-col items-center justify-between h-[50px] transition duration-100 ${
+        dayCard.className = `p-1 rounded-xl border flex flex-col items-center justify-between h-[50px] overflow-hidden transition duration-100 ${
           clickable ? 'bg-slate-800/90 hover:bg-blue-600/30 border-slate-700/80 hover:border-blue-400 cursor-pointer shadow-sm hover:scale-105' : 'bg-slate-950/60 border-slate-800/40 opacity-40'
         }`;
         dayCard.innerHTML = `
           <span class="font-bold text-xs ${d.dayOfWeek === 0 ? 'text-rose-400' : d.dayOfWeek === 6 ? 'text-blue-400' : 'text-slate-200'}">${i}</span>
-          <span class="text-[9px] tracking-tight">${statusTag}</span>
+          <span class="text-[9px] sm:text-[10px] tracking-tight flex items-center justify-center">${statusTag}</span>
         `;
         if (clickable) {
           dayCard.onclick = () => {
