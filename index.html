@@ -91,7 +91,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[110px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.8.5</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.8.6</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -144,7 +144,7 @@
           <div class="border-l border-slate-300 pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-2">
               <h1 id="lobby-main-header-title" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight hover:text-blue-600 transition">병무행정 비주얼노벨</h1>
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.8.5</span>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.8.6</span>
             </div>
           </div>
         </div>
@@ -806,13 +806,13 @@
   </div>
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
-  <script src="api.js?v=20260904_v185"></script>
-  <script src="scenario.js?v=20260904_v185"></script>
-  <script src="tracker.js?v=20260904_v185"></script>
+  <script src="api.js?v=20260904_v186"></script>
+  <script src="scenario.js?v=20260904_v186"></script>
+  <script src="tracker.js?v=20260904_v186"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260904_v185';
+    const ASSET_VER = '20260904_v186';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
