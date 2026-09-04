@@ -130,18 +130,23 @@
       </div>
 
       <!-- KPI 2: 오늘 방문자 (Unique Visitors) -->
-      <div class="bg-[#0f172a]/95 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl">
+      <div onclick="openTodayVisitorsModal()" class="bg-[#0f172a]/95 border border-slate-800 hover:border-blue-500/60 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl cursor-pointer transition-all duration-200 hover:shadow-blue-500/10 hover:-translate-y-0.5 group">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 group-hover:text-blue-300 transition">
             <i data-lucide="user-check" class="w-3.5 h-3.5 text-blue-400"></i> 오늘 순 방문자
           </span>
-          <div class="p-1.5 rounded-lg bg-blue-500/10 text-blue-400"><i data-lucide="activity" class="w-4 h-4"></i></div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1 group-hover:bg-blue-600 group-hover:text-white transition">
+            <span>상세보기</span> <i data-lucide="chevron-right" class="w-2.5 h-2.5"></i>
+          </span>
         </div>
         <div class="mt-3 flex items-baseline gap-2">
-          <span id="kpi-today-visitors" class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">0</span>
+          <span id="kpi-today-visitors" class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight group-hover:text-blue-200 transition">0</span>
           <span class="text-xs text-slate-400 font-semibold">명</span>
         </div>
-        <p class="text-[10px] text-slate-500 mt-1">당일 누적 고유 방문자</p>
+        <p class="text-[10px] text-slate-500 mt-1 flex items-center justify-between">
+          <span>당일 누적 고유 방문자</span>
+          <span class="text-blue-400/90 text-[10px] underline font-medium">클릭 시 최초 접속정보 확인</span>
+        </p>
       </div>
 
       <!-- KPI 3: 총 누적 페이지뷰 -->
@@ -394,6 +399,47 @@
   <footer class="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500 bg-[#0a0f1d]">
     <p>대한민국 병무청 비주얼 노벨 「슬기로운 병역 라이프」 실시간 방문자 관제 센터 · 비공개 관리자 전용</p>
   </footer>
+
+  <!-- ================= [MODAL] 오늘 순 방문자 최초 접속정보 상세 모달 ================= -->
+  <div id="today-visitors-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto" onclick="if(event.target === this) closeTodayVisitorsModal()">
+    <div class="relative w-full max-w-4xl bg-[#0b1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- 모달 헤더 -->
+      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+            <i data-lucide="user-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span>오늘 순 방문자 최초 접속 정보</span>
+              <span id="modal-visitor-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-sm">0명</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">당일 방문한 고유 이용자(Unique Visitor)별 첫 진입 시각, 기기 환경, 유입 화면 상세 목록입니다.</p>
+          </div>
+        </div>
+        <button onclick="closeTodayVisitorsModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 모달 본문 -->
+      <div class="p-5 overflow-y-auto space-y-3.5 flex-1 custom-scrollbar" id="today-visitors-modal-content">
+        <!-- 동적 렌더링 -->
+      </div>
+
+      <!-- 모달 푸터 -->
+      <div class="px-5 py-3 border-t border-slate-800 bg-slate-900/70 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+        <div class="flex items-center gap-2 text-[11px] text-slate-400">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>브라우저 고유 식별값(visitorId)을 기준으로 중복 세션을 배제한 순수 방문자 통계입니다.</span>
+        </div>
+        <button onclick="closeTodayVisitorsModal()" class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition cursor-pointer">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= 대시보드 로직 스크립트 ================= -->
   <script>
@@ -692,8 +738,15 @@
           savedVisitors.push(v.visitorId);
         }
       });
-      localStorage.setItem('mma_admin_unique_visitors_' + today, JSON.stringify(savedVisitors));
-      const todayUniqueCount = Math.max(data.kpi.todayVisitors || 0, savedVisitors.length, activeCount);
+      // 당일 고유 방문자 최초 접속 정보 추출
+      todayUniqueVisitorsList = extractTodayUniqueVisitors(data, mergedVisitors);
+      const todayUniqueCount = Math.max(data.kpi.todayVisitors || 0, savedVisitors.length, activeCount, todayUniqueVisitorsList.length);
+
+      // 모달이 열려 있는 상태면 실시간 갱신
+      const uvModal = document.getElementById('today-visitors-modal');
+      if (uvModal && !uvModal.classList.contains('hidden')) {
+        renderTodayVisitorsModalContent();
+      }
 
       // 1. KPI 렌더링
       document.getElementById('kpi-active-count').innerText = activeCount;
@@ -1027,6 +1080,220 @@
       if (!str) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
+
+    // ================= [오늘 순 방문자 최초 접속정보 모달 제어] =================
+    let todayUniqueVisitorsList = [];
+
+    function extractTodayUniqueVisitors(data, mergedVisitors) {
+      const visitorMap = new Map();
+      const allEvents = [];
+
+      // 1. 서버 API의 todayUniqueVisitors 우선 로드
+      if (data && Array.isArray(data.todayUniqueVisitors)) {
+        data.todayUniqueVisitors.forEach(v => {
+          const id = v.visitorId || v.sessionId;
+          if (id) visitorMap.set(id, Object.assign({}, v));
+        });
+      }
+
+      // 2. 서버 recentLogs
+      if (data && Array.isArray(data.recentLogs)) {
+        allEvents.push(...data.recentLogs);
+      }
+
+      // 3. 로컬 스토리지 저장 로그
+      try {
+        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
+        if (Array.isArray(savedLogs)) allEvents.push(...savedLogs);
+      } catch(e) {}
+
+      // 4. 현재 활성 방문자
+      if (Array.isArray(mergedVisitors)) {
+        allEvents.push(...mergedVisitors);
+      }
+
+      allEvents.forEach(item => {
+        const id = item.visitorId || item.sessionId;
+        if (!id) return;
+        const timeVal = item.firstSeen || (item.timestamp ? new Date(item.timestamp).getTime() : 0);
+        if (!timeVal) return;
+
+        const isMob = item.device === 'Mobile' || (item.clientEnv && /android|ios|iphone|mobile/i.test(item.clientEnv)) || (item.os && /android|ios|iphone/i.test(item.os));
+        const isTab = !isMob && (item.device === 'Tablet' || (item.clientEnv && /ipad|tablet/i.test(item.clientEnv)) || (item.os && /ipad/i.test(item.os)));
+        const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+
+        const rawIp = (item.ip && item.ip !== '127.0.0.1') ? item.ip : (adminPublicIp || item.ip || '127.0.0.1');
+        const maskedIp = (item.maskedIp && !item.maskedIp.includes('127.0.0.1')) ? item.maskedIp : (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp);
+
+        const isLobby = item.sceneIdx === 'lobby' || (typeof item.sceneIdx === 'string' && item.sceneIdx.startsWith('lobby')) || (item.sceneTitle && item.sceneTitle.includes('로비'));
+        const sceneName = isLobby ? (item.sceneTitle || '메인 로비 (시나리오 선택 중)') : (item.sceneTitle || ('SCENE ' + (item.sceneIdx !== undefined ? item.sceneIdx : 0)));
+
+        if (!visitorMap.has(id)) {
+          visitorMap.set(id, {
+            visitorId: id,
+            sessionId: item.sessionId || id,
+            firstSeen: timeVal,
+            ip: rawIp,
+            maskedIp: maskedIp,
+            city: item.city || '대한민국',
+            country: item.country || 'KR',
+            clientEnv: item.clientEnv || ((item.os || '기기') + ' · ' + (item.browser || '브라우저')),
+            os: item.os || 'OS',
+            browser: item.browser || 'Browser',
+            device: dev,
+            initialSceneTitle: sceneName,
+            initialSceneIdx: item.sceneIdx,
+            referrer: item.referrer || '직접 접속 (Direct)',
+            isCurrentlyActive: false
+          });
+        } else {
+          const existing = visitorMap.get(id);
+          if (timeVal < existing.firstSeen) {
+            existing.firstSeen = timeVal;
+            existing.initialSceneTitle = sceneName;
+            existing.initialSceneIdx = item.sceneIdx;
+            if (item.referrer) existing.referrer = item.referrer;
+          }
+          if (dev === 'Mobile') existing.device = 'Mobile';
+        }
+      });
+
+      // 현재 활성 상태 확인
+      if (Array.isArray(mergedVisitors)) {
+        mergedVisitors.forEach(m => {
+          const id = m.visitorId || m.sessionId;
+          if (visitorMap.has(id)) {
+            visitorMap.get(id).isCurrentlyActive = true;
+          }
+        });
+      }
+
+      return Array.from(visitorMap.values()).sort((a, b) => a.firstSeen - b.firstSeen);
+    }
+
+    function renderTodayVisitorsModalContent() {
+      const content = document.getElementById('today-visitors-modal-content');
+      const badge = document.getElementById('modal-visitor-count-badge');
+      if (!content) return;
+
+      const list = todayUniqueVisitorsList;
+      if (badge) badge.innerText = `${list.length}명`;
+
+      if (list.length === 0) {
+        content.innerHTML = `
+          <div class="py-12 text-center text-slate-500 space-y-3">
+            <div class="w-12 h-12 rounded-full bg-slate-800/60 flex items-center justify-center mx-auto text-slate-400">
+              <i data-lucide="user-x" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm font-medium text-slate-400">오늘 기록된 고유 방문자가 없습니다.</p>
+          </div>
+        `;
+        try { lucide.createIcons(); } catch(e) {}
+        return;
+      }
+
+      content.innerHTML = list.map((v, idx) => {
+        const d = new Date(v.firstSeen);
+        const timeStr = !isNaN(d.getTime())
+          ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`
+          : '-';
+
+        const agoMs = Math.max(0, Date.now() - v.firstSeen);
+        const agoMins = Math.floor(agoMs / 60000);
+        const agoText = agoMins < 1 ? '방금 전' : (agoMins < 60 ? `${agoMins}분 전` : `${Math.floor(agoMins/60)}시간 전`);
+
+        const isMob = v.device === 'Mobile';
+        const isTab = v.device === 'Tablet';
+        const devIcon = isMob ? 'smartphone' : (isTab ? 'tablet' : 'monitor');
+        const devBadge = isMob
+          ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1.5"><i data-lucide="smartphone" class="w-3 h-3 text-purple-400"></i> 스마트폰 (Mobile)</span>`
+          : (isTab
+              ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5"><i data-lucide="tablet" class="w-3 h-3 text-amber-400"></i> 태블릿 (Tablet)</span>`
+              : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40 flex items-center gap-1.5"><i data-lucide="laptop" class="w-3 h-3 text-blue-400"></i> 데스크톱 PC</span>`);
+
+        const statusBadge = v.isCurrentlyActive
+          ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 실시간 접속 중</span>`
+          : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700/60">접속 종료</span>`;
+
+        const rawIp = v.ip || '127.0.0.1';
+        const maskedIp = v.maskedIp || (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp);
+        const ipDisplay = showFullIp ? rawIp : maskedIp;
+        const flag = v.country === 'KR' ? '🇰🇷' : '🌐';
+        const isLobby = (v.initialSceneTitle && v.initialSceneTitle.includes('로비')) || v.initialSceneIdx === 'lobby';
+
+        return `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition shadow-lg space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-slate-800/80">
+              <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                <span class="w-7 h-7 rounded-xl bg-blue-600/30 text-blue-300 font-mono font-extrabold text-xs flex items-center justify-center border border-blue-500/40">#${idx + 1}</span>
+                <span class="font-mono text-xs font-bold text-white tracking-wide">${escapeHtml(v.visitorId)}</span>
+                ${statusBadge}
+                ${devBadge}
+              </div>
+              <div class="text-xs text-slate-300 flex items-center gap-1.5 font-mono">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>최초 접속: <strong class="text-white">${timeStr}</strong></span>
+                <span class="text-slate-400 text-[11px]">(${agoText})</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
+                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">1. 기기 / 운영체제</span>
+                <div class="flex items-center gap-2 font-bold text-slate-100">
+                  <i data-lucide="${devIcon}" class="w-4 h-4 text-blue-400 shrink-0"></i>
+                  <span class="truncate">${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
+                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">2. 접속 지역 / IP</span>
+                <div class="flex items-center gap-1.5 font-bold text-slate-100">
+                  <span class="shrink-0">${flag}</span>
+                  <span class="truncate">${escapeHtml(v.city || '대한민국')}</span>
+                  <span class="font-mono text-slate-400 text-[11px] font-normal shrink-0">(${escapeHtml(ipDisplay)})</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
+                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">3. 최초 유입 씬 (Landing)</span>
+                <div class="flex items-center gap-1.5 font-bold ${isLobby ? 'text-purple-300' : 'text-blue-300'} truncate">
+                  <i data-lucide="${isLobby ? 'layout-grid' : 'book-open'}" class="w-4 h-4 shrink-0 ${isLobby ? 'text-purple-400' : 'text-blue-400'}"></i>
+                  <span class="truncate">${escapeHtml(v.initialSceneTitle || 'SCENE 0')}</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
+                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">4. 유입 경로 (Referrer)</span>
+                <div class="flex items-center gap-1.5 font-medium text-slate-200 truncate">
+                  <i data-lucide="link" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                  <span class="truncate">${escapeHtml(v.referrer || '직접 접속 (Direct)')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      try { lucide.createIcons(); } catch(e) {}
+    }
+
+    function openTodayVisitorsModal() {
+      const modal = document.getElementById('today-visitors-modal');
+      if (!modal) return;
+      renderTodayVisitorsModalContent();
+      modal.classList.remove('hidden');
+      try { lucide.createIcons(); } catch(e) {}
+    }
+
+    function closeTodayVisitorsModal() {
+      const modal = document.getElementById('today-visitors-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeTodayVisitorsModal();
+    });
 
     // 시작
     fetchStats();

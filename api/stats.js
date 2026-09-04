@@ -201,6 +201,56 @@ module.exports = async (req, res) => {
     }
   });
 
+  // 당일 고유 방문자별 최초 접속 정보 추출
+  const uniqueVisitorMap = new Map();
+  const allEventsForUnique = [...historyList, ...activeVisitors];
+
+  allEventsForUnique.forEach(item => {
+    const id = item.visitorId || item.sessionId;
+    if (!id) return;
+    const timeVal = item.firstSeen || (item.timestamp ? new Date(item.timestamp).getTime() : 0);
+    if (!timeVal) return;
+
+    const isMob = item.device === 'Mobile' || (item.os && /android|ios|iphone/i.test(item.os));
+    const isTab = !isMob && (item.device === 'Tablet' || (item.os && /ipad/i.test(item.os)));
+    const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+
+    if (!uniqueVisitorMap.has(id)) {
+      uniqueVisitorMap.set(id, {
+        visitorId: id,
+        sessionId: item.sessionId || id,
+        firstSeen: timeVal,
+        ip: item.ip,
+        maskedIp: item.maskedIp || (item.ip && item.ip.includes('.') ? item.ip.split('.').slice(0, 2).join('.') + '.*.*' : item.ip),
+        country: item.country || 'KR',
+        city: item.city || '대한민국',
+        os: item.os || '기타',
+        browser: item.browser || '브라우저',
+        clientEnv: item.clientEnv || (item.os + ' · ' + item.browser),
+        device: dev,
+        initialSceneIdx: item.sceneIdx,
+        initialSceneTitle: item.sceneTitle || (item.sceneIdx === 'lobby' ? '메인 로비 (시나리오 선택 중)' : ('SCENE ' + item.sceneIdx)),
+        referrer: item.referrer || '직접 접속 (Direct)',
+        isCurrentlyActive: activeVisitors.some(a => (a.visitorId === id || a.sessionId === item.sessionId))
+      });
+    } else {
+      const existing = uniqueVisitorMap.get(id);
+      if (timeVal < existing.firstSeen) {
+        existing.firstSeen = timeVal;
+        existing.initialSceneIdx = item.sceneIdx;
+        existing.initialSceneTitle = item.sceneTitle || existing.initialSceneTitle;
+        if (item.referrer) existing.referrer = item.referrer;
+      }
+      if (dev === 'Mobile') existing.device = 'Mobile';
+      if (activeVisitors.some(a => (a.visitorId === id || a.sessionId === item.sessionId))) {
+        existing.isCurrentlyActive = true;
+      }
+    }
+  });
+
+  const todayUniqueVisitors = Array.from(uniqueVisitorMap.values())
+    .sort((a, b) => a.firstSeen - b.firstSeen);
+
   const totalActive = activeVisitors.length;
   const completedCount = historyList.filter(h => h.sceneIdx >= 12).length;
   const completionRate = historyList.length > 0
@@ -214,7 +264,7 @@ module.exports = async (req, res) => {
   return res.status(200).json({
     kpi: {
       activeCount: totalActive,
-      todayVisitors: Math.max(todayCount, todayVisitorSet.size, totalActive),
+      todayVisitors: Math.max(todayCount, todayVisitorSet.size, totalActive, todayUniqueVisitors.length),
       totalPageviews: Math.max(totalPv, historyList.length, totalActive),
       avgDurationSeconds: avgDur,
       avgDurationFormatted: formatDuration(avgDur),
@@ -222,6 +272,7 @@ module.exports = async (req, res) => {
     },
     activeVisitors,
     recentLogs: historyList.slice(0, 100),
+    todayUniqueVisitors,
     deviceBreakdown: deviceCounts,
     cityBreakdown: cityCounts,
     sceneFunnel: sceneCounts,
