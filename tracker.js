@@ -199,10 +199,48 @@
     .catch(function() {});
   }
 
+  // 3. 글로벌 크로스 디바이스 MQTT 연동 (모바일 ↔ PC 실시간 0.1초 동기화)
+  let mqttClient = null;
+  const MQTT_TOPIC = 'mmanovel_wookoon_2024/presence';
+
+  function initMqtt() {
+    if (typeof mqtt !== 'undefined' && mqtt.connect) {
+      try {
+        mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+          clientId: 'novel_' + Math.random().toString(36).substring(2, 9),
+          clean: true,
+          reconnectPeriod: 4000,
+          connectTimeout: 5000
+        });
+        mqttClient.on('connect', function() {
+          sendMqtt('visit');
+        });
+      } catch(e) {}
+    } else if (!document.getElementById('mqtt-script-tag')) {
+      const s = document.createElement('script');
+      s.id = 'mqtt-script-tag';
+      s.src = 'https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js';
+      s.onload = function() { initMqtt(); };
+      document.head.appendChild(s);
+    }
+  }
+
+  function sendMqtt(eventType) {
+    if (mqttClient && mqttClient.connected) {
+      try {
+        const payload = getPayload(eventType);
+        mqttClient.publish(MQTT_TOPIC, JSON.stringify(payload));
+      } catch(e) {}
+    }
+  }
+
+  initMqtt();
+
   // 통합 전송
   function trackAll(eventType, sceneIdx) {
     if (sceneIdx !== undefined) currentScene = sceneIdx;
     broadcastPresence(eventType);
+    sendMqtt(eventType);
     sendServerless(eventType);
   }
 
@@ -217,6 +255,12 @@
   // 탭 닫기/이탈 시
   window.addEventListener('pagehide', function() {
     trackAll('leave', currentScene);
+    if (mqttClient && mqttClient.connected) {
+      try {
+        mqttClient.publish(MQTT_TOPIC, JSON.stringify(getPayload('leave')));
+        mqttClient.end(true);
+      } catch(e) {}
+    }
   });
 
   window.MmaTracker = {
