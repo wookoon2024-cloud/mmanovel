@@ -75,8 +75,34 @@ function parseUserAgent(ua = '') {
   return { os, browser, device };
 }
 
+function extractClientIp(req) {
+  let ip = '';
+  // Vercel / Cloudflare / Proxy 헤더 우선 확인
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  if (xForwardedFor) {
+    const list = xForwardedFor.split(',');
+    if (list.length > 0 && list[0].trim()) {
+      ip = list[0].trim();
+    }
+  }
+  if (!ip && req.headers['x-real-ip']) ip = req.headers['x-real-ip'].trim();
+  if (!ip && req.headers['cf-connecting-ip']) ip = req.headers['cf-connecting-ip'].trim();
+  if (!ip && req.headers['x-client-ip']) ip = req.headers['x-client-ip'].trim();
+  if (!ip && req.socket && req.socket.remoteAddress) ip = req.socket.remoteAddress;
+  if (!ip && req.connection && req.connection.remoteAddress) ip = req.connection.remoteAddress;
+  if (!ip) ip = '127.0.0.1';
+
+  // IPv6 mapped IPv4 접두사(::ffff:) 정리
+  if (ip.startsWith('::ffff:')) {
+    ip = ip.substring(7);
+  }
+  return ip;
+}
+
 function maskIp(ip = '') {
-  if (!ip || ip === '127.0.0.1' || ip === '::1') return '127.0.0.1 (Local)';
+  if (!ip) return '127.0.0.1';
+  if (ip.startsWith('::ffff:')) ip = ip.substring(7);
+  if (ip === '127.0.0.1' || ip === '::1') return '127.0.0.1';
   if (ip.includes('.')) {
     const parts = ip.split('.');
     if (parts.length === 4) return parts[0] + '.' + parts[1] + '.*.*';
@@ -85,7 +111,7 @@ function maskIp(ip = '') {
     const parts = ip.split(':');
     return parts.slice(0, 2).join(':') + ':****';
   }
-  return '***.***.***';
+  return ip;
 }
 
 // Vercel KV / Upstash Redis REST 지원 (환경변수 존재 시)
@@ -132,10 +158,8 @@ module.exports = async (req, res) => {
   const referrer = body.referrer || '';
   const screen = body.screen || '';
 
-  // IP 및 Vercel 지리정보 추출
-  const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
-                req.headers['x-real-ip'] ||
-                req.socket.remoteAddress || '127.0.0.1';
+  // 실제 클라이언트 접속 PC IP 및 Vercel 지리정보 추출
+  const rawIp = extractClientIp(req);
   const country = req.headers['x-vercel-ip-country'] || 'KR';
   let city = '서울';
   try {
@@ -225,6 +249,7 @@ module.exports = async (req, res) => {
     activeCount: global.__MMA_SESSIONS__.size,
     sessionId,
     clientInfo: {
+      ip: rawIp,
       maskedIp: maskIp(rawIp),
       city,
       country,

@@ -215,8 +215,8 @@
       <!-- IP 마스킹 해제 토글 버튼 -->
       <div class="flex items-center gap-2 shrink-0 text-xs text-slate-400 pr-2">
         <label class="flex items-center gap-1.5 cursor-pointer select-none">
-          <input type="checkbox" id="unmask-ip-checkbox" onchange="toggleIpMask(this.checked)" class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-0 w-3.5 h-3.5 cursor-pointer" />
-          <span class="text-[11px]">IP 전체 표시</span>
+          <input type="checkbox" id="unmask-ip-checkbox" checked onchange="toggleIpMask(this.checked)" class="rounded border-slate-700 bg-slate-800 text-blue-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer" />
+          <span class="text-[11px] font-semibold text-slate-300">실제 IP 전체 표시</span>
         </label>
       </div>
     </div>
@@ -398,8 +398,22 @@
     let currentStatsData = null;
     let refreshIntervalMs = 2000;
     let refreshTimer = null;
-    let showFullIp = false;
+    let showFullIp = true;
     let currentActiveTab = 'live';
+    let adminPublicIp = '';
+
+    // 관리자 본인의 실제 공인 IP 조회
+    async function fetchAdminPublicIp() {
+      try {
+        const r = await fetch('https://api64.ipify.org?format=json');
+        const d = await r.json();
+        if (d && d.ip) {
+          adminPublicIp = d.ip;
+          renderCurrentData();
+        }
+      } catch(e) {}
+    }
+    fetchAdminPublicIp();
 
     // 로컬 탭에서 실시간 전달받은 세션 캐시 (BroadcastChannel & localStorage)
     const localActiveSessions = new Map();
@@ -503,6 +517,9 @@
         if (res.ok) {
           const data = await res.json();
           currentStatsData = data;
+          if (data && data.clientIp && data.clientIp !== '127.0.0.1') {
+            adminPublicIp = data.clientIp;
+          }
         }
       } catch (e) {
         console.error('Failed to fetch stats:', e);
@@ -534,13 +551,27 @@
       const now = Date.now();
       localActiveSessions.forEach((v, sid) => {
         if (now - v.lastSeen < 15000) {
+          const serverSession = mergedMap.get(sid) || {};
+          const resolvedIp = (v.ip && v.ip !== '127.0.0.1')
+            ? v.ip
+            : ((serverSession.ip && serverSession.ip !== '127.0.0.1')
+              ? serverSession.ip
+              : (adminPublicIp || v.ip || serverSession.ip || '127.0.0.1'));
+          const resolvedMasked = (v.maskedIp && !v.maskedIp.includes('127.0.0.1'))
+            ? v.maskedIp
+            : ((serverSession.maskedIp && !serverSession.maskedIp.includes('127.0.0.1'))
+              ? serverSession.maskedIp
+              : (resolvedIp.includes('.') ? resolvedIp.split('.').slice(0, 2).join('.') + '.*.*' : resolvedIp));
+
           mergedMap.set(sid, {
+            ...serverSession,
             ...v,
             isLocalTab: true,
-            maskedIp: v.maskedIp || '127.0.0.1 (내 기기)',
-            city: v.city || '대한민국 서울',
-            country: 'KR',
-            durationFormatted: Math.floor((now - v.firstSeen) / 1000) + '초',
+            ip: resolvedIp,
+            maskedIp: resolvedMasked,
+            city: v.city || serverSession.city || '대한민국 서울',
+            country: v.country || serverSession.country || 'KR',
+            durationFormatted: Math.floor((now - (v.firstSeen || serverSession.firstSeen || now)) / 1000) + '초',
             lastActiveAgo: Math.max(1, Math.floor((now - v.lastSeen) / 1000)) + '초 전'
           });
         } else {
@@ -604,7 +635,9 @@
       }
 
       tbody.innerHTML = visitors.map(v => {
-        const ipDisplay = showFullIp ? (v.ip || '127.0.0.1') : (v.maskedIp || '***.***.***');
+        const rawIp = (v.ip && v.ip !== '127.0.0.1') ? v.ip : (adminPublicIp || v.ip || '127.0.0.1');
+        const maskedIp = (v.maskedIp && !v.maskedIp.includes('127.0.0.1')) ? v.maskedIp : (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp);
+        const ipDisplay = showFullIp ? rawIp : maskedIp;
         const flag = v.country === 'KR' ? '🇰🇷' : (v.country === 'US' ? '🇺🇸' : '🌐');
         const deviceIcon = v.device === 'Mobile' ? 'smartphone' : (v.device === 'Tablet' ? 'tablet' : 'laptop');
         const badgeLabel = v.isLocalTab ? '열람 중 (내 탭)' : '열람 중';
@@ -660,7 +693,9 @@
 
       tbody.innerHTML = logs.map(item => {
         const timeStr = item.timestamp ? new Date(item.timestamp).toLocaleTimeString('ko-KR') : '-';
-        const ipDisplay = showFullIp ? (item.ip || '127.0.0.1') : (item.maskedIp || '***.***.***');
+        const rawIp = (item.ip && item.ip !== '127.0.0.1') ? item.ip : (adminPublicIp || item.ip || '127.0.0.1');
+        const maskedIp = (item.maskedIp && !item.maskedIp.includes('127.0.0.1')) ? item.maskedIp : (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp);
+        const ipDisplay = showFullIp ? rawIp : maskedIp;
         const flag = item.country === 'KR' ? '🇰🇷' : '🌐';
         
         return `

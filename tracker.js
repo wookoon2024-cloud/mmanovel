@@ -49,6 +49,34 @@
   let currentScene = 0;
   const startTime = Date.now();
 
+  let clientRealIp = '';
+  let clientMaskedIp = '';
+  let clientCity = '';
+
+  try {
+    clientRealIp = localStorage.getItem('mma_client_ip') || '';
+    clientMaskedIp = localStorage.getItem('mma_client_masked_ip') || '';
+    clientCity = localStorage.getItem('mma_client_city') || '';
+  } catch(e) {}
+
+  // 실제 접속 PC 공인 IP 조회 (클라이언트 사이드 신속 감지)
+  if (!clientRealIp || clientRealIp === '127.0.0.1') {
+    fetch('https://api64.ipify.org?format=json')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.ip) {
+          clientRealIp = d.ip;
+          clientMaskedIp = d.ip.includes('.') ? d.ip.split('.').slice(0, 2).join('.') + '.*.*' : d.ip;
+          try {
+            localStorage.setItem('mma_client_ip', clientRealIp);
+            localStorage.setItem('mma_client_masked_ip', clientMaskedIp);
+          } catch(e) {}
+          broadcastPresence('ip_update');
+        }
+      })
+      .catch(function() {});
+  }
+
   function getSceneTitle(idx) {
     if (idx === 'lobby') return '메인 로비 (에피소드 선택 화면)';
     return SCENE_NAMES[idx] || ('SCENE ' + idx);
@@ -62,19 +90,19 @@
   }
 
   function getOsAndBrowser() {
-    const ua = navigator.userAgent.toLowerCase();
+    const ua = navigator.userAgent;
+    const uaLower = ua.toLowerCase();
     let os = 'Windows';
-    if (ua.includes('macintosh') || ua.includes('mac os')) os = 'macOS';
-    else if (ua.includes('iphone')) os = 'iOS';
-    else if (ua.includes('android')) os = 'Android';
-    else if (ua.includes('linux')) os = 'Linux';
+    if (uaLower.includes('mac')) os = 'macOS';
+    if (uaLower.includes('iphone')) os = 'iOS';
+    if (uaLower.includes('android')) os = 'Android';
+    if (uaLower.includes('linux')) os = 'Linux';
 
     let browser = 'Chrome';
-    if (ua.includes('whale')) browser = 'Naver Whale';
-    else if (ua.includes('samsungbrowser')) browser = 'Samsung Internet';
-    else if (ua.includes('edg/')) browser = 'Edge';
-    else if (ua.includes('safari') && !ua.includes('chrome')) browser = 'Safari';
-    else if (ua.includes('firefox')) browser = 'Firefox';
+    if (uaLower.includes('edg/')) browser = 'Edge';
+    else if (uaLower.includes('whale')) browser = 'Whale';
+    else if (uaLower.includes('safari') && !uaLower.includes('chrome')) browser = 'Safari';
+    else if (uaLower.includes('firefox')) browser = 'Firefox';
 
     return os + ' · ' + browser;
   }
@@ -83,6 +111,9 @@
     return {
       sessionId: sessionId,
       visitorId: visitorId,
+      ip: clientRealIp || '',
+      maskedIp: clientMaskedIp || '',
+      city: clientCity || '',
       eventType: eventType || 'heartbeat',
       sceneIdx: currentScene,
       sceneTitle: getSceneTitle(currentScene),
@@ -139,7 +170,33 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(function() {});
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.clientInfo) {
+        let changed = false;
+        if (data.clientInfo.ip && data.clientInfo.ip !== '127.0.0.1') {
+          if (clientRealIp !== data.clientInfo.ip) {
+            clientRealIp = data.clientInfo.ip;
+            clientMaskedIp = data.clientInfo.maskedIp || clientRealIp;
+            try {
+              localStorage.setItem('mma_client_ip', clientRealIp);
+              localStorage.setItem('mma_client_masked_ip', clientMaskedIp);
+            } catch(e) {}
+            changed = true;
+          }
+        }
+        if (data.clientInfo.city && clientCity !== data.clientInfo.city) {
+          clientCity = data.clientInfo.city;
+          try { localStorage.setItem('mma_client_city', clientCity); } catch(e) {}
+          changed = true;
+        }
+        if (changed) {
+          broadcastPresence('ip_update');
+        }
+      }
+    })
+    .catch(function() {});
   }
 
   // 통합 전송

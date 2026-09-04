@@ -55,6 +55,28 @@ async function sendToUpstash(cmd, ...args) {
   }
 }
 
+function extractClientIp(req) {
+  let ip = '';
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  if (xForwardedFor) {
+    const list = xForwardedFor.split(',');
+    if (list.length > 0 && list[0].trim()) {
+      ip = list[0].trim();
+    }
+  }
+  if (!ip && req.headers['x-real-ip']) ip = req.headers['x-real-ip'].trim();
+  if (!ip && req.headers['cf-connecting-ip']) ip = req.headers['cf-connecting-ip'].trim();
+  if (!ip && req.headers['x-client-ip']) ip = req.headers['x-client-ip'].trim();
+  if (!ip && req.socket && req.socket.remoteAddress) ip = req.socket.remoteAddress;
+  if (!ip && req.connection && req.connection.remoteAddress) ip = req.connection.remoteAddress;
+  if (!ip) ip = '127.0.0.1';
+
+  if (ip.startsWith('::ffff:')) {
+    ip = ip.substring(7);
+  }
+  return ip;
+}
+
 function formatDuration(sec = 0) {
   if (sec < 60) return sec + '초';
   const mins = Math.floor(sec / 60);
@@ -69,6 +91,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  const clientIp = extractClientIp(req);
   loadTmpStorage();
   const now = Date.now();
 
@@ -186,6 +209,7 @@ module.exports = async (req, res) => {
     cityBreakdown: cityCounts,
     sceneFunnel: sceneCounts,
     storageEngine,
+    clientIp,
     timestamp: new Date().toISOString()
   });
 };
