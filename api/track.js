@@ -114,10 +114,13 @@ function maskIp(ip = '') {
   return ip;
 }
 
-// Vercel KV / Upstash Redis REST 지원 (환경변수 존재 시)
+// Vercel KV / Upstash Redis REST 지원 (환경변수 또는 연결된 클라우드 DB 기본값)
+const DEFAULT_UPSTASH_URL = 'https://enabling-tortoise-158995.upstash.io';
+const DEFAULT_UPSTASH_TOKEN = 'gQAAAAAAAm0TAAIgcDI3ZDlmY2M0MzI5N2Q0MzgwOTI5YmRhYjZjZjdjOTUyOA';
+
 async function sendToUpstash(cmd, ...args) {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || DEFAULT_UPSTASH_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || DEFAULT_UPSTASH_TOKEN;
   if (!url || !token) return null;
 
   try {
@@ -180,10 +183,9 @@ module.exports = async (req, res) => {
 
   if (eventType === 'leave') {
     global.__MMA_SESSIONS__.delete(sessionId);
-    saveTmpStorage();
-    if (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL) {
+    try {
       await sendToUpstash('DEL', 'mma:session:' + sessionId);
-    }
+    } catch (e) {}
     return res.status(200).json({ success: true, activeCount: global.__MMA_SESSIONS__.size });
   }
 
@@ -230,19 +232,17 @@ module.exports = async (req, res) => {
 
   saveTmpStorage();
 
-  // Upstash Redis 전송 (동기화)
-  if (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL) {
-    try {
-      await sendToUpstash('SETEX', 'mma:session:' + sessionId, 40, JSON.stringify(sessionObj));
-      await sendToUpstash('INCR', 'mma:pv_total');
-      const today = new Date().toISOString().split('T')[0];
-      await sendToUpstash('SADD', 'mma:daily_visitors:' + today, visitorId);
-      if (eventType === 'visit' || eventType === 'scene_change') {
-        await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(sessionObj));
-        await sendToUpstash('LTRIM', 'mma:logs', 0, 199);
-      }
-    } catch (e) {}
-  }
+  // Upstash Redis 전송 (영구 클라우드 동기화)
+  try {
+    await sendToUpstash('SETEX', 'mma:session:' + sessionId, 40, JSON.stringify(sessionObj));
+    await sendToUpstash('INCR', 'mma:pv_total');
+    const today = new Date().toISOString().split('T')[0];
+    await sendToUpstash('SADD', 'mma:daily_visitors:' + today, visitorId);
+    if (eventType === 'visit' || eventType === 'scene_change') {
+      await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(sessionObj));
+      await sendToUpstash('LTRIM', 'mma:logs', 0, 199);
+    }
+  } catch (e) {}
 
   return res.status(200).json({
     success: true,

@@ -35,9 +35,12 @@ function loadTmpStorage() {
   } catch (e) {}
 }
 
+const DEFAULT_UPSTASH_URL = 'https://enabling-tortoise-158995.upstash.io';
+const DEFAULT_UPSTASH_TOKEN = 'gQAAAAAAAm0TAAIgcDI3ZDlmY2M0MzI5N2Q0MzgwOTI5YmRhYjZjZjdjOTUyOA';
+
 async function sendToUpstash(cmd, ...args) {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || DEFAULT_UPSTASH_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || DEFAULT_UPSTASH_TOKEN;
   if (!url || !token) return null;
 
   try {
@@ -99,10 +102,11 @@ module.exports = async (req, res) => {
   let historyList = [];
   let totalPv = global.__MMA_TOTAL_PV__ || 0;
   let todayVisitorSet = new Set();
+  let todayCount = 0;
   let storageEngine = 'Serverless In-Memory + /tmp';
 
   // Check Upstash Redis first
-  const upstashUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const upstashUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || DEFAULT_UPSTASH_URL;
   if (upstashUrl) {
     try {
       storageEngine = 'Upstash Redis (Vercel KV Cloud)';
@@ -120,7 +124,7 @@ module.exports = async (req, res) => {
 
       const today = new Date().toISOString().split('T')[0];
       const todayCardRes = await sendToUpstash('SCARD', 'mma:daily_visitors:' + today);
-      const todayCount = (todayCardRes && todayCardRes.result) ? parseInt(todayCardRes.result, 10) : 0;
+      todayCount = (todayCardRes && todayCardRes.result) ? parseInt(todayCardRes.result, 10) : 0;
 
       const logsRes = await sendToUpstash('LRANGE', 'mma:logs', 0, 99);
       if (logsRes && Array.isArray(logsRes.result)) {
@@ -197,7 +201,7 @@ module.exports = async (req, res) => {
   return res.status(200).json({
     kpi: {
       activeCount: totalActive,
-      todayVisitors: Math.max(todayVisitorSet.size, totalActive),
+      todayVisitors: Math.max(todayCount, todayVisitorSet.size, totalActive),
       totalPageviews: Math.max(totalPv, historyList.length, totalActive),
       avgDurationSeconds: avgDur,
       avgDurationFormatted: formatDuration(avgDur),
