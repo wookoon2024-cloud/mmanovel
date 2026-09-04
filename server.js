@@ -12,7 +12,7 @@ try {
   ttsHandler = (req, res) => res.status(503).json({ error: 'ws module not installed locally' });
 }
 
-const PORT = process.env.PORT || 8090;
+const PORT = process.env.PORT || 3000;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
