@@ -1,69 +1,55 @@
 {
-  "last_sync": "2026-09-03 21:36:01",
-  "sync_status": "OK",
+  "last_sync": "2026-09-04 21:19:09",
+  "sync_status": "ERROR",
   "changed": false,
   "summary": "모든 5개 정부 Open API 및 나라사랑포털 공식 데이터 실시간 정상 연동 중",
   "apis": {
     "mma_exam_openapi": {
       "url": "https://www.data.go.kr/data/3064321/openapi.do",
       "title": "병무청 병역판정 신체검사 정보 Open API",
-      "status": "HEALTHY",
-      "checked_at": "2026-09-03 21:35:39",
-      "verified": true
+      "status": "ACTIVE",
+      "checked_at": "2026-09-04 21:18:06",
+      "verified": false,
+      "error": "<urlopen error timed out>"
     },
     "mma_recruit_openapi": {
       "url": "https://www.data.go.kr/data/3064321/openapi.do",
       "title": "병무청 모집분야별 지원자격 및 실시간 군지원 접수현황 Open API",
       "status": "ACTIVE",
-      "checked_at": "2026-09-03 21:35:40",
+      "checked_at": "2026-09-04 21:18:22",
       "verified": true
     },
     "mma_hotspots_openapi": {
       "url": "https://www.data.go.kr",
       "title": "병무청 나라사랑가게 가맹점 및 할인혜택 Open API",
       "status": "ACTIVE",
-      "checked_at": "2026-09-03 21:35:40",
+      "checked_at": "2026-09-04 21:18:22",
       "verified": true
     },
     "narasarang_portal": {
       "url": "https://www.narasarang.or.kr",
       "title": "군인공제회C&C 나라사랑포털 공식 혜택 공시 데이터",
       "status": "HEALTHY",
-      "checked_at": "2026-09-03 21:35:40",
+      "checked_at": "2026-09-04 21:18:22",
       "verified": true
     },
     "travel_allowance_regulation": {
       "api_type": "DRF_ADMIN_RULE_OPEN_API",
       "law_name": "병역의무자 여비지급 규정 (병무청 훈령)",
-      "checked_at": "2026-09-03 21:35:41",
+      "checked_at": "2026-09-04 21:18:23",
       "meal_allowance": 8000,
       "verified": true,
-      "status": "HEALTHY"
+      "notice": "<urlopen error timed out>"
     },
     "physical_exam_rules": {
-      "api_type": "DRF_OFFICIAL_OPEN_API",
-      "oc": "westock",
+      "api_type": "WEB_FALLBACK_SCRAPING",
+      "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%B3%91%EC%97%AD%ED%8C%90%EC%A0%95%EC%8B%A0%EC%B2%B4%EA%B2%80%EC%82%AC%EB%93%B1%EA%B2%80%EC%82%AC%EA%B7%9C%EC%B9%99",
       "law_name": "병역판정 신체검사 등 검사규칙",
-      "checked_at": "2026-09-03 21:35:52",
+      "checked_at": "2026-09-04 21:18:53",
       "bmi_appendix": 2,
       "disease_appendix": 3,
-      "verified": true,
-      "mst": "260145",
-      "ordinance_info": "국방부령 제1139호 (시행 20240201)",
-      "appendices": [
-        {
-          "number": 1,
-          "title": "신체검사 분담업무의 구분 및 담당자(제4조제1항 관련)"
-        },
-        {
-          "number": 2,
-          "title": "신장ㆍ체중에 따른 신체등급의 판정기준(제10조제1항 관련)"
-        },
-        {
-          "number": 3,
-          "title": "질병·심신장애의 정도 및 평가기준(제11조·제20조 및 제21조 관련)"
-        }
-      ]
+      "verified": false,
+      "error": "<urlopen error timed out>"
     }
   }
 }
