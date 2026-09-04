@@ -51,25 +51,29 @@ function parseUserAgent(ua = '') {
   const uaLower = ua.toLowerCase();
   let os = 'Unknown OS';
   if (uaLower.includes('windows')) os = 'Windows';
-  else if (uaLower.includes('macintosh') || uaLower.includes('mac os')) os = 'macOS';
   else if (uaLower.includes('iphone')) os = 'iOS (iPhone)';
   else if (uaLower.includes('ipad')) os = 'iPadOS';
+  else if (uaLower.includes('macintosh') || uaLower.includes('mac os')) os = 'macOS';
   else if (uaLower.includes('android')) os = 'Android';
   else if (uaLower.includes('linux')) os = 'Linux';
 
   let browser = 'Unknown Browser';
   if (uaLower.includes('whale')) browser = 'Naver Whale';
   else if (uaLower.includes('samsungbrowser')) browser = 'Samsung Internet';
+  else if (uaLower.includes('kakaotalk')) browser = 'KakaoTalk';
+  else if (uaLower.includes('naver')) browser = 'Naver App';
   else if (uaLower.includes('edg/')) browser = 'Microsoft Edge';
   else if (uaLower.includes('chrome') && !uaLower.includes('chromium')) browser = 'Google Chrome';
   else if (uaLower.includes('safari') && !uaLower.includes('chrome')) browser = 'Apple Safari';
   else if (uaLower.includes('firefox')) browser = 'Mozilla Firefox';
 
   let device = 'Desktop';
-  if (/mobile|iphone|ipod|android.*mobile/i.test(uaLower)) {
+  if (/mobile|iphone|ipod|blackberry|iemobile|opera mini/i.test(uaLower)) {
     device = 'Mobile';
-  } else if (/ipad|tablet|android(?!.*mobile)/i.test(uaLower)) {
+  } else if (/ipad|tablet/i.test(uaLower)) {
     device = 'Tablet';
+  } else if (uaLower.includes('android')) {
+    device = uaLower.includes('tablet') ? 'Tablet' : 'Mobile';
   }
 
   return { os, browser, device };
@@ -171,7 +175,18 @@ module.exports = async (req, res) => {
   } catch (e) {}
   const region = req.headers['x-vercel-ip-country-region'] || '';
   const userAgent = req.headers['user-agent'] || '';
-  const { os, browser, device } = parseUserAgent(userAgent);
+  const parsed = parseUserAgent(userAgent);
+  const clientDevice = body.device;
+  // 클라이언트가 명시적으로 보고한 기기(Mobile/Tablet) 최우선 신뢰
+  const finalDevice = (clientDevice === 'Mobile' || clientDevice === 'Tablet')
+    ? clientDevice
+    : (parsed.device !== 'Desktop' ? parsed.device : (clientDevice || 'Desktop'));
+
+  const finalOs = (body.clientEnv && /ios|iphone/i.test(body.clientEnv))
+    ? 'iOS'
+    : ((body.clientEnv && /android/i.test(body.clientEnv)) ? 'Android' : parsed.os);
+  const finalBrowser = parsed.browser !== 'Unknown Browser' ? parsed.browser : (body.clientEnv ? body.clientEnv.split('·').pop().trim() : 'Unknown Browser');
+
   const now = Date.now();
 
   // Prune inactive sessions (> 40s)
@@ -201,9 +216,9 @@ module.exports = async (req, res) => {
     country,
     city,
     region,
-    os,
-    browser,
-    device,
+    os: finalOs,
+    browser: finalBrowser,
+    device: finalDevice,
     sceneIdx,
     sceneTitle,
     lang,
@@ -253,9 +268,9 @@ module.exports = async (req, res) => {
       maskedIp: maskIp(rawIp),
       city,
       country,
-      device,
-      browser,
-      os
+      device: finalDevice,
+      browser: finalBrowser,
+      os: finalOs
     }
   });
 };

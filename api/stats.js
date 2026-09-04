@@ -167,9 +167,10 @@ module.exports = async (req, res) => {
   const sceneCounts = { lobby: 0 };
   for (let i = 0; i <= 14; i++) sceneCounts[i] = 0;
 
-  // Device Breakdown
+  // Device & City Breakdown (활성 방문자 + 히스토리 고유 방문자 누적 집계)
   const deviceCounts = { Desktop: 0, Mobile: 0, Tablet: 0 };
   const cityCounts = {};
+  const countedVisitors = new Set();
 
   activeVisitors.forEach(v => {
     if (v.sceneIdx === 'lobby' || (typeof v.sceneIdx === 'string' && v.sceneIdx.startsWith('lobby'))) {
@@ -177,17 +178,27 @@ module.exports = async (req, res) => {
     } else if (v.sceneIdx !== undefined && sceneCounts[v.sceneIdx] !== undefined) {
       sceneCounts[v.sceneIdx]++;
     }
-    if (deviceCounts[v.device] !== undefined) {
-      deviceCounts[v.device]++;
-    } else {
-      deviceCounts.Desktop++;
-    }
+    const dev = (v.device === 'Mobile' || v.device === 'Tablet')
+      ? v.device
+      : ((v.os && /android|ios|iphone/i.test(v.os)) ? 'Mobile' : 'Desktop');
+    deviceCounts[dev] = (deviceCounts[dev] || 0) + 1;
     const c = v.city || '기타';
     cityCounts[c] = (cityCounts[c] || 0) + 1;
+    if (v.visitorId || v.sessionId) countedVisitors.add(v.visitorId || v.sessionId);
   });
 
   historyList.forEach(h => {
     if (h.visitorId) todayVisitorSet.add(h.visitorId);
+    const id = h.visitorId || h.sessionId;
+    if (id && !countedVisitors.has(id)) {
+      countedVisitors.add(id);
+      const dev = (h.device === 'Mobile' || h.device === 'Tablet')
+        ? h.device
+        : ((h.os && /android|ios|iphone/i.test(h.os)) ? 'Mobile' : 'Desktop');
+      deviceCounts[dev] = (deviceCounts[dev] || 0) + 1;
+      const c = h.city || '기타';
+      cityCounts[c] = (cityCounts[c] || 0) + 1;
+    }
   });
 
   const totalActive = activeVisitors.length;

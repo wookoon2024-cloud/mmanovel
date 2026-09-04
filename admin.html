@@ -735,9 +735,46 @@
         console.error('renderFunnel error:', e);
       }
 
-      // 5. 기기 및 지역
+      // 5. 기기 및 지역 (현재 활성 세션 + 최근 로그 및 로컬 저장 로그 종합 집계)
       try {
-        renderDevicesAndCities(data.deviceBreakdown || {}, data.cityBreakdown || {});
+        const liveDevices = { Desktop: 0, Mobile: 0, Tablet: 0 };
+        const liveCities = {};
+        const countedIds = new Set();
+
+        // 1. 현재 활성 방문자 반영
+        mergedVisitors.forEach(v => {
+          const isMob = v.device === 'Mobile' || (v.clientEnv && /android|ios|iphone|mobile/i.test(v.clientEnv)) || (v.os && /android|ios|iphone/i.test(v.os));
+          const isTab = !isMob && (v.device === 'Tablet' || (v.clientEnv && /ipad|tablet/i.test(v.clientEnv)) || (v.os && /ipad/i.test(v.os)));
+          const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+          liveDevices[dev] = (liveDevices[dev] || 0) + 1;
+          const c = v.city || '대한민국';
+          liveCities[c] = (liveCities[c] || 0) + 1;
+          if (v.visitorId || v.sessionId) countedIds.add(v.visitorId || v.sessionId);
+        });
+
+        // 2. 최근 로그(기록된 방문자) 중 아직 안 들어간 고유 방문자 누적
+        const allLogs = (data.recentLogs || []).concat(JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]'));
+        allLogs.forEach(l => {
+          const id = l.visitorId || l.sessionId;
+          if (id && !countedIds.has(id)) {
+            countedIds.add(id);
+            const isMob = l.device === 'Mobile' || (l.clientEnv && /android|ios|iphone|mobile/i.test(l.clientEnv)) || (l.os && /android|ios|iphone/i.test(l.os));
+            const isTab = !isMob && (l.device === 'Tablet' || (l.clientEnv && /ipad|tablet/i.test(l.clientEnv)) || (l.os && /ipad/i.test(l.os)));
+            const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+            liveDevices[dev] = (liveDevices[dev] || 0) + 1;
+            const c = l.city || '대한민국';
+            liveCities[c] = (liveCities[c] || 0) + 1;
+          }
+        });
+
+        const finalDevices = {
+          Desktop: Math.max(data.deviceBreakdown?.Desktop || 0, liveDevices.Desktop),
+          Mobile: Math.max(data.deviceBreakdown?.Mobile || 0, liveDevices.Mobile),
+          Tablet: Math.max(data.deviceBreakdown?.Tablet || 0, liveDevices.Tablet)
+        };
+        const finalCities = Object.assign({}, data.cityBreakdown || {}, liveCities);
+
+        renderDevicesAndCities(finalDevices, finalCities);
       } catch (e) {
         console.error('renderDevicesAndCities error:', e);
       }
@@ -776,8 +813,8 @@
         const maskedIp = (v.maskedIp && !v.maskedIp.includes('127.0.0.1')) ? v.maskedIp : (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp);
         const ipDisplay = showFullIp ? rawIp : maskedIp;
         const flag = v.country === 'KR' ? '🇰🇷' : (v.country === 'US' ? '🇺🇸' : '🌐');
-        const isMobile = v.device === 'Mobile';
-        const isTablet = v.device === 'Tablet';
+        const isMobile = v.device === 'Mobile' || (v.clientEnv && /android|ios|iphone|mobile/i.test(v.clientEnv)) || (v.os && /android|ios|iphone/i.test(v.os));
+        const isTablet = !isMobile && (v.device === 'Tablet' || (v.clientEnv && /ipad|tablet/i.test(v.clientEnv)) || (v.os && /ipad/i.test(v.os)));
         const deviceIcon = isMobile ? 'smartphone' : (isTablet ? 'tablet' : 'monitor');
         const badgeLabel = isMobile ? '📱 모바일' : (isTablet ? '📟 태블릿' : (v.isLocalTab ? '내 탭' : '실시간'));
         const badgeColor = isMobile 

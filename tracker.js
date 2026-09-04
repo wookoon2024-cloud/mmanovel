@@ -87,24 +87,60 @@
   }
 
   function getDeviceType() {
-    const ua = navigator.userAgent.toLowerCase();
-    if (/mobile|iphone|ipod|android.*mobile/i.test(ua)) return 'Mobile';
-    if (/ipad|tablet|android(?!.*mobile)/i.test(ua)) return 'Tablet';
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const screenWidth = Math.min(window.screen.width || 9999, window.innerWidth || 9999);
+    const isSmall = screenWidth <= 768;
+
+    // 1. 명시적 모바일/스마트폰 UA
+    if (/iphone|ipod|mobile|android.*mobile|mobile.*android|blackberry|iemobile|opera mini/i.test(ua)) {
+      return 'Mobile';
+    }
+    // 2. 태블릿 UA
+    if (/ipad|tablet/i.test(ua) || (ua.includes('android') && !isSmall && !ua.includes('mobile'))) {
+      return 'Tablet';
+    }
+    // 3. 터치스크린 + 작은 화면 폭 (데스크톱 모드 스마트폰 포함 완벽 감지)
+    if (hasTouch && isSmall) {
+      return 'Mobile';
+    }
+    // 4. 안드로이드 기기는 기본 모바일 우선
+    if (ua.includes('android')) {
+      return isSmall ? 'Mobile' : 'Tablet';
+    }
+    // 5. 터치 기반 비-윈도우 기기 (iPad 데스크톱 모드 등)
+    if (hasTouch && !ua.includes('windows')) {
+      return isSmall ? 'Mobile' : 'Tablet';
+    }
     return 'Desktop';
   }
 
   function getOsAndBrowser() {
-    const ua = navigator.userAgent;
+    const ua = navigator.userAgent || '';
     const uaLower = ua.toLowerCase();
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const screenWidth = Math.min(window.screen.width || 9999, window.innerWidth || 9999);
+    const isSmall = screenWidth <= 768;
+
     let os = 'Windows';
-    if (uaLower.includes('mac')) os = 'macOS';
-    if (uaLower.includes('iphone')) os = 'iOS';
-    if (uaLower.includes('android')) os = 'Android';
-    if (uaLower.includes('linux')) os = 'Linux';
+    if (uaLower.includes('mac')) {
+      os = (hasTouch && navigator.maxTouchPoints > 1) ? (isSmall ? 'iOS' : 'iPadOS') : 'macOS';
+    } else if (uaLower.includes('iphone') || uaLower.includes('ipod')) {
+      os = 'iOS';
+    } else if (uaLower.includes('ipad')) {
+      os = 'iPadOS';
+    } else if (uaLower.includes('android')) {
+      os = 'Android';
+    } else if (uaLower.includes('linux')) {
+      os = (hasTouch && isSmall) ? 'Android' : 'Linux';
+    }
 
     let browser = 'Chrome';
-    if (uaLower.includes('edg/')) browser = 'Edge';
-    else if (uaLower.includes('whale')) browser = 'Whale';
+    if (uaLower.includes('whale')) browser = 'Whale';
+    else if (uaLower.includes('samsungbrowser')) browser = 'Samsung Internet';
+    else if (uaLower.includes('kakaotalk')) browser = 'KakaoTalk';
+    else if (uaLower.includes('naver')) browser = 'Naver App';
+    else if (uaLower.includes('edg/')) browser = 'Edge';
     else if (uaLower.includes('safari') && !uaLower.includes('chrome')) browser = 'Safari';
     else if (uaLower.includes('firefox')) browser = 'Firefox';
 
