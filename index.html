@@ -157,56 +157,55 @@
     </div>
 
     <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 -->
-    <div class="max-w-5xl w-full mx-auto my-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4 sm:space-y-6">
-      <div class="text-center space-y-2">
-        <span class="text-xs font-bold text-blue-400 tracking-wide uppercase">
+    <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 (모바일 세로 컴팩트 패딩) -->
+    <div class="max-w-5xl w-full mx-auto my-auto py-2 sm:py-6 px-2 sm:px-6 space-y-2 sm:space-y-6">
+      <div class="text-center space-y-1 sm:space-y-2">
+        <span class="text-[10px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase">
           Scenario Episodes
         </span>
-        <h2 id="lobby-select-title" class="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 id="lobby-select-title" class="text-base sm:text-3xl font-extrabold text-white tracking-tight">
           체험할 시나리오를 선택해 주세요
         </h2>
-        <p id="lobby-sub-title" class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto break-keep leading-relaxed px-2">
+        <p id="lobby-sub-title" class="hidden sm:block text-xs sm:text-sm text-slate-400 max-w-xl mx-auto break-keep leading-relaxed px-2">
           병역판정검사부터 예비군 훈련까지, 실제 행정 절차와 구비서류를 직접 체험하며 확인해 보세요.
         </p>
       </div>
 
-      <!-- ================= [에피소드 캐러셀 슬라이더: 좌우 화살표 & 2개씩 페이징] ================= -->
-      <div class="relative max-w-5xl w-full mx-auto px-2 sm:px-14">
+      <!-- ================= [에피소드 캐러셀 슬라이더: 모바일 1화씩 / PC 2화씩, 터치 스와이프 지원] ================= -->
+      <div class="relative max-w-5xl w-full mx-auto px-0 sm:px-14">
         
-        <!-- 좌측 이전 페이지 화살표 버튼 (<) - 첫 페이지에서는 완전히 숨김 -->
-        <button id="ep-prev-btn" onclick="prevEpisodePage()" class="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-900/90 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer opacity-0 pointer-events-none scale-75 invisible" title="이전 에피소드">
-          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        <!-- 좌측 이전 페이지 화살표 버튼 (<) -->
+        <button id="ep-prev-btn" onclick="prevEpisodePage()" class="absolute -left-1 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer opacity-0 pointer-events-none scale-75 invisible" title="이전 에피소드">
+          <i data-lucide="chevron-left" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
         <!-- 우측 다음 페이지 화살표 버튼 (>) -->
-        <button id="ep-next-btn" onclick="nextEpisodePage()" class="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-900/90 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer" title="다음 에피소드">
-          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        <button id="ep-next-btn" onclick="nextEpisodePage()" class="absolute -right-1 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer" title="다음 에피소드">
+          <i data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
-        <!-- 슬라이더 뷰포트 (오버플로우 숨김) -->
-        <div class="overflow-hidden w-full rounded-3xl p-1">
-          <div id="episode-slider-track" class="flex transition-transform duration-500 ease-out w-[200%]">
+        <!-- 슬라이더 뷰포트 (오버플로우 숨김 & 터치 스와이프) -->
+        <div id="episode-slider-viewport" class="overflow-hidden w-full rounded-2xl sm:rounded-3xl p-1 select-none">
+          <div id="episode-slider-track" class="flex transition-transform duration-500 ease-out w-full">
             
-            <!-- ================= [PAGE 1: 에피소드 1 (병역판정검사) & 에피소드 2 (예비군 훈련)] ================= -->
-            <div class="w-1/2 grid grid-cols-1 md:grid-cols-2 gap-7 px-2 shrink-0">
-              
-              <!-- CARD 1: 제1화 병역판정검사 (정식 플레이 가능) -->
-              <div class="group rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-[450px] sm:h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer shrink-0" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
-                <!-- 포스터 이미지 영역 (모바일 컴팩트 높이로 조절) -->
-                <div id="ep1-poster-wrapper" class="relative w-full h-[260px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+            <!-- [SLIDE 1: 제1화 병역판정검사] -->
+            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
+                <!-- 포스터 이미지 영역 (모바일 컴팩트 높이: 시작 버튼까지 100% 한 화면 노출) -->
+                <div id="ep1-poster-wrapper" class="relative w-full h-[135px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep1-live-video" src="assets/ep1_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 pointer-events-none"></div>
                   
-                  <div class="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
-                    <span id="ep1-badge-title" class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-bold tracking-wide shadow-md">
+                  <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
+                    <span id="ep1-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       <span class="xs:hidden">제1화</span><span class="hidden xs:inline">제1화 · 병역판정검사 편</span>
                     </span>
                     <div id="ep1-saved-badge">
-                      <span class="group-hover:hidden px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500 text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
+                      <span class="group-hover:hidden px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500 text-white text-[9px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
                         <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></span> 플레이 가능
                       </span>
-                      <span class="hidden group-hover:flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[10px] sm:text-xs font-bold items-center gap-1 shadow-lg border border-blue-300/40 animate-pulse">
+                      <span class="hidden group-hover:flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[9px] sm:text-xs font-bold items-center gap-1 shadow-lg border border-blue-300/40 animate-pulse">
                         <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-300"></span> AI 비디오
                       </span>
                     </div>
@@ -214,13 +213,13 @@
                 </div>
 
                 <!-- 하단 설명 및 버튼 영역 -->
-                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+                  <div class="space-y-1 sm:space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
                     <div>
-                      <h3 id="ep1-title-text" class="text-base sm:text-xl font-bold text-white tracking-tight">
+                      <h3 id="ep1-title-text" class="text-sm sm:text-xl font-bold text-white tracking-tight">
                         청춘의 첫 관문
                       </h3>
-                      <p id="ep1-desc-text" class="text-[11px] sm:text-sm text-slate-300 mt-1 leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep1-desc-text" class="text-[10.5px] sm:text-sm text-slate-300 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                         통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!
                       </p>
                     </div>
@@ -233,39 +232,39 @@
                     </div>
                   </div>
 
-                  <div id="ep1-action-buttons" class="pt-2">
-                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-3 sm:py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
-                      <i data-lucide="play" class="w-4 h-4 fill-white"></i> <span>시나리오 시작하기</span>
+                  <div id="ep1-action-buttons" class="pt-1.5 sm:pt-2">
+                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
+                      <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> <span>시나리오 시작하기</span>
                     </button>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- CARD 2: 제2화 예비군 훈련 (준비 중) -->
-              <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-[440px] sm:h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0 cursor-pointer" onclick="handleCardClick(2)">
-                <!-- 포스터 이미지 영역 -->
-                <div class="relative w-full h-[230px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+            <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
+            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)">
+                <div class="relative w-full h-[135px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
                   
-                  <div class="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
-                    <span id="ep2-badge-title" class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-bold tracking-wide shadow-md">
+                  <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
+                    <span id="ep2-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       제2화 · 예비군 훈련 편
                     </span>
-                    <span id="ep2-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] sm:text-xs font-bold flex items-center gap-1">
+                    <span id="ep2-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
                       <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
                     </span>
                   </div>
                 </div>
 
-                <!-- 하단 설명 및 버튼 영역 -->
-                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+                  <div class="space-y-1 sm:space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
                     <div>
-                      <h3 id="ep2-title-text" class="text-base sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep2-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
                         슬기로운 예비군 훈련 생활
                       </h3>
-                      <p id="ep2-desc-text" class="text-[11px] sm:text-sm text-slate-400 mt-1 leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep2-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                         동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드
                       </p>
                     </div>
@@ -278,44 +277,39 @@
                     </div>
                   </div>
 
-                  <div id="ep2-action-buttons" class="pt-2">
-                    <button disabled class="w-full py-2.5 sm:py-3.5 rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep2-action-buttons" class="pt-1.5 sm:pt-2">
+                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
                 </div>
               </div>
-
             </div>
 
-            <!-- ================= [PAGE 2: 에피소드 3 (병역진로설계) & 에피소드 4 (사회복무요원 첫 출근)] ================= -->
-            <div class="w-1/2 grid grid-cols-1 md:grid-cols-2 gap-7 px-2 shrink-0">
-              
-              <!-- CARD 3: 제3화 병역진로설계 (준비 중) -->
-              <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-[440px] sm:h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0 cursor-pointer" onclick="handleCardClick(3)">
-                <!-- 포스터 이미지 영역 -->
-                <div class="relative w-full h-[230px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+            <!-- [SLIDE 3: 제3화 병역진로설계 (준비 중)] -->
+            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
+                <div class="relative w-full h-[135px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep3_cover.jpg?v=20260904_v189" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
-                  <div class="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
-                    <span id="ep3-badge-title" class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-bold tracking-wide shadow-md">
+                  <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
+                    <span id="ep3-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       제3화 · 병역진로설계 편
                     </span>
-                    <span id="ep3-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] sm:text-xs font-bold flex items-center gap-1">
+                    <span id="ep3-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
                       <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
                     </span>
                   </div>
                 </div>
 
-                <!-- 하단 설명 및 버튼 영역 -->
-                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+                  <div class="space-y-1 sm:space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
                     <div>
-                      <h3 id="ep3-title-text" class="text-base sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep3-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
                         내 꿈을 찾는 병역진로설계
                       </h3>
-                      <p id="ep3-desc-text" class="text-[11px] sm:text-sm text-slate-400 mt-1 leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep3-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                         입영 전 적성·전공 연계 1:1 맞춤 군 특기 상담부터 모의 군 장비 체험, 자격 취득 및 복무 중 자기개발 로드맵!
                       </p>
                     </div>
@@ -328,39 +322,39 @@
                     </div>
                   </div>
 
-                  <div id="ep3-action-buttons" class="pt-2">
-                    <button disabled class="w-full py-2.5 sm:py-3.5 rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep3-action-buttons" class="pt-1.5 sm:pt-2">
+                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- CARD 4: 제4화 사회복무요원 첫출근하기 (준비 중) -->
-              <div class="group rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-[440px] sm:h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 shrink-0 cursor-pointer" onclick="handleCardClick(4)">
-                <!-- 포스터 이미지 영역 -->
-                <div class="relative w-full h-[230px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+            <!-- [SLIDE 4: 제4화 사회복무요원 첫 출근 (준비 중)] -->
+            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
+                <div class="relative w-full h-[135px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep4_cover.jpg?v=20260904_v189" alt="제4화 사회복무요원 첫 출근" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
-                  <div class="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
-                    <span id="ep4-badge-title" class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-bold tracking-wide shadow-md">
+                  <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
+                    <span id="ep4-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       제4화 · 사회복무요원 편
                     </span>
-                    <span id="ep4-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] sm:text-xs font-bold flex items-center gap-1">
+                    <span id="ep4-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
                       <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
                     </span>
                   </div>
                 </div>
 
-                <!-- 하단 설명 및 버튼 영역 -->
-                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
+                  <div class="space-y-1 sm:space-y-2 max-h-40 opacity-100 group-hover:max-h-0 group-hover:opacity-0 group-hover:space-y-0 overflow-hidden transition-all duration-500">
                     <div>
-                      <h3 id="ep4-title-text" class="text-base sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep4-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
                         사회복무 첫 출근
                       </h3>
-                      <p id="ep4-desc-text" class="text-[11px] sm:text-sm text-slate-400 mt-1 leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep4-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                         사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드!
                       </p>
                     </div>
@@ -373,21 +367,20 @@
                     </div>
                   </div>
 
-                  <div id="ep4-action-buttons" class="pt-2">
-                    <button disabled class="w-full py-2.5 sm:py-3.5 rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep4-action-buttons" class="pt-1.5 sm:pt-2">
+                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
                 </div>
               </div>
-
             </div>
 
           </div>
         </div>
 
-        <!-- 하단 슬라이더 페이지네이션 인디케이터 (페이지 점 & 텍스트) -->
-        <div class="flex items-center justify-center gap-3 pt-3">
+        <!-- 하단 슬라이더 페이지네이션 인디케이터 (데스크톱 2버튼, 모바일 4점 인디케이터) -->
+        <div id="ep-desktop-indicators" class="hidden md:flex items-center justify-center gap-3 pt-3">
           <button onclick="goToEpisodePage(0)" id="ep-page-indicator-0" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
             <span class="text-xs font-bold text-white">에피소드 1 · 2</span>
@@ -396,6 +389,13 @@
             <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
             <span class="text-xs font-medium text-slate-400">에피소드 3 · 4</span>
           </button>
+        </div>
+
+        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-2">
+          <button onclick="goToEpisodePage(0)" id="ep-dot-0" class="h-1.5 w-6 rounded-full bg-blue-500 transition-all duration-300 cursor-pointer"></button>
+          <button onclick="goToEpisodePage(1)" id="ep-dot-1" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
+          <button onclick="goToEpisodePage(2)" id="ep-dot-2" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
+          <button onclick="goToEpisodePage(3)" id="ep-dot-3" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
         </div>
 
       </div>
@@ -611,8 +611,8 @@
   </div>
 
   <!-- ================= [LAYER 3.5: 화면 중앙 플로팅 선택지 레이어 (VN Central Choice Overlay)] ================= -->
-  <div id="center-choice-overlay" class="fixed inset-0 z-25 flex items-center justify-center p-2 sm:p-4 pb-36 sm:pb-52 pointer-events-none hidden bg-slate-950/50 backdrop-blur-[3px] transition-all duration-300">
-    <div id="center-choice-container" class="w-full max-w-sm sm:max-w-xl max-h-[70vh] max-h-[70dvh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1">
+  <div id="center-choice-overlay" class="fixed inset-0 z-30 flex items-center justify-center p-2 sm:p-4 pb-2 sm:pb-52 pointer-events-none hidden bg-slate-950/80 backdrop-blur-md transition-all duration-300">
+    <div id="center-choice-container" class="w-full max-w-sm sm:max-w-xl max-h-[86vh] sm:max-h-[75vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1">
       <!-- 중앙 선택지 UI가 여기에 표출됩니다 -->
     </div>
   </div>
@@ -1466,9 +1466,13 @@
       const scene = SCENARIOS[idx];
       currentBg = scene.bg;
 
-      // 중앙 선택지 오버레이 숨김 초기화
+      // 중앙 선택지 오버레이 숨김 초기화 및 캐릭터 레이어 복원
       const choiceOverlay = document.getElementById('center-choice-overlay');
       const choiceContainer = document.getElementById('center-choice-container');
+      const charLayer = document.getElementById('character-layer');
+      if (charLayer) {
+        charLayer.classList.remove('opacity-0', 'pointer-events-none');
+      }
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
@@ -1799,51 +1803,51 @@
 
       if (type === 'CHOICE_SCHEDULE_CONSENT') {
         choiceContainer.innerHTML = `
-          <div class="flex flex-col gap-3 w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col gap-2 sm:gap-3 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 선택지 1: 실시간 공석 달력 조회 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(2);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 text-left flex items-center justify-between shadow-2xl transition duration-150 cursor-pointer">
-              <div class="flex items-center gap-3.5">
-                <span class="w-7 h-7 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">1</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); renderScene(2);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 text-left flex items-center justify-between shadow-2xl transition duration-150 cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3.5">
+                <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-[11px] sm:text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">1</span>
                 <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm sm:text-base text-white group-hover:text-blue-300 transition">네, 실시간 잔여석 달력으로 확인해 볼게요.</span>
-                    <span class="px-2 py-0.5 text-[11px] font-semibold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">추천</span>
+                  <div class="flex items-center gap-1.5 sm:gap-2">
+                    <span class="font-bold text-xs sm:text-base text-white group-hover:text-blue-300 transition">네, 실시간 잔여석 달력으로 확인해 볼게요.</span>
+                    <span class="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[11px] font-semibold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">추천</span>
                   </div>
-                  <p class="text-xs text-slate-400 mt-1">원하는 날짜(오전/오후)를 직접 선택하여 병역판정검사 일정을 스마트하게 변경합니다.</p>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 sm:mt-1 leading-snug">원하는 날짜(오전/오후)를 직접 선택하여 병역판정검사 일정을 스마트하게 변경합니다.</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-blue-300 group-hover:translate-x-1 transition shrink-0 ml-3"></i>
+              <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 group-hover:text-blue-300 group-hover:translate-x-1 transition shrink-0 ml-2 sm:ml-3"></i>
             </button>
 
             <!-- 선택지 2: 기본 통지 일정 진행 (관할 지방병무청 선택 모달로 연결) -->
-            <button onclick="playBeep(600, 'triangle', 0.05); renderWidget('DEFAULT_REGION_PICKER');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-4 sm:p-5 rounded-2xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-800 hover:border-blue-400 text-left flex items-center justify-between shadow-xl transition duration-150 cursor-pointer">
-              <div class="flex items-center gap-3.5">
-                <span class="w-7 h-7 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">2</span>
+            <button onclick="playBeep(600, 'triangle', 0.05); renderWidget('DEFAULT_REGION_PICKER');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-800 hover:border-blue-400 text-left flex items-center justify-between shadow-xl transition duration-150 cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3.5">
+                <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-[11px] sm:text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">2</span>
                 <div>
-                  <span class="font-medium text-sm sm:text-base text-slate-300 group-hover:text-white transition">괜찮아요. 통지된 기본 일정에 맞출게요.</span>
-                  <p class="text-xs text-slate-500 mt-1">지정된 기본 일정대로 주소지 관할 지방병무청을 방문합니다.</p>
+                  <span class="font-medium text-xs sm:text-base text-slate-300 group-hover:text-white transition">괜찮아요. 통지된 기본 일정에 맞출게요.</span>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 leading-snug">지정된 기본 일정대로 주소지 관할 지방병무청을 방문합니다.</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-1 transition shrink-0 ml-3"></i>
+              <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-1 transition shrink-0 ml-2 sm:ml-3"></i>
             </button>
           </div>
         `;
       } else if (type === 'DEFAULT_REGION_PICKER') {
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
             <!-- 팝업 본문 카드 -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl w-full">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span class="text-sm font-bold text-white flex items-center gap-2">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 space-y-2.5 sm:space-y-4 shadow-2xl w-full max-h-[50vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
+                <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                   <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 확인 & 선택
                 </span>
               </div>
               
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <p class="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                 수검을 받으실 <strong class="text-blue-300">주민등록 주소지 관할 지방병무청</strong>을 선택해 주세요.
               </p>
 
-              <select id="default-region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
+              <select id="default-region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
                 <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
                   <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
                   <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
@@ -1874,7 +1878,7 @@
             </div>
 
             <!-- 팝업 아래에 깔끔하게 분리된 이동 버튼 -->
-            <button onclick="confirmDefaultSchedule()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer">
+            <button onclick="confirmDefaultSchedule()" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
               <span>관할 지방병무청 확정 및 다음 단계로</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1882,16 +1886,16 @@
         lucide.createIcons();
       } else if (type === 'REGION_CALENDAR_PICKER') {
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
             <!-- 팝업 본문 카드 -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl w-full">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span class="text-sm font-bold text-white flex items-center gap-2">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 space-y-2.5 sm:space-y-4 shadow-2xl w-full max-h-[50vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
+                <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                   <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 선택
                 </span>
-                <span class="text-xs text-slate-400 font-medium">전국 14개 지방병무청</span>
+                <span class="text-[11px] sm:text-xs text-slate-400 font-medium">전국 14개 지방병무청</span>
               </div>
-              <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
+              <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
                 <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
                   <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
                   <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
@@ -1922,7 +1926,7 @@
             </div>
 
             <!-- 팝업 아래에 분리된 달력 열기 버튼 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer">
+            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
               <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 월별 잔여석 달력 열기</span>
             </button>
           </div>
@@ -1930,214 +1934,210 @@
       } else if (type === 'CONTACT_CARD') {
         const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)", dept: "병역판정검사과" };
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
-            <!-- 팝업 본문 카드 -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-2xl w-full">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span class="font-bold text-sm text-white flex items-center gap-2">
-                  <i data-lucide="calendar-check-2" class="w-4 h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 22일 (목) 오전'} 예약 가능
+          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
+            <!-- 팝업 본문 카드 (모바일 세로 높이 줄이고 내부 스크롤 적용) -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-5 space-y-2 sm:space-y-4 shadow-2xl w-full max-h-[46vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
+                <span class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5 sm:gap-2">
+                  <i data-lucide="calendar-check-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 22일 (목) 오전'} 예약 가능
                 </span>
-                <span class="text-[11px] px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-semibold">실시간 잔여석 확인됨</span>
+                <span class="text-[9px] sm:text-[11px] px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-semibold">실시간 잔여석 확인됨</span>
               </div>
 
               <!-- 병무청 전자민원 신청서 공문서 양식 -->
-              <div class="bg-slate-950/95 rounded-xl p-4 border border-slate-800 space-y-3 text-xs">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div class="bg-slate-950/95 rounded-xl p-2.5 sm:p-4 border border-slate-800 space-y-2 sm:space-y-3 text-[10px] sm:text-xs">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 sm:pb-2 gap-2">
                   <div>
-                    <span class="text-[10px] text-blue-400 font-bold uppercase tracking-wider block">병역법 시행령 제11조 [별지 제1호 서식]</span>
-                    <h4 class="font-extrabold text-white text-xs sm:text-sm">병역판정검사 일자 및 장소 본인선택(변경) 신청서</h4>
+                    <span class="text-[9px] sm:text-[10px] text-blue-400 font-bold uppercase tracking-wider block">병역법 시행령 제11조 [별지 제1호 서식]</span>
+                    <h4 class="font-extrabold text-white text-[11px] sm:text-sm">병역판정검사 일자 및 장소 본인선택(변경) 신청서</h4>
                   </div>
-                  <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2.5 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span id="copy-btn-text">신청 내용 복사</span>
+                  <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[10px] sm:text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0">
+                    <i data-lucide="copy" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> <span id="copy-btn-text">신청 내용 복사</span>
                   </button>
                 </div>
 
                 <!-- 수검 희망 검사장 내역 -->
-                <div class="p-3 rounded-lg bg-slate-900/80 space-y-1.5 text-[11px] leading-relaxed">
+                <div class="p-2 sm:p-3 rounded-lg bg-slate-900/80 space-y-1 sm:space-y-1.5 text-[10px] sm:text-[11px] leading-relaxed">
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 22일 (목) 오전'}</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망기관:</span> <strong class="text-white">${userData.region} (${contact.dept || '병역판정검사과'})</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">검사장 소재지:</span> <span class="text-slate-300">${contact.address}</span></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
-                  <div class="pt-1.5 border-t border-slate-800/80 text-[10px] text-slate-400 flex items-center gap-1">
+                  <div class="pt-1 border-t border-slate-800/80 text-[9px] sm:text-[10px] text-slate-400 flex items-center gap-1">
                     <i data-lucide="info" class="w-3 h-3 text-blue-400 shrink-0"></i>
-                    <span>지참물: 주민등록증·운전면허증·여권 등 공인 신분증 필수 (지참 시 신속 수검)</span>
+                    <span>지참물: 주민등록증·운전면허증·여권 등 신분증 필수</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 팝업 아래에 분리된 버튼 영역 -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-              <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-emerald-400/30 cursor-pointer">
-                <i data-lucide="external-link" class="w-4 h-4"></i> <span>${(currentLang === 'en') ? 'Go to MMA Portal' : '병무청 민원포털 예약하기'}</span>
+            <!-- 팝업 아래 고정 버튼 영역 (무조건 보이도록 shrink-0 및 2열 배치) -->
+            <div class="grid grid-cols-2 gap-2 w-full shrink-0 pt-0.5">
+              <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-2.5 sm:py-3.5 px-2 sm:px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-emerald-400/30 cursor-pointer">
+                <i data-lucide="external-link" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span class="truncate">${(currentLang === 'en') ? 'MMA Portal' : '민원포털 예약'}</span>
               </a>
-              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer">
-                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-2.5 sm:py-3.5 px-2 sm:px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer">
+                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
               </button>
             </div>
           </div>
         `;
       } else if (type === 'HEALTH_CHECK_CHOICE') {
         choiceContainer.innerHTML = `
-          <div class="flex flex-col gap-2.5 w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col gap-2 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 1. 특이질환 없음 (단순 시력저하·안경 포함) -->
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('특이질환 없음');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-emerald-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
-              <div class="flex items-center gap-3">
-                <span class="w-6 h-6 rounded-lg bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('특이질환 없음');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-emerald-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">1</span>
                 <div>
-                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-emerald-300">특이질환 없음 (단순 시력저하·안경 착용 포함)</p>
-                  <p class="text-xs text-slate-400 mt-0.5">서류 제출 불필요 · 병무청 자체 장비로 현장 정밀 측정 (신분증만 지참)</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-emerald-300">특이질환 없음 (단순 시력저하·안경 착용 포함)</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">서류 불필요 · 현장 정밀 측정 (신분증만 지참)</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-emerald-300 transition"></i>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-emerald-300 transition shrink-0"></i>
             </button>
 
             <!-- 2. 정형외과 질환 및 수술 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('정형외과 수술/치료 이력');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
-              <div class="flex items-center gap-3">
-                <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('정형외과 수술/치료 이력');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">2</span>
                 <div>
-                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">무릎 / 발목 / 척추 질환 및 수술 이력</p>
-                  <p class="text-xs text-slate-400 mt-0.5">병무용진단서 + 수술기록지 + MRI/CT 영상 CD 필수 지참</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">무릎 / 발목 / 척추 질환 및 수술 이력</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">병무용진단서 + 수술기록지 + MRI/CT CD 필수</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
             </button>
 
             <!-- 3. 기질적 안과 질환 및 수술 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('기질적 안과 질환/수술');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
-              <div class="flex items-center gap-3">
-                <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('기질적 안과 질환/수술');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">3</span>
                 <div>
-                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">기질적 안과 질환(망막·각막·녹내장 등) 수술·치료 이력</p>
-                  <p class="text-xs text-slate-400 mt-0.5">병무용진단서 + 의무기록사본 지참 (※단순 근시·원시·난시는 서류 불필요)</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">기질적 안과 질환(망막·각막·녹내장 등) 수술·치료</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">병무용진단서 + 의무기록사본 (단순 시력은 제외)</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
             </button>
 
             <!-- 4. 내과 / 만성 질환 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
-              <div class="flex items-center gap-3">
-                <span class="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">4</span>
                 <div>
-                  <p class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300">천식 / 피부질환 / 만성 질환 투약 이력 (6개월 이상)</p>
-                  <p class="text-xs text-slate-400 mt-0.5">6개월 이상 지속 치료 의무기록사본 및 처방전 지참</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">천식 / 피부질환 / 만성 질환 투약 (6개월 이상)</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">6개월 이상 치료 의무기록사본 및 처방전 지참</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition"></i>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
             </button>
           </div>
         `;
       } else if (type === 'NARA_CARD_CHOICE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-w-2xl">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-w-2xl max-h-[78vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
             
             <!-- 1. KB국민 나라사랑카드 (좌측 세로형 카드) -->
-            <div class="p-5 rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-yellow-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-4 relative overflow-hidden group">
-              <!-- 카드 상단 배경 그라데이션 장식 -->
+            <div class="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-yellow-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-2.5 sm:space-y-4 relative overflow-hidden group">
               <div class="absolute -top-10 -right-10 w-28 h-28 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none"></div>
               
-              <div class="space-y-3.5">
-                <!-- 카드 헤더 영역 -->
+              <div class="space-y-2 sm:space-y-3">
                 <div class="flex items-center justify-between">
-                  <div class="w-10 h-10 rounded-2xl bg-yellow-500/15 flex items-center justify-center text-yellow-400">
-                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/15 flex items-center justify-center text-yellow-400">
+                    <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                   </div>
                 </div>
 
                 <div>
-                  <h4 class="font-black text-base sm:text-lg text-white tracking-tight flex items-center gap-1.5">
+                  <h4 class="font-black text-sm sm:text-lg text-white tracking-tight flex items-center gap-1.5">
                     ${isEn ? 'KB Kookmin Nara Sarang' : 'KB국민 나라사랑카드'}
                   </h4>
-                  <p class="text-xs text-yellow-400/90 font-medium mt-0.5">
-                    ${isEn ? 'KB Kookmin Card · MMA Partner' : 'KB국민카드 · 병역 맞춤형 혜택'}
+                  <p class="text-[10px] sm:text-xs text-yellow-400/90 font-medium mt-0.5">
+                    ${isEn ? 'KB Card · MMA Partner' : 'KB국민카드 · 병역 맞춤형 혜택'}
                   </p>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (세로형, 테두리 박스 없는 플랫 리스트) -->
-                <div class="space-y-2 pt-1 text-xs text-slate-300">
-                  <div class="flex items-center gap-2">
+                <!-- 핵심 혜택 리스트 -->
+                <div class="space-y-1 sm:space-y-2 pt-0.5 text-[10px] sm:text-xs text-slate-300">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
                     <span><strong>${isEn ? 'Public Transit:' : '전국 대중교통:'}</strong> ${isEn ? '20% billing discount' : '20% 청구할인 (버스/지하철)'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
                     <span><strong>${isEn ? 'Military PX:' : '군마트 PX / 편의점:'}</strong> ${isEn ? 'Max 20% cashback' : '최대 20% 환급할인'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Starbucks Coffee:' : '스타벅스 커피:'}</strong> ${isEn ? '15% cashback discount' : '15% 환급할인'}</span>
+                    <span><strong>${isEn ? 'Starbucks Coffee:' : '스타벅스 커피:'}</strong> ${isEn ? '15% cashback' : '15% 환급할인'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Theme Parks:' : '에버랜드/롯데월드:'}</strong> ${isEn ? '50% on-site discount' : '50% 현장할인'}</span>
+                    <span><strong>${isEn ? 'Theme Parks:' : '에버랜드/롯데월드:'}</strong> ${isEn ? '50% discount' : '50% 현장할인'}</span>
                   </div>
                 </div>
               </div>
 
               <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-2 pt-2">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-yellow-500/20 cursor-pointer">
-                  <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}
+              <div class="space-y-1.5 sm:space-y-2 pt-1">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="w-full py-2.5 sm:py-3 px-3 rounded-xl sm:rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-yellow-500/20 cursor-pointer">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : '나라사랑포털 혜택 안내 ↗'}
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> ${isEn ? 'Official Benefits ↗' : '나라사랑포털 혜택 안내 ↗'}
                 </a>
               </div>
             </div>
 
             <!-- 2. IBK기업 나라사랑카드 (우측 세로형 카드) -->
-            <div class="p-5 rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-4 relative overflow-hidden group">
-              <!-- 카드 상단 배경 그라데이션 장식 -->
+            <div class="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-2xl flex flex-col justify-between space-y-2.5 sm:space-y-4 relative overflow-hidden group">
               <div class="absolute -top-10 -right-10 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-              <div class="space-y-3.5">
-                <!-- 카드 헤더 영역 -->
+              <div class="space-y-2 sm:space-y-3">
                 <div class="flex items-center justify-between">
-                  <div class="w-10 h-10 rounded-2xl bg-blue-500/15 flex items-center justify-center text-blue-400">
-                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-400">
+                    <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                   </div>
                 </div>
 
                 <div>
-                  <h4 class="font-black text-base sm:text-lg text-white tracking-tight flex items-center gap-1.5">
+                  <h4 class="font-black text-sm sm:text-lg text-white tracking-tight flex items-center gap-1.5">
                     ${isEn ? 'IBK Industrial Nara Sarang' : 'IBK기업 나라사랑카드'}
                   </h4>
-                  <p class="text-xs text-blue-400/90 font-medium mt-0.5">
-                    ${isEn ? 'IBK Bank · Military Life Benefits' : 'IBK기업은행 · 실속형 복지 혜택'}
+                  <p class="text-[10px] sm:text-xs text-blue-400/90 font-medium mt-0.5">
+                    ${isEn ? 'IBK Bank · Life Benefits' : 'IBK기업은행 · 실속형 복지 혜택'}
                   </p>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (세로형, 테두리 박스 없는 플랫 리스트) -->
-                <div class="space-y-2 pt-1 text-xs text-slate-300">
-                  <div class="flex items-center gap-2">
+                <!-- 핵심 혜택 리스트 -->
+                <div class="space-y-1 sm:space-y-2 pt-0.5 text-[10px] sm:text-xs text-slate-300">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'Convenience Stores:' : '편의점 CU·GS25:'}</strong> ${isEn ? '10% unlimited discount' : '10% 무제한 할인'}</span>
+                    <span><strong>${isEn ? 'Convenience:' : '편의점 CU·GS25:'}</strong> ${isEn ? '10% unlimited' : '10% 무제한 할인'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'High-speed Rail:' : 'KTX / SRT / 고속버스:'}</strong> ${isEn ? '5% discount' : '5% 청구할인'}</span>
+                    <span><strong>${isEn ? 'Train/Bus:' : 'KTX / SRT / 고속버스:'}</strong> ${isEn ? '5% discount' : '5% 청구할인'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'TOEIC & Language:' : 'TOEIC 어학시험:'}</strong> ${isEn ? '2,000 KRW discount' : '2,000원 할인 (월 1회)'}</span>
+                    <span><strong>${isEn ? 'TOEIC Exam:' : 'TOEIC 어학시험:'}</strong> ${isEn ? '2,000 KRW discount' : '2,000원 할인 (월 1회)'}</span>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span><strong>${isEn ? 'CGV Cinema:' : 'CGV 영화관:'}</strong> ${isEn ? 'Max 3,000 KRW discount' : '최대 3,000원 할인'}</span>
+                    <span><strong>${isEn ? 'CGV Cinema:' : 'CGV 영화관:'}</strong> ${isEn ? 'Max 3,000 KRW' : '최대 3,000원 할인'}</span>
                   </div>
                 </div>
               </div>
 
               <!-- 카드 하단 액션 버튼 영역 -->
-              <div class="space-y-2 pt-2">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="w-full py-3 px-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-500/25 cursor-pointer">
-                  <i data-lucide="check-circle-2" class="w-4 h-4"></i> ${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}
+              <div class="space-y-1.5 sm:space-y-2 pt-1">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="w-full py-2.5 sm:py-3 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-500/25 cursor-pointer">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}
                 </button>
-                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${isEn ? 'View Official Benefits ↗' : 'IBK 공식 혜택 보기 ↗'}
+                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> ${isEn ? 'Official Benefits ↗' : 'IBK 공식 혜택 보기 ↗'}
                 </a>
               </div>
             </div>
@@ -2147,19 +2147,19 @@
       } else if (type === 'LOCKER_CHANGE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 shadow-2xl w-full">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                  <i data-lucide="credit-card" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-5 shadow-2xl w-full">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
-                  <p class="text-xs text-slate-400">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
                 </div>
               </div>
             </div>
-            <button onclick="playBeep(750, 'triangle', 0.05); goToScene(7);" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer hover:scale-[1.01]">
+            <button onclick="playBeep(750, 'triangle', 0.05); goToScene(7);" class="w-full py-2.5 sm:py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -2167,60 +2167,60 @@
       } else if (type === 'PSYCH_TEST_UI') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
             <!-- 상단 단계/내용 박스 -->
-            <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-4 shadow-2xl w-full">
+            <div class="bg-slate-900/95 p-3.5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3 sm:space-y-4 shadow-2xl w-full max-h-[55vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
               <!-- 상단 헤더 & 진행 바 (테두리 없는 깔끔한 텍스트 배지) -->
-              <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
                     <span class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Psychological Test (PC Simulation)' : '심리검사 PC 실전 테스트'}</span>
                   </div>
-                  <span id="psych-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
+                  <span id="psych-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
                 </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
                   <div id="psych-progress-bar" class="bg-indigo-500 h-full w-1/2 transition-all duration-300"></div>
                 </div>
               </div>
 
               <!-- [STAGE 1] 문항 1: 인지능력검사 (정답 맞출 때까지 진행) -->
-              <div id="psych-stage-1" class="space-y-3">
-                <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
-                  <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
+              <div id="psych-stage-1" class="space-y-2 sm:space-y-3">
+                <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-xs">
+                  <div class="font-bold text-slate-200 text-[11px] sm:text-sm leading-snug">
                     [문항 1 · 기초 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?
                   </div>
-                  <div class="grid grid-cols-2 gap-2 pt-1">
-                    <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">① 군인 - 군대</button>
-                    <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">② 학생 - 학교</button>
-                    <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-xs cursor-pointer">③ 의사 - 병원</button>
-                    <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-left transition text-xs cursor-pointer">④ 자동차 - 도로</button>
+                  <div class="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1">
+                    <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">① 군인 - 군대</button>
+                    <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">② 학생 - 학교</button>
+                    <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">③ 의사 - 병원</button>
+                    <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">④ 자동차 - 도로</button>
                   </div>
                 </div>
-                <div id="psych-q1-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+                <div id="psych-q1-feedback" class="hidden p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs font-semibold"></div>
               </div>
 
               <!-- [STAGE 2] 문항 2: 인성 및 군 복무 적응도 검사 (기본 숨김) -->
-              <div id="psych-stage-2" class="hidden space-y-3">
-                <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
-                  <div class="font-bold text-slate-200 text-xs sm:text-sm leading-snug">
+              <div id="psych-stage-2" class="hidden space-y-2 sm:space-y-3">
+                <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
+                  <div class="font-bold text-slate-200 text-[11px] sm:text-sm leading-snug">
                     [문항 2 · 인성 및 군 복무 적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.
                   </div>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                    <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">매우 그렇다</button>
-                    <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">대체로 그렇다</button>
-                    <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">보통이다</button>
-                    <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-xs cursor-pointer">그렇지 않다</button>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 pt-1">
+                    <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">매우 그렇다</button>
+                    <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">대체로 그렇다</button>
+                    <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">보통이다</button>
+                    <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">그렇지 않다</button>
                   </div>
                 </div>
-                <div id="psych-q2-feedback" class="hidden p-3 rounded-xl bg-indigo-950/40 text-indigo-300 text-xs font-semibold flex items-center gap-1.5">
+                <div id="psych-q2-feedback" class="hidden p-2.5 sm:p-3 rounded-xl bg-indigo-950/40 text-indigo-300 text-[11px] sm:text-xs font-semibold flex items-center gap-1.5">
                   <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span>답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다.</span>
                 </div>
               </div>
             </div>
 
             <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 -->
-            <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer animate-in fade-in hover:scale-[1.01]">
+            <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-2.5 sm:py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer animate-in fade-in hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Pathology Lab' : '임상병리검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -2228,30 +2228,30 @@
       } else if (type === 'LAB_ROOM_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 상단 단계/내용 박스 (가장 큰 단계 기준으로 min-height 고정하여 창 크기 변동 방지) -->
-            <div class="bg-slate-900/95 p-5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-4 shadow-2xl w-full min-h-[225px] flex flex-col justify-between">
+            <div class="bg-slate-900/95 p-3.5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3 sm:space-y-4 shadow-2xl w-full min-h-[180px] sm:min-h-[225px] flex flex-col justify-between">
               <!-- 상단 헤더 & 진행 바 -->
-              <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <i data-lucide="flask-conical" class="w-4 h-4 text-teal-400"></i>
                     <span id="lab-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Urine Test Kit Received' : '1단계: 임상병리실 접수 & 소변검사 키트 수령'}</span>
                   </div>
-                  <span id="lab-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 4단계</span>
+                  <span id="lab-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 4단계</span>
                 </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
                   <div id="lab-progress-bar" class="bg-teal-500 h-full w-1/4 transition-all duration-300"></div>
                 </div>
               </div>
 
-              <!-- 고정 높이 콘텐츠 영역 (min-h-[115px]로 1~4단계 전체 높이 일치 고정) -->
-              <div class="min-h-[115px] flex flex-col justify-center">
+              <!-- 고정 높이 콘텐츠 영역 (min-h-[90px] sm:min-h-[115px]) -->
+              <div class="min-h-[90px] sm:min-h-[115px] flex flex-col justify-center">
                 <!-- [LAB STAGE 1: 임상병리 접수 & 키트 수령] -->
-                <div id="lab-stage-1" class="space-y-3">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
+                <div id="lab-stage-1" class="space-y-2 sm:space-y-3">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
                     <div class="flex items-center gap-2 text-teal-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="info" class="w-4 h-4"></i> 임상병리검사실 업무 안내
+                      <i data-lucide="info" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 임상병리검사실 업무 안내
                     </div>
                     <p class="text-slate-300 leading-relaxed">
                       간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등을 정밀하게 확인하기 위해 <strong>소변검사와 혈액검사(채혈)</strong>를 실시합니다.
@@ -2260,12 +2260,12 @@
                 </div>
 
                 <!-- [LAB STAGE 2: 화장실 소변 채취 가이드] -->
-                <div id="lab-stage-2" class="hidden space-y-3">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
+                <div id="lab-stage-2" class="hidden space-y-2 sm:space-y-3">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
                     <div class="flex items-center gap-2 text-amber-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="alert-triangle" class="w-4 h-4"></i> 올바른 소변 채취 필수 수칙 (중간뇨 채취)
+                      <i data-lucide="alert-triangle" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 올바른 소변 채취 필수 수칙 (중간뇨 채취)
                     </div>
-                    <div class="space-y-1.5 text-slate-300 leading-relaxed">
+                    <div class="space-y-1 text-slate-300 leading-relaxed text-[10px] sm:text-xs">
                       <p>1️⃣ <strong>첫 소변(처음 1~2초)은 변기에 버리고</strong>, 반드시 <strong>'중간 소변'을 컵의 1/3~1/2 정도</strong> 받아주세요.</p>
                       <p>2️⃣ 채취한 소변에 검사 스틱을 살짝 적신 후, 지정된 검체 보관함에 컵과 함께 안전하게 제출합니다.</p>
                     </div>
@@ -2273,24 +2273,24 @@
                 </div>
 
                 <!-- [LAB STAGE 3: 채혈 진행 및 지혈 주의사항] -->
-                <div id="lab-stage-3" class="hidden space-y-3">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
+                <div id="lab-stage-3" class="hidden space-y-2 sm:space-y-3">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
                     <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="syringe" class="w-4 h-4"></i> 채혈(혈액검사) 진행 & 필수 지혈 요령
+                      <i data-lucide="syringe" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 채혈(혈액검사) 진행 & 필수 지혈 요령
                     </div>
-                    <div class="p-2 rounded-lg bg-rose-950/40 text-rose-200 font-semibold text-[11px] leading-relaxed">
+                    <div class="p-2 rounded-lg bg-rose-950/40 text-rose-200 font-semibold text-[10.5px] sm:text-[11px] leading-relaxed">
                       ⚠️ <strong>[절대 주의]</strong> 알코올 솜을 절대 문지르지 마시고, <strong>손가락으로 5분간 꾹 눌러서 지혈</strong>해 주세요!
                     </div>
                   </div>
                 </div>
 
                 <!-- [LAB STAGE 4: 흉부 X-ray 촬영 및 최종 이동] -->
-                <div id="lab-stage-4" class="hidden space-y-3">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2 text-xs">
+                <div id="lab-stage-4" class="hidden space-y-2 sm:space-y-3">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
                     <div class="flex items-center gap-2 text-indigo-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="sparkles" class="w-4 h-4"></i> 흉부 X-ray 촬영 (영상의학)
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 흉부 X-ray 촬영 (영상의학)
                     </div>
-                    <p class="text-slate-300 leading-relaxed">
+                    <p class="text-slate-300 leading-relaxed text-[10.5px] sm:text-xs">
                       "숨을 깊게 들이마시고 참으세요! (찰칵)"<br>
                       결핵 및 흉부 질환 유무 판독 결과, 이상 소견 없이 정상입니다.
                     </p>
@@ -2300,17 +2300,17 @@
             </div>
 
             <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 영역 -->
-            <div class="w-full">
-              <button id="lab-btn-1" onclick="goLabStep(2)" class="w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
+            <div class="w-full shrink-0">
+              <button id="lab-btn-1" onclick="goLabStep(2)" class="w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Restroom' : '화장실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
-              <button id="lab-btn-2" onclick="goLabStep(3)" class="hidden w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
+              <button id="lab-btn-2" onclick="goLabStep(3)" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Blood Sampling Room' : '채혈실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
-              <button id="lab-btn-3" onclick="goLabStep(4)" class="hidden w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
+              <button id="lab-btn-3" onclick="goLabStep(4)" class="hidden w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Chest X-Ray Room' : '흉부 X-ray실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
-              <button id="lab-btn-4" onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="hidden w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
+              <button id="lab-btn-4" onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Basic Exam Lab' : '기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
@@ -2319,19 +2319,19 @@
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                  <i data-lucide="stethoscope" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="stethoscope" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-sm text-white">${isEn ? 'Specialist Medical Evaluation' : '과목별 전문의 정밀 진료 완료'}</h4>
-                  <p class="text-xs text-slate-400">${isEn ? 'Medical records & imaging review completed' : '제출 진단서 및 정밀 신체 검진 소견 상신'}</p>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Specialist Medical Evaluation' : '과목별 전문의 정밀 진료 완료'}</h4>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Medical records & imaging review completed' : '제출 진단서 및 정밀 신체 검진 소견 상신'}</p>
                 </div>
               </div>
             </div>
-            <button onclick="goToScene(11);" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01]">
+            <button onclick="goToScene(11);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Aptitude Classification Room' : '적성분류실로 이동 (군 특기 분류)'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -2339,82 +2339,82 @@
       } else if (type === 'APTITUDE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full space-y-4">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="compass" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 shadow-2xl w-full space-y-2.5 sm:space-y-4 max-h-[55vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
+                <div class="flex items-center gap-2 sm:gap-2.5">
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="compass" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                   </div>
                   <div>
                     <h4 class="font-bold text-xs sm:text-sm text-white">병무청 모집병 군별/특기별 실시간 지원가능 분야</h4>
-                    <p class="text-[11px] text-slate-400">전공(컴퓨터SW) 및 자격 연계 추천 특기 & 실시간 접수 경쟁률</p>
+                    <p class="text-[10px] sm:text-[11px] text-slate-400">전공(컴퓨터SW) 및 자격 연계 추천 특기 & 실시간 접수 경쟁률</p>
                   </div>
                 </div>
               </div>
 
               <!-- 모집병 추천 3종 카드 -->
-              <div class="space-y-2.5">
+              <div class="space-y-2 sm:space-y-2.5">
                 <!-- 1. 육군 IT/SW개발병 -->
-                <div class="p-3 bg-slate-950/90 rounded-xl border border-blue-500/30 space-y-2 text-xs">
+                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-blue-500/30 space-y-1.5 sm:space-y-2 text-xs">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="px-2 py-0.5 rounded bg-blue-600 text-white font-extrabold text-[10px]">육군</span>
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-blue-600 text-white font-extrabold text-[9px] sm:text-[10px]">육군</span>
                       <strong class="text-white text-xs sm:text-sm">IT/SW개발병 (전문특기병)</strong>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-xs">3.1 : 1</span>
+                    <div class="flex items-center gap-1 sm:gap-1.5">
+                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] sm:text-xs">3.1 : 1</span>
                     </div>
                   </div>
-                  <div class="text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
+                  <div class="text-[9.5px] sm:text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
                     <span>지원자격: 1~2급 현역 + 컴공 2년 이상</span>
                   </div>
                 </div>
 
                 <!-- 2. 공군 정보체계운영병 -->
-                <div class="p-3 bg-slate-950/90 rounded-xl border border-cyan-500/30 space-y-2 text-xs">
+                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-cyan-500/30 space-y-1.5 sm:space-y-2 text-xs">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="px-2 py-0.5 rounded bg-cyan-600 text-white font-extrabold text-[10px]">공군</span>
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-cyan-600 text-white font-extrabold text-[9px] sm:text-[10px]">공군</span>
                       <strong class="text-white text-xs sm:text-sm">정보체계운영병 (IT특기)</strong>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-xs">2.4 : 1</span>
+                    <div class="flex items-center gap-1 sm:gap-1.5">
+                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-[10px] sm:text-xs">2.4 : 1</span>
                     </div>
                   </div>
-                  <p class="text-[11px] text-slate-300 leading-relaxed">공군 비행단 전산실 서버·네트워크 운영 관리 · <strong class="text-cyan-300">쾌적한 실내 인프라 & 풍부한 자기계발 환경</strong></p>
-                  <div class="text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80">
+                  <p class="text-[10px] sm:text-[11px] text-slate-300 leading-relaxed">공군 비행단 전산실 서버·네트워크 운영 관리 · <strong class="text-cyan-300">쾌적한 실내 인프라 & 풍부한 자기계발 환경</strong></p>
+                  <div class="text-[9.5px] sm:text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
                     <span>지원자격: 1~3급 현역 + 전공자</span>
                   </div>
                 </div>
 
                 <!-- 3. 육군 정보통신운용병 -->
-                <div class="p-3 bg-slate-950/90 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-slate-800 space-y-1 sm:space-y-1.5 text-xs">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-extrabold text-[10px]">육군</span>
-                      <strong class="text-slate-200">정보통신운용병 (기술행정병)</strong>
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-extrabold text-[9px] sm:text-[10px]">육군</span>
+                      <strong class="text-slate-200 text-xs">정보통신운용병 (기술행정병)</strong>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-xs">1.8 : 1</span>
+                    <div class="flex items-center gap-1 sm:gap-1.5">
+                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
+                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px] sm:text-xs">1.8 : 1</span>
                     </div>
                   </div>
-                  <div class="text-[10px] text-slate-400">
+                  <div class="text-[9.5px] sm:text-[10px] text-slate-400">
                     <span>지휘통신망 및 네트워크 장비 운용</span>
                   </div>
                 </div>
               </div>
 
               <!-- 공식 자격증 가산점 인정 기준 안내 -->
-              <div class="p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-2">
-                <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
-                  <i data-lucide="award" class="w-4 h-4 text-blue-400"></i>
+              <div class="p-2.5 sm:p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-1.5 sm:space-y-2">
+                <div class="flex items-center gap-1.5 sm:gap-2 text-blue-300 font-bold text-xs sm:text-sm">
+                  <i data-lucide="award" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400"></i>
                   <span>모집병 국가기술자격증 가산점 기준 안내</span>
                 </div>
-                <div class="text-[11px] text-slate-300 leading-relaxed space-y-1.5">
+                <div class="text-[10px] sm:text-[11px] text-slate-300 leading-relaxed space-y-1 sm:space-y-1.5">
                   <div class="flex items-start gap-1.5">
                     <span class="text-blue-400 font-bold shrink-0">•</span>
                     <div><strong>국가기술자격증(정보처리기능사/산업기사)</strong> 소지 시<br class="hidden sm:inline"> 기술행정병 1차 서류 전형에서 <strong>직무 가산점(+15점)</strong>이 부여됩니다.</div>
@@ -2423,14 +2423,14 @@
                     <span class="text-blue-400 font-bold shrink-0">•</span>
                     <div>
                       <span>전공(컴퓨터·SW 2년) 기본 배점과 합산되어 공식 선발 전형 기준에 반영됩니다.</span>
-                      <p class="text-[10px] text-slate-400 mt-0.5">※ 최종 선발 여부는 병무청 정규 전형 심사 기준에 따라 결정됩니다.</p>
+                      <p class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">※ 최종 선발 여부는 병무청 정규 전형 심사 기준에 따라 결정됩니다.</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button onclick="goToScene(12);" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01]">
+            <button onclick="goToScene(12);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Adjudication Room' : '판정실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -2438,31 +2438,31 @@
       } else if (type === 'LOCKER_RETURN_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-2xl w-full space-y-4">
-              <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                  <i data-lucide="check-check" class="w-5 h-5"></i>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 shadow-2xl w-full space-y-2.5 sm:space-y-4">
+              <div class="flex items-center gap-2.5 sm:gap-3 border-b border-slate-800 pb-2 sm:pb-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="check-check" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-sm text-white">${isEn ? 'Locker Check & Uniform Return' : '소지품 회수 및 환복 완료'}</h4>
-                  <p class="text-xs text-slate-400">${isEn ? 'Belongings collected & locker key returned' : '사물함 소지품 회수 및 검사복 반납 완료'}</p>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Locker Check & Uniform Return' : '소지품 회수 및 환복 완료'}</h4>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Belongings collected & locker key returned' : '사물함 소지품 회수 및 검사복 반납 완료'}</p>
                 </div>
               </div>
 
-              <div class="space-y-2 text-xs text-slate-300">
-                <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
-                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <div class="space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs text-slate-300">
+                <div class="p-2 sm:p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0"></i>
                   <span>스마트폰, 지갑, 개인 소지품 회수 완료</span>
                 </div>
-                <div class="p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
-                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                <div class="p-2 sm:p-2.5 rounded-xl bg-slate-950/80 flex items-center gap-2">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0"></i>
                   <span>사물함 전자키 반납함 투입 완료</span>
                 </div>
               </div>
             </div>
 
-            <button onclick="goToScene(14);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01]">
+            <button onclick="goToScene(14);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Head Home' : '집으로 귀가하기'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -2470,51 +2470,51 @@
       } else if (type === 'BMI_CALCULATOR') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 상단 단계/내용 박스 (가장 큰 3단계 기준 min-height 고정으로 창 크기 변동 방지) -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl w-full min-h-[235px] flex flex-col justify-between">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl w-full min-h-[190px] sm:min-h-[235px] flex flex-col justify-between">
               <!-- 상단 헤더 & 진행 바 -->
-              <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <i data-lucide="ruler" class="w-4 h-4 text-teal-400"></i>
                     <span id="bio-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Height & Weight (BMI) Measurement' : '1단계: 신장 및 체중(BMI) 계측'}</span>
                   </div>
-                  <span id="bio-step-badge" class="text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 3단계</span>
+                  <span id="bio-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 3단계</span>
                 </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
                   <div id="bio-progress-bar" class="bg-teal-500 h-full w-1/3 transition-all duration-300"></div>
                 </div>
               </div>
 
-              <!-- 고정 높이 콘텐츠 영역 (min-h-[125px]) -->
-              <div class="min-h-[125px] flex flex-col justify-center">
+              <!-- 고정 높이 콘텐츠 영역 (min-h-[100px] sm:min-h-[125px]) -->
+              <div class="min-h-[100px] sm:min-h-[125px] flex flex-col justify-center">
                 <!-- [BIO STAGE 1: 신장 & 체중] -->
-                <div id="bio-stage-1" class="space-y-3.5">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
-                    <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="user-check" class="w-4 h-4"></i> 측정 발판에 바른 자세로 올라서 주세요
+                <div id="bio-stage-1" class="space-y-2.5 sm:space-y-3.5">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
+                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
+                      <i data-lucide="user-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 측정 발판에 바른 자세로 올라서 주세요
                     </div>
-                    <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3 pt-1">
                       <div>
-                        <label class="text-slate-400 block mb-1 font-semibold">신장 (cm):</label>
-                        <input id="inp-height" type="number" value="${userData.height}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-sm">
+                        <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">신장 (cm):</label>
+                        <input id="inp-height" type="number" value="${userData.height}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
                       </div>
                       <div>
-                        <label class="text-slate-400 block mb-1 font-semibold">체중 (kg):</label>
-                        <input id="inp-weight" type="number" value="${userData.weight}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-sm">
+                        <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">체중 (kg):</label>
+                        <input id="inp-weight" type="number" value="${userData.weight}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- [BIO STAGE 2: 자동 혈압 측정] -->
-                <div id="bio-stage-2" class="hidden space-y-3.5">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
-                    <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="activity" class="w-4 h-4"></i> 자동 혈압계에 오른팔을 넣고 시작 버튼을 누르세요
+                <div id="bio-stage-2" class="hidden space-y-2.5 sm:space-y-3.5">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
+                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
+                      <i data-lucide="activity" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 자동 혈압계에 오른팔을 넣고 시작 버튼을 누르세요
                     </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900 text-[11px] text-slate-300 space-y-1">
+                    <div class="p-2 sm:p-2.5 rounded-lg bg-slate-900 text-[10px] sm:text-[11px] text-slate-300 space-y-1">
                       <div>• 수축기 혈압: <strong class="text-emerald-400">120 mmHg</strong> (정상)</div>
                       <div>• 이완기 혈압: <strong class="text-emerald-400">80 mmHg</strong> (정상)</div>
                       <div>• 맥박수: <strong class="text-teal-300">72 bpm</strong> (안정)</div>
@@ -2523,29 +2523,29 @@
                 </div>
 
                 <!-- [BIO STAGE 3: 시력 & 색신 검사 및 BMI 종합 판정] -->
-                <div id="bio-stage-3" class="hidden space-y-3.5">
-                  <div class="bg-slate-950/80 p-3.5 rounded-xl space-y-2.5 text-xs">
-                    <div class="font-bold text-teal-300 text-xs sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="eye" class="w-4 h-4"></i> 안과 시력표 및 색각 검사 결과
+                <div id="bio-stage-3" class="hidden space-y-2.5 sm:space-y-3.5">
+                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
+                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
+                      <i data-lucide="eye" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 안과 시력표 및 색각 검사 결과
                     </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900 text-[11px] text-slate-300 space-y-1">
+                    <div class="p-2 sm:p-2.5 rounded-lg bg-slate-900 text-[10px] sm:text-[11px] text-slate-300 space-y-1">
                       <div>• 나안 시력: 좌 <strong>1.0</strong> / 우 <strong>1.0</strong> (교정 불필요 정상)</div>
                       <div>• 색신 검사: 정상 (색맹/색약 없음)</div>
                     </div>
                   </div>
                   
                   <!-- 실시간 BMI 종합 판정 결과 박스 -->
-                  <div id="bmi-result-box" class="p-3.5 rounded-xl bg-slate-950 text-xs space-y-2"></div>
+                  <div id="bmi-result-box" class="p-2.5 sm:p-3.5 rounded-xl bg-slate-950 text-xs space-y-1.5 sm:space-y-2"></div>
                 </div>
               </div>
             </div>
 
             <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 영역 -->
-            <div id="bio-action-container" class="w-full">
-              <button id="bio-btn-1" onclick="goBiometricStep(2)" class="w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
+            <div id="bio-action-container" class="w-full shrink-0">
+              <button id="bio-btn-1" onclick="goBiometricStep(2)" class="w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Blood Pressure Test' : '혈압 측정으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
-              <button id="bio-btn-2" onclick="goBiometricStep(3)" class="hidden w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
+              <button id="bio-btn-2" onclick="goBiometricStep(3)" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
                 <span>${isEn ? 'Move to Eyesight & Color Test' : '시력·색각 검사로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
               <div id="bio-btn-3" class="hidden w-full"></div>
@@ -2565,38 +2565,38 @@
         const hotspots = (typeof MmaApiService !== 'undefined') ? MmaApiService.getHotspots(userData.region) : [];
 
         choiceContainer.innerHTML = `
-          <div class="space-y-3.5 animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full">
+          <div class="space-y-2.5 sm:space-y-3.5 animate-in fade-in zoom-in-95 duration-150 max-w-xl w-full max-h-[82vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
             <!-- 1. 핵심 서비스 2종 (e-병무지갑 & 진로설계) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
-                <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="smartphone" class="w-4 h-4 text-blue-400"></i> 스마트 e-병무지갑</p>
-                <p class="text-[11px] text-slate-400">결과서 모바일 저장 & 군장병 할인 바우처</p>
-                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0003346', '_blank')" class="mt-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              <div class="p-3 sm:p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-1.5 sm:space-y-2 shadow-xl">
+                <p class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5"><i data-lucide="smartphone" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400"></i> 스마트 e-병무지갑</p>
+                <p class="text-[10px] sm:text-[11px] text-slate-400">결과서 모바일 저장 & 군장병 할인 바우처</p>
+                <button onclick="window.open('https://www.mma.go.kr/contents.do?mc=mma0003346', '_blank')" class="mt-1 px-2.5 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-500 font-semibold rounded-xl text-[11px] sm:text-xs text-white cursor-pointer flex items-center gap-1">
                   <span>e-병무지갑 안내</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
-              <div class="p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-2 shadow-xl">
-                <p class="font-bold text-sm text-white flex items-center gap-1.5"><i data-lucide="compass" class="w-4 h-4 text-emerald-400"></i> 병역진로설계센터</p>
-                <p class="text-[11px] text-slate-400">1:1 맞춤 군특기 추천 & 취업 무료 연계</p>
-                <button onclick="window.open('https://www.mma.go.kr/byjr/01/index.do', '_blank')" class="mt-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-xs text-white cursor-pointer flex items-center gap-1">
+              <div class="p-3 sm:p-3.5 bg-slate-900/95 border border-slate-700/80 rounded-2xl text-xs space-y-1.5 sm:space-y-2 shadow-xl">
+                <p class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5"><i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i> 병역진로설계센터</p>
+                <p class="text-[10px] sm:text-[11px] text-slate-400">1:1 맞춤 군특기 추천 & 취업 무료 연계</p>
+                <button onclick="window.open('https://www.mma.go.kr/byjr/01/index.do', '_blank')" class="mt-1 px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-xl text-[11px] sm:text-xs text-white cursor-pointer flex items-center gap-1">
                   <span>1:1 맞춤상담</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
             </div>
 
             <!-- 2. [신규] 병무청_나라사랑가게 조회 서비스 (검사장 인근 거점 선택) -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-5 shadow-2xl space-y-2 sm:space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-2.5">
                 <div class="flex items-center gap-2">
-                  <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="utensils" class="w-4 h-4"></i>
+                  <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="utensils" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                   </div>
                   <div>
                     <h4 class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5">
                       <span>${userData.region} 주변 나라사랑가게 맛집·문화 할인</span>
-                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">API 실시간</span>
+                      <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">API 실시간</span>
                     </h4>
-                    <p class="text-[11px] text-slate-400">지급된 여비로 검사장 주변에서 든든하게 점심 드실 거점을 선택해 보세요!</p>
+                    <p class="text-[10px] sm:text-[11px] text-slate-400">지급된 여비로 검사장 주변에서 든든하게 점심 드실 거점을 선택해 보세요!</p>
                   </div>
                 </div>
               </div>
@@ -2607,14 +2607,14 @@
               </div>
 
               <!-- 선택된 거점의 할인 가맹점 목록 -->
-              <div id="hotspot-stores-container" class="space-y-2">
+              <div id="hotspot-stores-container" class="space-y-1.5 sm:space-y-2">
                 <!-- JS 동적 주입 -->
               </div>
             </div>
 
             <!-- 3. 최종 결과서 발급 버튼 -->
-            <button onclick="showCertModal()" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40">
-              <i data-lucide="award" class="w-5 h-5"></i> 가상 병역판정검사 결과 확인
+            <button onclick="showCertModal()" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40 shrink-0">
+              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i> 가상 병역판정검사 결과 확인
             </button>
           </div>
         `;
@@ -2622,22 +2622,22 @@
       } else if (type === 'EPISODE_COMPLETE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-6 shadow-2xl w-full text-center space-y-4">
-              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400">
-                <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-6 shadow-2xl w-full text-center space-y-3 sm:space-y-4">
+              <div class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500/20 text-emerald-400">
+                <i data-lucide="check-circle-2" class="w-5 h-5 sm:w-7 sm:h-7"></i>
               </div>
               <div>
-                <h3 class="text-base sm:text-lg font-extrabold text-white">${isEn ? 'Episode 1 Complete!' : '제1화 병역판정검사 편 완결!'}</h3>
-                <p class="text-xs text-slate-400 mt-1">${isEn ? 'You have successfully completed the full physical exam & returned home safe!' : '병역판정검사부터 진로설계, 결과 확인 및 귀가까지 모든 시뮬레이션을 완주하셨습니다.'}</p>
+                <h3 class="text-sm sm:text-lg font-extrabold text-white">${isEn ? 'Episode 1 Complete!' : '제1화 병역판정검사 편 완결!'}</h3>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">${isEn ? 'You have successfully completed the full physical exam & returned home safe!' : '병역판정검사부터 진로설계, 결과 확인 및 귀가까지 모든 시뮬레이션을 완주하셨습니다.'}</p>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-2.5 w-full">
-              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
-                <i data-lucide="home" class="w-4 h-4"></i> 메인 메뉴로 이동
+            <div class="grid grid-cols-2 gap-2 sm:gap-2.5 w-full shrink-0">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
+                <i data-lucide="home" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 메인 메뉴로 이동
               </button>
-              <button onclick="playBeep(650, 'sine', 0.03); renderScene(0);" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl cursor-pointer hover:scale-[1.01]">
-                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 처음부터 다시하기
+              <button onclick="playBeep(650, 'sine', 0.03); renderScene(0);" class="w-full py-2.5 sm:py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl cursor-pointer hover:scale-[1.01]">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 처음부터 다시하기
               </button>
             </div>
           </div>
@@ -2646,6 +2646,10 @@
 
       choiceOverlay.classList.remove('hidden');
       choiceOverlay.classList.add('flex');
+      const charLayer = document.getElementById('character-layer');
+      if (charLayer && window.innerWidth <= 640) {
+        charLayer.classList.add('opacity-0', 'pointer-events-none');
+      }
       lucide.createIcons();
     }
 
@@ -2654,6 +2658,10 @@
       playBeep(750, 'triangle', 0.05);
       const choiceOverlay = document.getElementById('center-choice-overlay');
       const choiceContainer = document.getElementById('center-choice-container');
+      const charLayer = document.getElementById('character-layer');
+      if (charLayer) {
+        charLayer.classList.remove('opacity-0', 'pointer-events-none');
+      }
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
@@ -2815,7 +2823,7 @@
         let branchBtn = "";
         if (hasDisease) {
           branchBtn = `
-            <button onclick="goToScene(10);" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-blue-400/40 hover:scale-[1.01]">
+            <button onclick="goToScene(10);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-blue-400/40 hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Specialist Clinic' : '전문의 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
@@ -2829,7 +2837,7 @@
           updateDialogueDirect(cData.speaker, cData.speaker_en, cData.plateClass, cData.char, finalTxt, cData.text_en, "direct_bmi_calc_disease");
         } else {
           branchBtn = `
-            <button onclick="goToScene(11);" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-indigo-400/40 hover:scale-[1.01]">
+            <button onclick="goToScene(11);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-indigo-400/40 hover:scale-[1.01] shrink-0">
               <span>${isEn ? 'Move to Aptitude Center' : '적성분류실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
@@ -3732,18 +3740,26 @@
       }
     }
 
-    // ================= [에피소드 캐러셀 슬라이더 제어기 (2개씩 페이징)] =================
-    let currentEpisodePage = 0; // 0: page 1 (ep1, ep2), 1: page 2 (ep3, ep4)
-    const TOTAL_EPISODE_PAGES = 2;
+    // ================= [에피소드 캐러셀 슬라이더 제어기 (모바일 1화씩 / PC 2화씩, 터치 스와이프 지원)] =================
+    let currentEpisodePage = 0;
+
+    function isMobileLobby() {
+      return window.innerWidth < 768;
+    }
+
+    function getTotalEpisodePages() {
+      return isMobileLobby() ? 4 : 2;
+    }
 
     function goToEpisodePage(pageIdx) {
       playBeep(700, 'sine', 0.04);
-      currentEpisodePage = Math.max(0, Math.min(TOTAL_EPISODE_PAGES - 1, pageIdx));
+      currentEpisodePage = Math.max(0, Math.min(getTotalEpisodePages() - 1, pageIdx));
       updateEpisodeSliderUI();
     }
 
     function nextEpisodePage() {
-      if (currentEpisodePage < TOTAL_EPISODE_PAGES - 1) {
+      const max = getTotalEpisodePages() - 1;
+      if (currentEpisodePage < max) {
         playBeep(750, 'sine', 0.05);
         currentEpisodePage++;
         updateEpisodeSliderUI();
@@ -3759,14 +3775,19 @@
     }
 
     function updateEpisodeSliderUI() {
+      const viewport = document.getElementById('episode-slider-viewport');
       const track = document.getElementById('episode-slider-track');
       const prevBtn = document.getElementById('ep-prev-btn');
       const nextBtn = document.getElementById('ep-next-btn');
-      const ind0 = document.getElementById('ep-page-indicator-0');
-      const ind1 = document.getElementById('ep-page-indicator-1');
+      const maxPages = getTotalEpisodePages();
 
-      if (track) {
-        track.style.transform = `translateX(-${currentEpisodePage * 50}%)`;
+      if (currentEpisodePage >= maxPages) {
+        currentEpisodePage = maxPages - 1;
+      }
+
+      if (track && viewport) {
+        const width = viewport.getBoundingClientRect().width;
+        track.style.transform = `translateX(-${currentEpisodePage * width}px)`;
       }
 
       if (prevBtn) {
@@ -3781,7 +3802,7 @@
         }
       }
       if (nextBtn) {
-        if (currentEpisodePage === TOTAL_EPISODE_PAGES - 1) {
+        if (currentEpisodePage >= maxPages - 1) {
           nextBtn.classList.add('opacity-0', 'pointer-events-none', 'scale-75', 'invisible');
           nextBtn.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100', 'visible');
           nextBtn.disabled = true;
@@ -3792,6 +3813,9 @@
         }
       }
 
+      // 데스크톱 페이지네이션 인디케이터
+      const ind0 = document.getElementById('ep-page-indicator-0');
+      const ind1 = document.getElementById('ep-page-indicator-1');
       if (ind0 && ind1) {
         if (currentEpisodePage === 0) {
           ind0.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer";
@@ -3819,7 +3843,57 @@
           if (txt0) txt0.className = "text-xs font-medium text-slate-400";
         }
       }
+
+      // 모바일 점 인디케이터 (0..3)
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`ep-dot-${i}`);
+        if (dot) {
+          if (i === currentEpisodePage) {
+            dot.className = "h-1.5 w-6 rounded-full bg-blue-500 transition-all duration-300 cursor-pointer";
+          } else {
+            dot.className = "h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer";
+          }
+        }
+      }
+
       if (window.lucide) lucide.createIcons();
+    }
+
+    // 모바일 터치 스와이프 리스너 초기화
+    function initEpisodeSliderSwipe() {
+      const viewport = document.getElementById('episode-slider-viewport');
+      if (!viewport || viewport.dataset.swipeInit) return;
+      viewport.dataset.swipeInit = "true";
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const diffX = touchEndX - touchStartX;
+          const diffY = touchEndY - touchStartY;
+          if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+            if (diffX < 0) {
+              nextEpisodePage();
+            } else {
+              prevEpisodePage();
+            }
+          }
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', () => {
+        updateEpisodeSliderUI();
+      });
     }
 
     // 시나리오 카드(화면 전체) 클릭 시 실행
@@ -3948,6 +4022,10 @@
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
       const choiceOverlay = document.getElementById('center-choice-overlay');
+      const charLayer = document.getElementById('character-layer');
+      if (charLayer) {
+        charLayer.classList.remove('opacity-0', 'pointer-events-none');
+      }
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
@@ -3959,6 +4037,7 @@
       }
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.remove('hidden');
+      initEpisodeSliderSwipe();
       updateLobbyResumeButton();
       updateEpisodeSliderUI();
       lucide.createIcons();
@@ -3981,9 +4060,9 @@
       const save = getSavedGameState();
       const dict = I18N[currentLang];
       if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
-        // 이어하기가 있을 때는 2개 버튼 공간 확보를 위해 포스터 높이를 190~285px로 조정
+        // 이어하기가 있을 때는 2개 버튼 공간 확보를 위해 모바일 포스터 높이를 125px로 컴팩트화
         if (poster1) {
-          poster1.className = "relative w-full h-[190px] sm:h-[285px] group-hover:h-[405px] sm:group-hover:h-[420px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[125px] sm:h-[285px] group-hover:h-[405px] sm:group-hover:h-[420px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         let stepText = (currentLang === 'en') ? "STEP 1: Rescheduling" : "STEP 1: 일정 변경";
         if (save.sceneIdx === 4) stepText = (currentLang === 'en') ? "STEP 2: Document Check" : "STEP 2: 구비서류 점검";
@@ -3997,38 +4076,38 @@
 
         if (badgeContainer) {
           badgeContainer.innerHTML = `
-            <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
+            <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[9px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
               <i data-lucide="bookmark" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-300"></i> ${savedText}
             </span>
           `;
         }
 
         btnContainer.innerHTML = `
-          <div class="space-y-1.5 sm:space-y-2 w-full pb-1">
-            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2.5 sm:py-3 px-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30">
-              <i data-lucide="play-circle" class="w-4 h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
+          <div class="space-y-1 sm:space-y-1.5 w-full pb-0.5">
+            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30">
+              <i data-lucide="play-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
             </button>
-            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 shrink-0"></i> <span>${dict.lobby.restartBtn}</span>
+            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[10.5px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60">
+              <i data-lucide="rotate-ccw" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${dict.lobby.restartBtn}</span>
             </button>
           </div>
         `;
       } else {
-        // 이어하기가 없을 때는 포스터 높이를 260~365px로 확장
+        // 이어하기가 없을 때 모바일 포스터 높이 135px
         if (poster1) {
-          poster1.className = "relative w-full h-[260px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[135px] sm:h-[365px] group-hover:h-[425px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         const playableText = (currentLang === 'en') ? "Playable" : "플레이 가능";
         if (badgeContainer) {
           badgeContainer.innerHTML = `
-            <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500 text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
+            <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500 text-white text-[9px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
               <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></span> ${playableText}
             </span>
           `;
         }
         btnContainer.innerHTML = `
-          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2.5 sm:py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
-            <i data-lucide="play" class="w-4 h-4 fill-white"></i> ${dict.lobby.startBtn}
+          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+            <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
       }
