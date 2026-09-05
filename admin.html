@@ -178,42 +178,42 @@
       </div>
     </div>
 
-    <!-- 2. 상용 SaaS 스타일 세그먼트 탭 내비게이션 바 -->
-    <div class="flex items-center justify-between gap-3 flex-wrap border-b border-slate-800/80 pb-3">
-      <div class="inline-flex p-1 bg-slate-900/90 border border-slate-800/90 rounded-xl gap-1 overflow-x-auto max-w-full">
-        <button onclick="switchTab('live')" id="tab-btn-live" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition bg-slate-800 text-white shadow-sm border border-slate-700/60 cursor-pointer">
+    <!-- 2. 브라우저/폴더형 탭 내비게이션 바 (상단 라운드, 하단 평면 연결) -->
+    <div class="flex items-end justify-between gap-3 flex-wrap border-b border-slate-800/90 pt-2 px-0.5">
+      <div class="flex items-end gap-1.5 overflow-x-auto max-w-full -mb-px">
+        <button onclick="switchTab('live')" id="tab-btn-live" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-semibold flex items-center gap-2 transition bg-[#0D121F] text-white border-t-2 border-t-blue-500 border-x border-slate-700/80 border-b-[#0D121F] relative z-10 cursor-pointer shadow-xs">
           <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span>
           <span>실시간 세션</span>
           <span id="tab-live-badge" class="px-1.5 py-0.2 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300">0</span>
         </button>
-        <button onclick="switchTab('traffic')" id="tab-btn-traffic" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('traffic')" id="tab-btn-traffic" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
           <span>시간대/일별 트래픽</span>
         </button>
-        <button onclick="switchTab('logs')" id="tab-btn-logs" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('logs')" id="tab-btn-logs" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="list" class="w-3.5 h-3.5"></i>
           <span>접근 로그</span>
         </button>
-        <button onclick="switchTab('ip')" id="tab-btn-ip" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('ip')" id="tab-btn-ip" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="network" class="w-3.5 h-3.5"></i>
           <span>IP별 분석</span>
         </button>
-        <button onclick="switchTab('funnel')" id="tab-btn-funnel" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('funnel')" id="tab-btn-funnel" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
           <span>퍼널 분석</span>
         </button>
-        <button onclick="switchTab('devices')" id="tab-btn-devices" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('devices')" id="tab-btn-devices" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
           <span>기기 및 지역</span>
         </button>
-        <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+        <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer">
           <i data-lucide="server" class="w-3.5 h-3.5"></i>
           <span>인프라 상태</span>
         </button>
       </div>
 
       <!-- Right: Utility Toggle -->
-      <div class="flex items-center gap-2 text-xs text-slate-400 pr-1">
+      <div class="flex items-center gap-2 text-xs text-slate-400 pr-1 pb-2">
         <label class="flex items-center gap-1.5 cursor-pointer select-none">
           <input type="checkbox" id="unmask-ip-checkbox" checked onchange="toggleIpMask(this.checked)" class="rounded border-slate-700 bg-slate-800 text-blue-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer" />
           <span class="text-[11px] font-medium text-slate-400">실제 IP 표시</span>
@@ -906,12 +906,12 @@
         const sec = document.getElementById('tab-content-' + k);
         if (k === tabKey) {
           if (btn) {
-            btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition bg-slate-800 text-white shadow-sm border border-slate-700/60 cursor-pointer';
+            btn.className = 'px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-semibold flex items-center gap-2 transition bg-[#0D121F] text-white border-t-2 border-t-blue-500 border-x border-slate-700/80 border-b-[#0D121F] relative z-10 cursor-pointer shadow-xs';
           }
           if (sec) sec.classList.remove('hidden');
         } else {
           if (btn) {
-            btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer';
+            btn.className = 'px-4 py-2.5 rounded-t-xl rounded-b-none text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-t-2 border-t-transparent border-x border-transparent border-b-transparent cursor-pointer';
           }
           if (sec) sec.classList.add('hidden');
         }
