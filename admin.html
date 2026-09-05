@@ -222,7 +222,7 @@
     </div>
 
     <!-- 2-1. [GLOBAL DATE RANGE BAR] 모든 탭에 일괄 실시간 적용되는 전역 기간 선택기 -->
-    <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-3 shadow-sm flex items-center justify-between flex-wrap gap-3">
+    <div id="global-date-bar" class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-3 shadow-sm flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center gap-2.5 flex-wrap">
         <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
           <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
@@ -725,16 +725,25 @@
     <!-- 3-5. [TAB 5] 인프라 및 엔진 상태 -->
     <section id="tab-content-settings" class="hidden space-y-4">
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4 max-w-2xl">
-        <div class="border-b border-slate-800/80 pb-3">
+        <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between gap-3 flex-wrap">
           <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
             <i data-lucide="server" class="w-4 h-4 text-blue-400"></i> 인프라 및 트래킹 엔드포인트
           </h3>
+          <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-400 border border-slate-700/60">
+            시스템 환경 설정 (기간 조회 미적용)
+          </span>
+        </div>
+
+        <!-- 안내 뱃지 -->
+        <div class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs">
+          <i data-lucide="info" class="w-4 h-4 shrink-0 text-blue-400"></i>
+          <span>인프라 상태 및 엔진 정보는 <strong>실시간 시스템 환경 정보</strong>이므로 상단 기간 조회가 적용되지 않습니다.</span>
         </div>
 
         <div class="p-3.5 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-2.5 text-xs">
           <div class="flex items-center justify-between">
             <span class="text-slate-400">실시간 통신 엔진:</span>
-            <span class="font-mono text-emerald-400 font-semibold">BroadcastChannel + LocalStorage + API</span>
+            <span class="font-mono text-emerald-400 font-semibold">BroadcastChannel + LocalStorage + MQTT + API</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-400">트래킹 수집 엔드포인트:</span>
@@ -744,14 +753,22 @@
             <span class="text-slate-400">통계 집계 엔드포인트:</span>
             <span class="font-mono text-slate-300">GET /api/stats</span>
           </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">오픈소스 음성(TTS) 엔진:</span>
+            <span class="font-mono text-emerald-400 font-semibold">Node.js WebSocket (MS Edge Neural)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">TTS 스트리밍 엔드포인트:</span>
+            <span class="font-mono text-slate-300">GET /api/tts</span>
+          </div>
         </div>
 
         <div class="p-3.5 rounded-lg bg-slate-900/50 border border-slate-800/70 text-xs text-slate-400 space-y-1">
           <div class="text-slate-300 font-medium flex items-center gap-1.5">
-            <i data-lucide="database" class="w-3.5 h-3.5 text-blue-400"></i> 영구 스토리지 (선택 사항)
+            <i data-lucide="database" class="w-3.5 h-3.5 text-blue-400"></i> 스토리지 및 캐싱 구성
           </div>
           <p class="text-[11px] text-slate-400 leading-relaxed">
-            Vercel 대시보드에서 Upstash Redis(KV)를 연결하면 인스턴스 재시작(Cold Start) 시에도 누적 통계가 영구 보존됩니다.
+            방문자 로그 및 통계는 Vercel Serverless 메모리, 브라우저 영구 LocalStorage, 및 Vercel <code class="text-slate-300 font-mono">/tmp</code> 캐시를 활용하여 고속으로 처리됩니다.
           </p>
         </div>
       </div>
@@ -953,6 +970,17 @@
 
     function switchTab(tabKey) {
       currentActiveTab = tabKey;
+
+      // 인프라 상태(settings) 탭에서는 기간 선택 바를 자동으로 숨겨 혼선 방지
+      const globalDateBar = document.getElementById('global-date-bar');
+      if (globalDateBar) {
+        if (tabKey === 'settings') {
+          globalDateBar.classList.add('hidden');
+        } else {
+          globalDateBar.classList.remove('hidden');
+        }
+      }
+
       ['live', 'traffic', 'logs', 'ip', 'funnel', 'devices', 'settings'].forEach(k => {
         const btn = document.getElementById('tab-btn-' + k);
         const sec = document.getElementById('tab-content-' + k);
