@@ -257,14 +257,25 @@
     <!-- 3-1. [TAB 1] 실시간 활동 방문자 목록 -->
     <section id="tab-content-live" class="space-y-4">
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl overflow-hidden shadow-sm">
-        <div class="px-5 py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-b border-slate-800/80 flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-2">
             <span class="text-xs font-bold text-slate-200">현재 활성 세션</span>
             <span class="text-[11px] text-slate-500 font-mono">Live Sessions</span>
           </div>
-          <div class="text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
-            <span>동기화:</span>
-            <strong id="last-sync-time" class="text-slate-300 font-mono font-medium">--:--:--</strong>
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-1.5 text-xs text-slate-400">
+              <i data-lucide="arrow-down-up" class="w-3.5 h-3.5 text-slate-500"></i>
+              <span class="text-[11px] text-slate-500">정렬:</span>
+              <select id="live-sort-select" onchange="onLiveSortChange(this.value)" class="bg-slate-900 border border-slate-700/80 rounded px-2 py-0.5 text-xs text-slate-200 font-sans focus:outline-none cursor-pointer">
+                <option value="firstSeen-desc" selected>최근 접속 순 (안정적 고정)</option>
+                <option value="firstSeen-asc">오래 체류한 순</option>
+                <option value="lastSeen-desc">최근 활동 순 (핑 갱신)</option>
+              </select>
+            </div>
+            <div class="text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
+              <span>동기화:</span>
+              <strong id="last-sync-time" class="text-slate-300 font-mono font-medium">--:--:--</strong>
+            </div>
           </div>
         </div>
 
@@ -992,7 +1003,9 @@
         const res = await fetch('/api/stats');
         if (res.ok) {
           const data = await res.json();
-          currentStatsData = data;
+          if (data) {
+            currentStatsData = window.currentStatsData = data;
+          }
           if (data && data.clientIp && data.clientIp !== '127.0.0.1') {
             adminPublicIp = data.clientIp;
           }
@@ -1010,7 +1023,7 @@
     }
 
     function renderCurrentData() {
-      const data = currentStatsData || {
+      const data = window.currentStatsData || currentStatsData || {
         kpi: { activeCount: 0, todayVisitors: 0, totalPageviews: 0, avgDurationFormatted: '0초', completionRate: '0%' },
         activeVisitors: [],
         recentLogs: [],
@@ -1040,15 +1053,23 @@
               ? serverSession.maskedIp
               : (resolvedIp.includes('.') ? resolvedIp.split('.').slice(0, 2).join('.') + '.*.*' : resolvedIp));
 
+          let firstSeen = now;
+          if (serverSession.firstSeen && v.firstSeen) {
+            firstSeen = Math.min(serverSession.firstSeen, v.firstSeen);
+          } else {
+            firstSeen = serverSession.firstSeen || v.firstSeen || now;
+          }
+
           mergedMap.set(sid, {
             ...serverSession,
             ...v,
+            firstSeen,
             isLocalTab: true,
             ip: resolvedIp,
             maskedIp: resolvedMasked,
             city: v.city || serverSession.city || '대한민국 서울',
             country: v.country || serverSession.country || 'KR',
-            durationFormatted: Math.floor((now - (v.firstSeen || serverSession.firstSeen || now)) / 1000) + '초',
+            durationFormatted: Math.floor((now - firstSeen) / 1000) + '초',
             lastActiveAgo: Math.max(1, Math.floor((now - v.lastSeen) / 1000)) + '초 전'
           });
         } else {
@@ -1071,15 +1092,23 @@
               ? existing.maskedIp
               : (resolvedIp.includes('.') ? resolvedIp.split('.').slice(0, 2).join('.') + '.*.*' : resolvedIp));
 
+          let firstSeen = now;
+          if (existing.firstSeen && v.firstSeen) {
+            firstSeen = Math.min(existing.firstSeen, v.firstSeen);
+          } else {
+            firstSeen = existing.firstSeen || v.firstSeen || now;
+          }
+
           mergedMap.set(sid, {
             ...existing,
             ...v,
+            firstSeen,
             isMqtt: true,
             ip: resolvedIp,
             maskedIp: resolvedMasked,
             city: v.city || existing.city || '대한민국',
             country: v.country || existing.country || 'KR',
-            durationFormatted: Math.floor((now - (v.firstSeen || existing.firstSeen || now)) / 1000) + '초',
+            durationFormatted: Math.floor((now - firstSeen) / 1000) + '초',
             lastActiveAgo: Math.max(1, Math.floor((now - v.lastSeen) / 1000)) + '초 전'
           });
         } else {
@@ -1087,7 +1116,36 @@
         }
       });
 
-      const mergedVisitors = Array.from(mergedMap.values()).sort((a, b) => b.lastSeen - a.lastSeen);
+      // 3. 실시간 세션 안정적 정렬 (순서 뒤바뀜 방지)
+      let liveSortMode = 'firstSeen-desc';
+      try {
+        liveSortMode = localStorage.getItem('mma_admin_live_sort') || 'firstSeen-desc';
+        const sortSelect = document.getElementById('live-sort-select');
+        if (sortSelect && sortSelect.value !== liveSortMode) {
+          sortSelect.value = liveSortMode;
+        }
+      } catch (e) {}
+
+      const mergedVisitors = Array.from(mergedMap.values()).sort((a, b) => {
+        const aFirst = a.firstSeen || a.lastSeen || 0;
+        const bFirst = b.firstSeen || b.lastSeen || 0;
+        const aLast = a.lastSeen || 0;
+        const bLast = b.lastSeen || 0;
+
+        if (liveSortMode === 'firstSeen-asc') {
+          // 오래 체류한 순 (먼저 들어온 사용자 순)
+          if (aFirst !== bFirst) return aFirst - bFirst;
+        } else if (liveSortMode === 'lastSeen-desc') {
+          // 최근 활동 순 (핑 갱신순)
+          if (bLast !== aLast) return bLast - aLast;
+        } else {
+          // 기본값: 최근 접속 순 (신규 접속자가 상단에 배치되고 기존 세션 순서는 절대 흔들리지 않음)
+          if (bFirst !== aFirst) return bFirst - aFirst;
+        }
+
+        // 100% 결정론적 안정 정렬 (고유 sessionId 타이 브레이커로 순서 뒤바뀜 완전 차단)
+        return (a.sessionId || '').localeCompare(b.sessionId || '');
+      });
       const activeCount = mergedVisitors.length;
 
       // 오늘 순 방문자 (로컬스토리지 영구 보관 + API 합산)
@@ -1220,6 +1278,13 @@
 
       syncAllDateInputsAndStyles();
       refreshAllTabAnalytics();
+    }
+
+    function onLiveSortChange(val) {
+      try {
+        localStorage.setItem('mma_admin_live_sort', val);
+      } catch (e) {}
+      renderCurrentData();
     }
 
     // 기존 호환성 유지 래퍼 함수들
