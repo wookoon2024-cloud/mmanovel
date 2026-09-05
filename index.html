@@ -1294,6 +1294,7 @@
       }
     }
 
+    let currentVoiceSeq = 0;
     function speakDialogue(speaker, text, audioKey = null) {
       if (!soundEnabled || window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
         stopVoiceAudio();
@@ -1301,8 +1302,42 @@
       }
       stopVoiceAudio();
 
-      // [실시간 TTS 모드] MP3 파일 없이 실시간 텍스트를 화자별 맞춤 음성/톤으로 즉시 발음
-      speakWithWebSpeech(speaker, text);
+      const seq = ++currentVoiceSeq;
+      const cleanText = (text || '')
+        .replace(/\((일|월|화|수|목|금|토)\)/g, '$1요일')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※|①|②|③|④|⚠️|📸/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!cleanText) return;
+
+      // [오픈소스 뉴럴 음성 실시간 스트리밍] 남성 성우(인준/현수) 오픈소스 TTS API 우선 재생
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}`;
+      const audio = new Audio();
+      currentVoiceAudio = audio;
+      audio.src = ttsUrl;
+
+      let isFallbackTriggered = false;
+      const fallbackToWebSpeech = () => {
+        if (isFallbackTriggered || currentVoiceSeq !== seq) return;
+        isFallbackTriggered = true;
+        if (currentVoiceAudio === audio) currentVoiceAudio = null;
+        speakWithWebSpeech(speaker, text);
+      };
+
+      audio.onerror = () => {
+        fallbackToWebSpeech();
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          if (err.name !== 'AbortError') {
+            fallbackToWebSpeech();
+          }
+        });
+      }
     }
 
     function speakWithWebSpeech(speaker, text) {

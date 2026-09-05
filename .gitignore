@@ -1,4 +1,4 @@
-﻿node_modules/
+node_modules/
 *.mp3
 !assets/audio/*.mp3
 test_*.js
@@ -8,3 +8,4 @@ scenario.json
 
 __pycache__/
 *.pyc
+cache/
