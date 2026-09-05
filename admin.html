@@ -221,6 +221,39 @@
       </div>
     </div>
 
+    <!-- 2-1. [GLOBAL DATE RANGE BAR] 모든 탭에 일괄 실시간 적용되는 전역 기간 선택기 -->
+    <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-3 shadow-sm flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+          <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
+          <span>조회 기간:</span>
+        </span>
+
+        <!-- 시작일 ~ 종료일 캘린더 선택기 -->
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+          <input type="date" id="global-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('global-end-date').value)" title="조회 시작일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+          <span class="text-slate-500 text-xs">~</span>
+          <input type="date" id="global-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('global-start-date').value, this.value)" title="조회 종료일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+        </div>
+
+        <!-- 빠른 기간 프리셋 버튼 (오늘, 7일, 30일, 6개월, 1년, 전체) -->
+        <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="global-preset-group">
+          <button type="button" onclick="setGlobalDatePreset('today')" id="global-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+          <button type="button" onclick="setGlobalDatePreset('7days')" id="global-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+          <button type="button" onclick="setGlobalDatePreset('30days')" id="global-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+          <button type="button" onclick="setGlobalDatePreset('6months')" id="global-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+          <button type="button" onclick="setGlobalDatePreset('1year')" id="global-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+          <button type="button" onclick="setGlobalDatePreset('all')" id="global-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+        <span class="text-slate-400">적용 상태:</span>
+        <strong id="global-date-range-badge" class="text-blue-300 font-semibold">전체 기간</strong>
+      </div>
+    </div>
+
     <!-- 3-1. [TAB 1] 실시간 활동 방문자 목록 -->
     <section id="tab-content-live" class="space-y-4">
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl overflow-hidden shadow-sm">
@@ -270,16 +303,24 @@
       <!-- 날짜 선택 및 요약 카드 바 -->
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-4 shadow-sm">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <!-- Left: 날짜 선택기 & 빠른 프리셋 -->
+          <!-- Left: 날짜 선택기 & 빠른 프리셋 6종 -->
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-              <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i> 조회 일자:
+              <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i> 조회 기간:
             </span>
-            <input type="date" id="traffic-date-picker" onchange="changeTrafficDate(this.value)" class="px-2.5 py-1.5 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 font-mono focus:outline-none focus:border-blue-500 cursor-pointer" />
-            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5">
-              <button onclick="setTrafficDatePreset('today')" id="preset-btn-today" class="px-2.5 py-1 rounded-md text-xs font-medium transition bg-slate-800 text-white shadow-xs">오늘</button>
-              <button onclick="setTrafficDatePreset('yesterday')" id="preset-btn-yesterday" class="px-2.5 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">어제</button>
-              <button onclick="setTrafficDatePreset('7days')" id="preset-btn-7days" class="px-2.5 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">최근 7일</button>
+            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+              <input type="date" id="traffic-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('traffic-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+              <input type="hidden" id="traffic-date-picker" />
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="date" id="traffic-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('traffic-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+            </div>
+            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="traffic-preset-group">
+              <button type="button" onclick="setGlobalDatePreset('today')" id="traffic-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+              <button type="button" onclick="setGlobalDatePreset('7days')" id="traffic-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+              <button type="button" onclick="setGlobalDatePreset('30days')" id="traffic-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+              <button type="button" onclick="setGlobalDatePreset('6months')" id="traffic-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+              <button type="button" onclick="setGlobalDatePreset('1year')" id="traffic-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+              <button type="button" onclick="setGlobalDatePreset('all')" id="traffic-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
             </div>
           </div>
 
@@ -373,20 +414,20 @@
             <!-- 날짜 범위 선택기 (시작일 ~ 종료일, 클릭 시 캘린더 자동 팝업) -->
             <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
               <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
-              <input type="date" id="log-start-date" onclick="this.showPicker && this.showPicker()" onchange="onLogDateChange()" title="조회 시작일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+              <input type="date" id="log-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('log-end-date').value)" title="조회 시작일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
               <input type="hidden" id="log-date-filter" />
               <span class="text-slate-500 text-xs">~</span>
-              <input type="date" id="log-end-date" onclick="this.showPicker && this.showPicker()" onchange="onLogDateChange()" title="조회 종료일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+              <input type="date" id="log-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('log-start-date').value, this.value)" title="조회 종료일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
             </div>
 
             <!-- 빠른 기간 프리셋 버튼 (오늘, 7일, 30일, 6개월, 1년, 전체) -->
             <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="log-preset-group">
-              <button type="button" onclick="setLogDatePreset('today')" id="log-preset-today" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-              <button type="button" onclick="setLogDatePreset('7days')" id="log-preset-7days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일</button>
-              <button type="button" onclick="setLogDatePreset('30days')" id="log-preset-30days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-              <button type="button" onclick="setLogDatePreset('6months')" id="log-preset-6months" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-              <button type="button" onclick="setLogDatePreset('1year')" id="log-preset-1year" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-              <button type="button" onclick="setLogDatePreset('all')" id="log-preset-all" class="px-2 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+              <button type="button" onclick="setGlobalDatePreset('today')" id="log-preset-today" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+              <button type="button" onclick="setGlobalDatePreset('7days')" id="log-preset-7days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+              <button type="button" onclick="setGlobalDatePreset('30days')" id="log-preset-30days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+              <button type="button" onclick="setGlobalDatePreset('6months')" id="log-preset-6months" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+              <button type="button" onclick="setGlobalDatePreset('1year')" id="log-preset-1year" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+              <button type="button" onclick="setGlobalDatePreset('all')" id="log-preset-all" class="px-2 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
             </div>
 
             <!-- IP / 키워드 검색 인풋 -->
@@ -440,6 +481,24 @@
           </div>
 
           <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- 날짜 범위 선택기 (시작일 ~ 종료일) -->
+            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
+              <input type="date" id="ip-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('ip-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="date" id="ip-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('ip-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+            </div>
+
+            <!-- 빠른 기간 프리셋 버튼 (오늘, 7일, 30일, 6개월, 1년, 전체) -->
+            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="ip-preset-group">
+              <button type="button" onclick="setGlobalDatePreset('today')" id="ip-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+              <button type="button" onclick="setGlobalDatePreset('7days')" id="ip-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+              <button type="button" onclick="setGlobalDatePreset('30days')" id="ip-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+              <button type="button" onclick="setGlobalDatePreset('6months')" id="ip-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+              <button type="button" onclick="setGlobalDatePreset('1year')" id="ip-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+              <button type="button" onclick="setGlobalDatePreset('all')" id="ip-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+            </div>
+
             <!-- 정렬 기준 선택 -->
             <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
               <i data-lucide="arrow-down-up" class="w-3 h-3 text-slate-400 shrink-0"></i>
@@ -528,10 +587,31 @@
     <!-- 3-5. 퍼널 분석 -->
     <section id="tab-content-funnel" class="hidden space-y-4">
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-          <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
-            <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i> 시나리오 진행 단계별 도달 현황
-          </h3>
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 flex-wrap gap-3">
+          <div class="flex items-center gap-2">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i> 시나리오 진행 단계별 도달 현황
+            </h3>
+            <span id="funnel-date-range-badge" class="text-[11px] font-mono text-slate-400 font-normal">전체 기간</span>
+          </div>
+
+          <!-- 퍼널 날짜 범위 선택기 & 빠른 프리셋 6종 -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
+              <input type="date" id="funnel-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('funnel-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="date" id="funnel-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('funnel-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+            </div>
+            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="funnel-preset-group">
+              <button type="button" onclick="setGlobalDatePreset('today')" id="funnel-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+              <button type="button" onclick="setGlobalDatePreset('7days')" id="funnel-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+              <button type="button" onclick="setGlobalDatePreset('30days')" id="funnel-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+              <button type="button" onclick="setGlobalDatePreset('6months')" id="funnel-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+              <button type="button" onclick="setGlobalDatePreset('1year')" id="funnel-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+              <button type="button" onclick="setGlobalDatePreset('all')" id="funnel-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+            </div>
+          </div>
         </div>
 
         <div id="funnel-container" class="space-y-2.5">
@@ -542,6 +622,31 @@
 
     <!-- 3-4. [TAB 4] 기기 및 지역 분포 -->
     <section id="tab-content-devices" class="hidden space-y-4">
+      <!-- 기기/지역 날짜 선택기 & 빠른 프리셋 6종 -->
+      <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-3.5 shadow-sm flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-2">
+          <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-purple-400"></i> 기기 및 지역 트래픽 분석
+          </h3>
+          <span id="devices-date-range-badge" class="text-[11px] font-mono text-slate-400 font-normal">전체 기간</span>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
+            <input type="date" id="devices-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('devices-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+            <span class="text-slate-500 text-xs">~</span>
+            <input type="date" id="devices-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('devices-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+          </div>
+          <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="devices-preset-group">
+            <button type="button" onclick="setGlobalDatePreset('today')" id="devices-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
+            <button type="button" onclick="setGlobalDatePreset('7days')" id="devices-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
+            <button type="button" onclick="setGlobalDatePreset('30days')" id="devices-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
+            <button type="button" onclick="setGlobalDatePreset('6months')" id="devices-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
+            <button type="button" onclick="setGlobalDatePreset('1year')" id="devices-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
+            <button type="button" onclick="setGlobalDatePreset('all')" id="devices-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+          </div>
+        </div>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- 기기 분류 -->
         <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-3">
@@ -813,10 +918,16 @@
       });
       if (tabKey === 'traffic') {
         renderTrafficAnalytics();
-      }
-      if (tabKey === 'ip') {
+      } else if (tabKey === 'logs') {
+        filterLogs();
+      } else if (tabKey === 'ip') {
         renderIpAnalytics();
+      } else if (tabKey === 'funnel') {
+        renderFunnelWithDateFilter();
+      } else if (tabKey === 'devices') {
+        renderDevicesWithDateFilter();
       }
+      syncAllDateInputsAndStyles();
       lucide.createIcons();
     }
 
@@ -979,58 +1090,21 @@
         savedLogs.forEach(l => combinedLogsMap.set(l.sessionId + '_' + (l.timestamp || l.lastSeen), l));
         const finalLogs = Array.from(combinedLogsMap.values())
           .sort((a, b) => new Date(b.timestamp || b.lastSeen).getTime() - new Date(a.timestamp || a.lastSeen).getTime());
-        renderRecentLogs(finalLogs.slice(0, 100));
+      renderRecentLogs(finalLogs.slice(0, 100));
       } catch (e) {
         console.error('renderRecentLogs error:', e);
       }
 
-      // 4. 씬별 깔때기
+      // 4. 씬별 깔때기 (선택 기간 필터링 적용)
       try {
-        renderFunnel(data.sceneFunnel || {}, Math.max(data.kpi.totalPageviews, 1));
+        renderFunnelWithDateFilter();
       } catch (e) {
         console.error('renderFunnel error:', e);
       }
 
-      // 5. 기기 및 지역 (현재 활성 세션 + 최근 로그 및 로컬 저장 로그 종합 집계)
+      // 5. 기기 및 지역 (선택 기간 필터링 적용)
       try {
-        const liveDevices = { Desktop: 0, Mobile: 0, Tablet: 0 };
-        const liveCities = {};
-        const countedIds = new Set();
-
-        // 1. 현재 활성 방문자 반영
-        mergedVisitors.forEach(v => {
-          const isMob = v.device === 'Mobile' || (v.clientEnv && /android|ios|iphone|mobile/i.test(v.clientEnv)) || (v.os && /android|ios|iphone/i.test(v.os));
-          const isTab = !isMob && (v.device === 'Tablet' || (v.clientEnv && /ipad|tablet/i.test(v.clientEnv)) || (v.os && /ipad/i.test(v.os)));
-          const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
-          liveDevices[dev] = (liveDevices[dev] || 0) + 1;
-          const c = v.city || '대한민국';
-          liveCities[c] = (liveCities[c] || 0) + 1;
-          if (v.visitorId || v.sessionId) countedIds.add(v.visitorId || v.sessionId);
-        });
-
-        // 2. 최근 로그(기록된 방문자) 중 아직 안 들어간 고유 방문자 누적
-        const allLogs = (data.recentLogs || []).concat(JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]'));
-        allLogs.forEach(l => {
-          const id = l.visitorId || l.sessionId;
-          if (id && !countedIds.has(id)) {
-            countedIds.add(id);
-            const isMob = l.device === 'Mobile' || (l.clientEnv && /android|ios|iphone|mobile/i.test(l.clientEnv)) || (l.os && /android|ios|iphone/i.test(l.os));
-            const isTab = !isMob && (l.device === 'Tablet' || (l.clientEnv && /ipad|tablet/i.test(l.clientEnv)) || (l.os && /ipad/i.test(l.os)));
-            const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
-            liveDevices[dev] = (liveDevices[dev] || 0) + 1;
-            const c = l.city || '대한민국';
-            liveCities[c] = (liveCities[c] || 0) + 1;
-          }
-        });
-
-        const finalDevices = {
-          Desktop: Math.max(data.deviceBreakdown?.Desktop || 0, liveDevices.Desktop),
-          Mobile: Math.max(data.deviceBreakdown?.Mobile || 0, liveDevices.Mobile),
-          Tablet: Math.max(data.deviceBreakdown?.Tablet || 0, liveDevices.Tablet)
-        };
-        const finalCities = Object.assign({}, data.cityBreakdown || {}, liveCities);
-
-        renderDevicesAndCities(finalDevices, finalCities);
+        renderDevicesWithDateFilter();
       } catch (e) {
         console.error('renderDevicesAndCities error:', e);
       }
@@ -1054,78 +1128,178 @@
       } catch (e) {}
     }
 
-    // ================= [시간대별 및 날짜별 트래픽 분석 로직] =================
-    let selectedTrafficDate = new Date().toLocaleDateString('sv-SE'); // 'YYYY-MM-DD'
-    let trafficPresetMode = 'today';
+    // ================= [전역 날짜 범위 및 트래픽/로그/IP/퍼널/기기 공통 필터 시스템] =================
+    let globalStartDate = '';
+    let globalEndDate = '';
+    let globalDatePreset = 'all';
 
-    function setTrafficDatePreset(preset) {
-      trafficPresetMode = preset;
-      const today = new Date();
+    function getKstDateStr(dateObj) {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(dateObj || new Date());
+    }
+
+    function setGlobalDatePreset(preset) {
+      globalDatePreset = preset;
+      const now = new Date();
+      const todayStr = getKstDateStr(now);
+
       if (preset === 'today') {
-        selectedTrafficDate = today.toLocaleDateString('sv-SE');
-      } else if (preset === 'yesterday') {
-        const y = new Date(today);
-        y.setDate(y.getDate() - 1);
-        selectedTrafficDate = y.toLocaleDateString('sv-SE');
+        globalStartDate = todayStr;
+        globalEndDate = todayStr;
       } else if (preset === '7days') {
-        selectedTrafficDate = '7days';
+        const d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        globalStartDate = getKstDateStr(d);
+        globalEndDate = todayStr;
+      } else if (preset === '30days') {
+        const d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        globalStartDate = getKstDateStr(d);
+        globalEndDate = todayStr;
+      } else if (preset === '6months') {
+        const d = new Date(now);
+        d.setMonth(d.getMonth() - 6);
+        globalStartDate = getKstDateStr(d);
+        globalEndDate = todayStr;
+      } else if (preset === '1year') {
+        const d = new Date(now);
+        d.setFullYear(d.getFullYear() - 1);
+        globalStartDate = getKstDateStr(d);
+        globalEndDate = todayStr;
+      } else if (preset === 'all') {
+        globalStartDate = '';
+        globalEndDate = '';
       }
 
-      ['today', 'yesterday', '7days'].forEach(p => {
-        const b = document.getElementById('preset-btn-' + p);
-        if (b) {
-          if (p === preset) {
-            b.className = 'px-2.5 py-1 rounded-md text-xs font-medium transition bg-slate-800 text-white shadow-xs';
-          } else {
-            b.className = 'px-2.5 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50';
+      syncAllDateInputsAndStyles();
+      refreshAllTabAnalytics();
+    }
+
+    function onGlobalDateChange(startVal, endVal) {
+      globalStartDate = startVal || '';
+      globalEndDate = endVal || '';
+      globalDatePreset = 'custom';
+
+      syncAllDateInputsAndStyles();
+      refreshAllTabAnalytics();
+    }
+
+    // 기존 호환성 유지 래퍼 함수들
+    function setLogDatePreset(preset) { setGlobalDatePreset(preset); }
+    function onLogDateChange() { onGlobalDateChange(document.getElementById('log-start-date')?.value, document.getElementById('log-end-date')?.value); }
+    function setTrafficDatePreset(preset) { setGlobalDatePreset(preset); }
+    function changeTrafficDate(val) { onGlobalDateChange(val, val); }
+
+    function syncAllDateInputsAndStyles() {
+      const prefixes = ['global', 'traffic', 'log', 'ip', 'funnel', 'devices'];
+
+      // 1. 입력창 동기화
+      prefixes.forEach(pfx => {
+        const startEl = document.getElementById(pfx + '-start-date');
+        const endEl = document.getElementById(pfx + '-end-date');
+        if (startEl && startEl.value !== globalStartDate) startEl.value = globalStartDate;
+        if (endEl && endEl.value !== globalEndDate) endEl.value = globalEndDate;
+      });
+
+      // 기존 요소 호환성
+      const legacyLogFilter = document.getElementById('log-date-filter');
+      if (legacyLogFilter) legacyLogFilter.value = globalStartDate;
+      const legacyTrafficPicker = document.getElementById('traffic-date-picker');
+      if (legacyTrafficPicker) legacyTrafficPicker.value = globalStartDate || getKstDateStr();
+
+      // 2. 프리셋 버튼 스타일 동기화
+      const presets = ['today', '7days', '30days', '6months', '1year', 'all'];
+      prefixes.forEach(pfx => {
+        presets.forEach(p => {
+          const btn = document.getElementById(pfx + '-preset-' + p) || document.getElementById('preset-btn-' + p);
+          if (btn) {
+            if (p === globalDatePreset) {
+              btn.className = 'px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer';
+            } else {
+              btn.className = 'px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer';
+            }
           }
-        }
+        });
       });
 
-      const picker = document.getElementById('traffic-date-picker');
-      if (picker && selectedTrafficDate !== '7days') {
-        picker.value = selectedTrafficDate;
+      // 3. 상태 뱃지 동기화
+      let badgeText = '전체 기간';
+      if (globalStartDate && globalEndDate) {
+        if (globalStartDate === globalEndDate) badgeText = `${globalStartDate} (당일)`;
+        else badgeText = `${globalStartDate} ~ ${globalEndDate}`;
+      } else if (globalStartDate) {
+        badgeText = `${globalStartDate} ~`;
+      } else if (globalEndDate) {
+        badgeText = `~ ${globalEndDate}`;
       }
-      renderTrafficAnalytics();
-    }
 
-    function changeTrafficDate(val) {
-      if (!val) return;
-      selectedTrafficDate = val;
-      trafficPresetMode = 'custom';
-      ['today', 'yesterday', '7days'].forEach(p => {
-        const b = document.getElementById('preset-btn-' + p);
-        if (b) b.className = 'px-2.5 py-1 rounded-md text-xs font-medium transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50';
+      ['global', 'funnel', 'devices'].forEach(pfx => {
+        const b = document.getElementById(pfx + '-date-range-badge');
+        if (b) b.innerText = badgeText;
       });
-      renderTrafficAnalytics();
     }
 
-    function renderTrafficAnalytics() {
-      const allEvents = [];
+    function getAllAggregatedLogs() {
+      let allLogs = [];
       if (currentStatsData && Array.isArray(currentStatsData.recentLogs)) {
-        allEvents.push(...currentStatsData.recentLogs);
+        allLogs.push(...currentStatsData.recentLogs);
       }
       try {
         const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
-        if (Array.isArray(savedLogs)) allEvents.push(...savedLogs);
+        if (Array.isArray(savedLogs)) {
+          savedLogs.forEach(s => {
+            if (!allLogs.some(l => l.sessionId === s.sessionId && (l.timestamp || l.lastSeen) === (s.timestamp || s.lastSeen))) {
+              allLogs.push(s);
+            }
+          });
+        }
       } catch(e) {}
-      if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
-        allEvents.push(...currentStatsData.activeVisitors);
-      }
-      localActiveSessions.forEach(v => allEvents.push(v));
+      return allLogs;
+    }
 
-      const isSevenDays = selectedTrafficDate === '7days';
-      const todayStr = new Date().toLocaleDateString('sv-SE');
-      const targetDate = isSevenDays ? todayStr : selectedTrafficDate;
+    function getLogsInDateRange(startDate, endDate) {
+      const allLogs = getAllAggregatedLogs();
+      if (!startDate && !endDate) return allLogs;
 
-      const picker = document.getElementById('traffic-date-picker');
-      if (picker && !picker.value && !isSevenDays) {
-        picker.value = targetDate;
+      return allLogs.filter(item => {
+        const timeVal = item.timestamp ? new Date(item.timestamp).getTime() : (item.firstSeen || item.lastSeen || 0);
+        if (!timeVal) return true;
+        const itemDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal));
+        if (startDate && itemDate < startDate) return false;
+        if (endDate && itemDate > endDate) return false;
+        return true;
+      });
+    }
+
+    function refreshAllTabAnalytics() {
+      filterLogs();
+      renderIpAnalytics();
+      renderTrafficAnalytics();
+      renderFunnelWithDateFilter();
+      renderDevicesWithDateFilter();
+    }
+
+    function renderTrafficAnalytics() {
+      const allEvents = getLogsInDateRange(globalStartDate, globalEndDate);
+      const isIncludesToday = (!globalEndDate || globalEndDate >= getKstDateStr());
+      if (isIncludesToday) {
+        if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+          allEvents.push(...currentStatsData.activeVisitors);
+        }
+        localActiveSessions.forEach(v => allEvents.push(v));
       }
+
+      const todayStr = getKstDateStr();
+      const targetDate = (globalStartDate && globalStartDate === globalEndDate) ? globalStartDate : (globalStartDate || todayStr);
 
       const dateLabel = document.getElementById('traffic-chart-date-label');
       if (dateLabel) {
-        dateLabel.innerText = isSevenDays ? '최근 7일 종합 분석' : `${targetDate} (KST 24시간)`;
+        if (globalStartDate && globalEndDate && globalStartDate !== globalEndDate) {
+          dateLabel.innerText = `${globalStartDate} ~ ${globalEndDate} (선택 기간 24시간 분포)`;
+        } else if (globalDatePreset === '7days') {
+          dateLabel.innerText = '최근 7일 종합 분석 (24시간 분포)';
+        } else if (globalStartDate && globalStartDate === globalEndDate) {
+          dateLabel.innerText = `${globalStartDate} (KST 24시간)`;
+        } else {
+          dateLabel.innerText = `${targetDate} (KST 24시간)`;
+        }
       }
 
       const hourlyData = [];
@@ -1147,49 +1321,19 @@
         const d = new Date(t);
         if (isNaN(d.getTime())) return;
 
-        const evtDateStr = d.toLocaleDateString('sv-SE');
-        const h = d.getHours();
+        const h = parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hour: '2-digit', hour12: false }).format(d), 10);
+        const uid = evt.visitorId || evt.sessionId || evt.ip || 'anon';
 
-        if (isSevenDays) {
-          const diffDays = Math.floor((new Date() - d) / (1000 * 60 * 60 * 24));
-          if (diffDays >= 0 && diffDays < 7) {
-            const vid = evt.visitorId || evt.sessionId || ('session_' + evt.ip);
-            hourlyData[h].uvSet.add(vid);
-            hourlyData[h].pvCount++;
-            dayUvSet.add(vid);
-            dayPvCount++;
-          }
-        } else {
-          if (evtDateStr === targetDate) {
-            const vid = evt.visitorId || evt.sessionId || ('session_' + evt.ip);
-            hourlyData[h].uvSet.add(vid);
-            hourlyData[h].pvCount++;
-            dayUvSet.add(vid);
-            dayPvCount++;
-          }
+        if (h >= 0 && h < 24) {
+          hourlyData[h].pvCount += 1;
+          hourlyData[h].uvSet.add(uid);
         }
+        dayPvCount += 1;
+        dayUvSet.add(uid);
       });
 
-      if (targetDate === todayStr && !isSevenDays) {
-        const curHour = new Date().getHours();
-        localActiveSessions.forEach((v, sid) => {
-          const vid = v.visitorId || sid;
-          hourlyData[curHour].uvSet.add(vid);
-          hourlyData[curHour].pvCount = Math.max(hourlyData[curHour].pvCount, 1);
-          dayUvSet.add(vid);
-        });
-        if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
-          currentStatsData.activeVisitors.forEach(v => {
-            const vid = v.visitorId || v.sessionId;
-            hourlyData[curHour].uvSet.add(vid);
-            hourlyData[curHour].pvCount = Math.max(hourlyData[curHour].pvCount, 1);
-            dayUvSet.add(vid);
-          });
-        }
-      }
-
-      const totalDayUv = Math.max(dayUvSet.size, 0);
-      const totalDayPv = Math.max(dayPvCount, totalDayUv);
+      const totalDayUv = dayUvSet.size;
+      const totalDayPv = dayPvCount;
 
       let peakHour = 0;
       let peakUvCount = 0;
@@ -1217,7 +1361,7 @@
       const chartContainer = document.getElementById('hourly-chart-container');
       if (chartContainer) {
         const maxVal = Math.max(...hourlyData.map(d => d.uvSet.size), ...hourlyData.map(d => Math.ceil(d.pvCount / 2)), 3);
-        
+
         let chartBarsHtml = `
           <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
             <div class="border-b border-dashed border-slate-600 w-full"></div>
@@ -1235,7 +1379,6 @@
           const barColor = isPeak
             ? 'bg-emerald-500 hover:bg-emerald-400 shadow-xs'
             : (uv > 0 ? 'bg-blue-600/90 hover:bg-blue-500' : 'bg-slate-800/60 hover:bg-slate-700');
-          const isKeyLabel = (item.hour % 3 === 0) || item.hour === 23;
 
           return `
             <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10">
@@ -1243,17 +1386,11 @@
                 <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs">
                   <div class="font-bold text-slate-200">${item.label} ~ ${String(item.hour).padStart(2,'0')}:59</div>
                   <div class="text-blue-400">순 방문자: <strong class="text-white">${uv}명</strong></div>
-                  <div class="text-slate-400">페이지뷰: <strong class="text-slate-200">${pv}회</strong></div>
-                  ${isPeak ? '<div class="text-emerald-400 font-semibold mt-0.5">★ 최대 피크 시간대</div>' : ''}
+                  <div class="text-slate-400">페이지뷰: <strong class="text-white">${pv}회</strong></div>
                 </div>
-                <div class="w-1.5 h-1.5 bg-slate-900 rotate-45 -mt-1 border-r border-b border-slate-700/80"></div>
               </div>
-
-              <div class="w-full max-w-[28px] rounded-t-xs transition-all duration-200 cursor-pointer ${barColor}" style="height: ${heightPct}%;"></div>
-
-              <span class="text-[10px] font-mono mt-1.5 select-none ${isKeyLabel ? (isPeak ? 'text-emerald-400 font-bold' : 'text-slate-400') : 'text-transparent sm:text-slate-600'}">
-                ${String(item.hour).padStart(2, '0')}
-              </span>
+              <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
+              <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${item.hour}</span>
             </div>
           `;
         }).join('');
@@ -1261,36 +1398,71 @@
         chartContainer.innerHTML = chartBarsHtml;
       }
 
-      const tbody = document.getElementById('hourly-breakdown-tbody');
-      if (tbody) {
-        tbody.innerHTML = hourlyData.map(item => {
-          const uv = item.uvSet.size;
-          const pv = item.pvCount;
-          const isPeak = (peakUvCount > 0 && item.hour === peakHour);
-          const share = totalDayUv > 0 ? ((uv / totalDayUv) * 100).toFixed(1) : '0.0';
-          const statusText = isPeak ? '★ 피크 타임' : (uv > 0 ? '정상 활동' : '기록 없음');
-          const statusColor = isPeak ? 'text-emerald-400 font-bold' : (uv > 0 ? 'text-slate-300' : 'text-slate-600');
+      try { lucide.createIcons(); } catch(e) {}
+    }
 
-          return `
-            <tr class="hover:bg-slate-800/30 transition text-xs border-b border-slate-800/40">
-              <td class="py-2.5 px-4 font-mono text-slate-300 font-medium">${item.label} ~ ${String(item.hour).padStart(2, '0')}:59</td>
-              <td class="py-2.5 px-4 font-mono text-slate-100 font-bold">${uv}명</td>
-              <td class="py-2.5 px-4 font-mono text-slate-400">${pv}회</td>
-              <td class="py-2.5 px-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-24 h-1.5 bg-slate-800 rounded-sm overflow-hidden">
-                    <div class="h-full ${isPeak ? 'bg-emerald-500' : 'bg-blue-500'}" style="width: ${share}%;"></div>
-                  </div>
-                  <span class="text-[11px] font-mono text-slate-400">${share}%</span>
-                </div>
-              </td>
-              <td class="py-2.5 px-4 text-right font-mono text-xs ${statusColor}">${statusText}</td>
-            </tr>
-          `;
-        }).join('');
+    function renderFunnelWithDateFilter() {
+      const logs = getLogsInDateRange(globalStartDate, globalEndDate);
+      const sceneCounts = {};
+      let totalPv = logs.length;
+
+      logs.forEach(l => {
+        let idx = l.sceneIdx;
+        if (idx === 'lobby' || (l.sceneTitle && l.sceneTitle.includes('로비'))) {
+          sceneCounts.lobby = (sceneCounts.lobby || 0) + 1;
+        } else if (idx !== undefined && idx !== null && !isNaN(idx)) {
+          sceneCounts[idx] = (sceneCounts[idx] || 0) + 1;
+        } else if (l.sceneTitle) {
+          const found = SCENE_NAMES.findIndex(name => l.sceneTitle.includes(name));
+          if (found >= 0) sceneCounts[found] = (sceneCounts[found] || 0) + 1;
+        }
+      });
+
+      if (totalPv === 0 && !globalStartDate && !globalEndDate && currentStatsData?.sceneFunnel) {
+        renderFunnel(currentStatsData.sceneFunnel, currentStatsData.kpi?.totalPageviews || 1);
+        return;
       }
 
-      try { lucide.createIcons(); } catch(e) {}
+      renderFunnel(sceneCounts, Math.max(totalPv, 1));
+    }
+
+    function renderDevicesWithDateFilter() {
+      const logs = getLogsInDateRange(globalStartDate, globalEndDate);
+      const devices = { Desktop: 0, Mobile: 0, Tablet: 0 };
+      const cities = {};
+      const countedIds = new Set();
+
+      logs.forEach(l => {
+        const id = l.visitorId || l.sessionId;
+        if (id && !countedIds.has(id)) {
+          countedIds.add(id);
+          const isMob = l.device === 'Mobile' || (l.clientEnv && /android|ios|iphone|mobile/i.test(l.clientEnv)) || (l.os && /android|ios|iphone/i.test(l.os));
+          const isTab = !isMob && (l.device === 'Tablet' || (l.clientEnv && /ipad|tablet/i.test(l.clientEnv)) || (l.os && /ipad/i.test(l.os)));
+          const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+          devices[dev] = (devices[dev] || 0) + 1;
+          const c = l.city || '대한민국';
+          cities[c] = (cities[c] || 0) + 1;
+        }
+      });
+
+      const todayKST = getKstDateStr();
+      const isIncludesToday = (!globalEndDate || globalEndDate >= todayKST);
+      if (isIncludesToday && currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+        currentStatsData.activeVisitors.forEach(v => {
+          const id = v.visitorId || v.sessionId;
+          if (id && !countedIds.has(id)) {
+            countedIds.add(id);
+            const isMob = v.device === 'Mobile' || (v.clientEnv && /android|ios|iphone|mobile/i.test(v.clientEnv)) || (v.os && /android|ios|iphone/i.test(v.os));
+            const isTab = !isMob && (v.device === 'Tablet' || (v.clientEnv && /ipad|tablet/i.test(v.clientEnv)) || (v.os && /ipad/i.test(v.os)));
+            const dev = isMob ? 'Mobile' : (isTab ? 'Tablet' : 'Desktop');
+            devices[dev] = (devices[dev] || 0) + 1;
+            const c = v.city || '대한민국';
+            cities[c] = (cities[c] || 0) + 1;
+          }
+        });
+      }
+
+      renderDevicesAndCities(devices, cities);
     }
 
     function getEffectiveIp(rawIp) {
@@ -1510,70 +1682,6 @@
       }
     }
 
-    function getKstDateStr(dateObj) {
-      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(dateObj || new Date());
-    }
-
-    let activeLogPreset = 'all';
-
-    function setLogDatePreset(preset) {
-      activeLogPreset = preset;
-      const now = new Date();
-      const todayStr = getKstDateStr(now);
-      const startEl = document.getElementById('log-start-date');
-      const endEl = document.getElementById('log-end-date');
-      if (!startEl || !endEl) return;
-
-      if (preset === 'today') {
-        startEl.value = todayStr;
-        endEl.value = todayStr;
-      } else if (preset === '7days') {
-        const d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        startEl.value = getKstDateStr(d);
-        endEl.value = todayStr;
-      } else if (preset === '30days') {
-        const d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        startEl.value = getKstDateStr(d);
-        endEl.value = todayStr;
-      } else if (preset === '6months') {
-        const d = new Date(now);
-        d.setMonth(d.getMonth() - 6);
-        startEl.value = getKstDateStr(d);
-        endEl.value = todayStr;
-      } else if (preset === '1year') {
-        const d = new Date(now);
-        d.setFullYear(d.getFullYear() - 1);
-        startEl.value = getKstDateStr(d);
-        endEl.value = todayStr;
-      } else if (preset === 'all') {
-        startEl.value = '';
-        endEl.value = '';
-      }
-
-      updateLogPresetButtonStyles(preset);
-      filterLogs();
-    }
-
-    function onLogDateChange() {
-      activeLogPreset = 'custom';
-      updateLogPresetButtonStyles('custom');
-      filterLogs();
-    }
-
-    function updateLogPresetButtonStyles(active) {
-      const presets = ['today', '7days', '30days', '6months', '1year', 'all'];
-      presets.forEach(p => {
-        const btn = document.getElementById('log-preset-' + p);
-        if (btn) {
-          if (p === active) {
-            btn.className = 'px-2 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer';
-          } else {
-            btn.className = 'px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer';
-          }
-        }
-      });
-    }
-
     function clearLogSearch() {
       const searchInput = document.getElementById('log-search-input');
       if (searchInput) {
@@ -1594,7 +1702,7 @@
       switchTab('logs');
 
       // 3. 날짜는 전체로 리셋하여 해당 IP의 전 구간 이력을 조회
-      setLogDatePreset('all');
+      setGlobalDatePreset('all');
 
       // 4. 검색창에 해당 IP 입력 및 포커스 연출
       const searchInput = document.getElementById('log-search-input');
@@ -1618,8 +1726,8 @@
 
     function filterLogs() {
       const q = (document.getElementById('log-search-input')?.value || '').trim().toLowerCase();
-      const startDate = document.getElementById('log-start-date')?.value || '';
-      const endDate = document.getElementById('log-end-date')?.value || '';
+      const startDate = globalStartDate || document.getElementById('log-start-date')?.value || '';
+      const endDate = globalEndDate || document.getElementById('log-end-date')?.value || '';
 
       const clearBtn = document.getElementById('btn-clear-log-search');
       if (clearBtn) {
@@ -1627,28 +1735,9 @@
         else clearBtn.classList.add('hidden');
       }
 
-      let allLogs = [];
-      if (currentStatsData && Array.isArray(currentStatsData.recentLogs)) {
-        allLogs = [...currentStatsData.recentLogs];
-      }
-      try {
-        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
-        if (Array.isArray(savedLogs)) {
-          savedLogs.forEach(s => {
-            if (!allLogs.some(l => l.sessionId === s.sessionId && (l.timestamp || l.lastSeen) === (s.timestamp || s.lastSeen))) {
-              allLogs.push(s);
-            }
-          });
-        }
-      } catch(e) {}
+      const allLogs = getLogsInDateRange(startDate, endDate);
 
       const filtered = allLogs.filter(item => {
-        const timeVal = item.timestamp ? new Date(item.timestamp).getTime() : (item.firstSeen || item.lastSeen || 0);
-        if (timeVal) {
-          const itemDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal));
-          if (startDate && itemDate < startDate) return false;
-          if (endDate && itemDate > endDate) return false;
-        }
         if (q) {
           const rawIp = item.ip || '';
           const effIp = getEffectiveIp(rawIp);
@@ -1734,28 +1823,25 @@
         else clearBtn.classList.add('hidden');
       }
 
-      // 1. 모든 로그 수집 (API 최근 로그 + 로컬스토리지 영구 보존 로그)
-      let allLogs = [];
-      if (currentStatsData && Array.isArray(currentStatsData.recentLogs)) {
-        allLogs = allLogs.concat(currentStatsData.recentLogs);
-      }
-      try {
-        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
-        if (Array.isArray(savedLogs)) allLogs = allLogs.concat(savedLogs);
-      } catch (e) {}
+      // 1. 선택한 날짜 범위에 해당하는 로그 수집 (API 최근 로그 + 로컬스토리지 영구 보존 로그)
+      const allLogs = getLogsInDateRange(globalStartDate, globalEndDate);
 
-      // 2. 실시간 활성 IP 식별 세트
+      // 2. 실시간 활성 IP 식별 세트 (선택 날짜가 오늘을 포함할 때만 활성 세션 합산)
+      const todayKST = getKstDateStr();
+      const isIncludesToday = (!globalEndDate || globalEndDate >= todayKST);
       const activeIpSet = new Set();
-      if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
-        currentStatsData.activeVisitors.forEach(v => {
-          if (v.ip) activeIpSet.add(getEffectiveIp(v.ip));
-        });
-      }
-      if (typeof localActiveSessions !== 'undefined') {
-        localActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
-      }
-      if (typeof mqttActiveSessions !== 'undefined') {
-        mqttActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
+      if (isIncludesToday) {
+        if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+          currentStatsData.activeVisitors.forEach(v => {
+            if (v.ip) activeIpSet.add(getEffectiveIp(v.ip));
+          });
+        }
+        if (typeof localActiveSessions !== 'undefined') {
+          localActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
+        }
+        if (typeof mqttActiveSessions !== 'undefined') {
+          mqttActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
+        }
       }
 
       const ipMap = new Map();
@@ -1807,14 +1893,16 @@
 
       allLogs.forEach(l => processIpEntry(l, false));
 
-      if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
-        currentStatsData.activeVisitors.forEach(v => processIpEntry(v, true));
-      }
-      if (typeof localActiveSessions !== 'undefined') {
-        localActiveSessions.forEach(v => processIpEntry(v, true));
-      }
-      if (typeof mqttActiveSessions !== 'undefined') {
-        mqttActiveSessions.forEach(v => processIpEntry(v, true));
+      if (isIncludesToday) {
+        if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+          currentStatsData.activeVisitors.forEach(v => processIpEntry(v, true));
+        }
+        if (typeof localActiveSessions !== 'undefined') {
+          localActiveSessions.forEach(v => processIpEntry(v, true));
+        }
+        if (typeof mqttActiveSessions !== 'undefined') {
+          mqttActiveSessions.forEach(v => processIpEntry(v, true));
+        }
       }
 
       let aggregated = Array.from(ipMap.values()).map(rec => {
@@ -1880,8 +1968,18 @@
       // 뱃지 업데이트
       const countBadge = document.getElementById('ip-filtered-count-badge');
       if (countBadge) {
-        if (q) {
-          countBadge.innerHTML = `<span class="text-blue-400 font-semibold">[검색: '${escapeHtml(q)}']</span> ${filtered.length}개 IP`;
+        const parts = [];
+        if (q) parts.push(`검색: '${escapeHtml(q)}'`);
+        if (globalStartDate && globalEndDate) {
+          parts.push(globalStartDate === globalEndDate ? globalStartDate : `${globalStartDate} ~ ${globalEndDate}`);
+        } else if (globalStartDate) {
+          parts.push(`${globalStartDate} ~`);
+        } else if (globalEndDate) {
+          parts.push(`~ ${globalEndDate}`);
+        }
+
+        if (parts.length > 0) {
+          countBadge.innerHTML = `<span class="text-blue-400 font-semibold">[${escapeHtml(parts.join(' · '))}]</span> ${filtered.length}개 IP`;
         } else {
           countBadge.innerText = `전체 ${filtered.length}개 IP 주소`;
         }
