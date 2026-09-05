@@ -281,7 +281,7 @@ module.exports = async (req, res) => {
       completionRate
     },
     activeVisitors,
-    recentLogs: historyList.slice(0, 500),
+    recentLogs: historyList,
     todayUniqueVisitors,
     deviceBreakdown: deviceCounts,
     cityBreakdown: cityCounts,

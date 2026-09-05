@@ -241,7 +241,7 @@ module.exports = async (req, res) => {
       eventType
     };
     global.__MMA_HISTORY__.push(logItem);
-    if (global.__MMA_HISTORY__.length > 500) {
+    if (global.__MMA_HISTORY__.length > 5000) {
       global.__MMA_HISTORY__.shift();
     }
   }
@@ -256,7 +256,7 @@ module.exports = async (req, res) => {
     await sendToUpstash('SADD', 'mma:daily_visitors:' + todayKST, visitorId);
     if (eventType === 'visit' || eventType === 'scene_change') {
       await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(sessionObj));
-      await sendToUpstash('LTRIM', 'mma:logs', 0, 499);
+      await sendToUpstash('LTRIM', 'mma:logs', 0, 9999);
     }
   } catch (e) {}
 
