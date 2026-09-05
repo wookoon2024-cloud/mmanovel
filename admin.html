@@ -1293,9 +1293,17 @@
       try { lucide.createIcons(); } catch(e) {}
     }
 
+    function getEffectiveIp(rawIp) {
+      let ip = String(rawIp || '').trim();
+      if (ip.includes('(')) ip = ip.split('(')[0].trim();
+      if (!ip || ip === '::1' || ip === '127.0.0.1' || ip.startsWith('127.')) {
+        return adminPublicIp || '127.0.0.1';
+      }
+      return ip;
+    }
+
     function formatIpDisplay(rawIp, maskedIp, showFull) {
-      let ip = (rawIp && rawIp !== '127.0.0.1' && rawIp !== '::1') ? rawIp : (adminPublicIp || rawIp || '127.0.0.1');
-      if (ip === '::1') ip = '127.0.0.1';
+      let ip = getEffectiveIp(rawIp);
       const isLocal = ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.');
       if (showFull) {
         return isLocal ? '127.0.0.1 (내 PC)' : ip;
@@ -1577,9 +1585,7 @@
 
     function filterLogsByIp(rawIp) {
       if (!rawIp) return;
-      let cleanIp = String(rawIp).trim();
-      if (cleanIp.includes('(')) cleanIp = cleanIp.split('(')[0].trim();
-      if (cleanIp === '::1') cleanIp = '127.0.0.1';
+      let cleanIp = getEffectiveIp(rawIp);
 
       // 1. 모달 닫기
       closeTodayVisitorsModal();
@@ -1645,7 +1651,8 @@
         }
         if (q) {
           const rawIp = item.ip || '';
-          const str = `${rawIp} ${item.city || ''} ${item.sceneTitle || ''} ${item.os || ''} ${item.browser || ''} ${item.eventType || ''} ${item.sessionId || ''} ${item.visitorId || ''}`.toLowerCase();
+          const effIp = getEffectiveIp(rawIp);
+          const str = `${rawIp} ${effIp} ${item.city || ''} ${item.sceneTitle || ''} ${item.os || ''} ${item.browser || ''} ${item.eventType || ''} ${item.sessionId || ''} ${item.visitorId || ''}`.toLowerCase();
           if (!str.includes(q)) return false;
         }
         return true;
@@ -1741,27 +1748,25 @@
       const activeIpSet = new Set();
       if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
         currentStatsData.activeVisitors.forEach(v => {
-          if (v.ip) activeIpSet.add(v.ip);
+          if (v.ip) activeIpSet.add(getEffectiveIp(v.ip));
         });
       }
       if (typeof localActiveSessions !== 'undefined') {
-        localActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(v.ip); });
+        localActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
       }
       if (typeof mqttActiveSessions !== 'undefined') {
-        mqttActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(v.ip); });
+        mqttActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(getEffectiveIp(v.ip)); });
       }
 
       const ipMap = new Map();
 
       function processIpEntry(item, isActiveHint = false) {
-        let rawIp = String(item.ip || '127.0.0.1').trim();
-        if (rawIp.includes('(')) rawIp = rawIp.split('(')[0].trim();
-        if (rawIp === '::1' || rawIp === '') rawIp = '127.0.0.1';
+        let rawIp = getEffectiveIp(item.ip);
 
         if (!ipMap.has(rawIp)) {
           ipMap.set(rawIp, {
             ip: rawIp,
-            maskedIp: item.maskedIp || (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp),
+            maskedIp: (item.maskedIp && !item.maskedIp.includes('127.0.0.1')) ? item.maskedIp : (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp),
             country: item.country || 'KR',
             city: item.city || '대한민국',
             totalPv: 0,
