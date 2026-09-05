@@ -480,8 +480,8 @@
   </footer>
 
   <!-- ================= [MODAL] 오늘 순 방문자 최초 접속정보 상세 모달 ================= -->
-  <div id="today-visitors-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto" onclick="if(event.target === this) closeTodayVisitorsModal()">
-    <div class="relative w-full max-w-4xl bg-[#0b1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+  <div id="today-visitors-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-5 overflow-y-auto" onclick="if(event.target === this) closeTodayVisitorsModal()">
+    <div class="relative w-full max-w-6xl bg-[#0b1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
       
       <!-- 모달 헤더 -->
       <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/90">
@@ -502,9 +502,9 @@
         </button>
       </div>
 
-      <!-- 모달 본문 -->
-      <div class="p-5 overflow-y-auto space-y-3.5 flex-1 custom-scrollbar" id="today-visitors-modal-content">
-        <!-- 동적 렌더링 -->
+      <!-- 모달 본문 (테이블 뷰) -->
+      <div class="overflow-y-auto flex-1 custom-scrollbar p-0" id="today-visitors-modal-content">
+        <!-- 동적 테이블 렌더링 -->
       </div>
 
       <!-- 모달 푸터 -->
@@ -1526,7 +1526,7 @@
 
       if (list.length === 0) {
         content.innerHTML = `
-          <div class="py-12 text-center text-slate-500 space-y-3">
+          <div class="py-16 text-center text-slate-500 space-y-3">
             <div class="w-12 h-12 rounded-full bg-slate-800/60 flex items-center justify-center mx-auto text-slate-400">
               <i data-lucide="user-x" class="w-6 h-6"></i>
             </div>
@@ -1537,10 +1537,13 @@
         return;
       }
 
-      content.innerHTML = list.map((v, idx) => {
+      const rowsHtml = list.map((v, idx) => {
         const d = new Date(v.firstSeen);
         const timeStr = !isNaN(d.getTime())
-          ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`
+          ? `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`
+          : '-';
+        const fullTimeStr = !isNaN(d.getTime())
+          ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${timeStr}`
           : '-';
 
         const agoMs = Math.max(0, Date.now() - v.firstSeen);
@@ -1550,68 +1553,73 @@
         const isMob = v.device === 'Mobile';
         const isTab = v.device === 'Tablet';
         const devIcon = isMob ? 'smartphone' : (isTab ? 'tablet' : 'monitor');
-        const devBadge = `<span class="text-xs text-slate-400 font-medium flex items-center gap-1.5"><i data-lucide="${devIcon}" class="w-3.5 h-3.5 text-slate-400"></i> ${isMob ? '스마트폰' : (isTab ? '태블릿' : '데스크톱')}</span>`;
+        const devLabel = isMob ? '스마트폰' : (isTab ? '태블릿' : '데스크톱');
+
         const statusBadge = v.isCurrentlyActive
-          ? `<span class="text-xs font-medium text-emerald-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 접속 중</span>`
-          : `<span class="text-xs text-slate-500 font-medium">종료</span>`;
+          ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span>접속 중</span>`
+          : `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium text-slate-500 bg-slate-800/50 font-sans">종료</span>`;
 
         const ipDisplay = formatIpDisplay(v.ip, v.maskedIp, showFullIp);
         const flag = v.country === 'KR' ? '🇰🇷' : '🌐';
         const isLobby = (v.initialSceneTitle && v.initialSceneTitle.includes('로비')) || v.initialSceneIdx === 'lobby';
 
         return `
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition shadow-sm space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-slate-800/80">
-              <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-                <span class="font-mono text-xs font-bold text-blue-400">#${idx + 1}</span>
-                <span class="font-mono text-xs font-bold text-white tracking-wide">${escapeHtml(v.visitorId)}</span>
-                ${statusBadge}
-                ${devBadge}
+          <tr class="hover:bg-slate-800/40 transition border-b border-slate-800/50 text-xs">
+            <td class="py-3 px-4 text-center font-mono text-slate-500 text-[11px]">#${idx + 1}</td>
+            <td class="py-3 px-4 font-mono">
+              <div class="font-bold text-white tracking-wide">${escapeHtml(v.visitorId)}</div>
+              <div class="mt-1">${statusBadge}</div>
+            </td>
+            <td class="py-3 px-4 font-mono">
+              <div class="text-slate-200 font-semibold" title="${fullTimeStr}">${timeStr}</div>
+              <div class="text-slate-400 text-[11px] font-sans">(${agoText})</div>
+            </td>
+            <td class="py-3 px-4 font-sans">
+              <div class="flex items-center gap-1.5 text-slate-200 font-medium">
+                <i data-lucide="${devIcon}" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
+                <span>${devLabel}</span>
               </div>
-              <div class="text-xs text-slate-300 flex items-center gap-1.5 font-mono">
-                <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-400"></i>
-                <span>최초 접속: <strong class="text-white">${timeStr}</strong></span>
-                <span class="text-slate-400 text-[11px]">(${agoText})</span>
+              <div class="text-slate-400 text-[11px] truncate max-w-[160px]" title="${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}">${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}</div>
+            </td>
+            <td class="py-3 px-4 font-mono">
+              <div class="text-slate-200 font-medium">${escapeHtml(ipDisplay)}</div>
+              <div class="text-slate-400 text-[11px] font-sans flex items-center gap-1">${flag} ${escapeHtml(v.city || '대한민국')}</div>
+            </td>
+            <td class="py-3 px-4 font-sans">
+              <div class="font-medium ${isLobby ? 'text-purple-300' : 'text-blue-300'} truncate max-w-[180px]" title="${escapeHtml(v.initialSceneTitle || 'SCENE 0')}">
+                ${escapeHtml(v.initialSceneTitle || 'SCENE 0')}
               </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
-                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">1. 기기 / 운영체제</span>
-                <div class="flex items-center gap-2 font-bold text-slate-100">
-                  <i data-lucide="${devIcon}" class="w-4 h-4 text-blue-400 shrink-0"></i>
-                  <span class="truncate">${escapeHtml(v.clientEnv || (v.os + ' · ' + v.browser))}</span>
-                </div>
+              <div class="text-slate-500 text-[10px] uppercase">Landing Scene</div>
+            </td>
+            <td class="py-3 px-4 font-sans">
+              <div class="text-slate-300 truncate max-w-[150px]" title="${escapeHtml(v.referrer || '직접 접속 (Direct)')}">
+                ${escapeHtml(v.referrer || '직접 접속 (Direct)')}
               </div>
-
-              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
-                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">2. 접속 지역 / IP</span>
-                <div class="flex items-center gap-1.5 font-bold text-slate-100">
-                  <span class="shrink-0">${flag}</span>
-                  <span class="truncate">${escapeHtml(v.city || '대한민국')}</span>
-                  <span class="font-mono text-slate-400 text-[11px] font-normal shrink-0">(${escapeHtml(ipDisplay)})</span>
-                </div>
-              </div>
-
-              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
-                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">3. 최초 유입 씬 (Landing)</span>
-                <div class="flex items-center gap-1.5 font-bold ${isLobby ? 'text-purple-300' : 'text-blue-300'} truncate">
-                  <i data-lucide="${isLobby ? 'layout-grid' : 'book-open'}" class="w-4 h-4 shrink-0 ${isLobby ? 'text-purple-400' : 'text-blue-400'}"></i>
-                  <span class="truncate">${escapeHtml(v.initialSceneTitle || 'SCENE 0')}</span>
-                </div>
-              </div>
-
-              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/70 space-y-1">
-                <span class="text-slate-400 block text-[10px] font-semibold tracking-wider uppercase">4. 유입 경로 (Referrer)</span>
-                <div class="flex items-center gap-1.5 font-medium text-slate-200 truncate">
-                  <i data-lucide="link" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                  <span class="truncate">${escapeHtml(v.referrer || '직접 접속 (Direct)')}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            </td>
+          </tr>
         `;
       }).join('');
+
+      content.innerHTML = `
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-[#0B101D] sticky top-0 z-10 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4 w-12 text-center">#</th>
+                <th class="py-3 px-4 min-w-[150px]">방문자 ID / 상태</th>
+                <th class="py-3 px-4 min-w-[120px]">최초 접속 시각</th>
+                <th class="py-3 px-4 min-w-[160px]">기기 & 브라우저</th>
+                <th class="py-3 px-4 min-w-[160px]">접속 IP / 지역</th>
+                <th class="py-3 px-4 min-w-[180px]">첫 진입 화면</th>
+                <th class="py-3 px-4 min-w-[150px]">유입 경로</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/40 font-mono text-xs">
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
 
       try { lucide.createIcons(); } catch(e) {}
     }
