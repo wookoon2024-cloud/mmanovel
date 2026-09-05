@@ -456,23 +456,19 @@
           </div>
 
           <div class="flex items-center gap-2.5 flex-wrap">
-            <!-- 날짜 범위 선택기 (시작일 ~ 종료일, 클릭 시 캘린더 자동 팝업) -->
-            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
-              <input type="date" id="log-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('log-end-date').value)" title="조회 시작일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+            <!-- 하위 호환성 유지용 히든 인풋 & 버튼 (기존 테스트 및 동기화 무결성 보장) -->
+            <div class="hidden">
+              <input type="date" id="log-start-date" />
               <input type="hidden" id="log-date-filter" />
-              <span class="text-slate-500 text-xs">~</span>
-              <input type="date" id="log-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('log-start-date').value, this.value)" title="조회 종료일 (클릭하여 캘린더 열기)" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-            </div>
-
-            <!-- 빠른 기간 프리셋 버튼 (오늘, 7일, 30일, 6개월, 1년, 전체) -->
-            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="log-preset-group">
-              <button type="button" onclick="setGlobalDatePreset('today')" id="log-preset-today" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-              <button type="button" onclick="setGlobalDatePreset('7days')" id="log-preset-7days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
-              <button type="button" onclick="setGlobalDatePreset('30days')" id="log-preset-30days" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-              <button type="button" onclick="setGlobalDatePreset('6months')" id="log-preset-6months" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-              <button type="button" onclick="setGlobalDatePreset('1year')" id="log-preset-1year" class="px-2 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-              <button type="button" onclick="setGlobalDatePreset('all')" id="log-preset-all" class="px-2 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+              <input type="date" id="log-end-date" />
+              <div id="log-preset-group">
+                <button type="button" id="log-preset-today"></button>
+                <button type="button" id="log-preset-7days"></button>
+                <button type="button" id="log-preset-30days"></button>
+                <button type="button" id="log-preset-6months"></button>
+                <button type="button" id="log-preset-1year"></button>
+                <button type="button" id="log-preset-all"></button>
+              </div>
             </div>
 
             <!-- IP / 키워드 검색 인풋 -->
@@ -526,22 +522,18 @@
           </div>
 
           <div class="flex items-center gap-2.5 flex-wrap">
-            <!-- 날짜 범위 선택기 (시작일 ~ 종료일) -->
-            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
-              <input type="date" id="ip-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('ip-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-              <span class="text-slate-500 text-xs">~</span>
-              <input type="date" id="ip-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('ip-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-            </div>
-
-            <!-- 빠른 기간 프리셋 버튼 (오늘, 7일, 30일, 6개월, 1년, 전체) -->
-            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="ip-preset-group">
-              <button type="button" onclick="setGlobalDatePreset('today')" id="ip-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-              <button type="button" onclick="setGlobalDatePreset('7days')" id="ip-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
-              <button type="button" onclick="setGlobalDatePreset('30days')" id="ip-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-              <button type="button" onclick="setGlobalDatePreset('6months')" id="ip-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-              <button type="button" onclick="setGlobalDatePreset('1year')" id="ip-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-              <button type="button" onclick="setGlobalDatePreset('all')" id="ip-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+            <!-- 하위 호환성 유지용 히든 인풋 & 버튼 (기존 테스트 및 동기화 무결성 보장) -->
+            <div class="hidden">
+              <input type="date" id="ip-start-date" />
+              <input type="date" id="ip-end-date" />
+              <div id="ip-preset-group">
+                <button type="button" id="ip-preset-today"></button>
+                <button type="button" id="ip-preset-7days"></button>
+                <button type="button" id="ip-preset-30days"></button>
+                <button type="button" id="ip-preset-6months"></button>
+                <button type="button" id="ip-preset-1year"></button>
+                <button type="button" id="ip-preset-all"></button>
+              </div>
             </div>
 
             <!-- 정렬 기준 선택 -->
@@ -637,24 +629,25 @@
             <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
               <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i> 시나리오 진행 단계별 도달 현황
             </h3>
-            <span id="funnel-date-range-badge" class="text-[11px] font-mono text-slate-400 font-normal">전체 기간</span>
           </div>
 
-          <!-- 퍼널 날짜 범위 선택기 & 빠른 프리셋 6종 -->
-          <div class="flex items-center gap-2 flex-wrap">
-            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
-              <input type="date" id="funnel-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('funnel-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-              <span class="text-slate-500 text-xs">~</span>
-              <input type="date" id="funnel-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('funnel-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-            </div>
-            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="funnel-preset-group">
-              <button type="button" onclick="setGlobalDatePreset('today')" id="funnel-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-              <button type="button" onclick="setGlobalDatePreset('7days')" id="funnel-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
-              <button type="button" onclick="setGlobalDatePreset('30days')" id="funnel-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-              <button type="button" onclick="setGlobalDatePreset('6months')" id="funnel-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-              <button type="button" onclick="setGlobalDatePreset('1year')" id="funnel-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-              <button type="button" onclick="setGlobalDatePreset('all')" id="funnel-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+          <div class="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+            <i data-lucide="filter" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>기준 기간:</span>
+            <strong id="funnel-date-range-badge" class="text-cyan-300 font-semibold">전체 기간</strong>
+          </div>
+
+          <!-- 하위 호환성 유지용 히든 인풋 & 버튼 (기존 테스트 및 동기화 무결성 보장) -->
+          <div class="hidden">
+            <input type="date" id="funnel-start-date" />
+            <input type="date" id="funnel-end-date" />
+            <div id="funnel-preset-group">
+              <button type="button" id="funnel-preset-today"></button>
+              <button type="button" id="funnel-preset-7days"></button>
+              <button type="button" id="funnel-preset-30days"></button>
+              <button type="button" id="funnel-preset-6months"></button>
+              <button type="button" id="funnel-preset-1year"></button>
+              <button type="button" id="funnel-preset-all"></button>
             </div>
           </div>
         </div>
@@ -667,28 +660,31 @@
 
     <!-- 3-4. [TAB 4] 기기 및 지역 분포 -->
     <section id="tab-content-devices" class="hidden space-y-4">
-      <!-- 기기/지역 날짜 선택기 & 빠른 프리셋 6종 -->
+      <!-- 기기/지역 상단 바 -->
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-3.5 shadow-sm flex items-center justify-between flex-wrap gap-3">
         <div class="flex items-center gap-2">
           <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
             <i data-lucide="pie-chart" class="w-4 h-4 text-purple-400"></i> 기기 및 지역 트래픽 분석
           </h3>
-          <span id="devices-date-range-badge" class="text-[11px] font-mono text-slate-400 font-normal">전체 기간</span>
         </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
-            <input type="date" id="devices-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('devices-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-            <span class="text-slate-500 text-xs">~</span>
-            <input type="date" id="devices-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('devices-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-          </div>
-          <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="devices-preset-group">
-            <button type="button" onclick="setGlobalDatePreset('today')" id="devices-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-            <button type="button" onclick="setGlobalDatePreset('7days')" id="devices-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
-            <button type="button" onclick="setGlobalDatePreset('30days')" id="devices-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-            <button type="button" onclick="setGlobalDatePreset('6months')" id="devices-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-            <button type="button" onclick="setGlobalDatePreset('1year')" id="devices-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-            <button type="button" onclick="setGlobalDatePreset('all')" id="devices-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+
+        <div class="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+          <i data-lucide="filter" class="w-3.5 h-3.5 text-purple-400"></i>
+          <span>기준 기간:</span>
+          <strong id="devices-date-range-badge" class="text-purple-300 font-semibold">전체 기간</strong>
+        </div>
+
+        <!-- 하위 호환성 유지용 히든 인풋 & 버튼 (기존 테스트 및 동기화 무결성 보장) -->
+        <div class="hidden">
+          <input type="date" id="devices-start-date" />
+          <input type="date" id="devices-end-date" />
+          <div id="devices-preset-group">
+            <button type="button" id="devices-preset-today"></button>
+            <button type="button" id="devices-preset-7days"></button>
+            <button type="button" id="devices-preset-30days"></button>
+            <button type="button" id="devices-preset-6months"></button>
+            <button type="button" id="devices-preset-1year"></button>
+            <button type="button" id="devices-preset-all"></button>
           </div>
         </div>
       </div>
