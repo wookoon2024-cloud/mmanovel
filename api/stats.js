@@ -127,7 +127,7 @@ module.exports = async (req, res) => {
       const todayCardRes = await sendToUpstash('SCARD', 'mma:daily_visitors:' + todayKST);
       todayCount = (todayCardRes && todayCardRes.result) ? parseInt(todayCardRes.result, 10) : 0;
 
-      const logsRes = await sendToUpstash('LRANGE', 'mma:logs', 0, 99);
+      const logsRes = await sendToUpstash('LRANGE', 'mma:logs', 0, -1);
       if (logsRes && Array.isArray(logsRes.result)) {
         historyList = logsRes.result.map(item => typeof item === 'string' ? JSON.parse(item) : item);
       }
@@ -281,7 +281,7 @@ module.exports = async (req, res) => {
       completionRate
     },
     activeVisitors,
-    recentLogs: historyList.slice(0, 100),
+    recentLogs: historyList.slice(0, 500),
     todayUniqueVisitors,
     deviceBreakdown: deviceCounts,
     cityBreakdown: cityCounts,
