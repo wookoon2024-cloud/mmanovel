@@ -359,7 +359,10 @@
       </div>
 
       <!-- 트래픽 분포/추이 차트 카드 -->
-      <div id="traffic-chart-card" class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4">
+      <div id="traffic-chart-card" class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4 relative overflow-hidden">
+        <!-- 동적 툴팁 (차트 카드 헤더 아래에 플로팅 표출되어 스크롤 시에도 잘리지 않음) -->
+        <div id="traffic-chart-tooltip" class="pointer-events-none absolute hidden z-50 bg-slate-900/95 text-white text-[11px] p-2.5 rounded-lg shadow-2xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-md transition-all duration-75"></div>
+
         <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <h3 id="traffic-chart-title" class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
@@ -368,19 +371,23 @@
             </h3>
             <span id="traffic-chart-date-label" class="text-[11px] font-mono text-slate-500 font-medium">--</span>
           </div>
-          <div id="traffic-chart-legend" class="flex items-center gap-4 text-[11px] font-mono">
+          <div id="traffic-chart-legend" class="flex items-center gap-3 sm:gap-4 text-[11px] font-mono flex-wrap">
             <span class="flex items-center gap-1.5 text-blue-400">
               <span class="w-2.5 h-2.5 rounded-xs bg-blue-500"></span> 순 방문자(UV)
             </span>
             <span class="flex items-center gap-1.5 text-emerald-400">
               <span class="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span> 피크 시간/일자
             </span>
+            <span id="traffic-chart-scroll-hint" class="hidden items-center gap-1.5 text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded-full border border-slate-700/60 text-[10px]">
+              <i data-lucide="arrow-left-right" class="w-3 h-3 text-blue-400"></i>
+              <span id="traffic-chart-scroll-hint-text">가로 스크롤 가능</span>
+            </span>
           </div>
         </div>
 
-        <!-- 인터랙티브 바 차트 컨테이너 -->
-        <div class="pt-2 pb-1">
-          <div id="hourly-chart-container" class="h-44 w-full flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-1">
+        <!-- 인터랙티브 바 차트 컨테이너 (가로 스크롤 래퍼) -->
+        <div id="traffic-chart-scroll-wrapper" class="pt-2 pb-2 overflow-x-auto overflow-y-hidden border border-slate-800/40 rounded-lg bg-slate-950/30">
+          <div id="hourly-chart-container" class="h-44 min-w-full flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-2">
             <!-- JS 동적 주입 -->
           </div>
         </div>
@@ -1344,11 +1351,52 @@
         }
       }
 
+      hideTrafficChartTooltip();
       renderTrafficAnalytics();
+    }
+
+    function showTrafficChartTooltip(e, title, line1, line2, line3, line4) {
+      const tip = document.getElementById('traffic-chart-tooltip');
+      const card = document.getElementById('traffic-chart-card');
+      if (!tip || !card) return;
+
+      tip.innerHTML = `
+        <div class="font-bold text-slate-200 border-b border-slate-800 pb-1 flex items-center justify-between gap-3">
+          <span>${title}</span>
+          <span class="text-[10px] text-blue-400">24시간 분석 ➔</span>
+        </div>
+        <div class="text-blue-400 pt-0.5 text-[10px]">${line1}</div>
+        <div class="text-slate-300 text-[10px]">${line2}</div>
+        ${line3 ? `<div class="text-slate-400 text-[10px]">${line3}</div>` : ''}
+        ${line4 ? `<div class="text-emerald-400 text-[10px]">${line4}</div>` : ''}
+      `;
+
+      tip.classList.remove('hidden');
+
+      const cardRect = card.getBoundingClientRect();
+      const targetRect = e.currentTarget.getBoundingClientRect();
+      const tipWidth = tip.offsetWidth || 150;
+
+      // 타겟 막대의 수평 중앙 좌표 (card 기준)
+      const targetCenterX = (targetRect.left + targetRect.right) / 2 - cardRect.left;
+      let left = targetCenterX - (tipWidth / 2);
+
+      // 카드 좌우 경계 패딩 제한
+      if (left < 10) left = 10;
+      if (left + tipWidth > cardRect.width - 10) left = cardRect.width - tipWidth - 10;
+
+      tip.style.left = `${left}px`;
+      tip.style.top = `46px`;
+    }
+
+    function hideTrafficChartTooltip() {
+      const tip = document.getElementById('traffic-chart-tooltip');
+      if (tip) tip.classList.add('hidden');
     }
 
     function drillDownToHourly(targetDate) {
       if (!targetDate) return;
+      hideTrafficChartTooltip();
       onGlobalDateChange(targetDate, targetDate);
       setTrafficViewMode('hourly');
       const chartCard = document.getElementById('traffic-chart-card');
@@ -1458,6 +1506,7 @@
         // 24시간 바 차트 렌더링
         const chartContainer = document.getElementById('hourly-chart-container');
         if (chartContainer) {
+          chartContainer.className = "h-44 min-w-[540px] w-full flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-1";
           const maxVal = Math.max(...hourlyData.map(d => d.uvSet.size), ...hourlyData.map(d => Math.ceil(d.pvCount / 2)), 3);
           let chartBarsHtml = `
             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
@@ -1477,15 +1526,15 @@
               ? 'bg-emerald-500 hover:bg-emerald-400 shadow-xs'
               : (uv > 0 ? 'bg-blue-600/90 hover:bg-blue-500' : 'bg-slate-800/60 hover:bg-slate-700');
 
+            const tipTitle = `${item.label} ~ ${String(item.hour).padStart(2,'0')}:59`;
+            const tipL1 = `순 방문자: <strong class="text-white">${uv}명</strong>`;
+            const tipL2 = `페이지뷰: <strong class="text-white">${pv}회</strong>`;
+
             return `
-              <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10">
-                <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-30">
-                  <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs">
-                    <div class="font-bold text-slate-200">${item.label} ~ ${String(item.hour).padStart(2,'0')}:59</div>
-                    <div class="text-blue-400">순 방문자: <strong class="text-white">${uv}명</strong></div>
-                    <div class="text-slate-400">페이지뷰: <strong class="text-white">${pv}회</strong></div>
-                  </div>
-                </div>
+              <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10"
+                   onmouseenter="showTrafficChartTooltip(event, '${tipTitle}', '${tipL1}', '${tipL2}', '', '')"
+                   onmouseleave="hideTrafficChartTooltip()"
+                   title="${tipTitle} | UV: ${uv}명, PV: ${pv}회">
                 <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
                 <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${item.hour}</span>
               </div>
@@ -1493,6 +1542,17 @@
           }).join('');
 
           chartContainer.innerHTML = chartBarsHtml;
+
+          // 시간대별 모드에서는 가로 스크롤 힌트 숨김 및 스크롤 원위치
+          const scrollHint = document.getElementById('traffic-chart-scroll-hint');
+          if (scrollHint) {
+            scrollHint.classList.add('hidden');
+            scrollHint.classList.remove('flex');
+          }
+          const scrollWrapper = document.getElementById('traffic-chart-scroll-wrapper');
+          if (scrollWrapper) {
+            scrollWrapper.scrollLeft = 0;
+          }
         }
 
         // 24시간 테이블 렌더링
@@ -1632,6 +1692,15 @@
         const sortedForChart = [...allDailyRecords].sort((a, b) => a.dateStr.localeCompare(b.dateStr));
         const chartContainer = document.getElementById('hourly-chart-container');
         if (chartContainer) {
+          const isManyDays = sortedForChart.length > 14;
+          chartContainer.className = isManyDays
+            ? "h-44 min-w-full w-max flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-2"
+            : "h-44 min-w-full w-full flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-1";
+
+          const dayItemClass = isManyDays
+            ? "flex-none w-7 sm:w-8 flex flex-col items-center h-full justify-end group relative z-10 cursor-pointer"
+            : "flex-1 flex flex-col items-center h-full justify-end group relative z-10 cursor-pointer";
+
           const maxVal = Math.max(...sortedForChart.map(d => d.pvCount), 3);
           let chartBarsHtml = `
             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
@@ -1659,20 +1728,18 @@
             item.hourlyPV.forEach((cnt, h) => { if (cnt > maxHourPv) { maxHourPv = cnt; peakH = h; } });
             const peakHStr = maxHourPv > 0 ? `${String(peakH).padStart(2,'0')}:00` : '-';
 
+            const tipTitle = `${item.dateStr} (${weekday})`;
+            const tipL1 = `순 방문자: <strong class="text-white">${uv}명</strong>`;
+            const tipL2 = `페이지뷰: <strong class="text-white">${pv}회</strong>`;
+            const tipL3 = `접속 IP: <strong class="text-white">${item.ipSet.size}개</strong>`;
+            const tipL4 = `피크 시간: <strong>${peakHStr}</strong>`;
+
             return `
-              <div onclick="drillDownToHourly('${item.dateStr}')" class="flex-1 flex flex-col items-center h-full justify-end group relative z-10 cursor-pointer" title="클릭 시 ${item.dateStr} 24시간 분석으로 이동">
-                <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-30">
-                  <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs text-left">
-                    <div class="font-bold text-slate-200 border-b border-slate-800 pb-1 flex items-center justify-between gap-2">
-                      <span>${item.dateStr} (${weekday})</span>
-                      <span class="text-[10px] text-blue-400">24시간 보기 ➔</span>
-                    </div>
-                    <div class="text-blue-400 pt-0.5">순 방문자: <strong class="text-white">${uv}명</strong></div>
-                    <div class="text-slate-300">페이지뷰: <strong class="text-white">${pv}회</strong></div>
-                    <div class="text-slate-400">접속 IP: <strong class="text-white">${item.ipSet.size}개</strong></div>
-                    <div class="text-emerald-400 text-[10px]">피크 시간: <strong>${peakHStr}</strong></div>
-                  </div>
-                </div>
+              <div onclick="drillDownToHourly('${item.dateStr}')"
+                   onmouseenter="showTrafficChartTooltip(event, '${tipTitle}', '${tipL1}', '${tipL2}', '${tipL3}', '${tipL4}')"
+                   onmouseleave="hideTrafficChartTooltip()"
+                   class="${dayItemClass}"
+                   title="클릭 시 ${item.dateStr} 24시간 분석으로 이동 (UV: ${uv}명, PV: ${pv}회)">
                 <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
                 <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${shortLabel}</span>
               </div>
@@ -1680,6 +1747,28 @@
           }).join('');
 
           chartContainer.innerHTML = chartBarsHtml;
+
+          // 가로 스크롤 힌트 표시 및 최신 일자(오른쪽 끝)로 자동 스크롤
+          const scrollHint = document.getElementById('traffic-chart-scroll-hint');
+          const scrollHintText = document.getElementById('traffic-chart-scroll-hint-text');
+          if (scrollHint) {
+            if (isManyDays) {
+              scrollHint.classList.remove('hidden');
+              scrollHint.classList.add('flex');
+              if (scrollHintText) scrollHintText.innerText = `가로 스크롤 (${sortedForChart.length}일)`;
+              if (window.lucide) lucide.createIcons();
+            } else {
+              scrollHint.classList.add('hidden');
+              scrollHint.classList.remove('flex');
+            }
+          }
+
+          const scrollWrapper = document.getElementById('traffic-chart-scroll-wrapper');
+          if (scrollWrapper && isManyDays) {
+            setTimeout(() => {
+              scrollWrapper.scrollLeft = scrollWrapper.scrollWidth;
+            }, 60);
+          }
         }
 
         // 일별 테이블 렌더링 (테이블은 최근 일자 -> 과거 일자 순 내림차순 정렬)
