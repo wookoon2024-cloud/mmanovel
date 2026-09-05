@@ -190,9 +190,9 @@
             
             <!-- [SLIDE 1: 제1화 병역판정검사] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
-                <!-- 포스터 이미지 영역 (모바일 340px로 시원하게 확대, 모바일 호버 높이 급변 방지 sm:group-hover만 적용) -->
-                <div id="ep1-poster-wrapper" class="relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-full sm:min-h-[480px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
+                <!-- 포스터 이미지 영역 -->
+                <div id="ep1-poster-wrapper" class="relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep1-live-video" src="assets/ep1_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 pointer-events-none"></div>
@@ -212,28 +212,28 @@
                   </div>
                 </div>
 
-                <!-- 하단 설명 및 버튼 영역 (모바일에서는 불필요한 부가설명 숨김, 버튼만 깔끔 노출) -->
-                <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="hidden sm:block space-y-1 sm:space-y-2 max-h-40 opacity-100 sm:group-hover:max-h-0 sm:group-hover:opacity-0 sm:group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <!-- 하단 설명 및 버튼 영역 (컴팩트하고 빈 공간 없는 밀착 레이아웃) -->
+                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep1-title-text" class="text-sm sm:text-xl font-bold text-white tracking-tight">
+                      <h3 id="ep1-title-text" class="text-sm sm:text-lg font-bold text-white tracking-tight">
                         청춘의 첫 관문
                       </h3>
-                      <p id="ep1-desc-text" class="text-[10.5px] sm:text-sm text-slate-300 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep1-desc-text" class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-snug line-clamp-2">
                         통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!
                       </p>
                     </div>
 
                     <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#검사일정선택</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#구비서류준비</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#가상시나리오</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#여비지급</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#검사일정선택</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#구비서류준비</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#가상시나리오</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#여비지급</span>
                     </div>
                   </div>
 
-                  <div id="ep1-action-buttons" class="pt-0 sm:pt-2">
-                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
+                  <div id="ep1-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
+                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
                       <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> <span>시나리오 시작하기</span>
                     </button>
                   </div>
@@ -243,8 +243,8 @@
 
             <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
-                <div class="relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-full sm:min-h-[480px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
+                <div class="relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep2-live-video" src="assets/ep2_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
@@ -264,27 +264,27 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="hidden sm:block space-y-1 sm:space-y-2 max-h-40 opacity-100 sm:group-hover:max-h-0 sm:group-hover:opacity-0 sm:group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep2-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep2-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         슬기로운 예비군 훈련 생활
                       </h3>
-                      <p id="ep2-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep2-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드
                       </p>
                     </div>
 
                     <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#동원훈련소집</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#자율훈련신청</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#훈련연기사유</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#훈련보상비</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#동원훈련소집</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#자율훈련신청</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#훈련연기사유</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#훈련보상비</span>
                     </div>
                   </div>
 
-                  <div id="ep2-action-buttons" class="pt-0 sm:pt-2">
-                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep2-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -294,8 +294,8 @@
 
             <!-- [SLIDE 3: 제3화 병역진로설계 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
-                <div class="relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-full sm:min-h-[480px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
+                <div class="relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep3_cover.jpg?v=20260904_v189" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -309,27 +309,27 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="hidden sm:block space-y-1 sm:space-y-2 max-h-40 opacity-100 sm:group-hover:max-h-0 sm:group-hover:opacity-0 sm:group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep3-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep3-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         내 꿈을 찾는 병역진로설계
                       </h3>
-                      <p id="ep3-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep3-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         입영 전 적성·전공 연계 1:1 맞춤 군 특기 상담부터 모의 군 장비 체험, 자격 취득 및 복무 중 자기개발 로드맵!
                       </p>
                     </div>
 
                     <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#병역진로설계</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#1:1군특기상담</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#직업선호도</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#군적성체험</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#병역진로설계</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#1:1군특기상담</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#직업선호도</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#군적성체험</span>
                     </div>
                   </div>
 
-                  <div id="ep3-action-buttons" class="pt-0 sm:pt-2">
-                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep3-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -339,8 +339,8 @@
 
             <!-- [SLIDE 4: 제4화 사회복무요원 첫 출근 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
-                <div class="relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-full sm:min-h-[480px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
+                <div class="relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep4_cover.jpg?v=20260904_v189" alt="제4화 사회복무요원 첫 출근" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -354,27 +354,27 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden transition-all duration-500">
-                  <div class="hidden sm:block space-y-1 sm:space-y-2 max-h-40 opacity-100 sm:group-hover:max-h-0 sm:group-hover:opacity-0 sm:group-hover:space-y-0 overflow-hidden transition-all duration-500">
+                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep4-title-text" class="text-sm sm:text-xl font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep4-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         사회복무 첫 출근
                       </h3>
-                      <p id="ep4-desc-text" class="text-[10.5px] sm:text-sm text-slate-400 mt-0.5 sm:mt-1 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p id="ep4-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드!
                       </p>
                     </div>
 
                     <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#사회복무요원</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#첫출근가이드</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#복무기관배치</span>
-                      <span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#소집통지서</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#사회복무요원</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#첫출근가이드</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#복무기관배치</span>
+                      <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#소집통지서</span>
                     </div>
                   </div>
 
-                  <div id="ep4-action-buttons" class="pt-0 sm:pt-2">
-                    <button disabled class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep4-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -4188,9 +4188,9 @@
       const save = getSavedGameState();
       const dict = I18N[currentLang];
       if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
-        // 이어하기가 있을 때 포스터 높이 320px (모바일 호버 높이 급변 방지 sm:group-hover만 적용)
+        // 포스터 높이 일관성 유지 (280px)
         if (poster1) {
-          poster1.className = "relative w-full h-[320px] sm:h-[285px] sm:group-hover:h-[420px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         let stepText = (currentLang === 'en') ? "STEP 1: Rescheduling" : "STEP 1: 일정 변경";
         if (save.sceneIdx === 4) stepText = (currentLang === 'en') ? "STEP 2: Document Check" : "STEP 2: 구비서류 점검";
@@ -4211,7 +4211,7 @@
         }
 
         btnContainer.innerHTML = `
-          <div class="space-y-1 sm:space-y-1.5 w-full pb-0.5">
+          <div class="space-y-1 sm:space-y-1.5 w-full">
             <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30">
               <i data-lucide="play-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
             </button>
@@ -4221,9 +4221,9 @@
           </div>
         `;
       } else {
-        // 이어하기가 없을 때 포스터 높이 340px
+        // 이어하기가 없을 때 포스터 높이 일관성 유지
         if (poster1) {
-          poster1.className = "relative w-full h-[340px] sm:h-[365px] sm:group-hover:h-[440px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[250px] sm:h-[280px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         const playableText = (currentLang === 'en') ? "Playable" : "플레이 가능";
         if (badgeContainer) {
@@ -4234,7 +4234,7 @@
           `;
         }
         btnContainer.innerHTML = `
-          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 sm:py-3.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
             <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
