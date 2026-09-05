@@ -300,70 +300,85 @@
 
     <!-- 3-2. [TAB: TRAFFIC] 시간대별 및 날짜별 트래픽 분석 -->
     <section id="tab-content-traffic" class="hidden space-y-4">
-      <!-- 날짜 선택 및 요약 카드 바 -->
+      <!-- 뷰 모드 전환 (24시간 시간대별 vs 일별 트래픽) 및 요약 카드 바 -->
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-4 shadow-sm">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <!-- Left: 날짜 선택기 & 빠른 프리셋 6종 -->
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-              <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i> 조회 기간:
-            </span>
-            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
-              <input type="date" id="traffic-start-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(this.value, document.getElementById('traffic-end-date').value)" title="조회 시작일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
-              <input type="hidden" id="traffic-date-picker" />
-              <span class="text-slate-500 text-xs">~</span>
-              <input type="date" id="traffic-end-date" onclick="this.showPicker && this.showPicker()" onchange="onGlobalDateChange(document.getElementById('traffic-start-date').value, this.value)" title="조회 종료일" class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none cursor-pointer w-[115px]" />
+          <!-- Left: 뷰 모드 스위처 (24시간 시간대별 vs 일별 트래픽) & 기준 기간 안내 -->
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="inline-flex p-1 bg-slate-900 border border-slate-800 rounded-lg gap-1 text-xs">
+              <button type="button" id="traffic-view-hourly-btn" onclick="setTrafficViewMode('hourly')" class="px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 bg-blue-600 text-white shadow-xs">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                <span>24시간 시간대별</span>
+              </button>
+              <button type="button" id="traffic-view-daily-btn" onclick="setTrafficViewMode('daily')" class="px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800/60">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                <span>일별 트래픽 (Daily)</span>
+              </button>
             </div>
-            <div class="inline-flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg gap-0.5 text-xs font-mono" id="traffic-preset-group">
-              <button type="button" onclick="setGlobalDatePreset('today')" id="traffic-preset-today" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">오늘</button>
-              <button type="button" onclick="setGlobalDatePreset('7days')" id="traffic-preset-7days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">7일 (1주일)</button>
-              <button type="button" onclick="setGlobalDatePreset('30days')" id="traffic-preset-30days" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">30일</button>
-              <button type="button" onclick="setGlobalDatePreset('6months')" id="traffic-preset-6months" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">6개월</button>
-              <button type="button" onclick="setGlobalDatePreset('1year')" id="traffic-preset-1year" class="px-2.5 py-1 rounded text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60 cursor-pointer">1년</button>
-              <button type="button" onclick="setGlobalDatePreset('all')" id="traffic-preset-all" class="px-2.5 py-1 rounded text-xs font-medium transition bg-slate-800 text-white shadow-xs cursor-pointer">전체</button>
+
+            <div class="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-blue-400"></i>
+              <span>기준 기간:</span>
+              <strong id="traffic-period-badge" class="text-blue-300 font-semibold">전체 기간</strong>
+            </div>
+
+            <!-- 하위 호환성 유지용 히든 인풋 & 버튼 (기존 테스트 및 동기화 무결성 보장) -->
+            <div class="hidden">
+              <input type="date" id="traffic-start-date" />
+              <input type="date" id="traffic-end-date" />
+              <input type="hidden" id="traffic-date-picker" />
+              <div id="traffic-preset-group">
+                <button type="button" id="traffic-preset-today"></button>
+                <button type="button" id="traffic-preset-7days"></button>
+                <button type="button" id="traffic-preset-30days"></button>
+                <button type="button" id="traffic-preset-6months"></button>
+                <button type="button" id="traffic-preset-1year"></button>
+                <button type="button" id="traffic-preset-all"></button>
+              </div>
             </div>
           </div>
 
-          <!-- Right: 선택 날짜 요약 메트릭 3종 -->
+          <!-- Right: 선택 기간 요약 메트릭 3종 -->
           <div class="flex items-center gap-6 text-xs divide-x divide-slate-800/80 pt-2 lg:pt-0">
             <div>
-              <span class="text-slate-500 block text-[11px]">선택일 순 방문자 (UV)</span>
+              <span class="text-slate-500 block text-[11px]" id="traffic-summary-uv-label">선택 기간 순 방문자 (UV)</span>
               <strong id="traffic-summary-uv" class="text-base font-bold font-mono text-white">0</strong>
               <span class="text-[11px] text-slate-400">명</span>
             </div>
             <div class="pl-6">
-              <span class="text-slate-500 block text-[11px]">총 페이지뷰 (PV)</span>
+              <span class="text-slate-500 block text-[11px]" id="traffic-summary-pv-label">총 페이지뷰 (PV)</span>
               <strong id="traffic-summary-pv" class="text-base font-bold font-mono text-white">0</strong>
               <span class="text-[11px] text-slate-400">회</span>
             </div>
             <div class="pl-6">
-              <span class="text-slate-500 block text-[11px]">최대 트래픽 피크 타임</span>
+              <span class="text-slate-500 block text-[11px]" id="traffic-summary-peak-label">최대 트래픽 피크</span>
               <strong id="traffic-summary-peak" class="text-base font-bold font-mono text-emerald-400">--:--</strong>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 24시간 시간대별 트래픽 차트 카드 -->
-      <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+      <!-- 트래픽 분포/추이 차트 카드 -->
+      <div id="traffic-chart-card" class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-400"></i> 시간대별 접속 분포 (Hourly Distribution)
+            <h3 id="traffic-chart-title" class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-400"></i>
+              <span>시간대별 접속 분포 (Hourly Distribution)</span>
             </h3>
             <span id="traffic-chart-date-label" class="text-[11px] font-mono text-slate-500 font-medium">--</span>
           </div>
-          <div class="flex items-center gap-4 text-[11px] font-mono">
+          <div id="traffic-chart-legend" class="flex items-center gap-4 text-[11px] font-mono">
             <span class="flex items-center gap-1.5 text-blue-400">
               <span class="w-2.5 h-2.5 rounded-xs bg-blue-500"></span> 순 방문자(UV)
             </span>
             <span class="flex items-center gap-1.5 text-emerald-400">
-              <span class="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span> 피크 시간대
+              <span class="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span> 피크 시간/일자
             </span>
           </div>
         </div>
 
-        <!-- 인터랙티브 24시간 바 차트 컨테이너 -->
+        <!-- 인터랙티브 바 차트 컨테이너 -->
         <div class="pt-2 pb-1">
           <div id="hourly-chart-container" class="h-44 w-full flex items-end gap-1 sm:gap-1.5 relative pt-4 pb-2 px-1">
             <!-- JS 동적 주입 -->
@@ -371,27 +386,50 @@
         </div>
       </div>
 
-      <!-- 시간대별 상세 데이터 테이블 -->
+      <!-- 트래픽 상세 데이터 테이블 (시간대별 / 일별 듀얼 뷰) -->
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl overflow-hidden shadow-sm">
         <div class="px-5 py-3 border-b border-slate-800/80 flex items-center justify-between">
-          <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
-            <i data-lucide="clock" class="w-4 h-4 text-purple-400"></i> 24시간 시간대별 상세 데이터
+          <h3 id="traffic-table-title" class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-purple-400"></i>
+            <span>24시간 시간대별 상세 데이터</span>
           </h3>
-          <span class="text-[11px] text-slate-500 font-mono">Hourly Breakdown Table</span>
+          <span id="traffic-table-subtitle" class="text-[11px] text-slate-500 font-mono">Hourly Breakdown Table</span>
         </div>
 
-        <div class="overflow-x-auto max-h-[380px] overflow-y-auto">
+        <!-- 1. 시간대별 테이블 뷰 -->
+        <div id="hourly-table-wrapper" class="overflow-x-auto max-h-[380px] overflow-y-auto">
           <table class="w-full text-left text-xs border-collapse">
             <thead class="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-800 sticky top-0">
               <tr>
                 <th class="py-2.5 px-4">시간대 (KST)</th>
-                <th class="py-2.5 px-4">순 방문자 (UV)</th>
-                <th class="py-2.5 px-4">페이지뷰 (PV)</th>
+                <th class="py-2.5 px-4 text-center">순 방문자 (UV)</th>
+                <th class="py-2.5 px-4 text-center">페이지뷰 (PV)</th>
                 <th class="py-2.5 px-4">트래픽 점유율</th>
                 <th class="py-2.5 px-4 text-right">상태</th>
               </tr>
             </thead>
             <tbody id="hourly-breakdown-tbody" class="divide-y divide-slate-800/60 font-sans">
+              <!-- JS 동적 주입 -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 2. 일별 테이블 뷰 -->
+        <div id="daily-table-wrapper" class="hidden overflow-x-auto max-h-[380px] overflow-y-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-800 sticky top-0">
+              <tr>
+                <th class="py-2.5 px-4 text-center">순번</th>
+                <th class="py-2.5 px-4">접속 일자 (KST)</th>
+                <th class="py-2.5 px-4 text-center">순 방문자 (UV)</th>
+                <th class="py-2.5 px-4 text-center">페이지뷰 (PV)</th>
+                <th class="py-2.5 px-4">일일 트래픽 점유율</th>
+                <th class="py-2.5 px-4 text-center">접속 IP 수</th>
+                <th class="py-2.5 px-4 text-center">피크 시간</th>
+                <th class="py-2.5 px-4 text-right">상세 분석</th>
+              </tr>
+            </thead>
+            <tbody id="daily-breakdown-tbody" class="divide-y divide-slate-800/60 font-sans">
               <!-- JS 동적 주입 -->
             </tbody>
           </table>
@@ -1234,6 +1272,8 @@
         const b = document.getElementById(pfx + '-date-range-badge');
         if (b) b.innerText = badgeText;
       });
+      const trafficBadge = document.getElementById('traffic-period-badge');
+      if (trafficBadge) trafficBadge.innerText = badgeText;
     }
 
     function getAllAggregatedLogs() {
@@ -1276,6 +1316,45 @@
       renderDevicesWithDateFilter();
     }
 
+    let trafficViewMode = 'hourly'; // 'hourly' or 'daily'
+
+    function setTrafficViewMode(mode) {
+      trafficViewMode = mode;
+      const btnHourly = document.getElementById('traffic-view-hourly-btn');
+      const btnDaily = document.getElementById('traffic-view-daily-btn');
+      if (btnHourly && btnDaily) {
+        if (mode === 'hourly') {
+          btnHourly.className = 'px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 bg-blue-600 text-white shadow-xs';
+          btnDaily.className = 'px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800/60';
+        } else {
+          btnDaily.className = 'px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 bg-blue-600 text-white shadow-xs';
+          btnHourly.className = 'px-3 py-1.5 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800/60';
+        }
+      }
+
+      const hourlyWrapper = document.getElementById('hourly-table-wrapper');
+      const dailyWrapper = document.getElementById('daily-table-wrapper');
+      if (hourlyWrapper && dailyWrapper) {
+        if (mode === 'hourly') {
+          hourlyWrapper.classList.remove('hidden');
+          dailyWrapper.classList.add('hidden');
+        } else {
+          hourlyWrapper.classList.add('hidden');
+          dailyWrapper.classList.remove('hidden');
+        }
+      }
+
+      renderTrafficAnalytics();
+    }
+
+    function drillDownToHourly(targetDate) {
+      if (!targetDate) return;
+      onGlobalDateChange(targetDate, targetDate);
+      setTrafficViewMode('hourly');
+      const chartCard = document.getElementById('traffic-chart-card');
+      if (chartCard) chartCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function renderTrafficAnalytics() {
       const allEvents = getLogsInDateRange(globalStartDate, globalEndDate);
       const isIncludesToday = (!globalEndDate || globalEndDate >= getKstDateStr());
@@ -1286,116 +1365,384 @@
         localActiveSessions.forEach(v => allEvents.push(v));
       }
 
-      const todayStr = getKstDateStr();
-      const targetDate = (globalStartDate && globalStartDate === globalEndDate) ? globalStartDate : (globalStartDate || todayStr);
+      // 1. 기준 기간 뱃지 업데이트
+      const badgeEl = document.getElementById('traffic-period-badge');
+      let badgeText = '전체 기간';
+      if (globalStartDate && globalEndDate) {
+        badgeText = (globalStartDate === globalEndDate) ? `${globalStartDate} (당일)` : `${globalStartDate} ~ ${globalEndDate}`;
+      } else if (globalStartDate) {
+        badgeText = `${globalStartDate} ~`;
+      } else if (globalEndDate) {
+        badgeText = `~ ${globalEndDate}`;
+      }
+      if (badgeEl) badgeEl.innerText = badgeText;
 
       const dateLabel = document.getElementById('traffic-chart-date-label');
       if (dateLabel) {
-        if (globalStartDate && globalEndDate && globalStartDate !== globalEndDate) {
-          dateLabel.innerText = `${globalStartDate} ~ ${globalEndDate} (선택 기간 24시간 분포)`;
-        } else if (globalDatePreset === '7days') {
-          dateLabel.innerText = '최근 7일 종합 분석 (24시간 분포)';
-        } else if (globalStartDate && globalStartDate === globalEndDate) {
-          dateLabel.innerText = `${globalStartDate} (KST 24시간)`;
-        } else {
+        if (trafficViewMode === 'hourly') {
+          const targetDate = (globalStartDate && globalStartDate === globalEndDate) ? globalStartDate : (globalStartDate || getKstDateStr());
           dateLabel.innerText = `${targetDate} (KST 24시간)`;
-        }
-      }
-
-      const hourlyData = [];
-      for (let h = 0; h < 24; h++) {
-        hourlyData.push({
-          hour: h,
-          label: `${String(h).padStart(2, '0')}:00`,
-          uvSet: new Set(),
-          pvCount: 0
-        });
-      }
-
-      const dayUvSet = new Set();
-      let dayPvCount = 0;
-
-      allEvents.forEach(evt => {
-        const t = evt.timestamp || evt.firstSeen || evt.lastSeen;
-        if (!t) return;
-        const d = new Date(t);
-        if (isNaN(d.getTime())) return;
-
-        const h = parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hour: '2-digit', hour12: false }).format(d), 10);
-        const uid = evt.visitorId || evt.sessionId || evt.ip || 'anon';
-
-        if (h >= 0 && h < 24) {
-          hourlyData[h].pvCount += 1;
-          hourlyData[h].uvSet.add(uid);
-        }
-        dayPvCount += 1;
-        dayUvSet.add(uid);
-      });
-
-      const totalDayUv = dayUvSet.size;
-      const totalDayPv = dayPvCount;
-
-      let peakHour = 0;
-      let peakUvCount = 0;
-      hourlyData.forEach(item => {
-        const count = item.uvSet.size;
-        if (count > peakUvCount) {
-          peakUvCount = count;
-          peakHour = item.hour;
-        }
-      });
-
-      const uvEl = document.getElementById('traffic-summary-uv');
-      const pvEl = document.getElementById('traffic-summary-pv');
-      const peakEl = document.getElementById('traffic-summary-peak');
-      if (uvEl) uvEl.innerText = totalDayUv.toLocaleString();
-      if (pvEl) pvEl.innerText = totalDayPv.toLocaleString();
-      if (peakEl) {
-        if (peakUvCount > 0) {
-          peakEl.innerText = `${String(peakHour).padStart(2, '0')}:00 ~ ${String(peakHour).padStart(2, '0')}:59 (${peakUvCount}명)`;
         } else {
-          peakEl.innerText = '트래픽 수집 대기';
+          dateLabel.innerText = badgeText;
         }
       }
 
-      const chartContainer = document.getElementById('hourly-chart-container');
-      if (chartContainer) {
-        const maxVal = Math.max(...hourlyData.map(d => d.uvSet.size), ...hourlyData.map(d => Math.ceil(d.pvCount / 2)), 3);
+      const chartTitleEl = document.getElementById('traffic-chart-title');
+      const tableTitleEl = document.getElementById('traffic-table-title');
+      const tableSubEl = document.getElementById('traffic-table-subtitle');
+      const uvLabelEl = document.getElementById('traffic-summary-uv-label');
+      const peakLabelEl = document.getElementById('traffic-summary-peak-label');
 
-        let chartBarsHtml = `
-          <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
-            <div class="border-b border-dashed border-slate-600 w-full"></div>
-            <div class="border-b border-dashed border-slate-600 w-full"></div>
-            <div class="border-b border-dashed border-slate-600 w-full"></div>
-            <div></div>
-          </div>
-        `;
+      // 2-A. [모드 1: 시간대별(24시간) 분석]
+      if (trafficViewMode === 'hourly') {
+        if (chartTitleEl) chartTitleEl.innerHTML = `<i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-400"></i><span>시간대별 접속 분포 (Hourly Distribution)</span>`;
+        if (tableTitleEl) tableTitleEl.innerHTML = `<i data-lucide="clock" class="w-4 h-4 text-purple-400"></i><span>24시간 시간대별 상세 데이터</span>`;
+        if (tableSubEl) tableSubEl.innerText = 'Hourly Breakdown Table';
+        if (uvLabelEl) uvLabelEl.innerText = '선택 기간 순 방문자 (UV)';
+        if (peakLabelEl) peakLabelEl.innerText = '최대 트래픽 피크 시간대';
 
-        chartBarsHtml += hourlyData.map(item => {
-          const uv = item.uvSet.size;
-          const pv = item.pvCount;
-          const isPeak = (peakUvCount > 0 && item.hour === peakHour);
-          const heightPct = uv > 0 ? Math.max(8, Math.min(100, Math.round((uv / maxVal) * 100))) : (pv > 0 ? 6 : 2);
-          const barColor = isPeak
-            ? 'bg-emerald-500 hover:bg-emerald-400 shadow-xs'
-            : (uv > 0 ? 'bg-blue-600/90 hover:bg-blue-500' : 'bg-slate-800/60 hover:bg-slate-700');
+        const hourlyData = [];
+        for (let h = 0; h < 24; h++) {
+          hourlyData.push({
+            hour: h,
+            label: `${String(h).padStart(2, '0')}:00`,
+            uvSet: new Set(),
+            pvCount: 0
+          });
+        }
 
-          return `
-            <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10">
-              <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-30">
-                <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs">
-                  <div class="font-bold text-slate-200">${item.label} ~ ${String(item.hour).padStart(2,'0')}:59</div>
-                  <div class="text-blue-400">순 방문자: <strong class="text-white">${uv}명</strong></div>
-                  <div class="text-slate-400">페이지뷰: <strong class="text-white">${pv}회</strong></div>
-                </div>
-              </div>
-              <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
-              <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${item.hour}</span>
+        const dayUvSet = new Set();
+        let dayPvCount = 0;
+
+        allEvents.forEach(evt => {
+          const t = evt.timestamp || evt.firstSeen || evt.lastSeen;
+          if (!t) return;
+          const d = new Date(t);
+          if (isNaN(d.getTime())) return;
+
+          const h = parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hour: '2-digit', hour12: false }).format(d), 10);
+          const uid = evt.visitorId || evt.sessionId || evt.ip || 'anon';
+
+          if (h >= 0 && h < 24) {
+            hourlyData[h].pvCount += 1;
+            hourlyData[h].uvSet.add(uid);
+          }
+          dayPvCount += 1;
+          dayUvSet.add(uid);
+        });
+
+        const totalDayUv = dayUvSet.size;
+        const totalDayPv = dayPvCount;
+
+        let peakHour = 0;
+        let peakUvCount = 0;
+        hourlyData.forEach(item => {
+          const count = item.uvSet.size;
+          if (count > peakUvCount) {
+            peakUvCount = count;
+            peakHour = item.hour;
+          }
+        });
+
+        const uvEl = document.getElementById('traffic-summary-uv');
+        const pvEl = document.getElementById('traffic-summary-pv');
+        const peakEl = document.getElementById('traffic-summary-peak');
+        if (uvEl) uvEl.innerText = totalDayUv.toLocaleString();
+        if (pvEl) pvEl.innerText = totalDayPv.toLocaleString();
+        if (peakEl) {
+          peakEl.innerText = peakUvCount > 0
+            ? `${String(peakHour).padStart(2, '0')}:00 ~ ${String(peakHour).padStart(2, '0')}:59 (${peakUvCount}명)`
+            : '트래픽 수집 대기';
+        }
+
+        // 24시간 바 차트 렌더링
+        const chartContainer = document.getElementById('hourly-chart-container');
+        if (chartContainer) {
+          const maxVal = Math.max(...hourlyData.map(d => d.uvSet.size), ...hourlyData.map(d => Math.ceil(d.pvCount / 2)), 3);
+          let chartBarsHtml = `
+            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div></div>
             </div>
           `;
-        }).join('');
 
-        chartContainer.innerHTML = chartBarsHtml;
+          chartBarsHtml += hourlyData.map(item => {
+            const uv = item.uvSet.size;
+            const pv = item.pvCount;
+            const isPeak = (peakUvCount > 0 && item.hour === peakHour);
+            const heightPct = uv > 0 ? Math.max(8, Math.min(100, Math.round((uv / maxVal) * 100))) : (pv > 0 ? 6 : 2);
+            const barColor = isPeak
+              ? 'bg-emerald-500 hover:bg-emerald-400 shadow-xs'
+              : (uv > 0 ? 'bg-blue-600/90 hover:bg-blue-500' : 'bg-slate-800/60 hover:bg-slate-700');
+
+            return `
+              <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10">
+                <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-30">
+                  <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs">
+                    <div class="font-bold text-slate-200">${item.label} ~ ${String(item.hour).padStart(2,'0')}:59</div>
+                    <div class="text-blue-400">순 방문자: <strong class="text-white">${uv}명</strong></div>
+                    <div class="text-slate-400">페이지뷰: <strong class="text-white">${pv}회</strong></div>
+                  </div>
+                </div>
+                <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
+                <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${item.hour}</span>
+              </div>
+            `;
+          }).join('');
+
+          chartContainer.innerHTML = chartBarsHtml;
+        }
+
+        // 24시간 테이블 렌더링
+        const tbody = document.getElementById('hourly-breakdown-tbody');
+        if (tbody) {
+          tbody.innerHTML = hourlyData.map(item => {
+            const uv = item.uvSet.size;
+            const pv = item.pvCount;
+            const ratio = totalDayPv > 0 ? Math.round((pv / totalDayPv) * 100) : 0;
+            const isPeak = (peakUvCount > 0 && item.hour === peakHour);
+
+            return `
+              <tr class="hover:bg-slate-800/40 transition text-xs border-b border-slate-800/40">
+                <td class="py-2.5 px-4 font-mono font-medium text-slate-300">
+                  <span class="flex items-center gap-1.5">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500"></i>
+                    ${item.label} ~ ${String(item.hour).padStart(2, '0')}:59
+                  </span>
+                </td>
+                <td class="py-2.5 px-4 text-center font-mono font-bold text-blue-400">
+                  ${uv > 0 ? uv + '명' : '<span class="text-slate-600">-</span>'}
+                </td>
+                <td class="py-2.5 px-4 text-center font-mono font-bold text-slate-200">
+                  ${pv > 0 ? pv.toLocaleString() + '회' : '<span class="text-slate-600">-</span>'}
+                </td>
+                <td class="py-2.5 px-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="${isPeak ? 'bg-emerald-500' : 'bg-blue-500'} h-full rounded-full" style="width: ${ratio}%"></div>
+                    </div>
+                    <span class="font-mono text-[11px] text-slate-400">${ratio}%</span>
+                  </div>
+                </td>
+                <td class="py-2.5 px-4 text-right">
+                  ${isPeak
+                    ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold font-mono">PEAK</span>'
+                    : (pv > 0 ? '<span class="text-[10px] text-slate-500">정상</span>' : '<span class="text-[10px] text-slate-600">-</span>')}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // 2-B. [모드 2: 일별(Daily) 트래픽 분석]
+      else {
+        if (chartTitleEl) chartTitleEl.innerHTML = `<i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i><span>일별 트래픽 추이 (Daily Trend)</span>`;
+        if (tableTitleEl) tableTitleEl.innerHTML = `<i data-lucide="calendar" class="w-4 h-4 text-purple-400"></i><span>일자별(Daily) 트래픽 상세 내역</span>`;
+        if (tableSubEl) tableSubEl.innerText = 'Daily Breakdown Table';
+        if (uvLabelEl) uvLabelEl.innerText = '선택 기간 순 방문자 (UV)';
+        if (peakLabelEl) peakLabelEl.innerText = '최대 트래픽 피크 일자';
+
+        // 일자별 맵 생성
+        const dailyMap = new Map();
+        allEvents.forEach(evt => {
+          const t = evt.timestamp || evt.firstSeen || evt.lastSeen;
+          if (!t) return;
+          const d = new Date(t);
+          if (isNaN(d.getTime())) return;
+          const dateStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(d);
+
+          if (!dailyMap.has(dateStr)) {
+            dailyMap.set(dateStr, {
+              dateStr,
+              dateObj: d,
+              uvSet: new Set(),
+              pvCount: 0,
+              ipSet: new Set(),
+              hourlyPV: Array(24).fill(0),
+              hourlyUV: Array(24).fill(0).map(() => new Set())
+            });
+          }
+
+          const rec = dailyMap.get(dateStr);
+          rec.pvCount += 1;
+          const uid = evt.visitorId || evt.sessionId || evt.ip || 'anon';
+          rec.uvSet.add(uid);
+          if (evt.ip) rec.ipSet.add(getEffectiveIp(evt.ip));
+
+          const h = parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Seoul', hour: '2-digit', hour12: false }).format(d), 10);
+          if (h >= 0 && h < 24) {
+            rec.hourlyPV[h] += 1;
+            rec.hourlyUV[h].add(uid);
+          }
+        });
+
+        // 만약 선택 기간이 있으면 해당 범위의 날짜들을 연속적으로 보충
+        if (globalStartDate && globalEndDate) {
+          const startD = new Date(globalStartDate + 'T00:00:00+09:00');
+          const endD = new Date(globalEndDate + 'T00:00:00+09:00');
+          const dayMs = 24 * 60 * 60 * 1000;
+          for (let cur = new Date(startD); cur <= endD; cur = new Date(cur.getTime() + dayMs)) {
+            const curStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(cur);
+            if (!dailyMap.has(curStr)) {
+              dailyMap.set(curStr, {
+                dateStr: curStr,
+                dateObj: new Date(cur),
+                uvSet: new Set(),
+                pvCount: 0,
+                ipSet: new Set(),
+                hourlyPV: Array(24).fill(0),
+                hourlyUV: Array(24).fill(0).map(() => new Set())
+              });
+            }
+          }
+        }
+
+        // 전체 UV, PV 및 피크 일자 계산
+        const allDailyRecords = Array.from(dailyMap.values());
+        const totalPeriodUv = new Set(allEvents.map(e => e.visitorId || e.sessionId || e.ip || 'anon')).size;
+        const totalPeriodPv = allEvents.length;
+
+        let peakDayRec = null;
+        let maxDailyPv = 0;
+        allDailyRecords.forEach(rec => {
+          if (rec.pvCount > maxDailyPv) {
+            maxDailyPv = rec.pvCount;
+            peakDayRec = rec;
+          }
+        });
+
+        const uvEl = document.getElementById('traffic-summary-uv');
+        const pvEl = document.getElementById('traffic-summary-pv');
+        const peakEl = document.getElementById('traffic-summary-peak');
+        if (uvEl) uvEl.innerText = totalPeriodUv.toLocaleString();
+        if (pvEl) pvEl.innerText = totalPeriodPv.toLocaleString();
+        if (peakEl) {
+          if (peakDayRec && maxDailyPv > 0) {
+            const weekday = new Intl.DateTimeFormat('ko-KR', { weekday: 'short', timeZone: 'Asia/Seoul' }).format(new Date(peakDayRec.dateStr));
+            peakEl.innerText = `${peakDayRec.dateStr} (${weekday}) · ${maxDailyPv}회 (${peakDayRec.uvSet.size}명)`;
+          } else {
+            peakEl.innerText = '트래픽 수집 대기';
+          }
+        }
+
+        // 일별 바 차트 렌더링 (차트는 과거 -> 최근 순 오름차순 정렬)
+        const sortedForChart = [...allDailyRecords].sort((a, b) => a.dateStr.localeCompare(b.dateStr));
+        const chartContainer = document.getElementById('hourly-chart-container');
+        if (chartContainer) {
+          const maxVal = Math.max(...sortedForChart.map(d => d.pvCount), 3);
+          let chartBarsHtml = `
+            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 border-b border-slate-700 pb-5">
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div class="border-b border-dashed border-slate-600 w-full"></div>
+              <div></div>
+            </div>
+          `;
+
+          chartBarsHtml += sortedForChart.map(item => {
+            const uv = item.uvSet.size;
+            const pv = item.pvCount;
+            const isPeak = (peakDayRec && item.dateStr === peakDayRec.dateStr && pv > 0);
+            const heightPct = pv > 0 ? Math.max(10, Math.min(100, Math.round((pv / maxVal) * 100))) : 3;
+            const barColor = isPeak
+              ? 'bg-emerald-500 hover:bg-emerald-400 shadow-xs cursor-pointer'
+              : (pv > 0 ? 'bg-blue-600 hover:bg-blue-500 cursor-pointer' : 'bg-slate-800/40 hover:bg-slate-800');
+
+            const parts = item.dateStr.split('-');
+            const shortLabel = parts.length === 3 ? `${parts[1]}.${parts[2]}` : item.dateStr;
+            const weekday = new Intl.DateTimeFormat('ko-KR', { weekday: 'short', timeZone: 'Asia/Seoul' }).format(new Date(item.dateStr));
+
+            let peakH = 0, maxHourPv = 0;
+            item.hourlyPV.forEach((cnt, h) => { if (cnt > maxHourPv) { maxHourPv = cnt; peakH = h; } });
+            const peakHStr = maxHourPv > 0 ? `${String(peakH).padStart(2,'0')}:00` : '-';
+
+            return `
+              <div onclick="drillDownToHourly('${item.dateStr}')" class="flex-1 flex flex-col items-center h-full justify-end group relative z-10 cursor-pointer" title="클릭 시 ${item.dateStr} 24시간 분석으로 이동">
+                <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-30">
+                  <div class="bg-slate-900/95 text-white text-[11px] p-2 rounded-lg shadow-xl border border-slate-700/80 whitespace-nowrap font-mono space-y-0.5 backdrop-blur-xs text-left">
+                    <div class="font-bold text-slate-200 border-b border-slate-800 pb-1 flex items-center justify-between gap-2">
+                      <span>${item.dateStr} (${weekday})</span>
+                      <span class="text-[10px] text-blue-400">24시간 보기 ➔</span>
+                    </div>
+                    <div class="text-blue-400 pt-0.5">순 방문자: <strong class="text-white">${uv}명</strong></div>
+                    <div class="text-slate-300">페이지뷰: <strong class="text-white">${pv}회</strong></div>
+                    <div class="text-slate-400">접속 IP: <strong class="text-white">${item.ipSet.size}개</strong></div>
+                    <div class="text-emerald-400 text-[10px]">피크 시간: <strong>${peakHStr}</strong></div>
+                  </div>
+                </div>
+                <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
+                <span class="text-[10px] font-mono text-slate-500 mt-1.5 select-none">${shortLabel}</span>
+              </div>
+            `;
+          }).join('');
+
+          chartContainer.innerHTML = chartBarsHtml;
+        }
+
+        // 일별 테이블 렌더링 (테이블은 최근 일자 -> 과거 일자 순 내림차순 정렬)
+        const sortedForTable = [...allDailyRecords].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
+        const dailyTbody = document.getElementById('daily-breakdown-tbody');
+        if (dailyTbody) {
+          if (sortedForTable.length === 0) {
+            dailyTbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-slate-500">선택한 기간에 해당하는 일별 접속 데이터가 없습니다.</td></tr>';
+          } else {
+            dailyTbody.innerHTML = sortedForTable.map((item, idx) => {
+              const uv = item.uvSet.size;
+              const pv = item.pvCount;
+              const ratio = totalPeriodPv > 0 ? Math.round((pv / totalPeriodPv) * 100) : 0;
+              const isPeak = (peakDayRec && item.dateStr === peakDayRec.dateStr && pv > 0);
+              const weekday = new Intl.DateTimeFormat('ko-KR', { weekday: 'short', timeZone: 'Asia/Seoul' }).format(new Date(item.dateStr));
+
+              let peakH = 0, maxHourPv = 0;
+              item.hourlyPV.forEach((cnt, h) => { if (cnt > maxHourPv) { maxHourPv = cnt; peakH = h; } });
+              const peakHStr = maxHourPv > 0 ? `${String(peakH).padStart(2,'0')}:00 ~ ${String(peakH).padStart(2,'0')}:59` : '-';
+
+              return `
+                <tr class="hover:bg-slate-800/40 transition text-xs border-b border-slate-800/40">
+                  <td class="py-3 px-4 text-center font-mono text-slate-500 text-[11px]">${idx + 1}</td>
+                  <td class="py-3 px-4 font-mono font-semibold text-slate-200">
+                    <button type="button" onclick="drillDownToHourly('${item.dateStr}')" class="hover:text-blue-400 hover:underline flex items-center gap-1.5 cursor-pointer text-left" title="클릭 시 이 날짜(${item.dateStr})의 24시간 트래픽 상세 분석으로 이동">
+                      <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400"></i>
+                      <span>${item.dateStr} <span class="text-slate-400 font-normal">(${weekday})</span></span>
+                      ${isPeak ? '<span class="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">PEAK</span>' : ''}
+                    </button>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono">
+                    <span class="px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 font-bold">
+                      ${uv}명
+                    </span>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono font-bold text-white">
+                    ${pv.toLocaleString()}회
+                  </td>
+                  <td class="py-3 px-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div class="${isPeak ? 'bg-emerald-500' : 'bg-blue-500'} h-full rounded-full" style="width: ${ratio}%"></div>
+                      </div>
+                      <span class="font-mono text-[11px] text-slate-400">${ratio}%</span>
+                    </div>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono text-slate-300">
+                    ${item.ipSet.size > 0 ? item.ipSet.size + '개' : '-'}
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono text-slate-400 text-[11px]">
+                    ${peakHStr}
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <button type="button" onclick="drillDownToHourly('${item.dateStr}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-blue-600/30 hover:border-blue-500/50 border border-slate-700 text-slate-300 hover:text-blue-300 text-xs font-medium transition cursor-pointer" title="이 날짜의 24시간 시간대별 트래픽 분석">
+                      <span>24시간 분석</span>
+                      <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
       }
 
       try { lucide.createIcons(); } catch(e) {}
