@@ -1355,26 +1355,38 @@
       renderTrafficAnalytics();
     }
 
-    function showTrafficChartTooltip(e, title, line1, line2, line3, line4) {
+    function handleBarHover(el) {
       const tip = document.getElementById('traffic-chart-tooltip');
       const card = document.getElementById('traffic-chart-card');
-      if (!tip || !card) return;
+      if (!tip || !card || !el) return;
 
-      tip.innerHTML = `
+      const title = el.getAttribute('data-tip-title') || '';
+      const uv = el.getAttribute('data-uv') || '0';
+      const pv = el.getAttribute('data-pv') || '0';
+      const ip = el.getAttribute('data-ip') || '';
+      const peak = el.getAttribute('data-peak') || '';
+      const isDaily = el.getAttribute('data-is-daily') === 'true';
+
+      let html = `
         <div class="font-bold text-slate-200 border-b border-slate-800 pb-1 flex items-center justify-between gap-3">
           <span>${title}</span>
-          <span class="text-[10px] text-blue-400">24시간 분석 ➔</span>
+          ${isDaily ? '<span class="text-[10px] text-blue-400">24시간 분석 ➔</span>' : ''}
         </div>
-        <div class="text-blue-400 pt-0.5 text-[10px]">${line1}</div>
-        <div class="text-slate-300 text-[10px]">${line2}</div>
-        ${line3 ? `<div class="text-slate-400 text-[10px]">${line3}</div>` : ''}
-        ${line4 ? `<div class="text-emerald-400 text-[10px]">${line4}</div>` : ''}
+        <div class="text-blue-400 pt-0.5 text-[10px]">순 방문자: <strong class="text-white">${uv}명</strong></div>
+        <div class="text-slate-300 text-[10px]">페이지뷰: <strong class="text-white">${pv}회</strong></div>
       `;
+      if (ip) {
+        html += `<div class="text-slate-400 text-[10px]">접속 IP: <strong class="text-white">${ip}개</strong></div>`;
+      }
+      if (peak) {
+        html += `<div class="text-emerald-400 text-[10px]">피크 시간: <strong>${peak}</strong></div>`;
+      }
 
+      tip.innerHTML = html;
       tip.classList.remove('hidden');
 
       const cardRect = card.getBoundingClientRect();
-      const targetRect = e.currentTarget.getBoundingClientRect();
+      const targetRect = el.getBoundingClientRect();
       const tipWidth = tip.offsetWidth || 150;
 
       // 타겟 막대의 수평 중앙 좌표 (card 기준)
@@ -1387,6 +1399,12 @@
 
       tip.style.left = `${left}px`;
       tip.style.top = `46px`;
+    }
+
+    function showTrafficChartTooltip(e, title, line1, line2, line3, line4) {
+      if (e && e.currentTarget) {
+        handleBarHover(e.currentTarget);
+      }
     }
 
     function hideTrafficChartTooltip() {
@@ -1527,12 +1545,13 @@
               : (uv > 0 ? 'bg-blue-600/90 hover:bg-blue-500' : 'bg-slate-800/60 hover:bg-slate-700');
 
             const tipTitle = `${item.label} ~ ${String(item.hour).padStart(2,'0')}:59`;
-            const tipL1 = `순 방문자: <strong class="text-white">${uv}명</strong>`;
-            const tipL2 = `페이지뷰: <strong class="text-white">${pv}회</strong>`;
 
             return `
-              <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10"
-                   onmouseenter="showTrafficChartTooltip(event, '${tipTitle}', '${tipL1}', '${tipL2}', '', '')"
+              <div class="flex-1 flex flex-col items-center h-full justify-end group relative z-10 cursor-pointer"
+                   data-tip-title="${tipTitle}"
+                   data-uv="${uv}"
+                   data-pv="${pv}"
+                   onmouseenter="handleBarHover(this)"
                    onmouseleave="hideTrafficChartTooltip()"
                    title="${tipTitle} | UV: ${uv}명, PV: ${pv}회">
                 <div class="w-full ${barColor} rounded-t transition-all duration-300" style="height: ${heightPct}%;"></div>
@@ -1729,14 +1748,16 @@
             const peakHStr = maxHourPv > 0 ? `${String(peakH).padStart(2,'0')}:00` : '-';
 
             const tipTitle = `${item.dateStr} (${weekday})`;
-            const tipL1 = `순 방문자: <strong class="text-white">${uv}명</strong>`;
-            const tipL2 = `페이지뷰: <strong class="text-white">${pv}회</strong>`;
-            const tipL3 = `접속 IP: <strong class="text-white">${item.ipSet.size}개</strong>`;
-            const tipL4 = `피크 시간: <strong>${peakHStr}</strong>`;
 
             return `
               <div onclick="drillDownToHourly('${item.dateStr}')"
-                   onmouseenter="showTrafficChartTooltip(event, '${tipTitle}', '${tipL1}', '${tipL2}', '${tipL3}', '${tipL4}')"
+                   data-tip-title="${tipTitle}"
+                   data-uv="${uv}"
+                   data-pv="${pv}"
+                   data-ip="${item.ipSet.size}"
+                   data-peak="${peakHStr}"
+                   data-is-daily="true"
+                   onmouseenter="handleBarHover(this)"
                    onmouseleave="hideTrafficChartTooltip()"
                    class="${dayItemClass}"
                    title="클릭 시 ${item.dateStr} 24시간 분석으로 이동 (UV: ${uv}명, PV: ${pv}회)">
