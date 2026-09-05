@@ -3,10 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const CACHE_DIR = path.join(process.cwd(), 'cache', 'tts');
-if (!fs.existsSync(CACHE_DIR)) {
-  fs.mkdirSync(CACHE_DIR, { recursive: true });
-}
+const CACHE_DIR = process.env.VERCEL ? path.join('/tmp', 'tts') : path.join(process.cwd(), 'cache', 'tts');
+try {
+  if (!fs.existsSync(CACHE_DIR)) {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+  }
+} catch (e) {}
 
 // In-flight deduplication map: cacheKey -> Promise<string>
 const pendingPromises = new Map();

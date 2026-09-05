@@ -494,7 +494,7 @@
               <span>오늘 순 방문자 최초 접속 정보</span>
               <span id="modal-visitor-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-600 text-white shadow-sm">0명</span>
             </h3>
-            <p class="text-xs text-slate-400 mt-0.5">당일 방문한 고유 이용자(Unique Visitor)별 첫 진입 시각, 기기 환경, 유입 화면 상세 목록입니다.</p>
+            <p class="text-xs text-slate-400 mt-0.5"><span id="modal-date-kst-label" class="font-mono text-blue-400 font-semibold mr-1"></span>당일 방문한 고유 이용자(Unique Visitor)별 첫 진입 시각, 기기 환경, 유입 화면 상세 목록입니다.</p>
           </div>
         </div>
         <button onclick="closeTodayVisitorsModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer">
@@ -587,8 +587,8 @@
 
     function saveVisitorToLocalHistory(payload) {
       if (!payload || !payload.visitorId) return;
-      const today = new Date().toISOString().split('T')[0];
-      const todayKey = 'mma_admin_unique_visitors_' + today;
+      const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+      const todayKey = 'mma_admin_unique_visitors_' + todayKST;
       try {
         let visitors = JSON.parse(localStorage.getItem(todayKey) || '[]');
         if (!visitors.includes(payload.visitorId)) {
@@ -620,12 +620,7 @@
             connectTimeout: 5000
           });
           adminMqttClient.on('connect', function() {
-            adminMqttClient.subscribe(MQTT_TOPIC, function(err) {
-              if (!err) {
-                const liveText = document.getElementById('header-live-text');
-                if (liveText) liveText.innerText = '실시간 모바일/PC 관제 중';
-              }
-            });
+            adminMqttClient.subscribe(MQTT_TOPIC);
           });
           adminMqttClient.on('message', function(topic, message) {
             try {
@@ -813,8 +808,8 @@
       const activeCount = mergedVisitors.length;
 
       // 오늘 순 방문자 (로컬스토리지 영구 보관 + API 합산)
-      const today = new Date().toISOString().split('T')[0];
-      const savedVisitors = JSON.parse(localStorage.getItem('mma_admin_unique_visitors_' + today) || '[]');
+      const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+      const savedVisitors = JSON.parse(localStorage.getItem('mma_admin_unique_visitors_' + todayKST) || '[]');
       mergedVisitors.forEach(v => {
         if (v.visitorId && !savedVisitors.includes(v.visitorId)) {
           savedVisitors.push(v.visitorId);
@@ -837,11 +832,6 @@
       document.getElementById('kpi-avg-duration').innerText = data.kpi.avgDurationFormatted || '0초';
       document.getElementById('kpi-completion-rate').innerText = data.kpi.completionRate || '0%';
       document.getElementById('tab-live-badge').innerText = activeCount;
-
-      const liveText = document.getElementById('header-live-text');
-      if (liveText) {
-        liveText.innerText = activeCount > 0 ? `실시간 ${activeCount}명 접속 중` : '접속 대기 중';
-      }
 
       // 2. 실시간 방문자 테이블
       try {
@@ -1425,14 +1415,21 @@
     let todayUniqueVisitorsList = [];
 
     function extractTodayUniqueVisitors(data, mergedVisitors) {
+      const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
       const visitorMap = new Map();
       const allEvents = [];
 
-      // 1. 서버 API의 todayUniqueVisitors 우선 로드
+      // 1. 서버 API의 todayUniqueVisitors 우선 로드 (당일 KST 또는 활성만)
       if (data && Array.isArray(data.todayUniqueVisitors)) {
         data.todayUniqueVisitors.forEach(v => {
           const id = v.visitorId || v.sessionId;
-          if (id) visitorMap.set(id, Object.assign({}, v));
+          if (id) {
+            const timeVal = v.firstSeen || (v.timestamp ? new Date(v.timestamp).getTime() : 0);
+            const dKst = timeVal ? new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal)) : '';
+            if (dKst === todayKST || v.isCurrentlyActive) {
+              visitorMap.set(id, Object.assign({}, v));
+            }
+          }
         });
       }
 
@@ -1457,6 +1454,11 @@
         if (!id) return;
         const timeVal = item.firstSeen || (item.timestamp ? new Date(item.timestamp).getTime() : 0);
         if (!timeVal) return;
+
+        // 한국 날짜(KST) 오늘 방문자 또는 현재 활성 세션만 포함!
+        const itemDateKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal));
+        const isAct = Array.isArray(mergedVisitors) && mergedVisitors.some(m => (m.visitorId === id || m.sessionId === id));
+        if (itemDateKST !== todayKST && !isAct) return;
 
         const isMob = item.device === 'Mobile' || (item.clientEnv && /android|ios|iphone|mobile/i.test(item.clientEnv)) || (item.os && /android|ios|iphone/i.test(item.os));
         const isTab = !isMob && (item.device === 'Tablet' || (item.clientEnv && /ipad|tablet/i.test(item.clientEnv)) || (item.os && /ipad/i.test(item.os)));
@@ -1514,6 +1516,9 @@
     function renderTodayVisitorsModalContent() {
       const content = document.getElementById('today-visitors-modal-content');
       const badge = document.getElementById('modal-visitor-count-badge');
+      const dateLabel = document.getElementById('modal-date-kst-label');
+      const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+      if (dateLabel) dateLabel.innerText = `[${todayKST} 기준]`;
       if (!content) return;
 
       const list = todayUniqueVisitorsList;

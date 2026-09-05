@@ -252,8 +252,8 @@ module.exports = async (req, res) => {
   try {
     await sendToUpstash('SETEX', 'mma:session:' + sessionId, 40, JSON.stringify(sessionObj));
     await sendToUpstash('INCR', 'mma:pv_total');
-    const today = new Date().toISOString().split('T')[0];
-    await sendToUpstash('SADD', 'mma:daily_visitors:' + today, visitorId);
+    const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+    await sendToUpstash('SADD', 'mma:daily_visitors:' + todayKST, visitorId);
     if (eventType === 'visit' || eventType === 'scene_change') {
       await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(sessionObj));
       await sendToUpstash('LTRIM', 'mma:logs', 0, 199);

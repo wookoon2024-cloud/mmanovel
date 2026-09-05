@@ -123,8 +123,8 @@ module.exports = async (req, res) => {
       const pvRes = await sendToUpstash('GET', 'mma:pv_total');
       if (pvRes && pvRes.result) totalPv = parseInt(pvRes.result, 10);
 
-      const today = new Date().toISOString().split('T')[0];
-      const todayCardRes = await sendToUpstash('SCARD', 'mma:daily_visitors:' + today);
+      const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+      const todayCardRes = await sendToUpstash('SCARD', 'mma:daily_visitors:' + todayKST);
       todayCount = (todayCardRes && todayCardRes.result) ? parseInt(todayCardRes.result, 10) : 0;
 
       const logsRes = await sendToUpstash('LRANGE', 'mma:logs', 0, 99);
@@ -188,8 +188,12 @@ module.exports = async (req, res) => {
     if (v.visitorId || v.sessionId) countedVisitors.add(v.visitorId || v.sessionId);
   });
 
+  const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+
   historyList.forEach(h => {
-    if (h.visitorId) todayVisitorSet.add(h.visitorId);
+    const timeVal = h.firstSeen || (h.timestamp ? new Date(h.timestamp).getTime() : 0);
+    const itemDateKST = timeVal ? new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal)) : '';
+    if (h.visitorId && itemDateKST === todayKST) todayVisitorSet.add(h.visitorId);
     const id = h.visitorId || h.sessionId;
     if (id && !countedVisitors.has(id)) {
       countedVisitors.add(id);
@@ -202,7 +206,7 @@ module.exports = async (req, res) => {
     }
   });
 
-  // 당일 고유 방문자별 최초 접속 정보 추출
+  // 당일(한국 표준시 KST 기준) 고유 방문자별 최초 접속 정보 추출
   const uniqueVisitorMap = new Map();
   const allEventsForUnique = [...historyList, ...activeVisitors];
 
@@ -211,6 +215,11 @@ module.exports = async (req, res) => {
     if (!id) return;
     const timeVal = item.firstSeen || (item.timestamp ? new Date(item.timestamp).getTime() : 0);
     if (!timeVal) return;
+
+    // 한국 표준시(KST) 오늘 날짜 방문 또는 현재 실시간 활성 세션만 필터링!
+    const itemDateKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date(timeVal));
+    const isAct = activeVisitors.some(a => (a.visitorId === id || a.sessionId === item.sessionId));
+    if (itemDateKST !== todayKST && !isAct) return;
 
     const isMob = item.device === 'Mobile' || (item.os && /android|ios|iphone/i.test(item.os));
     const isTab = !isMob && (item.device === 'Tablet' || (item.os && /ipad/i.test(item.os)));
@@ -232,7 +241,7 @@ module.exports = async (req, res) => {
         initialSceneIdx: item.sceneIdx,
         initialSceneTitle: item.sceneTitle || (item.sceneIdx === 'lobby' ? '메인 로비 (시나리오 선택 중)' : ('SCENE ' + item.sceneIdx)),
         referrer: item.referrer || '직접 접속 (Direct)',
-        isCurrentlyActive: activeVisitors.some(a => (a.visitorId === id || a.sessionId === item.sessionId))
+        isCurrentlyActive: isAct
       });
     } else {
       const existing = uniqueVisitorMap.get(id);
@@ -243,7 +252,7 @@ module.exports = async (req, res) => {
         if (item.referrer) existing.referrer = item.referrer;
       }
       if (dev === 'Mobile') existing.device = 'Mobile';
-      if (activeVisitors.some(a => (a.visitorId === id || a.sessionId === item.sessionId))) {
+      if (isAct) {
         existing.isCurrentlyActive = true;
       }
     }
