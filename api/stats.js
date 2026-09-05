@@ -129,7 +129,19 @@ module.exports = async (req, res) => {
 
       const logsRes = await sendToUpstash('LRANGE', 'mma:logs', 0, -1);
       if (logsRes && Array.isArray(logsRes.result)) {
-        historyList = logsRes.result.map(item => typeof item === 'string' ? JSON.parse(item) : item);
+        historyList = logsRes.result
+          .filter(Boolean)
+          .map(item => {
+            const l = typeof item === 'string' ? JSON.parse(item) : item;
+            if (!l.timestamp) {
+              const t = l.lastSeen || l.firstSeen;
+              l.timestamp = t ? new Date(t).toISOString() : new Date().toISOString();
+            }
+            if (!l.eventType) {
+              l.eventType = (l.sceneIdx === 'lobby' || l.sceneIdx === 0) ? 'visit' : 'scene_change';
+            }
+            return l;
+          });
       }
     } catch (e) {
       console.error('Upstash fetch failed, falling back:', e);

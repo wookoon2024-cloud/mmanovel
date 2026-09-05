@@ -233,13 +233,14 @@ module.exports = async (req, res) => {
   global.__MMA_SESSIONS__.set(sessionId, sessionObj);
   global.__MMA_TOTAL_PV__++;
 
+  const logItem = {
+    ...sessionObj,
+    timestamp: new Date().toISOString(),
+    eventType
+  };
+
   // Log record
   if (eventType === 'visit' || eventType === 'scene_change' || !existing.sessionId) {
-    const logItem = {
-      ...sessionObj,
-      timestamp: new Date().toISOString(),
-      eventType
-    };
     global.__MMA_HISTORY__.push(logItem);
     if (global.__MMA_HISTORY__.length > 5000) {
       global.__MMA_HISTORY__.shift();
@@ -255,7 +256,7 @@ module.exports = async (req, res) => {
     const todayKST = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
     await sendToUpstash('SADD', 'mma:daily_visitors:' + todayKST, visitorId);
     if (eventType === 'visit' || eventType === 'scene_change') {
-      await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(sessionObj));
+      await sendToUpstash('LPUSH', 'mma:logs', JSON.stringify(logItem));
       await sendToUpstash('LTRIM', 'mma:logs', 0, 9999);
     }
   } catch (e) {}

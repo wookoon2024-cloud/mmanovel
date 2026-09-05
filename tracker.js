@@ -153,6 +153,7 @@
       visitorId: visitorId,
       ip: clientRealIp || '',
       maskedIp: clientMaskedIp || '',
+      country: 'KR',
       city: clientCity || '',
       eventType: eventType || 'heartbeat',
       sceneIdx: currentScene,
