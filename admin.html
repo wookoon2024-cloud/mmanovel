@@ -194,6 +194,10 @@
           <i data-lucide="list" class="w-3.5 h-3.5"></i>
           <span>접근 로그</span>
         </button>
+        <button onclick="switchTab('ip')" id="tab-btn-ip" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
+          <i data-lucide="network" class="w-3.5 h-3.5"></i>
+          <span>IP별 분석</span>
+        </button>
         <button onclick="switchTab('funnel')" id="tab-btn-funnel" class="px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 cursor-pointer">
           <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
           <span>퍼널 분석</span>
@@ -424,7 +428,104 @@
       </div>
     </section>
 
-    <!-- 3-3. [TAB 3] 퍼널 분석 -->
+    <!-- 3-4. [TAB: IP ANALYTICS] IP별 방문자 분석 및 통계 -->
+    <section id="tab-content-ip" class="hidden space-y-4">
+      <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl overflow-hidden shadow-sm">
+        <div class="p-3.5 sm:px-5 border-b border-slate-800/80 flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-2">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <i data-lucide="network" class="w-4 h-4 text-blue-400"></i> IP별 접속 분석 및 통계
+            </h3>
+            <span id="ip-filtered-count-badge" class="text-[11px] font-mono text-slate-400 font-normal">전체 0개 IP</span>
+          </div>
+
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- 정렬 기준 선택 -->
+            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1">
+              <i data-lucide="arrow-down-up" class="w-3 h-3 text-slate-400 shrink-0"></i>
+              <select id="ip-sort-select" onchange="renderIpAnalytics()" class="bg-transparent text-xs text-slate-200 font-sans focus:outline-none cursor-pointer">
+                <option value="pv-desc" selected class="bg-slate-900 text-slate-200">방문수(PV) 많은 순</option>
+                <option value="uv-desc" class="bg-slate-900 text-slate-200">고유방문자(UV) 순</option>
+                <option value="lastSeen-desc" class="bg-slate-900 text-slate-200">최근 접속 순</option>
+                <option value="firstSeen-asc" class="bg-slate-900 text-slate-200">최초 접속 순</option>
+              </select>
+            </div>
+
+            <!-- 검색 필터 인풋 -->
+            <div class="relative flex items-center">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 pointer-events-none"></i>
+              <input type="text" id="ip-search-input" onkeyup="renderIpAnalytics()" placeholder="IP 주소, 도시, 환경 검색..." class="pl-8 pr-7 py-1 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 w-36 sm:w-48 font-sans" />
+              <button id="btn-clear-ip-search" onclick="clearIpSearch()" class="hidden absolute right-2 text-slate-500 hover:text-slate-300 cursor-pointer" title="검색어 지우기">
+                <i data-lucide="x" class="w-3 h-3"></i>
+              </button>
+            </div>
+
+            <!-- CSV 내보내기 -->
+            <button onclick="exportIpSummaryToCsv()" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer" title="IP별 통계 요약 CSV 다운로드">
+              <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i> CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- IP 요약 메트릭 카드 4종 -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-slate-900/40 border-b border-slate-800/60 text-xs">
+          <div class="bg-slate-900/70 border border-slate-800/80 rounded-lg p-3">
+            <span class="text-slate-400 block text-[11px]">총 고유 IP 주소</span>
+            <div class="mt-1 flex items-baseline gap-1.5">
+              <strong id="ip-metric-total-ips" class="text-lg font-bold font-mono text-white">0</strong>
+              <span class="text-[11px] text-slate-400">개</span>
+            </div>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-800/80 rounded-lg p-3">
+            <span class="text-slate-400 block text-[11px]">실시간 활성 IP</span>
+            <div class="mt-1 flex items-baseline gap-1.5">
+              <strong id="ip-metric-active-ips" class="text-lg font-bold font-mono text-emerald-400">0</strong>
+              <span class="text-[11px] text-slate-400">개</span>
+            </div>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-800/80 rounded-lg p-3">
+            <span class="text-slate-400 block text-[11px]">국내 / 해외 접속 IP</span>
+            <div class="mt-1 flex items-baseline gap-1.5">
+              <strong id="ip-metric-kr-ips" class="text-lg font-bold font-mono text-blue-400">0</strong>
+              <span class="text-[11px] text-slate-400">/</span>
+              <strong id="ip-metric-global-ips" class="text-lg font-bold font-mono text-slate-400">0</strong>
+            </div>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-800/80 rounded-lg p-3">
+            <span class="text-slate-400 block text-[11px]">최대 트래픽 발생 IP</span>
+            <div class="mt-1 flex items-baseline gap-1.5 truncate">
+              <strong id="ip-metric-top-ip" class="text-xs font-bold font-mono text-cyan-400 truncate">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- IP별 통계 데이터 테이블 -->
+        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-800 sticky top-0">
+              <tr>
+                <th class="py-3 px-4 w-12 text-center">#</th>
+                <th class="py-3 px-4">접속 IP</th>
+                <th class="py-3 px-4">접속 지역</th>
+                <th class="py-3 px-4 text-center">총 방문(PV)</th>
+                <th class="py-3 px-4 text-center">고유 식별(UV)</th>
+                <th class="py-3 px-4">접속 환경 (기기 / 브라우저)</th>
+                <th class="py-3 px-4">최초 접속 일시</th>
+                <th class="py-3 px-4">최근 활동 일시</th>
+                <th class="py-3 px-4 text-right">상세 조회</th>
+              </tr>
+            </thead>
+            <tbody id="ip-breakdown-tbody" class="divide-y divide-slate-800/60 font-sans">
+              <tr>
+                <td colspan="9" class="py-10 text-center text-slate-500">집계된 IP 데이터가 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-5. 퍼널 분석 -->
     <section id="tab-content-funnel" class="hidden space-y-4">
       <div class="bg-[#0D121F] border border-slate-800/90 rounded-xl p-5 shadow-sm space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
@@ -695,7 +796,7 @@
 
     function switchTab(tabKey) {
       currentActiveTab = tabKey;
-      ['live', 'traffic', 'logs', 'funnel', 'devices', 'settings'].forEach(k => {
+      ['live', 'traffic', 'logs', 'ip', 'funnel', 'devices', 'settings'].forEach(k => {
         const btn = document.getElementById('tab-btn-' + k);
         const sec = document.getElementById('tab-content-' + k);
         if (k === tabKey) {
@@ -712,6 +813,9 @@
       });
       if (tabKey === 'traffic') {
         renderTrafficAnalytics();
+      }
+      if (tabKey === 'ip') {
+        renderIpAnalytics();
       }
       lucide.createIcons();
     }
@@ -936,6 +1040,13 @@
         renderTrafficAnalytics();
       } catch (e) {
         console.error('renderTrafficAnalytics error:', e);
+      }
+
+      // 7. IP별 방문자 분석 및 통계 렌더링
+      try {
+        renderIpAnalytics();
+      } catch (e) {
+        console.error('renderIpAnalytics error:', e);
       }
 
       try {
@@ -1589,6 +1700,304 @@
     function escapeHtml(str) {
       if (!str) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ================= [IP별 방문자 분석 및 통계 제어] =================
+    let lastAggregatedIpData = [];
+
+    function clearIpSearch() {
+      const input = document.getElementById('ip-search-input');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      renderIpAnalytics();
+    }
+
+    function renderIpAnalytics() {
+      const tbody = document.getElementById('ip-breakdown-tbody');
+      if (!tbody) return;
+
+      const q = (document.getElementById('ip-search-input')?.value || '').trim().toLowerCase();
+      const sortMode = document.getElementById('ip-sort-select')?.value || 'pv-desc';
+
+      const clearBtn = document.getElementById('btn-clear-ip-search');
+      if (clearBtn) {
+        if (q) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      // 1. 모든 로그 수집 (API 최근 로그 + 로컬스토리지 영구 보존 로그)
+      let allLogs = [];
+      if (currentStatsData && Array.isArray(currentStatsData.recentLogs)) {
+        allLogs = allLogs.concat(currentStatsData.recentLogs);
+      }
+      try {
+        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
+        if (Array.isArray(savedLogs)) allLogs = allLogs.concat(savedLogs);
+      } catch (e) {}
+
+      // 2. 실시간 활성 IP 식별 세트
+      const activeIpSet = new Set();
+      if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+        currentStatsData.activeVisitors.forEach(v => {
+          if (v.ip) activeIpSet.add(v.ip);
+        });
+      }
+      if (typeof localActiveSessions !== 'undefined') {
+        localActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(v.ip); });
+      }
+      if (typeof mqttActiveSessions !== 'undefined') {
+        mqttActiveSessions.forEach(v => { if (v.ip) activeIpSet.add(v.ip); });
+      }
+
+      const ipMap = new Map();
+
+      function processIpEntry(item, isActiveHint = false) {
+        let rawIp = String(item.ip || '127.0.0.1').trim();
+        if (rawIp.includes('(')) rawIp = rawIp.split('(')[0].trim();
+        if (rawIp === '::1' || rawIp === '') rawIp = '127.0.0.1';
+
+        if (!ipMap.has(rawIp)) {
+          ipMap.set(rawIp, {
+            ip: rawIp,
+            maskedIp: item.maskedIp || (rawIp.includes('.') ? rawIp.split('.').slice(0, 2).join('.') + '.*.*' : rawIp),
+            country: item.country || 'KR',
+            city: item.city || '대한민국',
+            totalPv: 0,
+            visitors: new Set(),
+            sessions: new Set(),
+            devices: new Set(),
+            browsers: new Set(),
+            firstSeen: Infinity,
+            lastSeen: 0,
+            latestScene: '',
+            isActive: false
+          });
+        }
+
+        const rec = ipMap.get(rawIp);
+        rec.totalPv += 1;
+        if (item.visitorId) rec.visitors.add(item.visitorId);
+        if (item.sessionId) rec.sessions.add(item.sessionId);
+        if (item.device) rec.devices.add(item.device);
+        if (item.browser) rec.browsers.add(item.browser);
+        if (item.os && !item.device) rec.devices.add(item.os);
+        if (item.sceneTitle) rec.latestScene = item.sceneTitle;
+        if (item.city && item.city !== '대한민국') rec.city = item.city;
+        if (item.country) rec.country = item.country;
+
+        const t = item.timestamp ? new Date(item.timestamp).getTime() : (item.firstSeen || item.lastSeen || 0);
+        if (t > 0) {
+          if (t < rec.firstSeen) rec.firstSeen = t;
+          if (t > rec.lastSeen) {
+            rec.lastSeen = t;
+            if (item.sceneTitle) rec.latestScene = item.sceneTitle;
+          }
+        }
+        if (isActiveHint || activeIpSet.has(rawIp)) {
+          rec.isActive = true;
+        }
+      }
+
+      allLogs.forEach(l => processIpEntry(l, false));
+
+      if (currentStatsData && Array.isArray(currentStatsData.activeVisitors)) {
+        currentStatsData.activeVisitors.forEach(v => processIpEntry(v, true));
+      }
+      if (typeof localActiveSessions !== 'undefined') {
+        localActiveSessions.forEach(v => processIpEntry(v, true));
+      }
+      if (typeof mqttActiveSessions !== 'undefined') {
+        mqttActiveSessions.forEach(v => processIpEntry(v, true));
+      }
+
+      let aggregated = Array.from(ipMap.values()).map(rec => {
+        if (rec.firstSeen === Infinity) rec.firstSeen = rec.lastSeen || Date.now();
+        if (rec.lastSeen === 0) rec.lastSeen = rec.firstSeen || Date.now();
+        rec.uniqueCount = Math.max(rec.visitors.size, rec.sessions.size, 1);
+        if (activeIpSet.has(rec.ip)) rec.isActive = true;
+        return rec;
+      });
+
+      lastAggregatedIpData = aggregated;
+
+      // 상단 KPI 카드 수치 업데이트
+      const totalIps = aggregated.length;
+      const activeIpsCount = aggregated.filter(x => x.isActive).length;
+      const krIpsCount = aggregated.filter(x => x.country === 'KR' || (x.city && x.city.includes('대한민국'))).length;
+      const globalIpsCount = totalIps - krIpsCount;
+      
+      const topIpItem = aggregated.length > 0
+        ? [...aggregated].sort((a, b) => b.totalPv - a.totalPv)[0]
+        : null;
+
+      const totalIpsEl = document.getElementById('ip-metric-total-ips');
+      if (totalIpsEl) totalIpsEl.innerText = totalIps;
+
+      const activeIpsEl = document.getElementById('ip-metric-active-ips');
+      if (activeIpsEl) activeIpsEl.innerText = activeIpsCount;
+
+      const krIpsEl = document.getElementById('ip-metric-kr-ips');
+      if (krIpsEl) krIpsEl.innerText = krIpsCount;
+
+      const globalIpsEl = document.getElementById('ip-metric-global-ips');
+      if (globalIpsEl) globalIpsEl.innerText = Math.max(0, globalIpsCount);
+
+      const topIpEl = document.getElementById('ip-metric-top-ip');
+      if (topIpEl) {
+        if (topIpItem) {
+          const topIpDisp = formatIpDisplay(topIpItem.ip, topIpItem.maskedIp, showFullIp);
+          topIpEl.innerHTML = `<span title="${escapeHtml(topIpItem.ip)}">${escapeHtml(topIpDisp)}</span> <span class="text-slate-400 font-normal text-[11px]">(${topIpItem.totalPv}회)</span>`;
+        } else {
+          topIpEl.innerText = '--';
+        }
+      }
+
+      // 검색어 필터링
+      let filtered = aggregated.filter(item => {
+        if (!q) return true;
+        const target = `${item.ip} ${item.maskedIp || ''} ${item.city || ''} ${Array.from(item.devices).join(' ')} ${Array.from(item.browsers).join(' ')}`.toLowerCase();
+        return target.includes(q);
+      });
+
+      // 정렬 처리
+      if (sortMode === 'pv-desc') {
+        filtered.sort((a, b) => b.totalPv - a.totalPv);
+      } else if (sortMode === 'uv-desc') {
+        filtered.sort((a, b) => b.uniqueCount - a.uniqueCount);
+      } else if (sortMode === 'lastSeen-desc') {
+        filtered.sort((a, b) => b.lastSeen - a.lastSeen);
+      } else if (sortMode === 'firstSeen-asc') {
+        filtered.sort((a, b) => a.firstSeen - b.firstSeen);
+      }
+
+      // 뱃지 업데이트
+      const countBadge = document.getElementById('ip-filtered-count-badge');
+      if (countBadge) {
+        if (q) {
+          countBadge.innerHTML = `<span class="text-blue-400 font-semibold">[검색: '${escapeHtml(q)}']</span> ${filtered.length}개 IP`;
+        } else {
+          countBadge.innerText = `전체 ${filtered.length}개 IP 주소`;
+        }
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="py-10 text-center text-slate-500">일치하는 IP 접속 데이터가 없습니다.</td></tr>';
+        return;
+      }
+
+      const maxPv = Math.max(...filtered.map(x => x.totalPv), 1);
+      const now = Date.now();
+
+      tbody.innerHTML = filtered.map((item, idx) => {
+        const ipDisplay = formatIpDisplay(item.ip, item.maskedIp, showFullIp);
+        const flag = (item.country === 'KR' || (item.city && item.city.includes('대한민국'))) ? '🇰🇷' : '🌐';
+        const pvRatio = Math.min(100, Math.round((item.totalPv / maxPv) * 100));
+
+        // 접속 시간 포맷
+        const firstSeenStr = item.firstSeen > 0
+          ? new Date(item.firstSeen).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+          : '-';
+        const lastSeenStr = item.lastSeen > 0
+          ? new Date(item.lastSeen).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+          : '-';
+        
+        // 상대 시간 계산
+        let diffSec = Math.max(1, Math.floor((now - item.lastSeen) / 1000));
+        let agoText = '방금 전';
+        if (diffSec < 60) agoText = `${diffSec}초 전`;
+        else if (diffSec < 3600) agoText = `${Math.floor(diffSec / 60)}분 전`;
+        else if (diffSec < 86400) agoText = `${Math.floor(diffSec / 3600)}시간 전`;
+        else agoText = `${Math.floor(diffSec / 86400)}일 전`;
+
+        const devicesStr = Array.from(item.devices).slice(0, 2).join(', ') || '기기';
+        const browsersStr = Array.from(item.browsers).slice(0, 2).join(', ');
+        const envStr = browsersStr ? `${devicesStr} · ${browsersStr}` : devicesStr;
+
+        const liveIndicator = item.isActive
+          ? `<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live inline-block shrink-0" title="실시간 활성 세션"></span>`
+          : `<span class="w-2 h-2 rounded-full bg-slate-600 inline-block shrink-0" title="오프라인"></span>`;
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition text-xs border-b border-slate-800/40">
+            <td class="py-3 px-4 text-center font-mono text-slate-500 text-[11px]">${idx + 1}</td>
+            <td class="py-3 px-4 font-mono">
+              <div class="flex items-center gap-2">
+                ${liveIndicator}
+                <button type="button" onclick="filterLogsByIp('${escapeHtml(item.ip)}')" class="hover:text-blue-400 hover:underline cursor-pointer flex items-center gap-1 group font-mono text-left font-semibold text-slate-200" title="클릭 시 이 IP(${escapeHtml(item.ip)})의 모든 상세 로그 필터링">
+                  <span>${escapeHtml(ipDisplay)}</span>
+                  <i data-lucide="filter" class="w-3 h-3 opacity-0 group-hover:opacity-100 text-blue-400 transition"></i>
+                </button>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-slate-300">
+              <div class="flex items-center gap-1.5">
+                <span>${flag}</span>
+                <span>${escapeHtml(item.city || '대한민국')}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-center font-mono">
+              <div class="flex flex-col items-center">
+                <span class="font-bold text-white">${item.totalPv.toLocaleString()}</span>
+                <div class="w-16 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1">
+                  <div class="bg-blue-500 h-full rounded-full" style="width: ${pvRatio}%"></div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-center font-mono">
+              <span class="px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">
+                ${item.uniqueCount}명
+              </span>
+            </td>
+            <td class="py-3 px-4 text-slate-300">
+              <div class="truncate max-w-[200px]" title="${escapeHtml(envStr)}">
+                ${escapeHtml(envStr)}
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-400 text-[11px]">
+              ${firstSeenStr}
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-300 text-[11px]">
+              <div>${lastSeenStr}</div>
+              <div class="text-[10px] text-slate-500">${agoText}</div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button type="button" onclick="filterLogsByIp('${escapeHtml(item.ip)}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-blue-600/30 hover:border-blue-500/50 border border-slate-700 text-slate-300 hover:text-blue-300 text-xs font-medium transition cursor-pointer" title="이 IP의 접속 로그로 이동">
+                <span>로그</span>
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function exportIpSummaryToCsv() {
+      const dataToExport = (lastAggregatedIpData && lastAggregatedIpData.length > 0)
+        ? lastAggregatedIpData
+        : [];
+
+      if (dataToExport.length === 0) {
+        alert('내보낼 IP 통계 데이터가 없습니다.');
+        return;
+      }
+
+      let csv = 'IP,Country,City,TotalPV,UniqueUV,Devices,Browsers,FirstSeenKST,LastSeenKST,IsActive\n';
+      dataToExport.forEach(item => {
+        const firstSeen = item.firstSeen > 0 ? new Date(item.firstSeen).toISOString() : '';
+        const lastSeen = item.lastSeen > 0 ? new Date(item.lastSeen).toISOString() : '';
+        csv += `"${item.ip}","${item.country}","${item.city}",${item.totalPv},${item.uniqueCount},"${Array.from(item.devices).join(';') || ''}","${Array.from(item.browsers).join(';') || ''}","${firstSeen}","${lastSeen}",${item.isActive}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mmanovel_ip_analytics_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
     }
 
     // ================= [오늘 순 방문자 최초 접속정보 모달 제어] =================
