@@ -24,6 +24,7 @@ jobs:
       - name: Run Legal & Open API Sync Script
         env:
           LAW_API_OC: westock
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python scripts/sync_legal_api.py
 

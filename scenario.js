@@ -33,7 +33,7 @@ const SCENARIOS = [
     widgetType: null
   },
 
-  // [SCENE 1] 민우의 자취방 - 힘찬이 첫 등장 & 일정 변경 제안 (반갑게 웃으며 인사)
+  // [SCENE 1] 민우의 자취방 - 힘찬이 첫 등장 & 관할 병무청 선택 요청 (반갑게 웃으며 인사)
   {
     bg: "assets/room.jpg",
     char: "assets/himchan_smile.png",
@@ -41,15 +41,15 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "충성! 안녕하십니까 {name} 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면\n통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n{name} 님 지역 관할 병무청의 [월별 실시간 잔여석 달력]을 확인해 보시겠습니까?",
-    text_en: "Salute! Hello {name}, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nMany young citizens don't know this, but as long as there are vacancies, you can freely change your draft physical exam date 100% online up to 1 day before your desired date regardless of the notice.\n\nWould you like to check the [Monthly Real-time Vacancy Calendar] for your regional MMA office?",
+    text: "충성! 안녕하십니까 {name} 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n병역판정검사 일정을 확인하고 계획하기 위해 {name} 님, 먼저 관할 병무청을 선택해 주시겠습니까?",
+    text_en: "Salute! Hello {name}, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nTo check and plan your draft physical examination schedule, {name}, would you please select your regional Military Manpower Administration office first?",
     apiSource: null,
     apiSource_en: null,
     isApi: false,
-    widgetType: "CHOICE_SCHEDULE_CONSENT"
+    widgetType: "DEFAULT_REGION_PICKER"
   },
 
-  // [SCENE 2] 민우의 자취방 - 지역 및 달력 선택 (안내하는 힘찬이)
+  // [SCENE 2] 민우의 자취방 - 선택된 관할청의 일별 실시간 달력 확인 (안내하는 힘찬이)
   {
     bg: "assets/room.jpg",
     char: "assets/himchan_smile.png",
@@ -57,8 +57,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "예를 들어 {name} 님의 주민등록 주소지가 [{residentAddress}]인 경우,\n해당 관할 지방병무청({region})의 실시간 공석 달력과 희망 일정을 바로 선택할 수 있습니다!\n\n또한 주소지 기준 실거리({distanceKm})에 맞춰 당일 지급될 왕복 여비({fare})가 실시간으로 자동 산출됩니다.",
-    text_en: "For example, if your resident registration address is [{residentAddress}],\nyou can immediately select the real-time vacancy calendar and preferred date for your regional office ({region})!\n\nAlso, your round-trip travel allowance ({fare}) will be automatically calculated live based on actual distance ({distanceKm}).",
+    text: "{name} 님이 선택하신 [{region}] (주민등록 주소지: {residentAddress})의 일별 실시간 공석 달력입니다!\n\n원하시는 검사 일자와 시간(오전/오후)을 자유롭게 선택해 보세요.\n주소지 기준 실거리({distanceKm})에 맞춘 당일 여비 지급 규정도 함께 연계됩니다.",
+    text_en: "Here is the daily real-time vacancy calendar for your selected [{region}] (Address: {residentAddress})!\n\nPlease feel free to choose your desired exam date and time (AM/PM).\nThe travel allowance regulation based on actual distance ({distanceKm}) will also be linked.",
     apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 공석 데이터 & 법제처: 「병역의무자 여비지급 규정」 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Draft Exam Vacancies & Law Center: Military Service Travel Allowance Regulations Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -75,8 +75,67 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "탁월한 선택입니다! [ {examDate} ] 잔여석 확인 및 주소지({residentAddress}) 기준 실거리({distanceKm})를 반영한 지급여비 [ {fare} ] 산정이 완료되었습니다!\n\n실제 일정 변경 민원이 필요하신 경우, 병무청 민원포털에 접속하여 간편하게 변경 신청하실 수 있습니다.",
-    text_en: "Excellent choice! Vacancies confirmed for [ {examDate} ]. Estimated travel allowance is [ {fare} ] based on distance ({distanceKm}) from your address ({residentAddress})!\n\nIf you need to change your official schedule, you can easily apply through the MMA Civil Petition Portal.",
+    customDialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "오, {name} 님! 검사 희망일로 [{examDate}] 일정을 직접 선택하셨군요!\n\n선택하신 관할 지방병무청({region})의 해당 일자 실시간 공석에 맞춰 검사 일정이 성공적으로 지정되었습니다.",
+        text_en: "Oh, {name}! You have selected [{examDate}] for your preferred exam date!\n\nYour exam schedule has been successfully booked to match the real-time vacancies at your regional office ({region})."
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "원하는 날짜와 시간대로 직접 골라서 정하니까 마음이 훨씬 편하네!\n\n내가 신청한 내역과 관할 병무청 연락처를 미리 잘 확인해 둬야겠어.",
+        text_en: "Choosing the exact date and time myself puts my mind so much more at ease!\n\nI should make sure to double check my application details and the regional office contact info."
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "만약 검사 일정 변경이나 추가 문의사항이 있으실 경우,\n아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 언제든 간편하게 신청하고 변경하실 수 있습니다!",
+        text_en: "If you need to change your exam schedule or have any questions,\nyou can easily apply or change it anytime via the regional office contact or the MMA Civil Petition Portal below!"
+      }
+    ],
+    defaultDialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "네, {name} 님! 통지서에 지정된 기본 일정인 [{examDate}]으로 안내를 도와드리겠습니다!\n\n선택하신 관할 지방병무청({region})의 기본 배정 정보가 확인되었습니다.",
+        text_en: "Yes, {name}! I will guide you with your notice's default date [{examDate}]!\n\nThe basic assignment information for your regional office ({region}) has been confirmed."
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "통지서에 지정된 기본 날짜에 맞춰서 미리 일정을 비워두고 준비해야겠어!\n\n관할 병무청 연락처랑 검사장 위치를 잘 확인해 두자.",
+        text_en: "I should clear my schedule and prepare according to the notice's assigned date!\n\nLet me double check the regional office contact and center location."
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "혹시라도 나중에 다른 날짜로 변경하고 싶으시면,\n검사 희망일 전날까지 아래 관할 병무청 직통 연락처나 병무청 민원포털에서 언제든 100% 자유롭게 변경하실 수 있으니 안심하세요!",
+        text_en: "If you ever wish to change to a different date later,\nyou can freely change it 100% online up to 1 day before your desired date through the regional contact or portal below!"
+      }
+    ],
+    dialogues: [],
+    text: "통지서에 지정된 기본 일정인 [{examDate}]으로 안내를 도와드리겠습니다.\n\n만약 검사 일정 변경이나 추가 문의사항이 있으실 경우, 아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 간편하게 신청하실 수 있습니다.",
+    text_en: "I will guide you with your notice's default date [{examDate}].\n\nIf you need to change your exam schedule or have any questions, you can easily apply through the regional office direct contact below or the MMA Civil Petition Portal.",
     apiSource: "[API] 공공데이터포털: 병무청_지방병무(지)청 조직 및 연락처 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Regional Offices & Contact Info Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -103,7 +162,7 @@ const SCENARIOS = [
     widgetType: "HEALTH_CHECK_CHOICE"
   },
 
-  // [SCENE 5] 병무청 로비 - 가상 검사장 도착 & 나라사랑카드 등록 (씩씩한 힘찬이)
+  // [SCENE 5] 병무청 로비 - 가상 검사장 도착 & 본인인증 및 의무자 등록 (씩씩한 힘찬이)
   {
     bg: "assets/lobby.jpg",
     char: "assets/himchan.png",
@@ -111,14 +170,41 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "드디어 가상 {region} 로비 접수데스크에 도착했습니다!\n\n가장 먼저 본인 확인 후 [나라사랑카드]를 발급·등록해야 하는데요, 이 카드가 왜 검사의 시작이자 필수인지 아시나요?\n\n① 검사장 전자신분증: 환복 후 이 카드를 주머니에 넣고 다니며, 모든 검사실(심리, 임상병리, 신체계측, 의사 진료) 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n\n② 지급여비 수령: 오늘 검사가 끝나면 왕복 교통비와 식비 등 지급여비가 등록하신 이 계좌로 입금될 예정입니다.\n\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 군 생활 전 기간 동안 핵심 혜택 카드로 쭉 사용하게 됩니다!\n\n두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
-    text_en: "We've arrived at the virtual {region} reception lobby!\n\nFirst, you will register your [Nara Sarang Card]. Why is this card essential?\n\n① Exam Electronic ID: You will carry this card in your pocket and tap it at readers before entering every exam room (psychology, pathology, biometrics, doctor clinic) to record results in real-time.\n\n② Travel Allowance: Transit and meal allowances are scheduled to be deposited into this designated account.\n\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nCompare the benefits and select your preferred Nara Sarang Card.",
-    apiSource: "[공식출처] 나라사랑포털(군인공제회C&C) & KB국민·IBK기업 공식 금융 혜택 공시 데이터",
-    apiSource_en: "[Official Source] Nara Sarang Portal & Official Bank Benefits Disclosure Data",
-    apiSourceUrl: "https://www.narasarang.or.kr",
-    apiIcon: "globe",
+    dialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "드디어 가상 {region} 로비 접수데스크에 도착했습니다!\n검사장에 오시면 가장 먼저 [본인인증 및 의무자 등록]을 진행해야 하는데요,\n① 신분증 본인 확인: 주민등록증, 운전면허증, 여권 등 공인 신분증을 접수창구에 제시하여 본인 여부를 철저히 대조 확인합니다.\n② 사진촬영: 대리검사를 방지하기 위해 디지털 사진을 현장에서 즉석 촬영합니다.\n③ 전용 검사복 수령: 등록이 완료되면 깨끗하게 소독된 신체검사 전용 검사복을 지급받습니다.\n지참하신 신분증을 제시하고 본인인증 및 사진촬영을 완료해 볼까요?",
+        text_en: "We've arrived at the virtual {region} reception desk!\nUpon entering the center, the very first step is [Identity Verification & Examinee Registration]:\n① ID Verification: Present an official government photo ID to verify your identity.\n② Photo Capture: A real-time photo is taken on-site to prevent proxy exams.\n③ Exam Uniform Pickup: Upon registration, you receive sanitized physical examination clothing.\nShall we present your ID and complete the verification & photo capture?"
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "긴장되는데... 정면을 똑바로 바라보고 눈감지 말고 잘 찍어볼게요!",
+        text_en: "I'm a bit nervous... I'll look straight at the camera and try not to blink!"
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "후우... 오랜만이라 긴장됐는데, 그래도 잘 나온 것 같아!",
+        text_en: "Phew... I was quite tense since it's been a while, but it seems to have turned out well!"
+      }
+    ],
+    apiSource: "[행정기준] 병역법 제11조(병역판정검사) 및 병역판정검사 규정 (공인 신분증 확인 및 사진촬영)",
+    apiSource_en: "[Legal Basis] Military Service Act Article 11 & MMA Exam Regulations (Photo ID Verification & Photo Capture)",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역법",
+    apiIcon: "shield-check",
     isApi: true,
-    widgetType: "NARA_CARD_CHOICE"
+    widgetType: "IDENTITY_REG_CONFIRM"
   },
 
   // [SCENE 6] 탈의실 및 사물함실 - 사물함 보관 & 검사복 환복 (미소 힘찬이)
@@ -135,8 +221,8 @@ const SCENARIOS = [
         char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "탈의실 및 사물함실로 이동했습니다!\n\n휴대폰, 지갑, 시계 등 모든 개인 소지품은 배정된 사물함에 넣고 편안한 전용 검사복으로 환복해 주세요.",
-        text_en: "We've moved to the locker room!\n\nPlease store all personal belongings in your locker and change into the examination uniform."
+        text: "탈의실 및 사물함실로 이동했습니다!\n\n휴대폰, 지갑, 시계 등 모든 개인 소지품은 사물함에 넣고 편안한 전용 검사복으로 환복해 주세요.",
+        text_en: "We've moved to the locker room!\n\nPlease store all personal belongings in the locker and change into the examination uniform."
       },
       {
         speaker: "{name} (주인공)",
@@ -144,8 +230,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "소지품은 사물함에 넣고... 아! 아까 발급받은 나라사랑카드랑 챙겨온 병원 진단서 서류는 검사복 주머니에 꼭 챙겨야지!",
-        text_en: "Belongings in locker... Oh! I must keep my Nara Sarang Card and medical documents in my pocket!"
+        text: "소지품은 사물함에 넣고... 아! 미리 챙겨온 병원 진단서(의무기록) 서류는 검사복 주머니에 꼭 챙겨야지!",
+        text_en: "Belongings in locker... Oh! I must keep my medical certificate and records in my pocket!"
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -153,8 +239,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "정확합니다 {name} 님! 카드와 서류를 주머니에 챙기셨다면 첫 번째 검사인 [심리검사장]으로 출발해 볼까요?",
-        text_en: "Exactly right! With your card and documents ready, let's head to the [Psychological Testing Hall]!"
+        text: "정확합니다 {name} 님! 환복을 마치셨다면 첫 번째 검사장인 [심리검사장]으로 출발해 볼까요?\n심리검사장 입구에서 오늘 검사의 필수 열쇠인 [나라사랑카드] 발급과 등록이 시작됩니다!",
+        text_en: "Exactly right {name}! Now that you're in uniform, let's head to the [Psychological Testing Hall]!\nAt the entrance, your essential [Nara Sarang Card] registration and tests begin!"
       }
     ],
     apiSource: null,
@@ -163,7 +249,7 @@ const SCENARIOS = [
     widgetType: "LOCKER_CHANGE_CONFIRM"
   },
 
-  // [SCENE 7] 심리검사장 - PC 1:1 인지능력 및 인성검사 (심리검사관 & 민우)
+  // [SCENE 7] 심리검사장 - 나라사랑카드 발급·등록 및 PC 1:1 심리검사 (심리검사관 & 민우)
   {
     bg: "assets/exam_room.jpg",
     char: "assets/psychologist.png",
@@ -177,8 +263,8 @@ const SCENARIOS = [
         char: "assets/psychologist.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-        text: "안녕하십니까 수검자 여러분! 병역판정검사의 첫 관문인 심리검사장입니다.\n\n배정받은 좌석 모니터 화면에 본인의 성명과 주민등록번호를 입력하여 로그인해 주세요.",
-        text_en: "Welcome examinees! This is the Psychological Testing Hall.\n\nPlease log in by entering your name and Resident Registration Number on your monitor screen."
+        text: "안녕하십니까 {name} 님! 병역판정검사의 첫 관문인 [심리검사장]에 오신 것을 환영합니다.\n심리검사장에 들어서면 가장 먼저 진행하는 핵심 절차가 바로 [나라사랑카드 발급·등록]입니다!\n① 나라사랑카드: 주머니에 넣고 다니며, 임상병리, 기본검사, 각 과목 의사 진료실 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n② 당일 지급여비 수령: 오늘 검사가 끝나면 왕복 교통비와 식비 등 지급여비가 등록하신 이 계좌로 입금됩니다.\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 핵심 복지 카드로 쭉 사용하게 됩니다!\nKB국민과 IBK기업 두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
+        text_en: "Welcome {name}! This is the Psychological Testing Hall, the first gateway of your physical examination.\nUpon entering, the very first essential step is [Nara Sarang Card Issuance & Registration]!\n① Nara Sarang Card: Kept in your pocket, tap this card at readers before entering each exam room (pathology, basic physical exam, doctor clinics) to verify identity and record results in real-time.\n② Travel Allowance: Transit and meal allowances will be deposited directly into this designated account upon exam completion.\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\nCompare the benefits and select your preferred Nara Sarang Card."
       },
       {
         speaker: "{name} (주인공)",
@@ -186,23 +272,16 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "키보드로 이름이랑 주민등록번호를 입력해서 로그인하면 되는구나!\n인지능력검사와 인성검사 화면이 떴네.",
-        text_en: "I log in by typing my name and ID number on the keyboard!\nCognitive and Personality test screens appeared."
-      },
-      {
-        speaker: "심리검사관 NPC",
-        speaker_en: "Psychological Examiner NPC",
-        char: "assets/psychologist.png",
-        charPos: "right",
-        plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-        text: "차분하고 솔직하게 문항을 풀어주세요. 그럼 컴퓨터 화면에 출제되는 대표 문항을 직접 풀어보실까요?",
-        text_en: "Please answer calmly and honestly. Let's solve sample questions on the computer screen!"
+        text: "나라사랑카드 혜택을 꼼꼼히 보고 선택해야겠어...!",
+        text_en: "I should carefully check the Nara Sarang Card benefits before choosing...!"
       }
     ],
-    apiSource: null,
-    apiSource_en: null,
-    isApi: false,
-    widgetType: "PSYCH_TEST_UI"
+    apiSource: "[공식출처] 나라사랑포털(군인공제회C&C) & KB국민·IBK기업 공식 금융 혜택 공시 데이터",
+    apiSource_en: "[Official Source] Nara Sarang Portal & Official Bank Benefits Disclosure Data",
+    apiSourceUrl: "https://www.narasarang.or.kr",
+    apiIcon: "credit-card",
+    isApi: true,
+    widgetType: "NARA_CARD_CHOICE"
   },
 
   // [SCENE 8] 임상병리검사실 및 영상의학실 - 소변·혈액 채취 & 흉부 X-ray
@@ -228,41 +307,14 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "여기서부터 나라사랑카드를 태그하는 거구나! 삑- 소변검사용 종이컵과 스틱을 받았어. 화장실로 가보자.",
-        text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick. Let's head to the restroom."
+        text: "여기서부터 나라사랑카드를 태그하는 거구나! 삑- 소변검사용 종이컵과 스틱을 받았어.",
+        text_en: "This is where I tap my Nara Sarang Card! Beep- received urine cup and stick."
       }
     ],
-    // [인터랙션 단계별 세부 대사 - 통합 일원화]
-    stepDialogues: {
-      step2: {
-        speaker: "{name} (주인공)",
-        speaker_en: "{name} (Protagonist)",
-        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        char: "assets/minwoo.png",
-        text: "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하자!",
-        text_en: "Arrived at the restroom. I discard the first 1-2 seconds of urine, collect the midstream urine in 1/3 of the cup, and submit it into the specimen box!"
-      },
-      step3: {
-        speaker: "임상병리사 NPC",
-        speaker_en: "Clinical Pathologist NPC",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/lab_officer.png",
-        text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다.\n\n⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
-        text_en: "Urine sample confirmed! Now collecting blood sample.\n\n⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
-      },
-      step4: {
-        speaker: "영상의학 방사선사 NPC",
-        speaker_en: "Radiologist NPC",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/lab_officer.png",
-        text: "흉부 X-ray 촬영대 앞에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! (찰칵) 촬영이 모두 끝났습니다.\n다음 검사인 [기본검사실]로 이동합니다.",
-        text_en: "Please stand firmly against the X-ray board. Deep breath in and hold it! (Click) Imaging complete.\nProceed to the Basic Examination Room."
-      }
-    },
     apiSource: null,
     apiSource_en: null,
     isApi: false,
-    widgetType: "LAB_ROOM_CONFIRM"
+    widgetType: "LAB_STEP1_POPUP"
   },
 
   // [SCENE 9] 기본검사실 - 신장/체중/혈압/시력 3단계 측정 & BMI 판정
@@ -292,45 +344,10 @@ const SCENARIOS = [
         text_en: "I just step onto the biometric platform and stand straight! Let's measure my height and weight accurately."
       }
     ],
-    // [인터랙션 단계별 세부 대사 - 통합 일원화]
-    stepDialogues: {
-      step2: {
-        speaker: "{name} (주인공)",
-        speaker_en: "{name} (Protagonist)",
-        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        char: "assets/minwoo.png",
-        text: "키와 몸무게 측정이 끝났네. 옆에 있는 자동 혈압계에 오른팔을 쑥 넣었어. 호흡을 편안하게 유지해야 혈압이 정확하게 측정된댔지.",
-        text_en: "Height and weight measurement done. Inserted my right arm into the automatic blood pressure monitor. Keeping calm for accurate reading."
-      },
-      step3: {
-        speaker: "의무관 NPC",
-        speaker_en: "Medical Officer NPC",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/medical_officer.png",
-        text: "혈압 120/80 정상입니다! 이어서 5m 전방 시력표와 색신 책자 검사를 진행했습니다. 좌 1.0 / 우 1.0 정상입니다. 이제 기본검사 계측 결과를 확인해 볼까요?",
-        text_en: "Blood pressure 120/80 is normal! Measured eyesight and color vision, both eyes 1.0 normal. Let's check your biometric measurement results!"
-      },
-      calcDisease: {
-        speaker: "의무관 NPC",
-        speaker_en: "Medical Officer NPC",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/medical_officer.png",
-        text: "기본검사 계측이 완료되었습니다. 사전에 등록하신 [{healthCheck}]의 정밀 심사를 위해 [전문의 진료실]로 이동해 주세요!",
-        text_en: "Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your medical documents."
-      },
-      calcNormal: {
-        speaker: "의무관 NPC",
-        speaker_en: "Medical Officer NPC",
-        plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
-        char: "assets/medical_officer.png",
-        text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 자격을 고려한 군 특기 적성 분류를 위해 [적성분류실]로 이동해 주세요!",
-        text_en: "Basic biometric exam complete! Please proceed to the Aptitude Classification Room for military specialty assignment."
-      }
-    },
     apiSource: null,
     apiSource_en: null,
     isApi: false,
-    widgetType: "BMI_CALCULATOR"
+    widgetType: "BIO_STEP1_POPUP"
   },
 
   // [SCENE 10] 전문의 정밀 진료실 - 사전 선택 질환(내과/천식, 정형외과, 안과, 일반) 맞춤형 정밀 진료
@@ -504,8 +521,8 @@ const SCENARIOS = [
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "제 전공을 살릴 수 있는 추천 모집병 특기와 실시간 지원 경쟁률은 어떻게 되나요?",
-        text_en: "What specialized military roles match my major, and what are their current real-time application competition rates?"
+        text: "제 전공뿐만 아니라 다른 희망 분야의 추천 특기와 모집 접수 일정, 실시간 경쟁률도 꼼꼼히 확인해 보고 싶어요!",
+        text_en: "I'd like to check recommended specialties, recruitment application dates, and live competition rates across different fields!"
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -513,8 +530,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "병무청 [모집병 지원가능 정보 & 실시간 접수현황 API] 조회 완료!\n\n[육군 IT/SW개발병(3.1:1)]과 [공군 정보체계운영병(2.4:1)] 추천 카드 및 국가기술자격 가산점 기준을 아래에 띄워드렸습니다!",
-        text_en: "MMA Live Recruit Specialty & Application API query complete!\n\nWe've displayed Army IT/SW Developer (3.1:1) and Air Force Info Systems (2.4:1) cards and national technical qualification bonus point criteria below!"
+        text: "병무청 [모집병 지원가능 정보 & 실시간 접수현황 API] 연동 완료!\n\nIT/SW 분야뿐만 아니라 기계·전자, 어학·행정, 경영·운전, 의료·보건 등 원하시는 분야를 자유롭게 선택하여 정확한 모집 접수 일정과 병무청 공식 상세 공고를 확인해 보세요!",
+        text_en: "MMA Live Recruit Specialty & Application API connected!\n\nSelect your field—IT/SW, Mechanical/Electronics, Languages/Admin, Business/Driving, or Healthcare—to view exact recruitment dates and official notices!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_모집분야별 지원자격 및 실시간 군지원 접수현황 Open API",
@@ -557,8 +574,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "축하드립니다! 주소지 기준 실거리({distanceKm})를 반영한 지급여비 [ {fare} ]가 등록하신 {cardType} 계좌로 입금될 예정입니다!\n아래 화면에서 스마트 e-병무지갑을 확인하시고, 검사장 근처 나라사랑가게 할인 맛집과 편의시설도 함께 안내해 드릴 테니 귀가길에 참고해 보세요!",
-        text_en: "Congratulations! Travel allowance [ {fare} ] based on actual distance ({distanceKm}) is scheduled to be deposited into your {cardType} account!\nCheck out your e-Military Wallet benefits below. We've also provided nearby Nara Sarang partner restaurants and amenities for your reference on your way home!"
+        text: "축하드립니다! 주소지 기준 실거리({distanceKm})를 반영한 지급여비가 등록하신 {cardType} 계좌로 입금될 예정입니다!\n스마트 e-병무지갑을 확인하시고, 검사장 근처 나라사랑가게 할인 맛집과 편의시설도 함께 안내해 드릴 테니 귀가길에 참고해 보세요!",
+        text_en: "Congratulations! Travel allowance based on actual distance ({distanceKm}) is scheduled to be deposited into your {cardType} account!\nCheck out your e-Military Wallet benefits. We've also provided nearby Nara Sarang partner restaurants and amenities for your reference on your way home!"
       }
     ],
     apiSource: "[API] 공공데이터포털: 병무청_나라사랑가게 가맹점 & 법제처: 「병역의무자 여비지급 규정」 Open API",
@@ -616,8 +633,8 @@ const SCENARIOS = [
         char: "assets/minwoo_happy.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "후아~ 드디어 집에 도착했다! 오늘 하루 병역판정검사 풀코스를 무사히 마치고 나니 마음이 정말 홀가분하고 뿌듯하네.\n\n스마트폰에 [나라사랑카드 여비 {fare} 입금 완료] 문자 알림도 딱 와 있고, 아까 안내받은 스마트 e-병무지갑 앱을 설치했더니 결과서도 스마트폰으로 바로 편하게 조회할 수 있어서 정말 좋은걸!",
-        text_en: "Phew~ Finally back home! Having completed the full physical exam course, I feel relieved and proud.\n\nI just got the SMS notification for my travel allowance [{fare}] deposit, and having installed the e-Military Wallet app, being able to check my digital exam certificate directly on my phone is so convenient!"
+        text: "후아~ 드디어 집에 도착했다! 오늘 하루 병역판정검사 풀코스를 무사히 마치고 나니 마음이 정말 홀가분하고 뿌듯하네.\n\n스마트폰에 [나라사랑카드 지급여비 입금 완료] 문자 알림도 딱 와 있고, 아까 안내받은 스마트 e-병무지갑 앱을 설치했더니 결과서도 스마트폰으로 바로 편하게 조회할 수 있어서 정말 좋은걸!",
+        text_en: "Phew~ Finally back home! Having completed the full physical exam course, I feel relieved and proud.\n\nI just got the SMS notification for my travel allowance deposit, and having installed the e-Military Wallet app, being able to check my digital exam certificate directly on my phone is so convenient!"
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",

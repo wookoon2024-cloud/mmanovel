@@ -60,7 +60,7 @@
   } catch(e) {}
 
   // 실제 접속 PC 공인 IP 조회 (클라이언트 사이드 신속 감지)
-  if (!clientRealIp || clientRealIp === '127.0.0.1') {
+  if (!clientRealIp || clientRealIp === '127.0.0.1' || clientRealIp === '::1') {
     fetch('https://api64.ipify.org?format=json')
       .then(function(r) { return r.json(); })
       .then(function(d) {
@@ -192,7 +192,10 @@
   }
 
   // 2. Serverless API (/api/track)
+  let serverlessSupported = true;
+
   function sendServerless(eventType) {
+    if (!serverlessSupported) return;
     const payload = getPayload(eventType);
     const endpoint = '/api/track';
 
@@ -211,8 +214,18 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-    .then(function(res) { return res.json(); })
+    .then(function(res) {
+      if (!res.ok) {
+        // If server returns 501 (e.g. static Python server), 404, or 405, disable gracefully to prevent console spam
+        if (res.status === 501 || res.status === 404 || res.status === 405) {
+          serverlessSupported = false;
+        }
+        return null;
+      }
+      return res.json();
+    })
     .then(function(data) {
+      if (!data) return;
       if (data && data.clientInfo) {
         let changed = false;
         if (data.clientInfo.ip && data.clientInfo.ip !== '127.0.0.1') {
@@ -236,7 +249,9 @@
         }
       }
     })
-    .catch(function() {});
+    .catch(function() {
+      // Network error or offline
+    });
   }
 
   // 3. 글로벌 크로스 디바이스 MQTT 연동 (모바일 ↔ PC 실시간 0.1초 동기화)
@@ -246,14 +261,23 @@
   function initMqtt() {
     if (typeof mqtt !== 'undefined' && mqtt.connect) {
       try {
+        if (mqttClient) {
+          try { mqttClient.end(true); } catch(e) {}
+        }
         mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
           clientId: 'novel_' + Math.random().toString(36).substring(2, 9),
           clean: true,
-          reconnectPeriod: 4000,
-          connectTimeout: 5000
+          reconnectPeriod: 5000,
+          connectTimeout: 6000
         });
         mqttClient.on('connect', function() {
           sendMqtt('visit');
+        });
+        mqttClient.on('error', function() {
+          // Suppress unhandled error events
+        });
+        mqttClient.on('close', function() {
+          // Cleanly handle close
         });
       } catch(e) {}
     } else if (!document.getElementById('mqtt-script-tag')) {
@@ -292,14 +316,24 @@
     trackAll('heartbeat', currentScene);
   }, 3000);
 
-  // 탭 닫기/이탈 시
+  // 탭 닫기 / 이탈 / bfcache 진입 시
   window.addEventListener('pagehide', function() {
     trackAll('leave', currentScene);
-    if (mqttClient && mqttClient.connected) {
+    if (mqttClient) {
       try {
-        mqttClient.publish(MQTT_TOPIC, JSON.stringify(getPayload('leave')));
-        mqttClient.end(true);
+        if (mqttClient.connected) {
+          mqttClient.publish(MQTT_TOPIC, JSON.stringify(getPayload('leave')));
+        }
+        mqttClient.end(false);
       } catch(e) {}
+    }
+  });
+
+  // bfcache 복원 시 (뒤로가기/앞으로가기 캐시에서 복구될 때)
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) {
+      initMqtt();
+      trackAll('visit', currentScene);
     }
   });
 

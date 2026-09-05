@@ -15,7 +15,25 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCENARIO_PATH = os.path.join(BASE_DIR, 'scenario.js')
 LOG_PATH = os.path.join(BASE_DIR, 'sync_log.json')
+
+def load_env():
+    """BASE_DIR의 .env 파일이 있으면 환경 변수로 자동 로드 (의존성 없는 순수 내장 구현)"""
+    env_path = os.path.join(BASE_DIR, '.env')
+    if os.path.exists(env_path):
+        try:
+            with open(env_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#') and '=' in line:
+                        k, v = line.split('=', 1)
+                        os.environ.setdefault(k.strip(), v.strip())
+        except Exception:
+            pass
+
+load_env()
 LAW_API_OC = os.environ.get('LAW_API_OC', 'westock')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-1.5-flash')
 
 def fetch_url(url, timeout=15):
     headers = {
@@ -93,7 +111,7 @@ def check_narasarang_portal():
     return result
 
 def check_travel_allowance_law(oc=LAW_API_OC):
-    """5. 법제처 국가법령정보공동활용 「병역의무자 여비지급 규정」(병무청 훈령) 확인"""
+    """5. 법제처 국가법령정보공동활용 「병역의무자 여비지급 규정」(병무청 훈령) 확인 및 조문 파싱"""
     query = urllib.parse.quote('병역의무자 여비지급 규정')
     search_url = f'https://www.law.go.kr/DRF/lawSearch.do?OC={oc}&target=admrul&type=JSON&query={query}'
     result = {
@@ -101,13 +119,33 @@ def check_travel_allowance_law(oc=LAW_API_OC):
         'law_name': '병역의무자 여비지급 규정 (병무청 훈령)',
         'checked_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'meal_allowance': 8000,
-        'verified': False
+        'verified': False,
+        'issue_date': '',
+        'issue_no': '',
+        'detail_text': ''
     }
     try:
         raw = fetch_url(search_url)
         data = json.loads(raw)
         rules = data.get('AdmRulSearch', {}).get('admrul', [])
+        if isinstance(rules, dict):
+            rules = [rules]
         if rules:
+            target_rule = rules[0]
+            adm_id = target_rule.get('행정규칙일련번호') or target_rule.get('일련번호')
+            result['adm_id'] = adm_id
+            result['issue_date'] = target_rule.get('발령일자', '')
+            result['issue_no'] = target_rule.get('발령번호', '')
+
+            # 행정규칙 본문 상세 조문 파싱
+            if adm_id:
+                detail_url = f'https://www.law.go.kr/DRF/lawService.do?OC={oc}&target=admrul&ID={adm_id}&type=JSON'
+                detail_raw = fetch_url(detail_url)
+                detail_data = json.loads(detail_raw)
+                jomun_list = detail_data.get('AdmRulService', {}).get('조문내용', [])
+                if isinstance(jomun_list, list):
+                    result['detail_text'] = "\n".join([str(j) for j in jomun_list if isinstance(j, str)])
+
             result['verified'] = True
             result['status'] = 'HEALTHY'
         else:
@@ -229,11 +267,108 @@ def check_national_law():
 
     return result
 
-def sync_scenario(openapi_res, law_res):
-    """최신 검증 결과에 따라 scenario.js 대본 및 출처 자동 업데이트"""
+def query_gemini_api(prompt, api_key, model=None):
+    """Google Gemini REST API 직접 호출 (무설치, 순수 파이썬 내장 라이브러리 사용)"""
+    if not model:
+        model = os.environ.get('GEMINI_MODEL', 'gemini-1.5-flash')
+    
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    payload = {
+        "contents": [
+            {
+                "parts": [{"text": prompt}]
+            }
+        ],
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "temperature": 0.1
+        }
+    }
+    data_bytes = json.dumps(payload).encode('utf-8')
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 MMA-VisualNovel-AI-Sync/1.0'
+    }
+    req = urllib.request.Request(url, data=data_bytes, headers=headers)
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        res_json = json.loads(resp.read().decode('utf-8'))
+        cand = res_json.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+        return json.loads(cand)
+
+def verify_with_ai(travel_res, law_res, current_benchmarks):
+    """외부 AI(Gemini API)를 활용한 최신 법령·훈령과 대본 기준값 심층 대조 검증"""
+    api_key = os.environ.get('GEMINI_API_KEY', '')
+    if not api_key:
+        return {
+            'status': 'SKIPPED',
+            'enabled': False,
+            'message': 'GEMINI_API_KEY 미설정으로 기존 규칙 기반(Regex) 검증으로 대체 진행되었습니다.',
+            'model': None,
+            'verified_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'discrepancies': []
+        }
+
+    prompt = f"""당신은 대한민국 병무청 행정 법령 및 규정 검증 전문 AI 어시스턴트입니다.
+제공된 법제처 최신 공시 데이터와 현재 비주얼 노벨 대본의 기준값을 대조 분석해주세요.
+
+[현재 비주얼 노벨 대본 기준값]
+- 식비 단가 (meal_allowance): {current_benchmarks.get('meal_allowance', 8000)}원
+- 신장/체중에 따른 신체등급 별표 번호 (bmi_appendix): {current_benchmarks.get('bmi_appendix', 2)}
+- 질병/심신장애 별표 번호 (disease_appendix): {current_benchmarks.get('disease_appendix', 3)}
+
+[법제처 최신 데이터]
+1. 「병역판정 신체검사 등 검사규칙」(국방부령):
+- 공포정보: {law_res.get('ordinance_info', '정보없음')}
+- 별표 목록: {json.dumps(law_res.get('appendices', []), ensure_ascii=False)}
+
+2. 「병역의무자 여비지급 규정」(병무청 훈령):
+- 발령정보: {travel_res.get('issue_no', '')}호 (발령일자: {travel_res.get('issue_date', '')})
+- 조문 요약:
+{travel_res.get('detail_text', '')[:1500]}
+
+[요청 사항]
+다음 JSON 스키마 규격으로만 응답해주세요:
+{{
+  "verified": true,
+  "meal_allowance": 8000,
+  "bmi_appendix": 2,
+  "disease_appendix": 3,
+  "has_discrepancies": false,
+  "discrepancies": [
+    {{"field": "meal_allowance", "current": 8000, "found": 9000, "reason": "개정 이유 설명"}}
+  ],
+  "summary": "검증 결과를 한국어 1~2문장으로 명확히 요약"
+}}"""
+
+    try:
+        model_name = os.environ.get('GEMINI_MODEL', 'gemini-1.5-flash')
+        print(f"[AI-SYNC] Gemini AI({model_name}) 법령 및 훈령 본문 심층 분석 요청 중...")
+        ai_data = query_gemini_api(prompt, api_key, model_name)
+        return {
+            'status': 'SUCCESS',
+            'enabled': True,
+            'model': model_name,
+            'verified_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'data': ai_data,
+            'discrepancies': ai_data.get('discrepancies', []),
+            'summary': ai_data.get('summary', 'AI 법령 대조 분석 완료')
+        }
+    except Exception as e:
+        print(f"[WARNING] Gemini AI 호출 실패 ({e}), 규칙 기반 검증으로 자동 폴백합니다.")
+        return {
+            'status': 'FALLBACK_ERROR',
+            'enabled': True,
+            'error': str(e),
+            'message': 'AI API 호출 중 오류 발생으로 규칙 기반 검증으로 대체되었습니다.',
+            'verified_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'discrepancies': []
+        }
+
+def sync_scenario(openapi_res, law_res, ai_res=None):
+    """최신 검증 결과(규칙 기반 + AI 분석)에 따라 scenario.js 대본 및 출처 자동 업데이트"""
     if not os.path.exists(SCENARIO_PATH):
         print(f'Error: {SCENARIO_PATH} not found.')
-        return False
+        return False, "ERROR"
 
     with open(SCENARIO_PATH, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -241,16 +376,37 @@ def sync_scenario(openapi_res, law_res):
     original_content = content
     changes = []
 
-    dis_app = law_res.get('disease_appendix', 3)
-    bmi_app = law_res.get('bmi_appendix', 2)
+    # AI 검증 결과가 성공적일 경우 AI가 도출한 값 우선 채택, 아니면 규칙 기반 값 사용
+    ai_data = ai_res.get('data', {}) if (ai_res and ai_res.get('status') == 'SUCCESS') else {}
+    dis_app = ai_data.get('disease_appendix') or law_res.get('disease_appendix', 3)
+    bmi_app = ai_data.get('bmi_appendix') or law_res.get('bmi_appendix', 2)
 
-    # SCENE 10: 대사 및 출처 (관절 질환)
-    target_s10_text = re.search(r'(국방부령 \[별표 )\d+(\] 204호 기준에 부합하여)', content)
-    if target_s10_text:
-        new_s10_text = f"{target_s10_text.group(1)}{dis_app}{target_s10_text.group(2)}"
-        if target_s10_text.group(0) != new_s10_text:
-            content = content.replace(target_s10_text.group(0), new_s10_text)
-            changes.append(f"SCENE 10 대사 별표 번호 업데이트: 별표 {dis_app}")
+    # SCENE 10 등: 질병·심신장애 별표 번호 일괄 정밀 업데이트
+    # 1) "국방부령 [별표 X] 204호 기준" 등 패턴
+    pattern_dis = re.compile(r'(국방부령 \[별표 )\d+(\] (?:내과|안과|\d+호))')
+    def replace_dis(m):
+        return f"{m.group(1)}{dis_app}{m.group(2)}"
+    
+    new_content, count = pattern_dis.subn(replace_dis, content)
+    if new_content != content:
+        changes.append(f"질병/심신장애 별표 번호 업데이트 ({count}곳): 별표 {dis_app}")
+        content = new_content
+
+    # 2) "국방부령 [별표 1, 2] 기준" (BMI 및 기본 기준)
+    pattern_bmi = re.compile(r'(국방부령 \[별표 1,\s*)\d+(\] 기준에 부합하여)')
+    def replace_bmi(m):
+        return f"{m.group(1)}{bmi_app}{m.group(2)}"
+    
+    new_content, count_bmi = pattern_bmi.subn(replace_bmi, content)
+    if new_content != content:
+        changes.append(f"신체등급(BMI) 별표 번호 업데이트 ({count_bmi}곳): 별표 {bmi_app}")
+        content = new_content
+
+    # 3) AI가 감지한 식비 단가 변동 사항 로깅
+    if ai_data.get('discrepancies'):
+        for disc in ai_data['discrepancies']:
+            print(f"[DISCREPANCY DETECTED] 항목: {disc.get('field')}, 기존: {disc.get('current')} -> 변경: {disc.get('found')}")
+            changes.append(f"AI 불일치 감지: {disc.get('field')} ({disc.get('current')} -> {disc.get('found')})")
 
     has_changed = (content != original_content)
     if has_changed:
@@ -280,13 +436,24 @@ def main():
     travel_res = check_travel_allowance_law(LAW_API_OC)
     law_res = check_national_law()
 
-    changed, sync_status = sync_scenario(openapi_res, law_res)
+    # 현재 대본의 기준 벤치마크 값
+    current_benchmarks = {
+        'meal_allowance': 8000,
+        'bmi_appendix': 2,
+        'disease_appendix': 3
+    }
+
+    # 외부 AI(Gemini API) 심층 검증 (API 키 없으면 룰 기반 자동 폴백)
+    ai_res = verify_with_ai(travel_res, law_res, current_benchmarks)
+
+    changed, sync_status = sync_scenario(openapi_res, law_res, ai_res)
 
     log_data = {
         'last_sync': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'sync_status': sync_status,
         'changed': changed,
         'summary': '모든 5개 정부 Open API 및 나라사랑포털 공식 데이터 실시간 정상 연동 중',
+        'ai_verification': ai_res,
         'apis': {
             'mma_exam_openapi': openapi_res,
             'mma_recruit_openapi': recruit_res,

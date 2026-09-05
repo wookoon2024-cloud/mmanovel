@@ -142,6 +142,31 @@ class MmaApiHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
 
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        if parsed.path == '/api/track':
+            length = int(self.headers.get('content-length', 0))
+            body_data = self.rfile.read(length) if length > 0 else b'{}'
+            try:
+                data = json.loads(body_data.decode('utf-8'))
+            except Exception:
+                data = {}
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "success": True,
+                "clientInfo": {
+                    "ip": self.client_address[0],
+                    "maskedIp": self.client_address[0],
+                    "city": "서울특별시",
+                    "device": data.get("device", "Desktop")
+                }
+            }, ensure_ascii=False).encode('utf-8'))
+            return
+        self.send_response(404)
+        self.end_headers()
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         params = urllib.parse.parse_qs(parsed.query)

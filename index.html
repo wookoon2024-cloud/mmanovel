@@ -93,7 +93,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.4</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.5</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -146,7 +146,7 @@
           <div class="border-l border-slate-300 pl-2 sm:pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 id="lobby-main-header-title" class="text-xs sm:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-600 transition truncate max-w-[140px] sm:max-w-none">병무행정 비주얼노벨</h1>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.9.4</span>
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.9.5</span>
             </div>
           </div>
         </div>
@@ -409,7 +409,10 @@
 
     <!-- 로비 하단 정보 바 & 실시간 법령/OpenAPI 연동 배지 -->
     <div class="pt-3 sm:pt-4 border-t border-slate-800 text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 px-4 shrink-0 pb-2">
-      <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+      <div class="flex items-center gap-3">
+        <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+        <button type="button" onclick="showPrivacyPolicyModal()" class="text-slate-400 hover:text-cyan-400 underline underline-offset-2 transition text-[11px] cursor-pointer">개인정보 처리 및 접속기록 안내</button>
+      </div>
       <div id="lobby-sync-banner-container" class="pointer-events-auto flex items-center justify-center"></div>
     </div>
 
@@ -439,6 +442,75 @@
         </button>
         <button id="sync-modal-btn-cancel" onclick="closeSyncWarningModal()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs sm:text-sm transition cursor-pointer">
           메인으로
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= [LAYER 2.85: 개인정보 처리 및 접속기록 안내 모달] ================= -->
+  <div id="privacy-policy-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl space-y-4 text-left">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">개인정보 처리 및 접속기록 안내</h3>
+            <p class="text-[11px] text-slate-400">병무청 비주얼 노벨 「슬기로운 병역 라이프」</p>
+          </div>
+        </div>
+        <button type="button" onclick="closePrivacyPolicyModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="text-xs text-slate-300 space-y-3 max-h-[60vh] overflow-y-auto pr-1 leading-relaxed">
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <p class="font-bold text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i> 1. 서비스 성격 및 비식별 원칙
+          </p>
+          <p class="text-slate-400 text-[11px] leading-relaxed pl-5">
+            본 비주얼 노벨은 별도의 <strong>회원가입, 실명 인증, 로그인 없이</strong> 누구나 자유롭게 이용할 수 있는 공개 체험형 시뮬레이션입니다. 주민등록번호, 연락처, 실명 등 특정 개인을 식별할 수 있는 고유식별정보는 일체 수집하거나 저장하지 않습니다.
+          </p>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <p class="font-bold text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="database" class="w-3.5 h-3.5 text-blue-400"></i> 2. 자동 생성·수집되는 접속 기록 (로그)
+          </p>
+          <p class="text-slate-400 text-[11px] leading-relaxed pl-5">
+            「통신비밀보호법」 제15조의2 및 웹 서비스 보안 규정에 따라 침해사고 예방, 품질 모니터링, 동시접속 분산을 위해 아래의 기술적 정보가 시스템에 의해 자동으로 기록될 수 있습니다.
+          </p>
+          <ul class="list-disc list-inside text-slate-400 text-[11px] space-y-0.5 pt-1 pl-6">
+            <li>접속 IP 주소 (개인정보 보호를 위해 마스킹 처리: 예: 211.234.*.*)</li>
+            <li>접속 일시 및 열람 시나리오 단계 (체류 시간, 세션 식별값)</li>
+            <li>기기 및 브라우저 환경 (운영체제, 화면 유형, 브라우저 종류)</li>
+          </ul>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <p class="font-bold text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i> 3. 보유 및 이용 기간
+          </p>
+          <p class="text-slate-400 text-[11px] leading-relaxed pl-5">
+            수집된 접속 기록은 통계 집계 및 안정적 서비스 운영을 위해 최대 3개월간 보관된 후 안전하게 파기됩니다. 통계용으로 집계된 비식별 수치(일별/시간대별 방문자 수 등)는 영구 보관될 수 있습니다.
+          </p>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <p class="font-bold text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-400"></i> 4. 이용자의 권리 및 데이터 삭제
+          </p>
+          <p class="text-slate-400 text-[11px] leading-relaxed pl-5">
+            이용자는 브라우저 설정의 '방문 기록 및 캐시/쿠키 삭제'를 통해 본인 기기에 저장된 시나리오 진행 데이터(LocalStorage)를 언제든지 직접 초기화하실 수 있습니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="button" onclick="closePrivacyPolicyModal()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold transition border border-slate-700/60 shadow-sm cursor-pointer">
+          확인
         </button>
       </div>
     </div>
@@ -615,6 +687,9 @@
       <img id="sprite-img" src="assets/minwoo.png?v=20260903_v172" alt="캐릭터 스프라이트" class="h-full w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] char-idle">
     </div>
   </div>
+
+  <!-- ================= [LAYER 3.4: 카메라 촬영 플래시 레이어 (Photo Flash Overlay)] ================= -->
+  <div id="camera-flash-overlay" class="fixed inset-0 z-40 bg-white pointer-events-none opacity-0 transition-opacity duration-300"></div>
 
   <!-- ================= [LAYER 3.5: 화면 중앙 플로팅 선택지 레이어 (VN Central Choice Overlay)] ================= -->
   <div id="center-choice-overlay" class="fixed inset-0 z-30 flex items-center justify-center p-2 sm:p-4 pb-2 sm:pb-52 pointer-events-none hidden bg-slate-950/80 backdrop-blur-md transition-all duration-300">
@@ -800,12 +875,12 @@
         <div class="flex justify-between items-center"><span class="text-slate-400">수검 장소:</span><span id="res-location" class="font-bold text-white">강원지방병무청 병역판정검사장</span></div>
         <div class="flex justify-between items-center"><span class="text-slate-400">신체등급 판정:</span><span id="res-grade" class="font-black text-amber-400 text-sm sm:text-base">1급 (현역)</span></div>
         <div class="flex justify-between items-center"><span class="text-slate-400">병역 처분:</span><span id="res-disp" class="font-bold text-blue-400">현역병 입영 대상</span></div>
-        <div class="flex justify-between items-center pt-2 border-t border-slate-800"><span class="text-slate-400">지급여비:</span><span id="res-pay" class="font-bold text-emerald-400">16,500원 (나라사랑카드 입금 예정)</span></div>
+        <div class="flex justify-between items-center pt-2 border-t border-slate-800"><span class="text-slate-400">지급여비:</span><span id="res-pay" class="font-bold text-emerald-400">실거리 기준 지급 예정 (나라사랑카드 입금)</span></div>
       </div>
 
       <div class="mt-2">
-        <button onclick="closeCertModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
-          <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> <span>탈의실 환복 & 귀가 ➔</span>
+        <button type="button" id="btn-close-cert" onclick="closeCertModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer active:scale-95">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i> <span>결과 요약서 확인 완료 ➔</span>
         </button>
       </div>
     </div>
@@ -813,13 +888,13 @@
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
-  <script src="api.js?v=20260904_v193"></script>
-  <script src="scenario.js?v=20260904_v193"></script>
-  <script src="tracker.js?v=20260904_v193"></script>
+  <script src="api.js?v=20260905_v195_25"></script>
+  <script src="scenario.js?v=20260905_v195_25"></script>
+  <script src="tracker.js?v=20260905_v195_26"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260904_v193';
+    const ASSET_VER = '20260905_v195_25';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
@@ -892,7 +967,8 @@
       regionName: "서울특별시 영등포구 여의대방로43길 13",
       residentAddress: "서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)",
       distanceKm: "5.8 km (7호선 12분 소요)",
-      examDate: "2026-10-22 (목) 오전",
+      examDate: "2026년 10월 22일 (목) 오전",
+      isCustomDate: false,
       healthCheck: "특이질환 없음",
       hasDisease: false,
       cardType: "KB국민은행 나라사랑카드",
@@ -901,9 +977,11 @@
       bmi: 22.7,
       bmiGrade: "1급 (정상)",
       specialty: "정보통신",
+      aptitudeCategory: "it",
+      selectedSpecialty: "IT/SW개발병 (전문특기병)",
       finalGrade: "1급 (현역)",
       disposition: "현역병 입영 대상",
-      fare: "16,500원 (교통비 8,500원 + 식비 8,000원)"
+      fare: "실거리 기준 산정 지급 예정 (나라사랑카드 입금)"
     };
 
     const conversationHistory = [];
@@ -924,6 +1002,54 @@
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
       } catch(e) {}
+    }
+
+    // 카메라 셔터 효과음 및 플래시 애니메이션 (Scene 5 사진촬영 연출)
+    function playCameraShutterSound() {
+      if (!soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const t = audioCtx.currentTime;
+        // 1차 셔터 클릭음 (고주파 트라이앵글)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(1400, t);
+        osc1.frequency.exponentialRampToValueAtTime(320, t + 0.05);
+        gain1.gain.setValueAtTime(0.18, t);
+        gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(t);
+        osc1.stop(t + 0.05);
+
+        // 2차 기계식 미러 릴리즈음 (찰-칵!)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(800, t + 0.06);
+        osc2.frequency.exponentialRampToValueAtTime(180, t + 0.14);
+        gain2.gain.setValueAtTime(0.16, t + 0.06);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(t + 0.06);
+        osc2.stop(t + 0.14);
+      } catch (e) {}
+    }
+
+    function triggerCameraFlash() {
+      playCameraShutterSound();
+      const flash = document.getElementById('camera-flash-overlay');
+      if (flash) {
+        flash.classList.remove('transition-opacity', 'duration-300', 'opacity-0');
+        flash.classList.add('opacity-100');
+        setTimeout(() => {
+          flash.classList.add('transition-opacity', 'duration-300');
+          flash.classList.remove('opacity-100');
+          flash.classList.add('opacity-0');
+        }, 60);
+      }
     }
 
     // ================= [다국어 i18n 시스템 (Korean / English)] =================
@@ -1175,41 +1301,7 @@
       }
       stopVoiceAudio();
 
-      const langCode = (currentLang === 'en') ? 'en' : 'ko';
-      let audioPath = null;
-
-      if (audioKey) {
-        audioPath = `assets/audio/${audioKey}_${langCode}.mp3`;
-      } else if (currentSceneIdx === 10) {
-        let clinicKey = 'normal';
-        const hc = userData.healthCheck || '';
-        if (hc.includes('내과') || hc.includes('천식') || hc.includes('복용약')) clinicKey = 'internal';
-        else if (hc.includes('정형외과') || hc.includes('무릎') || hc.includes('척추')) clinicKey = 'ortho';
-        else if (hc.includes('안과') || hc.includes('망막') || hc.includes('각막')) clinicKey = 'eye';
-        audioPath = `assets/audio/voice_10_${currentDialogueIdx}_${clinicKey}_${langCode}.mp3`;
-      } else if (typeof currentSceneIdx === 'number' && typeof currentDialogueIdx === 'number') {
-        audioPath = `assets/audio/voice_${currentSceneIdx}_${currentDialogueIdx}_${langCode}.mp3`;
-      }
-
-      if (audioPath) {
-        const audio = new Audio(audioPath);
-        currentVoiceAudio = audio;
-        audio.play().then(() => {
-          // 오디오 로딩/재생 중 음소거가 눌렸을 경우 즉각 정지
-          if (!soundEnabled) {
-            try {
-              audio.pause();
-              audio.currentTime = 0;
-            } catch (e) {}
-            if (currentVoiceAudio === audio) currentVoiceAudio = null;
-          }
-        }).catch(() => {
-          if (!soundEnabled) return;
-          speakWithWebSpeech(speaker, text);
-        });
-        return;
-      }
-
+      // [실시간 TTS 모드] MP3 파일 없이 실시간 텍스트를 화자별 맞춤 음성/톤으로 즉시 발음
       speakWithWebSpeech(speaker, text);
     }
 
@@ -1218,9 +1310,11 @@
       try {
         window.speechSynthesis.cancel();
         
+        // 낭독용 텍스트 정제 (기호 및 괄호 구어체 정리)
         const cleanText = text
+          .replace(/\((일|월|화|수|목|금|토)\)/g, '$1요일')
           .replace(/<[^>]*>/g, ' ')
-          .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※/g, ' ')
+          .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※|①|②|③|④|⚠️|📸/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
 
@@ -1230,7 +1324,7 @@
         const isEnglish = (currentLang === 'en');
         utterance.lang = isEnglish ? 'en-US' : 'ko-KR';
 
-        if (availableVoices.length === 0) {
+        if (!availableVoices || availableVoices.length === 0) {
           availableVoices = window.speechSynthesis.getVoices() || [];
         }
 
@@ -1253,36 +1347,46 @@
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
             utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.08;
-            utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.75;
+            utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.85;
           } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.60;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.70;
           } else {
-            utterance.voice = pickVoice(enVoices, ['george', 'brian', 'male']) || enVoices[0] || null;
+            utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.65 : 0.40;
+            utterance.pitch = isNativeMale(utterance.voice) ? 0.70 : 0.50;
           }
           window.speechSynthesis.speak(utterance);
         } else {
-          // 한국어: 시스템에 실제 남성 보이스 모델이 있을 때만 Web Speech 실행 (크롬 기본 여성 음성 출력 원천 차단)
+          // 한국어: 시스템에 설치된 한국어 보이스 탐색 및 화자별 피치·속도 맞춤 분기
           const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
           const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호']);
-          if (!maleVoice) {
-            // 크롬의 기본 여성 음성 출력 방지
-            return;
+          const selectedVoice = maleVoice || pickVoice(koVoices, ['heami', '혜미', 'sunhi', '선희', 'ko']) || koVoices[0] || null;
+
+          if (selectedVoice) {
+            utterance.voice = selectedVoice;
           }
-          utterance.voice = maleVoice;
+
+          // 캐릭터별 뚜렷한 음성 톤(Pitch) 및 발화 속도(Rate) 차별화
           if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-            utterance.rate = 1.08;
-            utterance.pitch = 1.15;
+            // 활기찬 소년/청년 가이드
+            utterance.rate = 1.06;
+            utterance.pitch = maleVoice ? 1.22 : 0.95;
           } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
+            // 20대 대학생 주인공
             utterance.rate = 0.98;
-            utterance.pitch = 0.95;
+            utterance.pitch = maleVoice ? 0.96 : 0.75;
+          } else if (spk.includes('판정관') || spk.includes('adjudicator')) {
+            // 50대 수석판정관: 묵직한 베이스 저음
+            utterance.rate = 0.85;
+            utterance.pitch = maleVoice ? 0.65 : 0.45;
           } else {
-            utterance.rate = 0.88;
-            utterance.pitch = 0.65;
+            // 의사 / 심리검사관 / 병리사 / 상담관: 차분하고 신뢰감 있는 전문의 톤
+            utterance.rate = 0.92;
+            utterance.pitch = maleVoice ? 0.80 : 0.55;
           }
+
           window.speechSynthesis.speak(utterance);
         }
       } catch (e) {}
@@ -1327,15 +1431,15 @@
       // 목적지에 따른 이동 타이틀 및 안내 동적 설정 (targetIdx 기준 우선 매칭)
       if (targetIdx === 7 || bg.includes('exam_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장으로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Cognitive Aptitude & Personality Psychological Test" : "인지능력 및 인성검사";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Nara Sarang Card Issuance & Cognitive / Personality Psychological Test" : "나라사랑카드 발급·등록 및 1:1 컴퓨터 심리검사";
         if (icon) icon.setAttribute('data-lucide', 'brain');
       } else if (targetIdx === 5 || (bg.includes('lobby') && targetIdx <= 5)) {
         if (title) title.innerText = (currentLang === 'en') ? `${userData.region} Exam Center Arrived` : `${userData.region} 가상 검사장 도착`;
-        if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk & Nara Sarang Card Registration" : "로비 접수데스크 도착 및 나라사랑카드 금융 등록";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Reception Desk: ID Verification & Examinee Registration" : "로비 접수데스크: 본인인증(신분증·사진촬영) 및 의무자 등록";
         if (icon) icon.setAttribute('data-lucide', 'building-2');
       } else if (targetIdx === 6 || (bg.includes('locker_room') && targetIdx < 10)) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Locker Room..." : "탈의실 및 사물함실로 이동 중...";
-        if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Nara Sarang Card & Changing Uniform" : "사물함 소지품 보관, 나라사랑카드 지참 & 검사복 환복";
+        if (desc) desc.innerText = (currentLang === 'en') ? "Locker Storage, Medical Documents & Changing Uniform" : "사물함 소지품 보관, 진단서 지참 & 전용 검사복 환복";
         if (icon) icon.setAttribute('data-lucide', 'shirt');
       } else if (targetIdx === 8 || bg.includes('lab_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Pathology & Radiology Room..." : "임상병리검사실 및 영상의학실로 이동 중...";
@@ -1397,22 +1501,81 @@
         spriteWrapper.style.opacity = '0';
       }
 
-      // 로딩 게이지 바 0.9초 전진 애니메이션
-      setTimeout(() => {
-        bar.style.transition = 'width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        bar.style.width = '100%';
-      }, 30);
+      // [실제 리소스 프리로딩] 배경 + 해당 씬의 모든 캐릭터 이미지 + TTS 엔진 예열
+      const imagesToPreload = [];
+      if (newScene && newScene.bg) imagesToPreload.push(newScene.bg);
+      if (newScene && newScene.char) imagesToPreload.push(newScene.char);
+      if (newScene && newScene.dialogues && Array.isArray(newScene.dialogues)) {
+        newScene.dialogues.forEach(d => {
+          if (d.char && !imagesToPreload.includes(d.char)) {
+            imagesToPreload.push(d.char);
+          }
+        });
+      }
 
-      // 로딩 1.1초 후 씬 적용 및 페이드 아웃
-      setTimeout(() => {
-        onComplete();
-        overlay.classList.remove('opacity-100', 'pointer-events-auto');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
+      let loadedCount = 0;
+      const totalCount = imagesToPreload.length + 1; // 이미지들 + TTS 1개
+
+      function onResourceLoaded() {
+        loadedCount++;
+        const pct = Math.min(96, Math.round((loadedCount / totalCount) * 92));
+        bar.style.transition = 'width 0.25s ease-out';
+        bar.style.width = `${pct}%`;
+      }
+
+      // 이미지 프리로드 프로미스
+      const imgPromises = imagesToPreload.map(url => {
+        return new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => { onResourceLoaded(); resolve(); };
+          img.onerror = () => { onResourceLoaded(); resolve(); };
+          img.src = getAssetUrl(url);
+        });
+      });
+
+      // 실시간 TTS 음성 엔진 사전 예열 프로미스
+      const ttsWarmupPromise = new Promise(resolve => {
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const voices = window.speechSynthesis.getVoices();
+            if (voices && voices.length > 0) {
+              availableVoices = voices;
+              onResourceLoaded();
+              resolve();
+              return;
+            }
+            window.speechSynthesis.onvoiceschanged = () => {
+              availableVoices = window.speechSynthesis.getVoices();
+              onResourceLoaded();
+              resolve();
+            };
+          } catch(e) { onResourceLoaded(); resolve(); }
+        } else {
+          onResourceLoaded();
+          resolve();
+        }
+        setTimeout(() => { onResourceLoaded(); resolve(); }, 350);
+      });
+
+      // 자연스러운 시네마틱 전환을 위한 최소 시간 (550ms)
+      const minDurationPromise = new Promise(resolve => setTimeout(resolve, 550));
+
+      // 모든 리소스(배경, 캐릭터, 실시간 TTS)가 100% 준비 완료되면 로딩바 100% 채우고 씬 표출!
+      Promise.all([...imgPromises, ttsWarmupPromise, minDurationPromise]).then(() => {
+        bar.style.transition = 'width 0.2s ease-out';
+        bar.style.width = '100%';
+
         setTimeout(() => {
-          bar.style.transition = 'none';
-          bar.style.width = '0%';
-        }, 300);
-      }, 1100);
+          onComplete();
+          overlay.classList.remove('opacity-100', 'pointer-events-auto');
+          overlay.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => {
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+          }, 300);
+        }, 220);
+      });
     }
 
     // 장소 이동 전 예고 대사를 대화창에 먼저 안내하고, 클릭 시 실제 장소 이동 실행
@@ -1476,6 +1639,9 @@
       isAnnouncement = false;
       pendingTransitionSceneIdx = null;
       currentSceneIdx = idx;
+      if (idx === 1 && typeof SCENARIOS !== 'undefined' && SCENARIOS[1]) {
+        SCENARIOS[1].widgetType = 'DEFAULT_REGION_PICKER';
+      }
       if (window.MmaTracker) window.MmaTracker.reportScene(idx);
       const scene = SCENARIOS[idx];
       currentBg = scene.bg;
@@ -1540,6 +1706,11 @@
       if (topTitle) {
         const stepList = I18N[currentLang].steps;
         topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
+      }
+
+      // SCENE 3 일정 선택 동적 분기 (달력 직접선택 vs 기본 통지일정)
+      if (idx === 3 && scene.customDialogues && scene.defaultDialogues) {
+        scene.dialogues = userData.isCustomDate ? scene.customDialogues : scene.defaultDialogues;
       }
 
       // SCENE 10 진료과목 동적 분기 (내과/천식, 정형외과, 안과, 일반종합)
@@ -1641,12 +1812,17 @@
       updateCharacterSprite(charImg, charPos, false);
 
       // AI TTS 음성 낭독 실행
-      speakDialogue(currentSpeaker, targetText);
+      speakDialogue(currentSpeaker, targetText, item.audioKey || null);
 
       typewriterEffect(targetText, () => {
         if (isLastChunk) {
-          renderWidget(scene ? scene.widgetType : null);
-          if (autoPlay && !scene.widgetType) {
+          // 대사를 다 읽기 전에 팝업이 가리는 문제를 방지하기 위해, 위젯이 있더라도 바로 띄우지 않고 사용자의 터치를 대기합니다.
+          // AUTO 모드일 때만 사용자가 대사를 충분히 읽을 수 있도록 2.8초 후 위젯 자동 표출
+          if (autoPlay && scene && scene.widgetType) {
+            autoPlayTimer = setTimeout(() => {
+              renderWidget(scene.widgetType);
+            }, 2800);
+          } else if (autoPlay && !scene.widgetType) {
             autoPlayTimer = setTimeout(() => {
               renderScene(currentSceneIdx + 1);
             }, 2400);
@@ -1671,7 +1847,7 @@
         .replace(/Minwoo Kim/gi, userName)
         .replace(/Minwoo/gi, userName)
         .replace(/(?<![가-힣a-zA-Z0-9])민우/g, userName)
-        .replace(/\{examDate\}/g, userData.examDate || '2026-10-29 (목) 오전')
+        .replace(/\{examDate\}/g, userData.examDate || '2026년 10월 22일 (목) 오전')
         .replace(/\{region\}/g, userData.region || '서울지방병무청')
         .replace(/\{residentAddress\}/g, userData.residentAddress || '서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)')
         .replace(/\{distanceKm\}/g, userData.distanceKm || '5.8 km (7호선 12분 소요)')
@@ -1680,7 +1856,7 @@
         .replace(/\{bmi\}/g, userData.bmi || '22.7')
         .replace(/\{finalGrade\}/g, userData.finalGrade || '1급 (현역)')
         .replace(/\{disposition\}/g, userData.disposition || '현역병 입영 대상')
-        .replace(/\{fare\}/g, userData.fare || '16,500원 (교통비 8,500원 + 식비 8,000원)');
+        .replace(/\{fare\}/g, userData.fare || '실거리 기준 산정 지급 예정 (나라사랑카드 입금)');
 
       // 모바일 환경에서는 <br>이나 인위적인 강제 줄바꿈(\n) 없이 문장이 화면 너비에 맞춰 자연스럽게 쭉 이어져서 나오도록 처리
       const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -1725,10 +1901,8 @@
           }
           const choiceOverlay = document.getElementById('center-choice-overlay');
           const isOverlayOpen = choiceOverlay && !choiceOverlay.classList.contains('hidden');
-          const scene = SCENARIOS[currentSceneIdx];
-          const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
           if (nextIndicator) {
-            if (isOverlayOpen || (isLastChunk && scene && scene.widgetType)) {
+            if (isOverlayOpen) {
               nextIndicator.classList.add('hidden');
             } else {
               nextIndicator.classList.remove('hidden');
@@ -1739,7 +1913,7 @@
       }, intervalMs);
     }
 
-    // 다음 클릭 (1클릭: 현재 대사 즉시 출력 / 2클릭: 다음 대사 문단으로 진행 / 마지막: 다음 씬 또는 선택지 표출)
+    // 다음 클릭 (1클릭: 현재 대사 즉시 전체 출력 / 2클릭: 대사 다 읽고 터치 시 다음 문단 또는 선택지 팝업 표출)
     function handleNextClick() {
       const scene = SCENARIOS[currentSceneIdx];
       const textElem = document.getElementById('dialogue-text');
@@ -1763,7 +1937,7 @@
         return;
       }
 
-      // 1. 타이핑 진행 중에 화면 클릭 시: 현재 대사를 즉시 끝까지 출력
+      // 1. 타이핑 진행 중에 화면 클릭 시: 현재 대사를 즉시 끝까지 출력 (팝업은 절대 띄우지 않고 대사를 읽을 수 있게 대기)
       if (isTyping) {
         clearInterval(typingInterval);
         const item = currentDialogueList[currentDialogueIdx];
@@ -1777,16 +1951,11 @@
         const choiceOverlay = document.getElementById('center-choice-overlay');
         const isOverlayOpen = choiceOverlay && !choiceOverlay.classList.contains('hidden');
         if (nextIndicator) {
-          if (isOverlayOpen || (isLastChunk && scene && scene.widgetType)) {
+          if (isOverlayOpen) {
             nextIndicator.classList.add('hidden');
           } else {
             nextIndicator.classList.remove('hidden');
           }
-        }
-        
-        // 위젯이 아직 렌더링되지 않은 경우에만 마지막 대사에서 1회 렌더링
-        if (isLastChunk && !isOverlayOpen) {
-          renderWidget(scene ? scene.widgetType : null);
         }
         return;
       }
@@ -1799,16 +1968,378 @@
 
       // 2. 현재 문단 타이핑이 끝난 상태에서 화면 클릭 시: 다음 대사 문단이 있다면 다음 문단으로 전환
       if (!isLastChunk) {
+        // [SCENE 5 / SCENE 8] 사진촬영 및 흉부 X-ray 촬영 연출: 촬영 순간 찰칵 플래시 효과 발동!
+        if ((currentSceneIdx === 5 && currentDialogueIdx === 1) ||
+            (currentDialogueList && currentDialogueList[currentDialogueIdx] && currentDialogueList[currentDialogueIdx].audioKey === 'lab_xray_1')) {
+          triggerCameraFlash();
+        }
         currentDialogueIdx++;
         playDialogueChunk();
         return;
       }
 
-      // 3. 마지막 대사까지 다 보았는데 화면에 선택지 위젯이 있다면 사용자 선택 대기
-      if (scene && scene.widgetType) return;
+      // 3. 마지막 대사까지 다 읽고 화면을 터치(클릭)했을 때: 씬에 선택지/위젯이 있다면 비로소 팝업 표출!
+      if (scene && scene.widgetType) {
+        renderWidget(scene.widgetType);
+        if (nextIndicator) nextIndicator.classList.add('hidden');
+        return;
+      }
 
       // 4. 모든 대사가 끝났고 위젯이 없다면 다음 씬으로 진행
       renderScene(currentSceneIdx + 1);
+    }
+
+    // 병무청 모집병 분야별 특기 데이터 (실시간 경쟁률, 모집일정, 상세링크 포함)
+    const SPECIALTY_CATEGORIES = {
+      it: {
+        label: 'IT·SW·정보통신',
+        label_en: 'IT / SW / Telecom',
+        icon: 'code-2',
+        cards: [
+          {
+            branch: '육군',
+            branchColor: 'bg-blue-600',
+            name: 'IT/SW개발병 (전문특기병)',
+            name_en: 'IT/SW Developer Specialist',
+            rate: '3.1 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~2급 현역 + 컴공/SW 관련학과 2년 이상 수료',
+            desc: '육군본부/군단 전산센터 국방 소프트웨어 개발 및 체계 유지관리',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '공군',
+            branchColor: 'bg-cyan-600',
+            name: '정보체계운영병 (전산특기)',
+            name_en: 'Information Systems Operator',
+            rate: '2.4 : 1',
+            schedule: '접수: 2026.11.05 ~ 11.12 | 입영: 2027년 2월',
+            schedule_en: 'Apply: Nov 05 ~ Nov 12, 2026 | Enlist: Feb 2027',
+            req: '1~3급 현역 + IT관련 전공자 또는 정보처리기능사 이상',
+            desc: '공군 비행단 전산실 서버·네트워크 운영 및 정보보안 모니터링',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '육군',
+            branchColor: 'bg-blue-600',
+            name: '정보통신운용병 (기술행정병)',
+            name_en: 'Info-Communications Operator',
+            rate: '1.8 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 전기/전자/통신/전산 전공 또는 자격증',
+            desc: '군 지휘통신망, 무전 및 위성 통신 링크 시스템 운용·정비',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          }
+        ]
+      },
+      mech: {
+        label: '기계·항공·정비',
+        label_en: 'Mech / Aviation / Maint',
+        icon: 'wrench',
+        cards: [
+          {
+            branch: '공군',
+            branchColor: 'bg-cyan-600',
+            name: '항공기체정비병 (전문기술병)',
+            name_en: 'Aircraft Airframe Maintenance',
+            rate: '2.8 : 1',
+            schedule: '접수: 2026.11.05 ~ 11.12 | 입영: 2027년 2월',
+            schedule_en: 'Apply: Nov 05 ~ Nov 12, 2026 | Enlist: Feb 2027',
+            req: '1~3급 현역 + 항공/기계공학 전공 또는 항공정비사/기능사',
+            desc: '전투기 및 수송기 기체 구조 점검, 유압 계통 주기 검사 및 정비',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '육군',
+            branchColor: 'bg-blue-600',
+            name: '자주포/전차정비병 (기술행정병)',
+            name_en: 'K-9 SPH / Tank Maintenance',
+            rate: '1.5 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 자동차/기계 관련 전공 또는 정비기능사',
+            desc: 'K-9 자주포 및 K-2 흑표 전차 동력장치·궤도·포탑 유압 정비',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '해군',
+            branchColor: 'bg-sky-700',
+            name: '함정기관병 (기술병)',
+            name_en: 'Naval Engine Specialist',
+            rate: '1.6 : 1',
+            schedule: '접수: 2026.11.02 ~ 11.09 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Nov 02 ~ Nov 09, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 기계/기관/조선 전공 또는 관련 국가기술자격',
+            desc: '해군 함정 가스터빈·디젤 추진기관 및 보기장비 운전과 정비',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          }
+        ]
+      },
+      lang: {
+        label: '어학·행정·카투사',
+        label_en: 'Language / Admin / KATUSA',
+        icon: 'languages',
+        cards: [
+          {
+            branch: '육군',
+            branchColor: 'bg-emerald-600',
+            name: 'KATUSA (카투사 주한미군지원)',
+            name_en: 'KATUSA (Korean Augmentation to US Army)',
+            rate: '8.4 : 1',
+            schedule: '접수: 2026.09.05 ~ 09.11 | 입영: 2027년 연중 선발',
+            schedule_en: 'Apply: Sep 05 ~ Sep 11, 2026 | Enlist: Throughout 2027',
+            req: '1~4급 현역 + TOEIC 780점 이상 (어학 성적 기준 충족자 공개추첨)',
+            desc: '미 8군 기지(평택, 동두천, 용산 등) 한미 연합작전 협조 및 행정지원',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '육군',
+            branchColor: 'bg-blue-600',
+            name: '전문어학병 (영어/일어/중국어)',
+            name_en: 'Language Specialist',
+            rate: '4.2 : 1',
+            schedule: '접수: 2026.10.15 ~ 10.22 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 15 ~ Oct 22, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 공인어학시험 최상위 점수자 (필기/통역 시험 선발)',
+            desc: '연합사, 합참, 육군본부 군사 통번역 및 해외 군사 정보 수집 번역',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '육군',
+            branchColor: 'bg-slate-700',
+            name: '인사·행정병 (기술행정병)',
+            name_en: 'Personnel & Admin Specialist',
+            rate: '2.9 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 인문/사회/경영 전공 또는 워드/컴활 자격증',
+            desc: '대대~사단 참모부 병적관리, 공문서 기안, 휴가 명령 및 복무 행정',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          }
+        ]
+      },
+      biz: {
+        label: '운전·재정·조리',
+        label_en: 'Driving / Finance / Cook',
+        icon: 'car',
+        cards: [
+          {
+            branch: '육군',
+            branchColor: 'bg-blue-600',
+            name: '차량운전병 (소형/중형/대형)',
+            name_en: 'Military Vehicle Driver',
+            rate: '3.5 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 제1종 보통/대형 운전면허 소지자',
+            desc: '야전수송교육대 수료 후 작전 차량, 버스, 트럭 운전 및 기본 정비',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '공군',
+            branchColor: 'bg-cyan-600',
+            name: '재정·회계병 (전문기술병)',
+            name_en: 'Finance & Accounting Specialist',
+            rate: '2.7 : 1',
+            schedule: '접수: 2026.11.05 ~ 11.12 | 입영: 2027년 2월',
+            schedule_en: 'Apply: Nov 05 ~ Nov 12, 2026 | Enlist: Feb 2027',
+            req: '1~3급 현역 + 경영/경제/회계학 전공 또는 전산회계/ERP 자격증',
+            desc: '공군 예산 집행 관리, 장병 급여 계산 및 군 자금 회계 결산',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '육군',
+            branchColor: 'bg-amber-700',
+            name: '전문조리병 (기술행정병)',
+            name_en: 'Culinary & Cooking Specialist',
+            rate: '1.9 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 조리/식품영양 전공 또는 조리기능사 자격증',
+            desc: '장병 균형 급식 조리, 취사장 위생 관리 및 식자재 안전 검수',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          }
+        ]
+      },
+      med: {
+        label: '의무·보건의료',
+        label_en: 'Healthcare / Medical',
+        icon: 'heart-pulse',
+        cards: [
+          {
+            branch: '육군',
+            branchColor: 'bg-rose-600',
+            name: '일반의무병 (전문특기병)',
+            name_en: 'General Medic Specialist',
+            rate: '4.8 : 1',
+            schedule: '접수: 2026.10.28 ~ 11.04 | 입영: 2027년 1월',
+            schedule_en: 'Apply: Oct 28 ~ Nov 04, 2026 | Enlist: Jan 2027',
+            req: '1~3급 현역 + 의학/간호/응급구조/생명과학 전공 또는 면허',
+            desc: '사단 의무대 및 국군병원 환자 응급처치, 진료 보조, 약품 관리',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          },
+          {
+            branch: '공군',
+            branchColor: 'bg-cyan-600',
+            name: '항공의무병 (전문의무)',
+            name_en: 'Aviation Medical Specialist',
+            rate: '3.6 : 1',
+            schedule: '접수: 2026.11.05 ~ 11.12 | 입영: 2027년 2월',
+            schedule_en: 'Apply: Nov 05 ~ Nov 12, 2026 | Enlist: Feb 2027',
+            req: '1~3급 현역 + 보건/간호/물리치료/임상병리 전공자',
+            desc: '비행단 항공의무대 조종사 신체검사 보조 및 기지 의무실 운영 지원',
+            link: 'https://www.mma.go.kr/contents.do?mc=mma0000388'
+          }
+        ]
+      }
+    };
+
+    function selectAptitudeCategory(catKey) {
+      userData.aptitudeCategory = catKey;
+      const isEn = (currentLang === 'en');
+      const cat = SPECIALTY_CATEGORIES[catKey] || SPECIALTY_CATEGORIES['it'];
+
+      // Update tab button styles
+      document.querySelectorAll('.aptitude-tab-btn').forEach(btn => {
+        const key = btn.getAttribute('data-cat');
+        if (key === catKey) {
+          btn.className = 'aptitude-tab-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-indigo-600 text-white shadow-md border border-indigo-400/50 cursor-pointer';
+        } else {
+          btn.className = 'aptitude-tab-btn px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center gap-1 bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white border border-slate-700/60 cursor-pointer';
+        }
+      });
+
+      const container = document.getElementById('aptitude-cards-container');
+      if (!container) return;
+
+      container.innerHTML = cat.cards.map((c) => {
+        const isSelected = (userData.selectedSpecialty === c.name);
+        return `
+          <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border ${isSelected ? 'border-amber-400 ring-1 ring-amber-400/50 bg-amber-950/10' : 'border-slate-700/70 hover:border-slate-600'} transition space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <span class="px-1.5 sm:px-2 py-0.5 rounded ${c.branchColor} text-white font-extrabold text-[9px] sm:text-[10px] shrink-0">${c.branch}</span>
+                <strong class="text-white text-xs sm:text-sm">${isEn ? c.name_en : c.name}</strong>
+              </div>
+              <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+                <span class="text-[9px] sm:text-[10px] text-slate-400">${isEn ? 'Rate' : '실시간 경쟁률'}</span>
+                <span class="px-1.5 sm:px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] sm:text-xs">${c.rate}</span>
+              </div>
+            </div>
+
+            <!-- 모집 일정 배너 -->
+            <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-[10px] sm:text-[10.5px]">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 shrink-0 text-indigo-400"></i>
+              <span class="font-medium">${isEn ? c.schedule_en : c.schedule}</span>
+            </div>
+
+            <p class="text-[10.5px] sm:text-[11px] text-slate-300 leading-relaxed">${c.desc}</p>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pt-1.5 border-t border-slate-800/80 text-[10px] sm:text-[10.5px]">
+              <span class="text-slate-400"><strong class="text-slate-300">${isEn ? 'Eligibility:' : '지원자격:'}</strong> ${c.req}</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" onclick="pickSpecialty('${c.name.replace(/'/g, "\\'")}');" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/60 font-semibold cursor-pointer transition flex items-center gap-1 text-[10px]">
+                  <i data-lucide="${isSelected ? 'check-circle-2' : 'bookmark'}" class="w-3 h-3 ${isSelected ? 'text-amber-400' : 'text-slate-400'}"></i>
+                  <span>${isSelected ? (isEn ? 'Selected' : '선택됨') : (isEn ? 'Select' : '관심특기 선택')}</span>
+                </button>
+                <a href="${c.link}" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 hover:text-blue-200 border border-blue-500/40 font-semibold transition flex items-center gap-1 text-[10px]">
+                  <span>${isEn ? 'Official Notice' : '모집요강 보기'}</span>
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function pickSpecialty(name) {
+      userData.selectedSpecialty = name;
+      userData.specialty = name.split(' ')[0];
+      selectAptitudeCategory(userData.aptitudeCategory || 'it');
+      playBeep(640, 'triangle', 0.04);
+    }
+
+    function finishAptitudeAndTalk() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'APTITUDE_TO_ADJUDICATION_POPUP';
+
+      // 1) 적성분류 조회 완료 후: 민우, 적성분류관 NPC, 힘찬이 대화
+      currentDialogueList = [
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo_happy.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "컴퓨터·SW 전공뿐만 아니라 다양한 분야의 모집 특기와 접수 기간, 입영 시기까지 한눈에 비교해 보니까 앞으로의 군 복무 계획을 어떻게 세워야 할지 확실하게 감이 잡혔어!",
+          text_en: "Comparing recruitment specialties, application schedules, and enlistment dates across multiple fields gave me a clear direction for my military career roadmap!"
+        },
+        {
+          speaker: "적성분류관 NPC",
+          speaker_en: "Aptitude Classification Officer NPC",
+          char: "assets/aptitude_officer.png",
+          charPos: "right",
+          plateClass: "from-indigo-700 to-cyan-800 border-indigo-400/40",
+          text: "네, {name} 님! 본인의 적성과 전공, 자격증 가산점을 미리 확인해 두시면 원하시는 시기와 특기에 맞춰 훨씬 유리하게 지원하실 수 있습니다.\n\n이제 모든 검사와 분류가 완료되었으니, 최종 병역처분을 받으러 [판정실]로 이동해 주시기 바랍니다.",
+          text_en: "Exactly, {name}! Knowing your aptitude, major, and license bonus points gives you a strong edge when applying.\n\nAll examinations and aptitude classifications are complete! Please proceed to the [Adjudication Room] for your final disposition."
+        },
+        {
+          speaker: "힘찬이 (병무청 AI 가이드)",
+          speaker_en: "Himchan (MMA AI Guide)",
+          char: "assets/himchan_cheer.png",
+          charPos: "right",
+          plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+          text: "드디어 병역판정검사의 마지막 관문인 판정실만 남았습니다!\n\n수석판정관님께서 {name} 님의 모든 검사 데이터를 종합하여 최종 신체등급과 병역처분을 확정해 주실 거예요. 함께 판정실로 가보실까요?",
+          text_en: "Only the final stage remains—the Adjudication Room!\n\nThe Chief Adjudicator will synthesize all your exam results to confirm your final physical grade and disposition. Ready to head in together?"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
+    }
+
+    function finishBenefitsAndTalk() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'CERT_SUMMARY_TRIGGER_POPUP';
+
+      // 혜택 팝업 확인 후 민우 독백 대사
+      currentDialogueList = [
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo_happy.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "e-병무지갑으로 모바일 결과서도 보관하고, 검사장 근처 나라사랑가게 할인 맛집 혜택까지 챙길 수 있다니 정말 유용하네!\n\n이제 오늘 검사의 최종 판정 결과 요약서를 확인해 볼까?",
+          text_en: "Being able to store my digital certificate in the e-Military Wallet and check nearby partner store discounts is so convenient!\n\nLet's check the summary of today's final examination results."
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
     }
 
     // 화면 중앙 플로팅 선택지 렌더러 (정통 비주얼 노벨 스타일)
@@ -1835,22 +2366,22 @@
                 <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-[11px] sm:text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">1</span>
                 <div>
                   <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="font-bold text-xs sm:text-base text-white group-hover:text-blue-300 transition">네, 실시간 잔여석 달력으로 확인해 볼게요.</span>
+                    <span class="font-bold text-xs sm:text-base text-white group-hover:text-blue-300 transition">네, 일별 실시간 잔여석 달력으로 확인해 볼게요.</span>
                     <span class="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[11px] font-semibold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">추천</span>
                   </div>
-                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 sm:mt-1 leading-snug">원하는 날짜(오전/오후)를 직접 선택하여 병역판정검사 일정을 스마트하게 변경합니다.</p>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 sm:mt-1 leading-snug">선택하신 관할 병무청의 일별 실시간 공석을 확인하고 희망 일정을 직접 선택합니다.</p>
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 group-hover:text-blue-300 group-hover:translate-x-1 transition shrink-0 ml-2 sm:ml-3"></i>
             </button>
 
-            <!-- 선택지 2: 기본 통지 일정 진행 (관할 지방병무청 선택 모달로 연결) -->
-            <button onclick="playBeep(600, 'triangle', 0.05); renderWidget('DEFAULT_REGION_PICKER');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-800 hover:border-blue-400 text-left flex items-center justify-between shadow-xl transition duration-150 cursor-pointer">
+            <!-- 선택지 2: 기본 통지 일정 진행 -->
+            <button onclick="playBeep(600, 'triangle', 0.05); confirmDefaultSchedule();" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/85 hover:bg-slate-800/90 border border-slate-800 hover:border-blue-400 text-left flex items-center justify-between shadow-xl transition duration-150 cursor-pointer">
               <div class="flex items-center gap-2.5 sm:gap-3.5">
                 <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-[11px] sm:text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">2</span>
                 <div>
                   <span class="font-medium text-xs sm:text-base text-slate-300 group-hover:text-white transition">괜찮아요. 통지된 기본 일정에 맞출게요.</span>
-                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 leading-snug">지정된 기본 일정대로 주소지 관할 지방병무청을 방문합니다.</p>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 leading-snug">선택하신 관할 병무청의 기본 지정 일정으로 바로 안내받습니다.</p>
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-1 transition shrink-0 ml-2 sm:ml-3"></i>
@@ -1903,8 +2434,8 @@
             </div>
 
             <!-- 팝업 아래에 깔끔하게 분리된 이동 버튼 -->
-            <button onclick="confirmDefaultSchedule()" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
-              <span>관할 지방병무청 확정 및 다음 단계로</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <button onclick="confirmRegionAndAskCalendar()" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
+              <span>관할 지방병무청 선택 완료 ➔</span>
             </button>
           </div>
         `;
@@ -1912,61 +2443,63 @@
       } else if (type === 'REGION_CALENDAR_PICKER') {
         choiceContainer.innerHTML = `
           <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
-            <!-- 팝업 본문 카드 -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 space-y-2.5 sm:space-y-4 shadow-2xl w-full max-h-[50vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+            <!-- 팝업 본문 카드 (기선택된 관할청 확인 및 달력 연동 안내, 중복 선택 제거) -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl w-full">
               <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
                 <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                  <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i> 관할 지방병무청 선택
+                  <i data-lucide="calendar-check" class="w-4 h-4 text-cyan-400"></i> 일별 실시간 공석 달력
                 </span>
-                <span class="text-[11px] sm:text-xs text-slate-400 font-medium">전국 14개 지방병무청</span>
+                <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-semibold">공공데이터 연동</span>
               </div>
-              <select id="region-select" onchange="updateRegion(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-blue-400">
-                <optgroup label="── 수도권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="서울지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '서울지방병무청' ? 'selected' : ''}>서울지방병무청 (서울특별시 영등포구)</option>
-                  <option value="경인지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경인지방병무청' ? 'selected' : ''}>경인지방병무청 (경기남부 수원시)</option>
-                  <option value="인천병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '인천병무지청' ? 'selected' : ''}>인천병무지청 (인천광역시 미추홀구)</option>
-                  <option value="경기북부병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '경기북부병무지청' ? 'selected' : ''}>경기북부병무지청 (경기북부 의정부시)</option>
-                </optgroup>
-                <optgroup label="── 영남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="부산울산지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '부산울산지방병무청' ? 'selected' : ''}>부산울산지방병무청 (부산·울산 수영구)</option>
-                  <option value="대구경북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대구경북지방병무청' ? 'selected' : ''}>대구경북지방병무청 (대구·경북 동구)</option>
-                  <option value="경남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '경남지방병무청' ? 'selected' : ''}>경남지방병무청 (경남 창원시)</option>
-                </optgroup>
-                <optgroup label="── 충청권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="대전충남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '대전충남지방병무청' ? 'selected' : ''}>대전충남지방병무청 (대전·세종·충남 중구)</option>
-                  <option value="충북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '충북지방병무청' ? 'selected' : ''}>충북지방병무청 (충북 청주시)</option>
-                </optgroup>
-                <optgroup label="── 호남권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="광주전남지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '광주전남지방병무청' ? 'selected' : ''}>광주전남지방병무청 (광주·전남 동구)</option>
-                  <option value="전북지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '전북지방병무청' ? 'selected' : ''}>전북지방병무청 (전북 전주시)</option>
-                </optgroup>
-                <optgroup label="── 강원권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="강원지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원지방병무청' ? 'selected' : ''}>강원지방병무청 (강원영서 춘천시)</option>
-                  <option value="강원영동병무지청" class="bg-slate-950 text-white font-normal" ${userData.region === '강원영동병무지청' ? 'selected' : ''}>강원영동병무지청 (강원영동 강릉시)</option>
-                </optgroup>
-                <optgroup label="── 제주권 ──" class="bg-slate-900 text-blue-300 font-bold">
-                  <option value="제주지방병무청" class="bg-slate-950 text-white font-normal" ${userData.region === '제주지방병무청' ? 'selected' : ''}>제주지방병무청 (제주특별자치도 제주시)</option>
-                </optgroup>
-              </select>
+
+              <!-- 기선택된 관할 병무청 확인 카드 -->
+              <div class="p-3 sm:p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 text-left">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400 text-xs font-medium">선택된 관할 지방병무청</span>
+                  <strong class="text-cyan-300 font-extrabold text-sm sm:text-base flex items-center gap-1.5">
+                    <i data-lucide="building-2" class="w-4 h-4 text-cyan-400"></i> ${userData.region}
+                  </strong>
+                </div>
+                <div class="flex items-center justify-between text-[11px] sm:text-xs border-t border-slate-800/80 pt-2">
+                  <span class="text-slate-400">주민등록 주소지:</span>
+                  <span class="text-slate-200 truncate max-w-[210px] sm:max-w-none">${userData.residentAddress}</span>
+                </div>
+                <div class="flex items-center justify-between text-[11px] sm:text-xs">
+                  <span class="text-slate-400">편도 실거리:</span>
+                  <span class="text-emerald-400 font-semibold">${userData.distanceKm}</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-400 px-0.5">
+                <span>원하는 날짜를 클릭하여 일정을 확정하세요.</span>
+                <button onclick="renderWidget('DEFAULT_REGION_PICKER')" class="text-slate-400 hover:text-cyan-300 underline transition cursor-pointer">
+                  관할청 다시 선택
+                </button>
+              </div>
             </div>
 
             <!-- 팝업 아래에 분리된 달력 열기 버튼 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
-              <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 월별 잔여석 달력 열기</span>
+            <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-2.5 sm:py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-cyan-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
+              <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 일별 잔여석 달력 열기 ➔</span>
             </button>
           </div>
         `;
+        lucide.createIcons();
+        openCalendarModal();
       } else if (type === 'CONTACT_CARD') {
         const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)", dept: "병역판정검사과" };
+        const isCustom = !!userData.isCustomDate;
         choiceContainer.innerHTML = `
           <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
             <!-- 팝업 본문 카드 (모바일 세로 높이 줄이고 내부 스크롤 적용) -->
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-5 space-y-2 sm:space-y-4 shadow-2xl w-full max-h-[46vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
               <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
                 <span class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5 sm:gap-2">
-                  <i data-lucide="calendar-check-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 22일 (목) 오전'} 예약 가능
+                  <i data-lucide="calendar-check-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 21일 (수) 오전'} ${isCustom ? '본인선택 확정' : '기본 배정 확정'}
                 </span>
-                <span class="text-[9px] sm:text-[11px] px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-semibold">실시간 잔여석 확인됨</span>
+                <span class="text-[9px] sm:text-[11px] px-2 py-0.5 rounded-lg ${isCustom ? 'bg-emerald-500/20 text-emerald-300' : 'bg-blue-500/20 text-blue-300'} font-semibold">
+                  ${isCustom ? '실시간 잔여석 확인됨' : '통지서 기본 배정'}
+                </span>
               </div>
 
               <!-- 병무청 전자민원 신청서 공문서 양식 -->
@@ -1974,7 +2507,7 @@
                 <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 sm:pb-2 gap-2">
                   <div>
                     <span class="text-[9px] sm:text-[10px] text-blue-400 font-bold uppercase tracking-wider block">병역법 시행령 제11조 [별지 제1호 서식]</span>
-                    <h4 class="font-extrabold text-white text-[11px] sm:text-sm">병역판정검사 일자 및 장소 본인선택(변경) 신청서</h4>
+                    <h4 class="font-extrabold text-white text-[11px] sm:text-sm">${isCustom ? '병역판정검사 일자 및 장소 본인선택(변경) 신청서' : '병역판정검사 통지서 기본 배정 내역서'}</h4>
                   </div>
                   <button onclick="copyApplicationInfo()" id="btn-copy-info" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[10px] sm:text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0">
                     <i data-lucide="copy" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i> <span id="copy-btn-text">신청 내용 복사</span>
@@ -1983,7 +2516,7 @@
 
                 <!-- 수검 희망 검사장 내역 -->
                 <div class="p-2 sm:p-3 rounded-lg bg-slate-900/80 space-y-1 sm:space-y-1.5 text-[10px] sm:text-[11px] leading-relaxed">
-                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 22일 (목) 오전'}</strong></div>
+                  <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 21일 (수) 오전'}</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망기관:</span> <strong class="text-white">${userData.region} (${contact.dept || '병역판정검사과'})</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">검사장 소재지:</span> <span class="text-slate-300">${contact.address}</span></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
@@ -2055,6 +2588,31 @@
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'IDENTITY_REG_CONFIRM') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400"></i>
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-extrabold text-xs sm:text-base text-white tracking-tight">
+                    ${isEn ? 'Identity Verification & Photo Complete!' : '본인인증 및 사진촬영 완료!'}
+                  </h4>
+                  <p class="text-[10px] sm:text-xs text-slate-300 mt-1 leading-relaxed">
+                    ${isEn ? 'Sanitized exam uniform received. Proceed to the locker room to store belongings and change.' : '전용 검사복을 수령했습니다. 소지품 보관 및 환복을 위해 [탈의실]로 이동합니다.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button onclick="confirmIdentityReg();" class="w-full py-3 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Proceed to Locker Room to Change ➔' : '탈의실로 이동하여 검사복 환복하기 ➔'}</span>
             </button>
           </div>
         `;
@@ -2175,12 +2733,12 @@
           <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-5 shadow-2xl w-full">
               <div class="flex items-center gap-2.5 sm:gap-3">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                  <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="shirt" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-xs sm:text-sm text-white">나라사랑카드 소지 및 환복 완료</h4>
-                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">사물함 소지품 보관, 검사복 착용 & 카드 주머니 지참</p>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Uniform Changed & Documents Ready' : '검사복 환복 및 진단서 지참 완료'}</h4>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Personal belongings in locker · Exam uniform on · Medical records kept' : '사물함 개인 소지품 보관 · 전용 검사복 착용 · 병원 진단서 지참'}</p>
                 </div>
               </div>
             </div>
@@ -2189,156 +2747,179 @@
             </button>
           </div>
         `;
-      } else if (type === 'PSYCH_TEST_UI') {
+      } else if (type === 'PSYCH_TEST_UI' || type === 'PSYCH_TEST_UI_Q1') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
           <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
-            <!-- 상단 단계/내용 박스 -->
             <div class="bg-slate-900/95 p-3.5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3 sm:space-y-4 shadow-2xl w-full max-h-[55vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
-              <!-- 상단 헤더 & 진행 바 (테두리 없는 깔끔한 텍스트 배지) -->
               <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <i data-lucide="monitor" class="w-4 h-4 text-indigo-400"></i>
-                    <span class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Psychological Test (PC Simulation)' : '심리검사 PC 실전 테스트'}</span>
+                    <span class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Psychological Test (1단계: Cognitive Test)' : '심리검사 PC 실전 테스트 (1단계: 기초 인지능력)'}</span>
                   </div>
-                  <span id="psych-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
+                  <span class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">${isEn ? 'Step 1 / 2 Items' : '1단계 / 총 2문항'}</span>
                 </div>
                 <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
-                  <div id="psych-progress-bar" class="bg-indigo-500 h-full w-1/2 transition-all duration-300"></div>
+                  <div class="bg-indigo-500 h-full w-1/2 transition-all duration-300"></div>
                 </div>
               </div>
 
-              <!-- [STAGE 1] 문항 1: 인지능력검사 (정답 맞출 때까지 진행) -->
-              <div id="psych-stage-1" class="space-y-2 sm:space-y-3">
+              <!-- 문항 1 인지능력검사 -->
+              <div class="space-y-2 sm:space-y-3">
                 <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-xs">
                   <div class="font-bold text-slate-200 text-[11px] sm:text-sm leading-snug">
                     [문항 1 · 기초 인지능력] 다음 중 단어의 관계가 나머지 셋과 다른 것은?
                   </div>
                   <div class="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1">
-                    <button onclick="checkPsychQ1(1)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">① 군인 - 군대</button>
-                    <button onclick="checkPsychQ1(2)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">② 학생 - 학교</button>
-                    <button onclick="checkPsychQ1(3)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">③ 의사 - 병원</button>
-                    <button onclick="checkPsychQ1(4)" class="psych-q1-btn p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer">④ 자동차 - 도로</button>
+                    <button onclick="checkPsychQ1(1)" class="p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-slate-600">① 군인 - 군대</button>
+                    <button onclick="checkPsychQ1(2)" class="p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-slate-600">② 학생 - 학교</button>
+                    <button onclick="checkPsychQ1(3)" class="p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-slate-600">③ 의사 - 병원</button>
+                    <button onclick="checkPsychQ1(4)" class="p-2 sm:p-3 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-left transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-indigo-500/50">④ 자동차 - 도로</button>
                   </div>
                 </div>
-                <div id="psych-q1-feedback" class="hidden p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs font-semibold"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'PSYCH_TEST_UI_Q2') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
+            <div class="bg-slate-900/95 p-3.5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3 sm:space-y-4 shadow-2xl w-full max-h-[55vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="monitor" class="w-4 h-4 text-emerald-400"></i>
+                    <span class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Psychological Test (2단계: Personality Test)' : '심리검사 PC 실전 테스트 (2단계: 인성 및 군 복무 적응도)'}</span>
+                  </div>
+                  <span class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold">${isEn ? 'Step 2 / 2 Items' : '2단계 / 총 2문항'}</span>
+                </div>
+                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
+                  <div class="bg-emerald-500 h-full w-full transition-all duration-300"></div>
+                </div>
               </div>
 
-              <!-- [STAGE 2] 문항 2: 인성 및 군 복무 적응도 검사 (기본 숨김) -->
-              <div id="psych-stage-2" class="hidden space-y-2 sm:space-y-3">
+              <!-- 문항 2 인성검사 -->
+              <div class="space-y-2 sm:space-y-3">
                 <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
                   <div class="font-bold text-slate-200 text-[11px] sm:text-sm leading-snug">
                     [문항 2 · 인성 및 군 복무 적응도] 낯선 환경이나 새로운 단체 생활에 빠르게 적응하는 편이다.
                   </div>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 pt-1">
-                    <button onclick="checkPsychQ2(1, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">매우 그렇다</button>
-                    <button onclick="checkPsychQ2(2, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">대체로 그렇다</button>
-                    <button onclick="checkPsychQ2(3, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">보통이다</button>
-                    <button onclick="checkPsychQ2(4, this)" class="psych-q2-btn p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer">그렇지 않다</button>
+                    <button onclick="checkPsychQ2(1)" class="p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-indigo-500/50">매우 그렇다</button>
+                    <button onclick="checkPsychQ2(2)" class="p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-indigo-500/50">대체로 그렇다</button>
+                    <button onclick="checkPsychQ2(3)" class="p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-indigo-500/50">보통이다</button>
+                    <button onclick="checkPsychQ2(4)" class="p-2 sm:p-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/40 text-slate-300 text-center transition text-[11px] sm:text-xs cursor-pointer border border-slate-800 hover:border-indigo-500/50">그렇지 않다</button>
                   </div>
-                </div>
-                <div id="psych-q2-feedback" class="hidden p-2.5 sm:p-3 rounded-xl bg-indigo-950/40 text-indigo-300 text-[11px] sm:text-xs font-semibold flex items-center gap-1.5">
-                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span>답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다.</span>
                 </div>
               </div>
             </div>
-
-            <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 -->
-            <button id="psych-final-submit" onclick="playBeep(750, 'triangle', 0.05); renderScene(8);" class="hidden w-full py-2.5 sm:py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer animate-in fade-in hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Pathology Lab' : '임상병리검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        `;
+      } else if (type === 'PSYCH_TO_LAB_CONFIRM') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-teal-600/20 text-teal-400 flex items-center justify-center shrink-0 border border-teal-500/30">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 sm:w-6 sm:h-6 text-teal-400"></i>
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-extrabold text-xs sm:text-base text-white tracking-tight">
+                    ${isEn ? 'Psychological Test Complete!' : '심리검사 완료!'}
+                  </h4>
+                  <p class="text-[10px] sm:text-xs text-slate-300 mt-1 leading-relaxed">
+                    ${isEn ? 'Cognitive and personality tests complete. Proceed to Clinical Pathology Lab.' : '기초 인지능력 및 인성검사가 완료되었습니다. 소변·혈액검사를 위해 [임상병리검사실]로 이동합니다.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button onclick="playBeep(750, 'triangle', 0.05); goToScene(8);" class="w-full py-3 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Clinical Pathology Lab ➔' : '임상병리검사실로 이동하기 ➔'}</span>
             </button>
           </div>
         `;
-      } else if (type === 'LAB_ROOM_CONFIRM') {
+      } else if (type === 'LAB_ROOM_CONFIRM' || type === 'LAB_STEP1_POPUP') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
-            <!-- 상단 단계/내용 박스 (가장 큰 단계 기준으로 min-height 고정하여 창 크기 변동 방지) -->
-            <div class="bg-slate-900/95 p-3.5 sm:p-6 rounded-2xl border border-slate-700/80 space-y-3 sm:space-y-4 shadow-2xl w-full min-h-[180px] sm:min-h-[225px] flex flex-col justify-between">
-              <!-- 상단 헤더 & 진행 바 -->
-              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <i data-lucide="flask-conical" class="w-4 h-4 text-teal-400"></i>
-                    <span id="lab-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Urine Test Kit Received' : '1단계: 임상병리실 접수 & 소변검사 키트 수령'}</span>
-                  </div>
-                  <span id="lab-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 4단계</span>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-teal-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-teal-600/20 text-teal-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="flask-conical" class="w-5 h-5"></i>
                 </div>
-                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
-                  <div id="lab-progress-bar" class="bg-teal-500 h-full w-1/4 transition-all duration-300"></div>
-                </div>
-              </div>
-
-              <!-- 고정 높이 콘텐츠 영역 (min-h-[90px] sm:min-h-[115px]) -->
-              <div class="min-h-[90px] sm:min-h-[115px] flex flex-col justify-center">
-                <!-- [LAB STAGE 1: 임상병리 접수 & 키트 수령] -->
-                <div id="lab-stage-1" class="space-y-2 sm:space-y-3">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
-                    <div class="flex items-center gap-2 text-teal-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="info" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 임상병리검사실 업무 안내
-                    </div>
-                    <p class="text-slate-300 leading-relaxed">
-                      간기능, 신장기능, 혈당, 단백뇨, 혈액질환 등을 정밀하게 확인하기 위해 <strong>소변검사와 혈액검사(채혈)</strong>를 실시합니다.
-                    </p>
-                  </div>
-                </div>
-
-                <!-- [LAB STAGE 2: 화장실 소변 채취 가이드] -->
-                <div id="lab-stage-2" class="hidden space-y-2 sm:space-y-3">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
-                    <div class="flex items-center gap-2 text-amber-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="alert-triangle" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 올바른 소변 채취 필수 수칙 (중간뇨 채취)
-                    </div>
-                    <div class="space-y-1 text-slate-300 leading-relaxed text-[10px] sm:text-xs">
-                      <p>1️⃣ <strong>첫 소변(처음 1~2초)은 변기에 버리고</strong>, 반드시 <strong>'중간 소변'을 컵의 1/3~1/2 정도</strong> 받아주세요.</p>
-                      <p>2️⃣ 채취한 소변에 검사 스틱을 살짝 적신 후, 지정된 검체 보관함에 컵과 함께 안전하게 제출합니다.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- [LAB STAGE 3: 채혈 진행 및 지혈 주의사항] -->
-                <div id="lab-stage-3" class="hidden space-y-2 sm:space-y-3">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
-                    <div class="flex items-center gap-2 text-blue-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="syringe" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 채혈(혈액검사) 진행 & 필수 지혈 요령
-                    </div>
-                    <div class="p-2 rounded-lg bg-rose-950/40 text-rose-200 font-semibold text-[10.5px] sm:text-[11px] leading-relaxed">
-                      ⚠️ <strong>[절대 주의]</strong> 알코올 솜을 절대 문지르지 마시고, <strong>손가락으로 5분간 꾹 눌러서 지혈</strong>해 주세요!
-                    </div>
-                  </div>
-                </div>
-
-                <!-- [LAB STAGE 4: 흉부 X-ray 촬영 및 최종 이동] -->
-                <div id="lab-stage-4" class="hidden space-y-2 sm:space-y-3">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs">
-                    <div class="flex items-center gap-2 text-indigo-300 font-bold text-xs sm:text-sm">
-                      <i data-lucide="sparkles" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 흉부 X-ray 촬영 (영상의학)
-                    </div>
-                    <p class="text-slate-300 leading-relaxed text-[10.5px] sm:text-xs">
-                      "숨을 깊게 들이마시고 참으세요! (찰칵)"<br>
-                      결핵 및 흉부 질환 유무 판독 결과, 이상 소견 없이 정상입니다.
-                    </p>
-                  </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Urine Test Kit Received' : '1단계: 임상병리실 접수 & 소변검사 키트 수령'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Proceed to restroom to collect midstream urine sample' : '간기능·단백뇨·혈당 검사를 위한 소변검사 키트를 수령했습니다. 화장실로 이동하여 검체를 채취해 주세요.'}</p>
                 </div>
               </div>
             </div>
-
-            <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 영역 -->
-            <div class="w-full shrink-0">
-              <button id="lab-btn-1" onclick="goLabStep(2)" class="w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Restroom' : '화장실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <button id="lab-btn-2" onclick="goLabStep(3)" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Blood Sampling Room' : '채혈실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <button id="lab-btn-3" onclick="goLabStep(4)" class="hidden w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Chest X-Ray Room' : '흉부 X-ray실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <button id="lab-btn-4" onclick="playBeep(750, 'triangle', 0.05); renderScene(9);" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Basic Exam Lab' : '기본검사실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
+            <button onclick="startLabRestroom();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Restroom ➔' : '화장실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'LAB_STEP2_POPUP') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-teal-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? '2. Urine Sample Submitted' : '2단계: 소변 채취 완료 & 검체 제출'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Midstream sample submitted. Now proceed to blood test.' : '중간 소변 채취 및 스틱 검체 제출이 완료되었습니다. 이제 혈액 검사를 위해 채혈실로 이동합니다.'}</p>
+                </div>
+              </div>
             </div>
+            <button onclick="startLabBlood();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Blood Sampling Room ➔' : '채혈실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'LAB_STEP3_POPUP') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-blue-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="syringe" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? '3. Blood Sampling Complete & Hemostasis' : '3단계: 혈액 채취 완료 & 5분 지혈'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Blood drawn. Keep pressing with swab for 5 min. Proceed to chest X-ray.' : '채혈이 완료되었습니다. 멍 방지를 위해 5분간 알코올 솜을 꾹 눌러주세요. 이제 흉부 X-ray실로 이동합니다.'}</p>
+                </div>
+              </div>
+            </div>
+            <button onclick="startLabXray();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Chest X-Ray Room ➔' : '흉부 X-ray실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'LAB_TO_BASIC_CONFIRM') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-emerald-600/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Clinical Pathology & Imaging Complete' : '임상병리 & 영상의학 검사 완료'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Urine, blood, and chest X-ray tests completed. Proceed to Basic Exam Room.' : '소변검사, 혈액검사, 흉부 X-ray 검진이 모두 완료되었습니다. 바로 옆 기본검사실로 이동합니다.'}</p>
+                </div>
+              </div>
+            </div>
+            <button onclick="goToScene(9);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-emerald-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Basic Examination Room ➔' : '기본검사실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
           </div>
         `;
       } else if (type === 'DOCTOR_ROOM_CONFIRM') {
@@ -2364,99 +2945,86 @@
       } else if (type === 'APTITUDE_CONFIRM') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 shadow-2xl w-full space-y-2.5 sm:space-y-4 max-h-[55vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
+          <div class="flex flex-col items-center gap-2 sm:gap-3 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
+            <!-- 팝업 본문 카드 (제일 큰 크기로 세로 높이 고정하여 탭 전환 시 높이 변화 방지) -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-5 shadow-2xl w-full flex flex-col h-[58vh] sm:h-[64vh] min-h-[460px] sm:min-h-[540px]">
+              <!-- 상단 헤더 영역 (고정) -->
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-2.5 shrink-0">
                 <div class="flex items-center gap-2 sm:gap-2.5">
                   <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
                     <i data-lucide="compass" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                   </div>
                   <div>
-                    <h4 class="font-bold text-xs sm:text-sm text-white">병무청 모집병 군별/특기별 실시간 지원가능 분야</h4>
-                    <p class="text-[10px] sm:text-[11px] text-slate-400">전공(컴퓨터SW) 및 자격 연계 추천 특기 & 실시간 접수 경쟁률</p>
+                    <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'MMA Recruit Specialty & Application Information' : '병무청 모집병 군별/특기별 실시간 지원가능 분야'}</h4>
+                    <p class="text-[10px] sm:text-[11px] text-slate-400">${isEn ? 'Select field to explore recruitment dates & live competition rates' : '분야별 모집 일정(접수·입영 시기) 및 실시간 경쟁률 조회'}</p>
                   </div>
                 </div>
               </div>
 
-              <!-- 모집병 추천 3종 카드 -->
-              <div class="space-y-2 sm:space-y-2.5">
-                <!-- 1. 육군 IT/SW개발병 -->
-                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-blue-500/30 space-y-1.5 sm:space-y-2 text-xs">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5 sm:gap-2">
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-blue-600 text-white font-extrabold text-[9px] sm:text-[10px]">육군</span>
-                      <strong class="text-white text-xs sm:text-sm">IT/SW개발병 (전문특기병)</strong>
-                    </div>
-                    <div class="flex items-center gap-1 sm:gap-1.5">
-                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] sm:text-xs">3.1 : 1</span>
-                    </div>
-                  </div>
-                  <div class="text-[9.5px] sm:text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
-                    <span>지원자격: 1~2급 현역 + 컴공 2년 이상</span>
-                  </div>
+              <!-- 분야 선택 탭 버튼 (고정) -->
+              <div class="space-y-1.5 py-2 shrink-0">
+                <div class="text-[10px] sm:text-[11px] text-slate-400 font-semibold flex items-center gap-1">
+                  <i data-lucide="layers" class="w-3 h-3 text-indigo-400"></i>
+                  <span>${isEn ? 'Select Specialty Field:' : '희망 지원 분야 선택:'}</span>
                 </div>
-
-                <!-- 2. 공군 정보체계운영병 -->
-                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-cyan-500/30 space-y-1.5 sm:space-y-2 text-xs">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5 sm:gap-2">
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-cyan-600 text-white font-extrabold text-[9px] sm:text-[10px]">공군</span>
-                      <strong class="text-white text-xs sm:text-sm">정보체계운영병 (IT특기)</strong>
-                    </div>
-                    <div class="flex items-center gap-1 sm:gap-1.5">
-                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-[10px] sm:text-xs">2.4 : 1</span>
-                    </div>
-                  </div>
-                  <p class="text-[10px] sm:text-[11px] text-slate-300 leading-relaxed">공군 비행단 전산실 서버·네트워크 운영 관리 · <strong class="text-cyan-300">쾌적한 실내 인프라 & 풍부한 자기계발 환경</strong></p>
-                  <div class="text-[9.5px] sm:text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
-                    <span>지원자격: 1~3급 현역 + 전공자</span>
-                  </div>
-                </div>
-
-                <!-- 3. 육군 정보통신운용병 -->
-                <div class="p-2.5 sm:p-3 bg-slate-950/90 rounded-xl border border-slate-800 space-y-1 sm:space-y-1.5 text-xs">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5 sm:gap-2">
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-extrabold text-[9px] sm:text-[10px]">육군</span>
-                      <strong class="text-slate-200 text-xs">정보통신운용병 (기술행정병)</strong>
-                    </div>
-                    <div class="flex items-center gap-1 sm:gap-1.5">
-                      <span class="text-[9px] sm:text-[10px] text-slate-400">실시간 경쟁률</span>
-                      <span class="px-1.5 sm:px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px] sm:text-xs">1.8 : 1</span>
-                    </div>
-                  </div>
-                  <div class="text-[9.5px] sm:text-[10px] text-slate-400">
-                    <span>지휘통신망 및 네트워크 장비 운용</span>
-                  </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                  ${Object.keys(SPECIALTY_CATEGORIES).map(k => {
+                    const item = SPECIALTY_CATEGORIES[k];
+                    const active = (userData.aptitudeCategory || 'it') === k;
+                    return `
+                      <button type="button" data-cat="${k}" onclick="selectAptitudeCategory('${k}');" class="aptitude-tab-btn px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center gap-1 ${active ? 'bg-indigo-600 text-white shadow-md border border-indigo-400/50' : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white border border-slate-700/60'} cursor-pointer">
+                        <i data-lucide="${item.icon}" class="w-3.5 h-3.5"></i>
+                        <span>${isEn ? item.label_en : item.label}</span>
+                      </button>
+                    `;
+                  }).join('')}
                 </div>
               </div>
 
-              <!-- 공식 자격증 가산점 인정 기준 안내 -->
-              <div class="p-2.5 sm:p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-1.5 sm:space-y-2">
-                <div class="flex items-center gap-1.5 sm:gap-2 text-blue-300 font-bold text-xs sm:text-sm">
-                  <i data-lucide="award" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400"></i>
-                  <span>모집병 국가기술자격증 가산점 기준 안내</span>
+              <!-- 스크롤 가능한 본문 영역 (카드 목록 + 가산점 안내가 유연하게 스크롤되어 팝업 전체 높이는 고정 유지) -->
+              <div class="flex-1 overflow-y-auto custom-scroll pr-1 space-y-2.5 my-1">
+                <!-- 모집병 추천 카드 목록 (JS로 동적 렌더링) -->
+                <div id="aptitude-cards-container" class="space-y-2">
                 </div>
-                <div class="text-[10px] sm:text-[11px] text-slate-300 leading-relaxed space-y-1 sm:space-y-1.5">
-                  <div class="flex items-start gap-1.5">
-                    <span class="text-blue-400 font-bold shrink-0">•</span>
-                    <div><strong>국가기술자격증(정보처리기능사/산업기사)</strong> 소지 시<br class="hidden sm:inline"> 기술행정병 1차 서류 전형에서 <strong>직무 가산점(+15점)</strong>이 부여됩니다.</div>
+
+                <!-- 공식 자격증 가산점 인정 기준 안내 -->
+                <div class="p-2.5 sm:p-3 bg-blue-950/40 rounded-xl border border-blue-500/30 text-xs space-y-1 sm:space-y-1.5">
+                  <div class="flex items-center gap-1.5 text-blue-300 font-bold text-xs">
+                    <i data-lucide="award" class="w-3.5 h-3.5 text-blue-400"></i>
+                    <span>${isEn ? 'MMA Certification & Academic Bonus Points' : '모집병 국가기술자격증 & 전공 가산점 안내'}</span>
                   </div>
-                  <div class="flex items-start gap-1.5">
-                    <span class="text-blue-400 font-bold shrink-0">•</span>
-                    <div>
-                      <span>전공(컴퓨터·SW 2년) 기본 배점과 합산되어 공식 선발 전형 기준에 반영됩니다.</span>
-                      <p class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">※ 최종 선발 여부는 병무청 정규 전형 심사 기준에 따라 결정됩니다.</p>
-                    </div>
+                  <div class="text-[10px] sm:text-[10.5px] text-slate-300 leading-relaxed space-y-0.5">
+                    <p>• <strong>국가기술자격증</strong>(기능사/산업기사) 소지 시 기술행정병 1차 서류 전형에서 <strong>직무 가산점(+15점)</strong>이 자동 반영됩니다.</p>
+                    <p>• 모집 시기별 상세 선발 배점표 및 제출 서류는 병무청 누리집 이달의 모집계획에서 확인 가능합니다.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button onclick="goToScene(12);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Adjudication Room' : '판정실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <!-- 하단 확인 버튼 (고정 위치) -->
+            <button onclick="finishAptitudeAndTalk();" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Confirm Specialty & Complete Counseling ➔' : '특기 및 모집일정 확인 완료 (상담 마무리) ➔'}</span> <i data-lucide="check-check" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        selectAptitudeCategory(userData.aptitudeCategory || 'it');
+      } else if (type === 'APTITUDE_TO_ADJUDICATION_POPUP') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-purple-600/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="award" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Aptitude Classification & Counseling Complete' : '적성분류 및 군특기 상담 완료'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'All exams and classifications finalized. Proceed to Adjudication Room for final grade.' : '모든 신체검사 및 적성분류 데이터 검증이 완료되었습니다. 최종 판정을 위해 판정실로 이동합니다.'}</p>
+                </div>
+              </div>
+            </div>
+            <button onclick="goToScene(12);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Adjudication Room (Final Determination) ➔' : '판정실로 이동하기 (최종 병역처분 확인) ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -2492,89 +3060,79 @@
             </button>
           </div>
         `;
-      } else if (type === 'BMI_CALCULATOR') {
+      } else if (type === 'BMI_CALCULATOR' || type === 'BIO_STEP1_POPUP') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
-            <!-- 상단 단계/내용 박스 (가장 큰 3단계 기준 min-height 고정으로 창 크기 변동 방지) -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl w-full min-h-[190px] sm:min-h-[235px] flex flex-col justify-between">
-              <!-- 상단 헤더 & 진행 바 -->
-              <div class="space-y-1.5 sm:space-y-2 border-b border-slate-800 pb-2 sm:pb-3">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <i data-lucide="ruler" class="w-4 h-4 text-teal-400"></i>
-                    <span id="bio-step-title" class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Height & Weight (BMI) Measurement' : '1단계: 신장 및 체중(BMI) 계측'}</span>
-                  </div>
-                  <span id="bio-step-badge" class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-semibold">1단계 / 총 3단계</span>
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-teal-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full space-y-3">
+              <div class="flex items-center gap-3 border-b border-slate-800 pb-2.5">
+                <div class="w-10 h-10 rounded-xl bg-teal-600/20 text-teal-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="ruler" class="w-5 h-5"></i>
                 </div>
-                <div class="w-full bg-slate-950 h-1.5 sm:h-2 rounded-full overflow-hidden">
-                  <div id="bio-progress-bar" class="bg-teal-500 h-full w-1/3 transition-all duration-300"></div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? '1. Height & Weight (BMI) Measurement' : '1단계: 신장 및 체중(BMI) 계측'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Biometric scale platform measurement' : '측정 발판에 바른 자세로 올라서 주세요'}</p>
                 </div>
               </div>
-
-              <!-- 고정 높이 콘텐츠 영역 (min-h-[100px] sm:min-h-[125px]) -->
-              <div class="min-h-[100px] sm:min-h-[125px] flex flex-col justify-center">
-                <!-- [BIO STAGE 1: 신장 & 체중] -->
-                <div id="bio-stage-1" class="space-y-2.5 sm:space-y-3.5">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
-                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="user-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 측정 발판에 바른 자세로 올라서 주세요
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 sm:gap-3 pt-1">
-                      <div>
-                        <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">신장 (cm):</label>
-                        <input id="inp-height" type="number" value="${userData.height}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
-                      </div>
-                      <div>
-                        <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">체중 (kg):</label>
-                        <input id="inp-weight" type="number" value="${userData.weight}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 sm:px-3 py-1.5 sm:py-2 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
-                      </div>
-                    </div>
-                  </div>
+              <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div class="bg-slate-950/80 p-2.5 sm:p-3 rounded-xl border border-slate-800 text-center">
+                  <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">신장 (cm)</label>
+                  <input id="inp-height" type="number" value="${userData.height || 176}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
                 </div>
-
-                <!-- [BIO STAGE 2: 자동 혈압 측정] -->
-                <div id="bio-stage-2" class="hidden space-y-2.5 sm:space-y-3.5">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
-                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="activity" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 자동 혈압계에 오른팔을 넣고 시작 버튼을 누르세요
-                    </div>
-                    <div class="p-2 sm:p-2.5 rounded-lg bg-slate-900 text-[10px] sm:text-[11px] text-slate-300 space-y-1">
-                      <div>• 수축기 혈압: <strong class="text-emerald-400">120 mmHg</strong> (정상)</div>
-                      <div>• 이완기 혈압: <strong class="text-emerald-400">80 mmHg</strong> (정상)</div>
-                      <div>• 맥박수: <strong class="text-teal-300">72 bpm</strong> (안정)</div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- [BIO STAGE 3: 시력 & 색신 검사 및 BMI 종합 판정] -->
-                <div id="bio-stage-3" class="hidden space-y-2.5 sm:space-y-3.5">
-                  <div class="bg-slate-950/80 p-2.5 sm:p-3.5 rounded-xl space-y-2 text-xs">
-                    <div class="font-bold text-teal-300 text-[11px] sm:text-sm flex items-center gap-1.5">
-                      <i data-lucide="eye" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 안과 시력표 및 색각 검사 결과
-                    </div>
-                    <div class="p-2 sm:p-2.5 rounded-lg bg-slate-900 text-[10px] sm:text-[11px] text-slate-300 space-y-1">
-                      <div>• 나안 시력: 좌 <strong>1.0</strong> / 우 <strong>1.0</strong> (교정 불필요 정상)</div>
-                      <div>• 색신 검사: 정상 (색맹/색약 없음)</div>
-                    </div>
-                  </div>
-                  
-                  <!-- 실시간 BMI 종합 판정 결과 박스 -->
-                  <div id="bmi-result-box" class="p-2.5 sm:p-3.5 rounded-xl bg-slate-950 text-xs space-y-1.5 sm:space-y-2"></div>
+                <div class="bg-slate-950/80 p-2.5 sm:p-3 rounded-xl border border-slate-800 text-center">
+                  <label class="text-slate-400 block mb-1 font-semibold text-[10px] sm:text-xs">체중 (kg)</label>
+                  <input id="inp-weight" type="number" value="${userData.weight || 70}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-white font-bold text-center focus:outline-none focus:border-teal-400 text-xs sm:text-sm">
                 </div>
               </div>
             </div>
-
-            <!-- 단계창 박스 바깥 아래에 분리된 이동 버튼 영역 -->
-            <div id="bio-action-container" class="w-full shrink-0">
-              <button id="bio-btn-1" onclick="goBiometricStep(2)" class="w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Blood Pressure Test' : '혈압 측정으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <button id="bio-btn-2" onclick="goBiometricStep(3)" class="hidden w-full py-2.5 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/30 cursor-pointer hover:scale-[1.01]">
-                <span>${isEn ? 'Move to Eyesight & Color Test' : '시력·색각 검사로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <div id="bio-btn-3" class="hidden w-full"></div>
+            <button onclick="startBioBloodPressure();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Blood Pressure Test ➔' : '혈압 측정으로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'BIO_STEP2_POPUP') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-teal-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-teal-600/20 text-teal-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="activity" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? '2. Automated Blood Pressure Complete' : '2단계: 자동 혈압 측정 완료'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Systolic 120 / Diastolic 80 mmHg (Normal)' : '수축기 120 mmHg / 이완기 80 mmHg (정상 안정 혈압)'}</p>
+                </div>
+              </div>
             </div>
+            <button onclick="startBioEyesight();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Eyesight & Color Vision Test ➔' : '시력·색각 검사로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'BIO_TO_NEXT_CONFIRM') {
+        const isEn = (currentLang === 'en');
+        const hasDisease = (userData.hasDisease === true);
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-emerald-600/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Basic Physical Examination Complete' : '기본 신체검사 계측 완료'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">
+                    ${hasDisease 
+                      ? (isEn ? 'Biometrics completed. Proceed to Specialist Clinic for medical record review.' : '기본검사가 완료되었습니다. 등록하신 질환 서류 심사를 위해 전문의 진료실로 이동합니다.') 
+                      : (isEn ? 'Biometrics completed. Proceed to Aptitude Classification Room.' : '신장·체중(BMI), 혈압, 시력·색각 측정이 모두 완료되었습니다! 적성분류실로 이동합니다.')}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button onclick="${hasDisease ? 'goToScene(10);' : 'goToScene(11);'}" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${hasDisease ? (isEn ? 'Move to Specialist Clinic ➔' : '전문의 진료실로 이동하기 ➔') : (isEn ? 'Move to Aptitude Classification Room ➔' : '적성분류실로 이동하기 ➔')}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
           </div>
         `;
       } else if (type === 'FINAL_SUMMARY_CARDS') {
@@ -2583,7 +3141,7 @@
         const fareData = (typeof MmaApiService !== 'undefined') 
           ? MmaApiService.calculateFare(userData.region) 
           : { formattedText: "16,500원 (교통비 8,500원 + 식비 8,000원)", distanceKm: "5.8 km (7호선 12분 소요)", residentAddress: "서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)" };
-        userData.fare = fareData.formattedText;
+        userData.fare = "실거리 기준 산정 지급 예정 (나라사랑카드 입금)";
         userData.distanceKm = fareData.distanceKm;
         userData.residentAddress = fareData.residentAddress;
 
@@ -2649,13 +3207,43 @@
               </div>
             </div>
 
-            <!-- 3. 최종 결과서 발급 버튼 -->
-            <button onclick="showCertModal()" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40 shrink-0">
-              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i> 가상 병역판정검사 결과 확인
+            <!-- 3. 최종 결과서 발급 전 확인 버튼 -->
+            <button onclick="finishBenefitsAndTalk()" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40 shrink-0">
+              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span>${isEn ? 'Confirm Benefits & Review Result Summary ➔' : '혜택 확인 완료 & 결과 요약서 확인 ➔'}</span>
             </button>
           </div>
         `;
         renderHotspots(hotspots, 0);
+      } else if (type === 'CERT_SUMMARY_TRIGGER_POPUP') {
+        const choiceOverlay = document.getElementById('center-choice-overlay');
+        const choiceContainer = document.getElementById('center-choice-container');
+        if (choiceOverlay) {
+          choiceOverlay.classList.add('hidden');
+          choiceOverlay.classList.remove('flex');
+        }
+        if (choiceContainer) choiceContainer.innerHTML = '';
+        showCertModal();
+        return;
+      } else if (type === 'TO_LOCKER_ROOM_POPUP') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-900/95 border border-blue-600/60 rounded-2xl p-4 sm:p-6 shadow-2xl w-full">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="door-open" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs sm:text-sm text-white">${isEn ? 'Proceed to Locker Room' : '탈의실로 이동 (환복 및 소지품 회수)'}</h4>
+                  <p class="text-[10.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Change into your clothes and collect your belongings.' : '모든 검사가 끝났습니다. 본인 옷으로 환복하고 소지품을 챙기러 탈의실로 이동합니다.'}</p>
+                </div>
+              </div>
+            </div>
+            <button onclick="goToScene(13);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
+              <span>${isEn ? 'Move to Locker Room ➔' : '탈의실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
       } else if (type === 'EPISODE_COMPLETE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
@@ -2771,142 +3359,170 @@
     }
 
     // 기본 신체계측 3단계 순차 진행 함수
-    function goBiometricStep(step) {
-      playBeep(650, 'triangle', 0.03);
-      const isEn = (currentLang === 'en');
-      const st1 = document.getElementById('bio-stage-1');
-      const st2 = document.getElementById('bio-stage-2');
-      const st3 = document.getElementById('bio-stage-3');
-      const title = document.getElementById('bio-step-title');
-      const badge = document.getElementById('bio-step-badge');
-      const pBar = document.getElementById('bio-progress-bar');
-      const bioB1 = document.getElementById('bio-btn-1');
-      const bioB2 = document.getElementById('bio-btn-2');
-      const bioB3 = document.getElementById('bio-btn-3');
-
-      if (st1) st1.classList.add('hidden');
-      if (st2) st2.classList.add('hidden');
-      if (st3) st3.classList.add('hidden');
-
-      if (bioB1) { bioB1.classList.add('hidden'); bioB1.classList.remove('flex'); }
-      if (bioB2) { bioB2.classList.add('hidden'); bioB2.classList.remove('flex'); }
-      if (bioB3) { bioB3.classList.add('hidden'); }
-
-      if (step === 2) {
-        if (st2) {
-          st2.classList.remove('hidden');
-          st2.classList.add('animate-in', 'fade-in');
-        }
-        if (bioB2) {
-          bioB2.classList.remove('hidden');
-          bioB2.classList.add('flex');
-        }
-        if (title) title.innerText = isEn ? '2. Automated Blood Pressure Measurement' : '2단계: 자동 혈압 측정';
-        if (badge) badge.innerText = isEn ? 'Step 2 / 3 Steps' : '2단계 / 총 3단계';
-        if (pBar) pBar.style.width = '66%';
-        
-        const sData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[9] && SCENARIOS[9].stepDialogues && SCENARIOS[9].stepDialogues.step2) || {
-          speaker: "김민우 (주인공)", speaker_en: "Minwoo Kim (Protagonist)", plateClass: "from-slate-700 to-slate-900 border-slate-500/40", char: "assets/minwoo.png",
-          text: "키와 몸무게 측정이 끝났네. 옆에 있는 자동 혈압계에 오른팔을 쑥 넣었어. 호흡을 편안하게 유지해야 혈압이 정확하게 측정된댔지.",
-          text_en: "Height and weight measurement done. Inserted my right arm into the automatic blood pressure monitor. Keeping calm for accurate reading."
-        };
-        updateDialogueDirect(sData.speaker, sData.speaker_en, sData.plateClass, sData.char, sData.text, sData.text_en, "direct_bmi_step2");
-      } else if (step === 3) {
-        if (st3) {
-          st3.classList.remove('hidden');
-          st3.classList.add('animate-in', 'fade-in');
-        }
-        if (title) title.innerText = isEn ? '3. Eyesight & Color Vision Test Complete' : '3단계: 안과 시력·색신 검사 및 종합 판정';
-        if (badge) badge.innerText = isEn ? 'Step 3 / 3 Steps' : '3단계 / 총 3단계';
-        if (pBar) pBar.style.width = '100%';
-
-        const sData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[9] && SCENARIOS[9].stepDialogues && SCENARIOS[9].stepDialogues.step3) || {
-          speaker: "의무관 NPC", speaker_en: "Medical Officer NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/doctor.png",
-          text: "혈압 120/80 정상입니다! 이어서 5m 전방 시력표와 색신 책자 검사를 진행했습니다. 좌 1.0 / 우 1.0 정상입니다. 이제 기본검사 계측 결과를 확인해 볼까요?",
-          text_en: "Blood pressure 120/80 is normal! Measured eyesight and color vision, both eyes 1.0 normal. Let's check your biometric measurement results!"
-        };
-        updateDialogueDirect(sData.speaker, sData.speaker_en, sData.plateClass, sData.char, sData.text, sData.text_en, "direct_bmi_step3");
-        calculateBMI();
-      }
-      lucide.createIcons();
-    }
-
-    // BMI 및 기본 신체검사 종합 판정 & 스마트 분기 함수
-    function calculateBMI() {
+    function calculateBMIValues() {
       const hInp = document.getElementById('inp-height');
       const wInp = document.getElementById('inp-weight');
-      if (!hInp || !wInp) return;
-
-      const h = parseFloat(hInp.value) / 100;
-      const w = parseFloat(wInp.value);
-      if (!h || !w) return;
-
-      const bmi = (w / (h * h)).toFixed(1);
-      userData.height = (h * 100).toFixed(0);
-      userData.weight = w;
-      userData.bmi = bmi;
-
-      const descText = "신장, 체중, 혈압(120/80), 시력(1.0/1.0) 기초 건강 계측이 정상적으로 완료되었습니다.";
-
-      // 최종 급수 데이터는 내부 저장만 하고 화면에는 급수 예상을 노출하지 않음 (마지막 수석판정관실에서 확정)
-      if (bmi >= 18.5 && bmi < 25.0) {
-        userData.bmiGrade = "신체등급 1급 (현역)";
-      } else if (bmi >= 25.0 && bmi < 30.0) {
-        userData.bmiGrade = "신체등급 2급 (현역)";
-      } else if (bmi >= 35.0 || bmi < 16.0) {
-        userData.bmiGrade = "신체등급 4급 (보충역)";
-      } else {
-        userData.bmiGrade = "신체등급 3급 (현역)";
-      }
-
-      const resBox = document.getElementById('bmi-result-box');
-      const bioBtn3 = document.getElementById('bio-btn-3');
-      if (resBox) {
-        const hasDisease = (userData.hasDisease === true);
-        const isEn = (currentLang === 'en');
-
-        let branchBtn = "";
-        if (hasDisease) {
-          branchBtn = `
-            <button onclick="goToScene(10);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-blue-400/40 hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Specialist Clinic' : '전문의 진료실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
-          `;
-          const cData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[9] && SCENARIOS[9].stepDialogues && SCENARIOS[9].stepDialogues.calcDisease) || {
-            speaker: "의무관 NPC", speaker_en: "Medical Officer NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/doctor.png",
-            text: "기본검사 계측이 완료되었습니다. 사전에 등록하신 [{healthCheck}]의 정밀 심사를 위해 [전문의 진료실]로 이동해 주세요!",
-            text_en: "Basic biometric exam complete. Please proceed to the Specialist Clinic for review of your medical documents."
-          };
-          const rawTxt = isEn ? (cData.text_en || cData.text) : cData.text;
-          const finalTxt = rawTxt.replace('{healthCheck}', userData.healthCheck || '정형외과 수술 서류');
-          updateDialogueDirect(cData.speaker, cData.speaker_en, cData.plateClass, cData.char, finalTxt, cData.text_en, "direct_bmi_calc_disease");
+      let h = userData.height ? parseFloat(userData.height) / 100 : 1.76;
+      let w = userData.weight ? parseFloat(userData.weight) : 70;
+      if (hInp && hInp.value) h = parseFloat(hInp.value) / 100;
+      if (wInp && wInp.value) w = parseFloat(wInp.value);
+      if (h && w) {
+        userData.height = (h * 100).toFixed(0);
+        userData.weight = w;
+        const bmi = (w / (h * h)).toFixed(1);
+        userData.bmi = bmi;
+        if (bmi >= 18.5 && bmi < 25.0) {
+          userData.bmiGrade = "신체등급 1급 (현역)";
+        } else if (bmi >= 25.0 && bmi < 30.0) {
+          userData.bmiGrade = "신체등급 2급 (현역)";
+        } else if (bmi >= 35.0 || bmi < 16.0) {
+          userData.bmiGrade = "신체등급 4급 (보충역)";
         } else {
-          branchBtn = `
-            <button onclick="goToScene(11);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xl border border-indigo-400/40 hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Aptitude Center' : '적성분류실로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
-          `;
-          const cData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[9] && SCENARIOS[9].stepDialogues && SCENARIOS[9].stepDialogues.calcNormal) || {
-            speaker: "의무관 NPC", speaker_en: "Medical Officer NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/medical_officer.png",
-            text: "기본검사 결과 신장·체중(BMI), 혈압, 시력 측정이 모두 완료되었습니다! 전공과 자격을 고려한 군 특기 적성 분류를 위해 [적성분류실]로 이동해 주세요!",
-            text_en: "Basic biometric exam complete! Please proceed to the Aptitude Classification Room for military specialty assignment."
-          };
-          updateDialogueDirect(cData.speaker, cData.speaker_en, cData.plateClass, cData.char, isEn ? (cData.text_en || cData.text) : cData.text, cData.text_en, "direct_bmi_calc_normal");
+          userData.bmiGrade = "신체등급 3급 (현역)";
         }
-
-        resBox.innerHTML = `
-          <div class="space-y-2.5">
-            <div class="flex justify-between font-bold items-center"><span class="text-teal-300">BMI: ${bmi} (혈압·시력 정상)</span><span class="text-emerald-400 font-extrabold text-xs sm:text-sm">기초 계측 완료 ✓</span></div>
-            <p class="text-[11px] text-slate-300">${descText}</p>
-          </div>
-        `;
-        resBox.classList.remove('hidden');
-        if (bioBtn3) {
-          bioBtn3.innerHTML = branchBtn;
-          bioBtn3.classList.remove('hidden');
-        }
-        lucide.createIcons();
       }
+    }
+
+    function startBioBloodPressure() {
+      playBeep(750, 'triangle', 0.05);
+      calculateBMIValues();
+
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'BIO_STEP2_POPUP';
+
+      // 1) 혈압 측정 이동 시: 민우 & 의무관 NPC 대화
+      currentDialogueList = [
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "키와 몸무게 측정이 끝났으니, 옆에 있는 자동 혈압계에 오른팔을 넣고 재어볼게요.",
+          text_en: "Height and weight are measured. I'll insert my right arm into the automatic blood pressure monitor.",
+          audioKey: "bio_bp_1"
+        },
+        {
+          speaker: "의무관 NPC",
+          speaker_en: "Medical Officer NPC",
+          char: "assets/medical_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "네 {name} 님, 말을 하거나 움직이지 마시고 호흡을 편안하게 유지해 주세요. 혈압을 측정하겠습니다.\n\n(위잉- 쉬익... 삑-)\n\n수축기 120, 이완기 80, 맥박 72회로 아주 이상적인 정상 혈압입니다!",
+          text_en: "Please keep still and breathe comfortably. Measuring blood pressure now.\n\n(Whirring... Beep-)\n\nSystolic 120, Diastolic 80, Pulse 72 bpm. Perfectly normal blood pressure!",
+          audioKey: "bio_bp_2"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "휴우, 긴장해서 혈압이 높게 나올까 봐 걱정했는데 정상이라 다행이네요!",
+          text_en: "Phew, I was worried it might be high from nervousness, but I'm glad it's normal!",
+          audioKey: "bio_bp_3"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
+    }
+
+    function startBioEyesight() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'BIO_TO_NEXT_CONFIRM';
+
+      const hasDisease = (userData.hasDisease === true);
+
+      // 2) 시력·색각 검사 진행 및 안과 검사 종료 후 적성분류실 이동 안내 대화
+      currentDialogueList = [
+        {
+          speaker: "의무관 NPC",
+          speaker_en: "Medical Officer NPC",
+          char: "assets/medical_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "다음은 안과 기본 검사입니다. 5m 전방 시력표를 보시고 한쪽 눈을 가린 채 가리키는 숫자를 말씀해 주세요. 그리고 색각 검사 책자의 숫자도 읽어보겠습니다.",
+          text_en: "Next is the basic eye exam. Look at the 5m eye chart, cover one eye, and read the indicated numbers. Then we'll check the color vision booklet.",
+          audioKey: "bio_eye_1"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "오른쪽 1.0, 왼쪽 1.0! 색각 책자에 적힌 숫자 12, 74도 또렷하게 잘 보입니다.",
+          text_en: "Right eye 1.0, left eye 1.0! The numbers 12 and 74 in the color booklet are clearly visible too.",
+          audioKey: "bio_eye_2"
+        },
+        {
+          speaker: "의무관 NPC",
+          speaker_en: "Medical Officer NPC",
+          char: "assets/medical_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "양안 나안 시력 1.0 정상이며, 색신 검사에서도 색맹이나 색약 없이 정상 판정되었습니다!",
+          text_en: "Both uncorrected eyes 1.0 normal, and color vision test shows no color deficiency. All normal!",
+          audioKey: "bio_eye_3"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "신장과 체중(BMI), 혈압, 시력과 색각까지 기본 신체검사를 모두 건강하게 마쳤어!",
+          text_en: "Height and weight BMI, blood pressure, eyesight and color vision—all basic physical tests completed healthy!",
+          audioKey: "bio_finish_1"
+        },
+        {
+          speaker: "의무관 NPC",
+          speaker_en: "Medical Officer NPC",
+          char: "assets/medical_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: hasDisease
+            ? "기본검사실의 모든 계측이 완료되었습니다. 사전에 등록하신 [" + (userData.healthCheck || "특이질환 서류") + "]의 정밀 심사를 위해 바로 앞 [전문의 진료실]로 이동해 주세요!"
+            : "기본검사실의 모든 계측이 완료되었습니다! 이제 다음 순서인 [적성분류실]로 이동하여 {name} 님의 전공과 자격에 딱 맞는 군 특기를 분류받으세요.",
+          text_en: hasDisease
+            ? "Basic biometric exams complete. Please proceed to the Specialist Clinic for review of your medical documents."
+            : "All basic biometric measurements complete! Now proceed to the [Aptitude Classification Room] to find military specialties matching your major and skills.",
+          audioKey: "bio_finish_2"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: hasDisease
+            ? "네, 꼼꼼히 챙겨온 의무기록과 서류를 가지고 전문의 선생님께 진료를 받으러 가보자!"
+            : "드디어 내 전공을 살릴 수 있는 군 특기를 알아보는 적성분류실이구나. 바로 이동해보자!",
+          text_en: hasDisease
+            ? "Yes, let's take my medical records and visit the specialist doctor!"
+            : "Finally, the Aptitude Room where I can explore specialties for my major. Let's head over right away!",
+          audioKey: "bio_finish_3"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
     }
 
     // 기본검사 완료 후 안전 이동 함수
@@ -2915,181 +3531,284 @@
     }
 
     function checkPsychQ1(choice) {
-      const fb = document.getElementById('psych-q1-feedback');
-      if (!fb) return;
+      // 팝업 오버레이 닫기
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const scene = SCENARIOS[currentSceneIdx];
 
       if (choice === 4) {
         // 정답!
         playBeep(750, 'sine', 0.05);
-        fb.className = 'p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in';
-        fb.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i> <span><strong>[심리검사관] 정답입니다!</strong> (④번은 사물-공간 관계 / ①②③은 사람-소속기관 관계) 1차 인지능력검사를 통과했습니다.</span>';
-        fb.classList.remove('hidden');
-        lucide.createIcons();
+        if (scene) scene.widgetType = 'PSYCH_TEST_UI_Q2';
 
-        // 하단 캐릭터 대화창에 심리검사관 음성/대사 표출
-        updateDialogueDirect(
-          "심리검사관 NPC",
-          "Psychological Examiner NPC",
-          "from-indigo-700 to-purple-800 border-indigo-400/40",
-          "assets/psychologist.png",
-          "정답입니다! ④번 자동차-도로는 [사물과 공간]의 관계이고, 나머지는 사람과 소속 기관의 관계죠. 1차 인지능력검사를 훌륭하게 통과하셨습니다!",
-          "Correct! No. 4 Car-Road is an [Object and Space] relationship, while the rest are Person and Organization. You have successfully passed the first cognitive test!"
-        );
-
-        // 1.2초 후 다음 문항(2단계)으로 자동 전환
-        setTimeout(() => {
-          const st1 = document.getElementById('psych-stage-1');
-          const st2 = document.getElementById('psych-stage-2');
-          const pBar = document.getElementById('psych-progress-bar');
-          const pBadge = document.getElementById('psych-step-badge');
-          if (st1) st1.classList.add('hidden');
-          if (st2) {
-            st2.classList.remove('hidden');
-            st2.classList.add('animate-in', 'fade-in');
+        currentDialogueList = [
+          {
+            speaker: "심리검사관 NPC",
+            speaker_en: "Psychological Examiner NPC",
+            char: "assets/psychologist.png",
+            charPos: "right",
+            plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+            text: "잘 맞추셨네요! 1차 인지능력검사를 통과하셨습니다.",
+            text_en: "You got it right! You have passed the first cognitive test.",
+            audioKey: "voice_7_q1_correct"
           }
-          if (pBar) pBar.style.width = '100%';
-          if (pBadge) pBadge.innerText = (currentLang === 'en') ? 'Step 2 / 2 Items' : '2단계 / 총 2문항';
-          lucide.createIcons();
-        }, 1200);
+        ];
+        currentDialogueIdx = 0;
+        playDialogueChunk();
       } else {
         // 오답!
         playBeep(320, 'sawtooth', 0.08);
-        fb.className = 'p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in';
-        fb.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i> <span><strong>[심리검사관] 오답입니다!</strong> 군인-군대, 학생-학교, 의사-병원은 모두 [사람과 소속 기관]의 관계입니다. 사물과 공간의 관계인 단어를 찾아 다시 풀어보세요.</span>';
-        fb.classList.remove('hidden');
-        lucide.createIcons();
+        if (scene) scene.widgetType = 'PSYCH_TEST_UI';
 
-        // 하단 캐릭터 대화창에 심리검사관 오답 피드백 대사 표출
-        updateDialogueDirect(
-          "심리검사관 NPC",
-          "Psychological Examiner NPC",
-          "from-indigo-700 to-purple-800 border-indigo-400/40",
-          "assets/psychologist.png",
-          "오답입니다! 군인-군대, 학생-학교, 의사-병원은 모두 [사람과 소속 기관]의 관계입니다. 사물과 공간의 관계인 단어를 찾아 다시 풀어보세요.",
-          "That is incorrect! Soldier-Army, Student-School, and Doctor-Hospital are all [Person - Organization] relationships. Find the word pair with an Object and Space relationship and try again."
-        );
+        currentDialogueList = [
+          {
+            speaker: "심리검사관 NPC",
+            speaker_en: "Psychological Examiner NPC",
+            char: "assets/psychologist.png",
+            charPos: "right",
+            plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+            text: "오답이네요! 다시 한번 풀어주시겠어요?",
+            text_en: "That is incorrect! Would you like to try solving it again?",
+            audioKey: "voice_7_q1_wrong"
+          }
+        ];
+        currentDialogueIdx = 0;
+        playDialogueChunk();
       }
     }
 
-    function checkPsychQ2(val, btn) {
-      playBeep(650, 'sine', 0.02);
-      document.querySelectorAll('.psych-q2-btn').forEach(b => {
-        b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-400', 'font-bold');
-        b.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
-      });
-      if (btn) {
-        btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
-        btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-400', 'font-bold');
-      }
+    function checkPsychQ2(choice) {
+      playBeep(750, 'triangle', 0.05);
 
-      const fb = document.getElementById('psych-q2-feedback');
-      const submitBtn = document.getElementById('psych-final-submit');
-      if (fb) fb.classList.remove('hidden');
-      if (submitBtn) {
-        submitBtn.classList.remove('hidden');
-        submitBtn.classList.add('flex');
+      // 팝업 오버레이 닫기
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
       }
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceContainer) choiceContainer.innerHTML = '';
 
-      // 하단 캐릭터 대화창에 심리검사관 완료 안내 대사 표출
-      updateDialogueDirect(
-        "심리검사관 NPC",
-        "Psychological Examiner NPC",
-        "from-indigo-700 to-purple-800 border-indigo-400/40",
-        "assets/psychologist.png",
-        "답변이 정상 저장되었습니다. 인성 및 적응도 판정 양호합니다. 아래 [임상병리검사실로 이동] 버튼을 눌러주세요.",
-        "Your answer has been saved successfully. Personality and adaptability status is normal. Please click the button below to proceed to the Clinical Pathology Lab."
-      );
-      lucide.createIcons();
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'PSYCH_TO_LAB_CONFIRM';
+
+      // 문항 2번 완료 후 대사 시퀀스:
+      // 1) 주인공 민우: "휴우... 아, 이제 심리검사가 끝난 건가...?"
+      // 2) 주인공 민우: "처음엔 조금 긴장했는데, 솔직하게 답하다 보니 생각보다 어렵지 않았어. 무사히 잘 마쳐서 다행이야!"
+      // 3) 심리검사관 NPC: "고생하셨습니다 {name} 님! 심리검사가 모두 완료되었으니, 이제 다음 검사인 [임상병리검사실]로 이동하겠습니다."
+      // 세 대사 모두 순차적으로 출력된 후 터치하면 -> PSYCH_TO_LAB_CONFIRM 팝업 표출!
+      currentDialogueList = [
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "휴우... 아, 이제 심리검사가 끝난 건가...?",
+          text_en: "Phew... Ah, is the psychological test finished now...?",
+          audioKey: "voice_7_finish_minwoo_1"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "처음엔 조금 긴장했는데, 솔직하게 답하다 보니 생각보다 어렵지 않았어. 무사히 잘 마쳐서 다행이야!",
+          text_en: "I was a bit nervous at first, but answering honestly wasn't as difficult as I thought. I'm glad I completed it smoothly!",
+          audioKey: "voice_7_finish_minwoo_2"
+        },
+        {
+          speaker: "심리검사관 NPC",
+          speaker_en: "Psychological Examiner NPC",
+          char: "assets/psychologist.png",
+          charPos: "right",
+          plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+          text: "고생하셨습니다 {name} 님! 심리검사가 모두 완료되었으니, 이제 다음 검사인 [임상병리검사실]로 이동하겠습니다.",
+          text_en: "Great job {name}! The psychological test is complete. Now let's move to the next test at the [Clinical Pathology Lab].",
+          audioKey: "voice_7_finish_psychologist"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
     }
 
-    function goLabStep(step) {
-      playBeep(650, 'triangle', 0.03);
-      const isEn = (currentLang === 'en');
-      const st1 = document.getElementById('lab-stage-1');
-      const st2 = document.getElementById('lab-stage-2');
-      const st3 = document.getElementById('lab-stage-3');
-      const st4 = document.getElementById('lab-stage-4');
-      const title = document.getElementById('lab-step-title');
-      const badge = document.getElementById('lab-step-badge');
-      const pBar = document.getElementById('lab-progress-bar');
+    function startLabRestroom() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      // 화장실 배경으로 교체
       const bgImg = document.getElementById('bg-image');
+      if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl('assets/restroom.jpg')}')`;
 
-      if (st1) st1.classList.add('hidden');
-      if (st2) st2.classList.add('hidden');
-      if (st3) st3.classList.add('hidden');
-      if (st4) st4.classList.add('hidden');
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'LAB_STEP2_POPUP';
 
-      const b1 = document.getElementById('lab-btn-1');
-      const b2 = document.getElementById('lab-btn-2');
-      const b3 = document.getElementById('lab-btn-3');
-      const b4 = document.getElementById('lab-btn-4');
-      if (b1) { b1.classList.add('hidden'); b1.classList.remove('flex'); }
-      if (b2) { b2.classList.add('hidden'); b2.classList.remove('flex'); }
-      if (b3) { b3.classList.add('hidden'); b3.classList.remove('flex'); }
-      if (b4) { b4.classList.add('hidden'); b4.classList.remove('flex'); }
+      // 1) 주인공 민우: 화장실 도착 후 소변 채취 요령 독백 대사
+      currentDialogueList = [
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "화장실에 도착했어. 설명해주신 대로 처음 나오는 1~2초간의 소변은 변기에 살짝 흘려보내고...",
+          text_en: "Arrived at the restroom. As instructed, I let the first 1-2 seconds of urine pass into the toilet...",
+          audioKey: "lab_restroom_1"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검사 스틱을 살짝 적시고, 보관함에 안전하게 제출하자!",
+          text_en: "Collect the clean midstream urine in about 1/3 of the cup, dip the test stick, and submit it safely into the specimen box!",
+          audioKey: "lab_restroom_2"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
+    }
 
-      if (step === 2) {
-        if (st2) {
-          st2.classList.remove('hidden');
-          st2.classList.add('animate-in', 'fade-in');
-        }
-        if (b2) {
-          b2.classList.remove('hidden');
-          b2.classList.add('flex');
-        }
-        if (title) title.innerText = isEn ? '2. Restroom Urine Sampling Guide' : '2단계: 화장실 이동 & 소변(중간뇨) 채취';
-        if (badge) badge.innerText = isEn ? 'Step 2 / 4 Steps' : '2단계 / 총 4단계';
-        if (pBar) pBar.style.width = '50%';
-        if (bgImg) bgImg.style.backgroundImage = "url('assets/restroom.jpg')";
-
-        const sData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[8] && SCENARIOS[8].stepDialogues && SCENARIOS[8].stepDialogues.step2) || {
-          speaker: "김민우 (주인공)", speaker_en: "Minwoo Kim (Protagonist)", plateClass: "from-slate-700 to-slate-900 border-slate-500/40", char: "assets/minwoo.png",
-          text: "화장실에 도착했어. 설명대로 처음 나오는 1~2초간의 소변은 변기에 살짝 버리고, 깨끗한 '중간 소변'을 컵의 1/3 정도 받아서 검체 보관함에 제출하자!",
-          text_en: "Arrived at the restroom. I discard the first 1-2 seconds of urine, collect the midstream urine in 1/3 of the cup, and submit it into the specimen box!"
-        };
-        updateDialogueDirect(sData.speaker, sData.speaker_en, sData.plateClass, sData.char, sData.text, sData.text_en, "direct_lab_step2");
-      } else if (step === 3) {
-        if (st3) {
-          st3.classList.remove('hidden');
-          st3.classList.add('animate-in', 'fade-in');
-        }
-        if (b3) {
-          b3.classList.remove('hidden');
-          b3.classList.add('flex');
-        }
-        if (title) title.innerText = isEn ? '3. Blood Sampling & Pressure Dressing' : '3단계: 채혈실 복귀 & 혈액 검사 및 지혈 요령';
-        if (badge) badge.innerText = isEn ? 'Step 3 / 4 Steps' : '3단계 / 총 4단계';
-        if (pBar) pBar.style.width = '75%';
-        if (bgImg) bgImg.style.backgroundImage = "url('assets/lab_room.jpg')";
-
-        const sData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[8] && SCENARIOS[8].stepDialogues && SCENARIOS[8].stepDialogues.step3) || {
-          speaker: "임상병리사 NPC", speaker_en: "Clinical Pathologist NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/lab_officer.png",
-          text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행합니다.\n\n⚠️ 채혈 부위는 멍이 들지 않도록 문지르지 마시고 5분간 꾹 눌러서 지혈해 주세요!",
-          text_en: "Urine sample confirmed! Now collecting blood sample.\n\n⚠️ Press firmly with alcohol cotton for 5 minutes without rubbing to prevent bruising!"
-        };
-        updateDialogueDirect(sData.speaker, sData.speaker_en, sData.plateClass, sData.char, sData.text, sData.text_en, "direct_lab_step3");
-      } else if (step === 4) {
-        if (st4) {
-          st4.classList.remove('hidden');
-          st4.classList.add('animate-in', 'fade-in');
-        }
-        if (b4) {
-          b4.classList.remove('hidden');
-          b4.classList.add('flex');
-        }
-        if (title) title.innerText = isEn ? '4. Chest X-Ray Imaging Complete' : '4단계: 흉부 X-ray 촬영 (영상의학)';
-        if (badge) badge.innerText = isEn ? 'Step 4 / 4 Steps' : '4단계 / 총 4단계';
-        if (pBar) pBar.style.width = '100%';
-        if (bgImg) bgImg.style.backgroundImage = "url('assets/lab_room.jpg')";
-
-        const sData = (typeof SCENARIOS !== 'undefined' && SCENARIOS[8] && SCENARIOS[8].stepDialogues && SCENARIOS[8].stepDialogues.step4) || {
-          speaker: "영상의학 방사선사 NPC", speaker_en: "Radiologist NPC", plateClass: "from-teal-700 to-emerald-800 border-teal-400/40", char: "assets/lab_officer.png",
-          text: "흉부 X-ray 촬영대 앞에 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요! (찰칵) 촬영이 모두 끝났습니다.\n다음 검사인 [기본검사실]로 이동합니다.",
-          text_en: "Please stand firmly against the X-ray board. Deep breath in and hold it! (Click) Imaging complete.\nProceed to the Basic Examination Room."
-        };
-        updateDialogueDirect(sData.speaker, sData.speaker_en, sData.plateClass, sData.char, sData.text, sData.text_en, "direct_lab_step4");
+    function startLabBlood() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
       }
-      lucide.createIcons();
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      // 검사실 배경으로 복귀
+      const bgImg = document.getElementById('bg-image');
+      if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl('assets/lab_room.jpg')}')`;
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'LAB_STEP3_POPUP';
+
+      // 2) 채혈실 복귀 후 임상병리사 채혈 및 민우 대사
+      currentDialogueList = [
+        {
+          speaker: "임상병리사 NPC",
+          speaker_en: "Clinical Pathologist NPC",
+          char: "assets/lab_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "소변 검체 확인했습니다! 이어서 혈액 검사를 위해 채혈을 진행하겠습니다. 팔을 편하게 올려주세요, 따끔합니다~",
+          text_en: "Urine sample confirmed! Next, we will draw blood for lab tests. Please rest your arm here, slight pinch~",
+          audioKey: "lab_blood_1"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "앗, 따끔! 그래도 생각보다 금방 끝났네.",
+          text_en: "Ouch, a pinch! But that was much quicker than I expected.",
+          audioKey: "lab_blood_2"
+        },
+        {
+          speaker: "임상병리사 NPC",
+          speaker_en: "Clinical Pathologist NPC",
+          char: "assets/lab_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "채혈 부위는 멍이 들지 않도록 절대 문지르지 마시고, 알코올 솜으로 5분간 꾹 눌러서 지혈해 주세요!",
+          text_en: "Do not rub the puncture site to prevent bruising. Please press firmly with the alcohol swab for 5 minutes!",
+          audioKey: "lab_blood_3"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
+    }
+
+    function startLabXray() {
+      playBeep(750, 'triangle', 0.05);
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      // 흉부 X-ray 촬영실 배경으로 전환
+      const bgImg = document.getElementById('bg-image');
+      if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl('assets/xray_room.jpg')}')`;
+
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) scene.widgetType = 'LAB_TO_BASIC_CONFIRM';
+
+      // 3) 흉부 X-ray 촬영 진행 + 기본검사실 이동 전 NPC & 주인공 대화 시퀀스
+      currentDialogueList = [
+        {
+          speaker: "영상의학 방사선사 NPC",
+          speaker_en: "Radiologist NPC",
+          char: "assets/lab_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "흉부 X-ray 촬영대 앞에 서서 가슴을 밀착해 주세요. 숨을 깊게 들이마시고~ 참으세요!",
+          text_en: "Please stand against the chest X-ray stand and press your chest firmly. Take a deep breath in... and hold it!",
+          audioKey: "lab_xray_1"
+        },
+        {
+          speaker: "영상의학 방사선사 NPC",
+          speaker_en: "Radiologist NPC",
+          char: "assets/lab_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "(찰칵) 촬영 끝났습니다! 숨 편하게 쉬셔도 됩니다. 흉부 영상 이상 소견 없이 깨끗합니다.",
+          text_en: "(Click) Imaging complete! You may breathe comfortably now. No abnormal chest findings.",
+          audioKey: "lab_xray_2"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "휴우, 숨 참느라 긴장했는데 엑스레이 촬영도 금방 끝났네!",
+          text_en: "Phew, I was nervous holding my breath, but the X-ray was over in no time!",
+          audioKey: "lab_xray_3"
+        },
+        {
+          speaker: "임상병리사 NPC",
+          speaker_en: "Clinical Pathologist NPC",
+          char: "assets/lab_officer.png",
+          charPos: "right",
+          plateClass: "from-teal-700 to-emerald-800 border-teal-400/40",
+          text: "소변, 채혈, 흉부 X-ray까지 임상병리실의 모든 검사가 무사히 끝났습니다! 이제 바로 옆 [기본검사실]로 이동하여 혈압, 시력, 신장·체중 측정을 진행해 주세요.",
+          text_en: "Urine, blood, and chest X-ray exams are all complete! Please proceed to the [Basic Exam Lab] next for blood pressure, vision, and height & weight measurements.",
+          audioKey: "lab_xray_4"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "피도 뽑고 엑스레이도 이상 없이 잘 마쳤으니, 다음 순서인 기본검사실로 가보자!",
+          text_en: "Blood drawn and X-ray done with no issues! Let's head to the Basic Examination Room next.",
+          audioKey: "lab_xray_5"
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
     }
 
     function selectHealth(val) {
@@ -3128,33 +3847,116 @@
         "ann_health"
       );
     }
+    function confirmIdentityReg() {
+      playBeep(920, 'sine', 0.08);
+      setTimeout(() => playBeep(1200, 'triangle', 0.06), 100);
+      goToScene(6);
+    }
+
     function selectCard(val) {
       userData.cardType = val;
-      transitionWithAnnouncement(
-        "{cardType} 등록이 완료되었습니다! 이제 사물함에 소지품을 보관하고 전용 검사복으로 환복하기 위해 탈의실로 이동하겠습니다.",
-        "{cardType} registered! Now let's move to the locker room to store your belongings and change into the examination uniform.",
-        6,
-        "힘찬이 (병무청 AI 가이드)",
-        "Himchan (MMA AI Guide)",
-        "ann_card"
-      );
+      playBeep(750, 'triangle', 0.05);
+      setTimeout(() => playBeep(880, 'sine', 0.06), 120);
+
+      // 선택지 팝업 즉시 닫기
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      // 다음 위젯을 심리검사 UI로 설정
+      const scene = SCENARIOS[currentSceneIdx];
+      if (scene) {
+        scene.widgetType = 'PSYCH_TEST_UI';
+      }
+
+      // 카드 선택 후 순차 대사:
+      // 1) 심리검사관 NPC: 분실 시 재발급 안내
+      // 2) 주인공 민우: 심리검사 문제 테스트 참여 선언
+      currentDialogueList = [
+        {
+          speaker: "심리검사관 NPC",
+          speaker_en: "Psychological Examiner NPC",
+          char: "assets/psychologist.png",
+          charPos: "right",
+          plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
+          text: `[${val}] 발급 및 등록이 완료되었습니다!\n혹시라도 나중에 나라사랑카드를 분실하시더라도 가까운 해당 은행 고객센터에 연락해 보시고 영업점을 방문하시면 언제든 재발급이 가능하니 안심하세요.`,
+          text_en: `[${val}] issued and registered!\nIf you ever lose your card later, simply contact the bank's customer service or visit a nearby branch to easily get a reissuance, so no worries.`,
+          audioKey: "voice_7_card_complete"
+        },
+        {
+          speaker: "{name} (주인공)",
+          speaker_en: "{name} (Protagonist)",
+          char: "assets/minwoo.png",
+          charPos: "right",
+          plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+          text: "카드 등록도 마쳤으니, 본격적인 검사 전에 심리검사 문제를 한번 테스트 삼아 직접 풀어볼게요!",
+          text_en: "Now that my card registration is complete, I'll try solving some sample psychological test questions as a practice!",
+          audioKey: "voice_7_practice_start"
+        }
+      ];
+      currentDialogueIdx = 0;
+
+      // 대사 출력 시작 (두 대사가 모두 끝나고 터치하면 widgetType인 PSYCH_TEST_UI가 표출됨)
+      playDialogueChunk();
     }
-    function confirmDefaultSchedule() {
+    function confirmRegionAndAskCalendar() {
       playBeep(750, 'triangle', 0.05);
       const sel = document.getElementById('default-region-select');
       if (sel && sel.value) {
-        userData.region = sel.value;
+        updateRegion(sel.value);
       } else if (!userData.region) {
-        userData.region = "서울지방병무청";
+        updateRegion("서울지방병무청");
       }
-      userData.examDate = "2026-10-21 (수) 오전";
 
       const choiceOverlay = document.getElementById('center-choice-overlay');
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
       }
-      renderScene(4);
+
+      // 후속 대사 및 위젯 세팅 (SCENARIOS[1]에 CHOICE_SCHEDULE_CONSENT 세팅)
+      const scene = (typeof SCENARIOS !== 'undefined') ? SCENARIOS[1] : null;
+      if (scene) scene.widgetType = 'CHOICE_SCHEDULE_CONSENT';
+
+      const uName = userData.name || '김민우';
+      const uRegion = userData.region || '서울지방병무청';
+
+      currentDialogueList = [
+        {
+          speaker: (currentLang === 'en') ? "Himchan (MMA AI Guide)" : "힘찬이 (병무청 AI 가이드)",
+          speaker_en: "Himchan (MMA AI Guide)",
+          char: "assets/himchan_smile.png",
+          charPos: "right",
+          plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+          text: `${uName} 님, 선택하신 관할 병무청은 [${uRegion}]입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면 통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n${uName} 님, [${uRegion}]의 일별 실시간 잔여석 달력도 혹시 확인해 보시겠습니까?`,
+          text_en: `${uName}, your selected regional MMA office is [${uRegion}]!\n\nMany young people don't know this, but as long as there are vacancies, you can freely change your draft exam date 100% online up to 1 day before your desired date regardless of the notice.\n\n${uName}, would you also like to check the daily real-time vacancy calendar for [${uRegion}]?`
+        }
+      ];
+      currentDialogueIdx = 0;
+      playDialogueChunk();
+    }
+
+    function confirmDefaultSchedule() {
+      playBeep(750, 'triangle', 0.05);
+      const sel = document.getElementById('default-region-select');
+      if (sel && sel.value) {
+        updateRegion(sel.value);
+      } else if (!userData.region) {
+        updateRegion("서울지방병무청");
+      }
+      userData.isCustomDate = false;
+      userData.examDate = "2026년 10월 21일 (수) 오전";
+
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      renderScene(3);
     }
 
     function updateRegion(val) {
@@ -3163,7 +3965,7 @@
         const fareData = MmaApiService.calculateFare(val);
         userData.residentAddress = fareData.residentAddress;
         userData.distanceKm = fareData.distanceKm;
-        userData.fare = fareData.formattedText;
+        userData.fare = "실거리 기준 산정 지급 예정 (나라사랑카드 입금)";
         const contact = MmaApiService.getOfficeContact(val);
         userData.regionName = contact.address || val;
       }
@@ -3174,9 +3976,10 @@
     // 병무청 민원 신청서 작성용 필수 정보 원클릭 복사
     function copyApplicationInfo() {
       const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "02-820-4241", address: "서울특별시 영등포구 여의대방로43길 13 (신길역/대방역)", dept: "병역판정검사과" };
-      const textToCopy = `[별지 제1호 서식] 병역판정검사 일자 및 장소 본인선택(변경) 신청서
+      const formTitle = userData.isCustomDate ? '병역판정검사 일자 및 장소 본인선택(변경) 신청서' : '병역판정검사 통지서 기본 배정 내역서';
+      const textToCopy = `[별지 제1호 서식] ${formTitle}
 ■ 수검 희망 검사장 내역
-• 수검 희망일시: ${userData.examDate || '2026년 10월 22일 (목) 오전'}
+• 수검 희망일시: ${userData.examDate || '2026년 10월 21일 (수) 오전'}
 • 수검 희망기관: ${userData.region} (${contact.dept || '병역판정검사과'})
 • 검사장 소재지: ${contact.address}
 • 직통 문의전화: ${contact.phone}
@@ -3341,6 +4144,7 @@
         if (clickable) {
           dayCard.onclick = () => {
             playBeep(750, 'triangle', 0.05);
+            userData.isCustomDate = true;
             userData.examDate = `${currentCalYear}년 ${currentCalMonth}월 ${i}일 (${dayNames[d.dayOfWeek]}) 오전`;
             closeCalendarModal();
             renderScene(3);
@@ -3436,7 +4240,7 @@
       if (resLoc) resLoc.innerText = userData.region;
       if (resGrade) resGrade.innerText = userData.finalGrade;
       if (resDisp) resDisp.innerText = userData.disposition;
-      if (resPay) resPay.innerText = userData.fare;
+      if (resPay) resPay.innerText = (currentLang === 'en') ? 'To be deposited via card based on actual distance' : '실거리 기준 지급 예정 (나라사랑카드 입금)';
 
       const modal = document.getElementById('cert-modal');
       if (modal) {
@@ -3449,14 +4253,70 @@
       } catch(e) {}
     }
     function closeCertModal() {
+      playBeep(750, 'triangle', 0.05);
       const modal = document.getElementById('cert-modal');
       if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
-      // 결과서 확인 후 탈의실 환복 씬(SCENE 13)으로 자동 진행
+
+      // 중앙 선택지 오버레이 및 잔여 콘텐츠 확실하게 초기화 은닉
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+
+      const charLayer = document.getElementById('character-layer');
+      if (charLayer) {
+        charLayer.classList.remove('opacity-0', 'pointer-events-none');
+      }
+
+      clearInterval(typingInterval);
+      isTyping = false;
+
       if (currentSceneIdx === 12) {
-        renderScene(13);
+        const scene = SCENARIOS[currentSceneIdx];
+        if (scene) scene.widgetType = 'TO_LOCKER_ROOM_POPUP';
+
+        // 결과 요약서 확인 후: 민우, 수석판정관 NPC, 힘찬이 대사
+        currentDialogueList = [
+          {
+            speaker: "{name} (주인공)",
+            speaker_en: "{name} (Protagonist)",
+            char: "assets/minwoo_happy.png",
+            charPos: "right",
+            plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+            text: "모든 검사를 무사히 마치고 신체등급 1급 현역병 입영 대상 처분을 받았어!\n처음엔 조금 긴장했는데, 모든 검사가 체계적이고 친절하게 진행되어서 정말 다행이야.",
+            text_en: "All exams are complete, and I've officially received Grade 1 Active Duty disposition!\nI was a bit nervous at first, but everything was systematic and friendly."
+          },
+          {
+            speaker: "수석판정관 NPC",
+            speaker_en: "Chief Adjudicator NPC",
+            char: "assets/adjudicator.png",
+            charPos: "right",
+            plateClass: "from-purple-800 to-indigo-950 border-purple-400/40",
+            text: "성실하게 검사에 임해주셔서 대단히 감사합니다, {name} 수검자님! 오늘 판정된 결과는 병무청 전산에 즉시 등록되었습니다.\n\n이제 탈의실로 이동하여 검사복을 환복하시고, 사물함에서 개인 소지품을 챙겨 귀가하시면 됩니다.",
+            text_en: "Thank you for your sincere participation, examinee {name}! Today's result has been registered in the MMA system.\n\nPlease proceed to the locker room to change back into your clothes, collect your personal belongings, and head home safely."
+          },
+          {
+            speaker: "힘찬이 (병무청 AI 가이드)",
+            speaker_en: "Himchan (MMA AI Guide)",
+            char: "assets/himchan_cheer.png",
+            charPos: "right",
+            plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+            text: "오늘 하루 병역판정검사 받으시느라 정말 고생 많으셨습니다!\n사물함 열쇠를 반납하고 평상복으로 갈아입으러 탈의실로 가볼까요?",
+            text_en: "You did great today completing your draft physical examination!\nLet's head to the locker room to return your key and change into your casual clothes!"
+          }
+        ];
+        currentDialogueIdx = 0;
+        playDialogueChunk();
+      } else if (currentSceneIdx >= 14) {
+        openLobby();
+      } else {
+        goToScene(13);
       }
     }
     function downloadCertMock() {
@@ -3730,6 +4590,23 @@
       }
     }
 
+    function showPrivacyPolicyModal() {
+      const modal = document.getElementById('privacy-policy-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    function closePrivacyPolicyModal() {
+      const modal = document.getElementById('privacy-policy-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
     function dismissSyncWarningAndStart() {
       window._syncWarningAcknowledged = true;
       closeSyncWarningModal();
@@ -3767,7 +4644,7 @@
             const fareData = MmaApiService.calculateFare(userData.region || '서울지방병무청');
             userData.residentAddress = fareData.residentAddress;
             userData.distanceKm = fareData.distanceKm;
-            userData.fare = fareData.formattedText;
+            userData.fare = "실거리 기준 산정 지급 예정 (나라사랑카드 입금)";
           }
         }
       }

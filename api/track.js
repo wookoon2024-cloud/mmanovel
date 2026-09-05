@@ -94,12 +94,13 @@ function extractClientIp(req) {
   if (!ip && req.headers['x-client-ip']) ip = req.headers['x-client-ip'].trim();
   if (!ip && req.socket && req.socket.remoteAddress) ip = req.socket.remoteAddress;
   if (!ip && req.connection && req.connection.remoteAddress) ip = req.connection.remoteAddress;
-  if (!ip) ip = '127.0.0.1';
+  if (!ip || ip === '::1' || ip === '::ffff:127.0.0.1') ip = '127.0.0.1';
 
   // IPv6 mapped IPv4 접두사(::ffff:) 정리
   if (ip.startsWith('::ffff:')) {
     ip = ip.substring(7);
   }
+  if (ip === '::1') ip = '127.0.0.1';
   return ip;
 }
 

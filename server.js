@@ -12,7 +12,7 @@ try {
   ttsHandler = (req, res) => res.status(503).json({ error: 'ws module not installed locally' });
 }
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -31,6 +31,17 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
   let pathname = parsedUrl.pathname;
+
+  // Set default CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-session-id');
+
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 200;
+    res.end();
+    return;
+  }
 
   // Enhance res with status and json helpers for serverless functions
   res.status = function(code) {
