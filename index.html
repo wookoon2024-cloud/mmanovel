@@ -2982,9 +2982,11 @@
         askMsgEn = adaptGuideDialogue(askMsgEn, userData.selectedGuide || 'himchan', true);
       }
 
-      const resolved = (typeof resolveGuideAssets === 'function') 
-        ? resolveGuideAssets('assets/himchan_smile.png', '힘찬이 (병무청 AI 가이드)', 'Himchan (MMA AI Guide)', userData.selectedGuide || 'himchan')
-        : { speaker: '힘찬이 (병무청 AI 가이드)', speaker_en: 'Himchan (MMA AI Guide)', plateClass: 'from-blue-700 to-indigo-800 border-blue-400/40', char: 'assets/himchan_smile.png' };
+      // 씬의 widgetType을 DEFAULT_REGION_PICKER로 설정하여
+      // 가이드의 질문 대사 낭독 및 타이핑이 완전히 끝난 후 사용자가 화면을 클릭했을 때 팝업이 뜨도록 자연스럽게 연계
+      if (typeof SCENARIOS !== 'undefined' && SCENARIOS[currentSceneIdx]) {
+        SCENARIOS[currentSceneIdx].widgetType = 'DEFAULT_REGION_PICKER';
+      }
 
       updateDialogueDirect(
         resolved.speaker,
@@ -2994,10 +2996,6 @@
         askMsgKo,
         askMsgEn
       );
-
-      setTimeout(() => {
-        renderWidget('DEFAULT_REGION_PICKER');
-      }, 400);
     }
 
     // 화면 중앙 플로팅 선택지 렌더러 (정통 비주얼 노벨 스타일)
@@ -4173,7 +4171,18 @@
       }];
       currentDialogueIdx = 0;
 
-      typewriterEffect(formattedTxt);
+      typewriterEffect(formattedTxt, () => {
+        const nextIndicator = document.getElementById('next-indicator');
+        if (nextIndicator) nextIndicator.classList.remove('hidden');
+        if (autoPlay) {
+          const scene = (typeof SCENARIOS !== 'undefined') ? SCENARIOS[currentSceneIdx] : null;
+          if (scene && scene.widgetType) {
+            autoPlayTimer = setTimeout(() => {
+              renderWidget(scene.widgetType);
+            }, 2800);
+          }
+        }
+      });
     }
 
     // 기본 신체계측 3단계 순차 진행 함수
