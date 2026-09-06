@@ -108,12 +108,13 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
   // 한국어 어조 변환
   if (guideId === 'narae') {
     return rawText
-      .replace(/힘찬이/g, '나래')
-      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'힘찬이'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '나래'예요 :)")
+      .replace(/(힘찬이|서준)/g, '나래')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|서준)'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '나래'예요 :)")
       .replace(/충성!\s*안녕하십니까/g, "안녕하세요")
       .replace(/파이팅해 볼까요\?!/g, "천천히 힘을 내어 시작해 볼까요? :)")
       .replace(/파이팅입니다!/g, "함께 힘내봐요 :)")
       .replace(/가보실까요\?!/g, "함께 가보실래요? :)")
+      .replace(/가볼까요\?/g, "함께 가볼까요? :)")
       .replace(/이동해 볼까요\?!/g, "함께 이동해 볼까요? :)")
       .replace(/확인해 보세요!/g, "편안하게 확인해 보세요 :)")
       .replace(/출발합니다!/g, "함께 출발해 볼게요 :)")
@@ -127,12 +128,13 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
       .replace(/해보겠습니다!/g, "도와드릴게요 :)");
   } else if (guideId === 'seojun') {
     return rawText
-      .replace(/힘찬이/g, '서준')
-      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'힘찬이'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
+      .replace(/(힘찬이|나래)/g, '서준')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|서준)'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
       .replace(/충성!\s*안녕하십니까/g, "반갑습니다")
       .replace(/파이팅해 볼까요\?!/g, "원활한 검사를 위해 집중해 주시기 바랍니다.")
       .replace(/파이팅입니다!/g, "다음 절차로 원활하게 진행하겠습니다.")
       .replace(/가보실까요\?!/g, "다음 검사장으로 신속히 이동하겠습니다.")
+      .replace(/가볼까요\?/g, "다음 검사장으로 이동하겠습니다.")
       .replace(/이동해 볼까요\?!/g, "검사실로 이동하겠습니다.")
       .replace(/확인해 보세요!/g, "상세 규정을 면밀히 확인 바랍니다.")
       .replace(/출발합니다!/g, "안내 절차를 개시합니다.")
@@ -153,9 +155,18 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
  */
 function resolveGuideAssets(originalChar, originalSpeaker, originalSpeakerEn, guideId = 'himchan') {
   const g = GUIDE_PERSONAS[guideId] || GUIDE_PERSONAS.himchan;
-  const isHimchanSpeaker = (originalSpeaker && (originalSpeaker.includes('힘찬이') || originalSpeaker.includes('Himchan') || originalSpeaker.includes('가이드') || originalSpeaker.includes('Guide')));
+  const isGuideSpeaker = (originalSpeaker && (
+    originalSpeaker.includes('힘찬이') || originalSpeaker.includes('Himchan') || 
+    originalSpeaker.includes('나래') || originalSpeaker.includes('Narae') || 
+    originalSpeaker.includes('서준') || originalSpeaker.includes('Seojun') || 
+    originalSpeaker.includes('가이드') || originalSpeaker.includes('Guide')
+  ));
   
-  if (!isHimchanSpeaker && !originalChar.includes('himchan')) {
+  const isGuideChar = originalChar && (
+    originalChar.includes('himchan') || originalChar.includes('narae') || originalChar.includes('seojun')
+  );
+
+  if (!isGuideSpeaker && !isGuideChar) {
     return {
       char: originalChar,
       speaker: originalSpeaker,

@@ -1021,6 +1021,15 @@
         return;
       }
 
+      // 가이드 캐릭터 스프라이트 동적 치환 (나래/서준 선택 시 힘찬이 스프라이트 자동 치환)
+      if (charPath && (charPath.includes('himchan') || charPath.includes('narae') || charPath.includes('seojun'))) {
+        const guideId = (typeof userData !== 'undefined' && userData.selectedGuide) || 'himchan';
+        if (typeof resolveGuideAssets === 'function') {
+          const res = resolveGuideAssets(charPath, '', '', guideId);
+          if (res && res.char) charPath = res.char;
+        }
+      }
+
       const targetSrc = getAssetUrl(charPath);
 
       // 이미 같은 스프라이트가 정상 표시 중인 경우 위치만 갱신
@@ -1987,8 +1996,26 @@
       }
       if (choiceContainer) choiceContainer.innerHTML = '';
 
+      // 선택된 가이드에 맞게 화자, 대사, 스프라이트, 플레이트 동적 치환
+      const guideId = (typeof userData !== 'undefined' && userData.selectedGuide) || 'himchan';
+      let resolvedChar = 'assets/himchan_smile.png';
+      let resolvedPlate = 'from-blue-700 to-indigo-800 border-blue-400/40';
+
+      if (typeof resolveGuideAssets === 'function') {
+        const res = resolveGuideAssets('assets/himchan_smile.png', speakerKo, speakerEn, guideId);
+        speakerKo = res.speaker;
+        speakerEn = res.speaker_en;
+        resolvedChar = res.char;
+        if (res.plateClass) resolvedPlate = res.plateClass;
+      }
+      if (typeof adaptGuideDialogue === 'function') {
+        announcementKo = adaptGuideDialogue(announcementKo, guideId, false);
+        announcementEn = adaptGuideDialogue(announcementEn, guideId, true);
+      }
+
       // 화자 설정
       const spkName = document.getElementById('speaker-name');
+      const spkPlate = document.getElementById('speaker-plate');
       let currentSpeaker = (currentLang === 'en') ? speakerEn : speakerKo;
       if (currentSpeaker) {
         const uName = userData.name || '김민우';
@@ -1999,14 +2026,27 @@
                                        .replace(/Minwoo/gi, uName);
       }
       if (spkName) spkName.innerText = currentSpeaker;
+      if (spkPlate) {
+        spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${resolvedPlate}`;
+      }
+
+      // 가이드 스프라이트 즉시 표출
+      updateCharacterSprite(resolvedChar, 'right', false);
 
       // 안내 대사 포맷팅
       const rawMsg = (currentLang === 'en') ? announcementEn : announcementKo;
       const formattedMsg = formatSceneText(rawMsg);
-      currentDialogueList = [formattedMsg];
+      currentDialogueList = [{
+        speaker: speakerKo,
+        speaker_en: speakerEn,
+        char: resolvedChar,
+        plateClass: resolvedPlate,
+        text: rawMsg,
+        text_en: rawMsg
+      }];
       currentDialogueIdx = 0;
 
-      // 실제 남성 음성 오디오 또는 TTS 음성 낭독 실행
+      // TTS 음성 낭독 실행
       speakDialogue(currentSpeaker, formattedMsg, audioKey);
       typewriterEffect(formattedMsg, () => {
         if (autoPlay) {
@@ -2034,37 +2074,65 @@
       const spkEn = item.speaker_en || '';
       const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('narae') || item.char.includes('seojun')));
 
-      if (!isGuide) return item;
-
       let resolvedChar = item.char;
       let resolvedSpk = item.speaker;
       let resolvedSpkEn = item.speaker_en;
       let resolvedPlate = item.plateClass;
 
-      if (typeof resolveGuideAssets === 'function') {
-        const res = resolveGuideAssets(item.char, item.speaker, item.speaker_en, guideId);
-        resolvedChar = res.char;
-        resolvedSpk = res.speaker;
-        resolvedSpkEn = res.speaker_en;
-        if (res.plateClass) resolvedPlate = res.plateClass;
+      if (isGuide) {
+        if (typeof resolveGuideAssets === 'function') {
+          const res = resolveGuideAssets(item.char, item.speaker, item.speaker_en, guideId);
+          resolvedChar = res.char;
+          resolvedSpk = res.speaker;
+          resolvedSpkEn = res.speaker_en;
+          if (res.plateClass) resolvedPlate = res.plateClass;
+        }
+
+        let textKo = item.text || '';
+        let textEn = item.text_en || textKo;
+        if (typeof adaptGuideDialogue === 'function') {
+          textKo = adaptGuideDialogue(textKo, guideId, false);
+          textEn = adaptGuideDialogue(textEn, guideId, true);
+        }
+
+        let resolvedDialogues = item.dialogues;
+        if (resolvedDialogues && Array.isArray(resolvedDialogues)) {
+          resolvedDialogues = resolvedDialogues.map(d => getGuideResolvedItem(d));
+        }
+        let resolvedCustom = item.customDialogues;
+        if (resolvedCustom && Array.isArray(resolvedCustom)) {
+          resolvedCustom = resolvedCustom.map(d => getGuideResolvedItem(d));
+        }
+        let resolvedDefault = item.defaultDialogues;
+        if (resolvedDefault && Array.isArray(resolvedDefault)) {
+          resolvedDefault = resolvedDefault.map(d => getGuideResolvedItem(d));
+        }
+
+        return {
+          ...item,
+          char: resolvedChar,
+          speaker: resolvedSpk,
+          speaker_en: resolvedSpkEn,
+          plateClass: resolvedPlate,
+          text: textKo,
+          text_en: textEn,
+          ...(resolvedDialogues ? { dialogues: resolvedDialogues } : {}),
+          ...(resolvedCustom ? { customDialogues: resolvedCustom } : {}),
+          ...(resolvedDefault ? { defaultDialogues: resolvedDefault } : {})
+        };
       }
 
-      let textKo = item.text || '';
-      let textEn = item.text_en || textKo;
-      if (typeof adaptGuideDialogue === 'function') {
-        textKo = adaptGuideDialogue(textKo, guideId, false);
-        textEn = adaptGuideDialogue(textEn, guideId, true);
+      // 비 가이드 항목이라도 내부에 dialogues가 있을 경우 매핑
+      if (item.dialogues || item.customDialogues || item.defaultDialogues) {
+        return {
+          ...item,
+          ...(item.dialogues ? { dialogues: item.dialogues.map(d => getGuideResolvedItem(d)) } : {}),
+          ...(item.customDialogues ? { customDialogues: item.customDialogues.map(d => getGuideResolvedItem(d)) } : {}),
+          ...(item.defaultDialogues ? { defaultDialogues: item.defaultDialogues.map(d => getGuideResolvedItem(d)) } : {})
+        };
       }
 
-      return {
-        ...item,
-        char: resolvedChar,
-        speaker: resolvedSpk,
-        speaker_en: resolvedSpkEn,
-        plateClass: resolvedPlate,
-        text: textKo,
-        text_en: textEn
-      };
+      return item;
     }
 
     // 실제 씬 화면 업데이트 및 대사 출력
@@ -2223,8 +2291,10 @@
 
     // 현재 문단 대사 출력 함수 (화자, 캐릭터 스프라이트, 이름표 동적 실시간 전환)
     function playDialogueChunk() {
-      const scene = SCENARIOS[currentSceneIdx];
-      const item = currentDialogueList[currentDialogueIdx] || {};
+      const rawScene = SCENARIOS[currentSceneIdx];
+      const scene = (typeof getGuideResolvedItem === 'function') ? getGuideResolvedItem(rawScene) : (rawScene || {});
+      let rawItem = currentDialogueList[currentDialogueIdx] || {};
+      const item = (typeof getGuideResolvedItem === 'function') ? getGuideResolvedItem(rawItem) : rawItem;
       const rawText = (currentLang === 'en' && item.text_en) ? item.text_en : (item.text || '');
       const targetText = formatSceneText(rawText);
       const isLastChunk = (currentDialogueIdx >= currentDialogueList.length - 1);
@@ -2750,6 +2820,7 @@
           text_en: "Only the final stage remains—the Adjudication Room!\n\nThe Chief Adjudicator will synthesize all your exam results to confirm your final physical grade and disposition. Ready to head in together?"
         }
       ];
+      currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
       currentDialogueIdx = 0;
       playDialogueChunk();
     }
@@ -4047,12 +4118,8 @@
       if (spPlate) {
         spPlate.className = `px-4 py-1.5 rounded-t-xl text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide select-none bg-gradient-to-r ${plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       }
-      if (spriteImg && charSrc) {
-        spriteImg.src = charSrc;
-      }
-      if (spriteWrap) {
-        spriteWrap.classList.remove('opacity-0', 'translate-y-4');
-        spriteWrap.classList.add('opacity-100', 'translate-y-0');
+      if (charSrc) {
+        updateCharacterSprite(charSrc, 'right', false);
       }
 
       const txt = isEn ? (textEn || text) : text;
@@ -4658,6 +4725,7 @@
           text_en: `${uName}, your selected regional MMA office is [${uRegion}]!\n\nMany young people don't know this, but as long as there are vacancies, you can freely change your draft exam date 100% online up to 1 day before your desired date regardless of the notice.\n\n${uName}, would you also like to check the daily real-time vacancy calendar for [${uRegion}]?`
         }
       ];
+      currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
       currentDialogueIdx = 0;
       playDialogueChunk();
     }
@@ -5008,6 +5076,7 @@
             text_en: "You did great today completing your draft physical examination!\nLet's head to the locker room to return your key and change into your casual clothes!"
           }
         ];
+        currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
         currentDialogueIdx = 0;
         playDialogueChunk();
       } else if (currentSceneIdx >= 14) {
