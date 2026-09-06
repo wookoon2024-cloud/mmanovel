@@ -2041,8 +2041,8 @@
         speaker_en: speakerEn,
         char: resolvedChar,
         plateClass: resolvedPlate,
-        text: rawMsg,
-        text_en: rawMsg
+        text: formattedMsg,
+        text_en: formattedMsg
       }];
       currentDialogueIdx = 0;
 
@@ -2436,7 +2436,9 @@
       if (isAnnouncement) {
         if (isTyping) {
           clearInterval(typingInterval);
-          const currentText = currentDialogueList[currentDialogueIdx] || '';
+          const item = currentDialogueList[currentDialogueIdx];
+          const rawText = (typeof item === 'object') ? ((currentLang === 'en' && item.text_en) ? item.text_en : (item.text || '')) : (item || '');
+          const currentText = formatSceneText(rawText);
           const isMobile = (window.innerWidth <= 640) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
           if (textElem) textElem.innerHTML = isMobile ? currentText.replace(/\n+/g, ' ').trim() : currentText.replace(/\n/g, '<br>');
           isTyping = false;
