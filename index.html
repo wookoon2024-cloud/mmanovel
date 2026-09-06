@@ -2862,7 +2862,7 @@
 
     function setMentorSlide(idx) {
       if (typeof stopPreviewAudio === 'function') stopPreviewAudio();
-      currentMentorSlide = (idx + 3) % 3;
+      currentMentorSlide = Math.max(0, Math.min(2, idx));
       const track = document.getElementById('mentor-carousel-track');
       if (track) {
         track.style.transform = `translateX(-${currentMentorSlide * 100}%)`;
@@ -2883,15 +2883,42 @@
       if (countLabel) {
         countLabel.textContent = `${currentMentorSlide + 1} / 3 · ${isEn ? 'Swipe left/right' : '좌우로 넘겨보세요'}`;
       }
+
+      // 맨 처음(0)이면 이전 버튼 숨김, 맨 끝(2)이면 다음 버튼 숨김
+      const prevBtn = document.getElementById('btn-mentor-carousel-prev');
+      const nextBtn = document.getElementById('btn-mentor-carousel-next');
+      if (prevBtn) {
+        if (currentMentorSlide <= 0) {
+          prevBtn.classList.add('invisible');
+          prevBtn.disabled = true;
+        } else {
+          prevBtn.classList.remove('invisible');
+          prevBtn.disabled = false;
+        }
+      }
+      if (nextBtn) {
+        if (currentMentorSlide >= 2) {
+          nextBtn.classList.add('invisible');
+          nextBtn.disabled = true;
+        } else {
+          nextBtn.classList.remove('invisible');
+          nextBtn.disabled = false;
+        }
+      }
+
       if (typeof playBeep === 'function') playBeep(520 + currentMentorSlide * 50, 'sine', 0.02);
     }
 
     function nextMentorSlide() {
-      setMentorSlide(currentMentorSlide + 1);
+      if (currentMentorSlide < 2) {
+        setMentorSlide(currentMentorSlide + 1);
+      }
     }
 
     function prevMentorSlide() {
-      setMentorSlide(currentMentorSlide - 1);
+      if (currentMentorSlide > 0) {
+        setMentorSlide(currentMentorSlide - 1);
+      }
     }
 
     function initMentorCarouselSwipe() {
@@ -2996,12 +3023,12 @@
         choiceContainer.innerHTML = `
           <div class="flex flex-col gap-2.5 sm:gap-3.5 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 멘토 캐릭터 선택 안내 헤더 -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-4 text-center shadow-xl">
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-2.5 sm:p-4 text-center shadow-xl">
               <span class="text-xs sm:text-sm font-black text-blue-300 flex items-center justify-center gap-1.5 mb-1 tracking-wide">
                 <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? 'Choose Your AI Mentor Guide' : '병역판정검사 동행 AI 가이드 멘토 선택'}
               </span>
-              <p class="text-[10.5px] sm:text-xs text-slate-300 leading-relaxed">
-                ${isEn ? 'Select your preferred mentor! Their illustrations, tone of voice, and speech style will be tailored to you.' : '함께할 가이드 선생님을 선택해 보세요. 일러스트 스프라이트·말투·목소리가 맞춤 적용됩니다.'}
+              <p class="text-[11px] sm:text-xs text-slate-300 truncate leading-tight">
+                ${isEn ? 'Tailored illustration, voice, and tone applied.' : '선택한 멘토에 맞춰 일러스트·말투·목소리가 적용됩니다.'}
               </p>
             </div>
 
@@ -3100,7 +3127,7 @@
 
               <!-- 모바일 전용 캐러셀 하단 네비게이션 (이전/다음 버튼, 도트, 스와이프 안내) -->
               <div class="flex md:hidden items-center justify-between px-2 pt-2 pb-0.5">
-                <button type="button" onclick="event.stopPropagation(); prevMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold">
+                <button id="btn-mentor-carousel-prev" type="button" onclick="event.stopPropagation(); prevMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold invisible">
                   <i data-lucide="chevron-left" class="w-4 h-4"></i>
                   <span>${isEn ? 'Prev' : '이전'}</span>
                 </button>
@@ -3114,7 +3141,7 @@
                   <span class="text-[10px] text-slate-400 font-bold" id="mentor-carousel-count">1 / 3 · ${isEn ? 'Swipe left/right' : '좌우로 넘겨보세요'}</span>
                 </div>
 
-                <button type="button" onclick="event.stopPropagation(); nextMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold">
+                <button id="btn-mentor-carousel-next" type="button" onclick="event.stopPropagation(); nextMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold">
                   <span>${isEn ? 'Next' : '다음'}</span>
                   <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </button>
@@ -3122,8 +3149,8 @@
             </div>
 
             <!-- 하단 부가 안내 문구 -->
-            <p class="text-[10px] sm:text-[11px] text-slate-400 text-center mt-0.5">
-              ${isEn ? '※ You can change your mentor anytime via the ⚙️(Guide) button on the top right.' : '※ 검사 진행 도중 언제든 우측 상단 ⚙️(가이드) 버튼을 눌러 다른 멘토로 변경하실 수 있습니다.'}
+            <p class="text-[10px] sm:text-[11px] text-slate-400 text-center truncate max-w-full mt-0.5">
+              ${isEn ? '※ You can change your mentor anytime via the ⚙️(Guide) button.' : '※ 진행 중 우측 상단 ⚙️(가이드) 버튼으로 언제든 변경할 수 있습니다.'}
             </p>
           </div>
         `;
