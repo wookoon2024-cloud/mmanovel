@@ -892,11 +892,11 @@
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
-                <img src="assets/himchan_smile.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
+                <img src="assets/himchan_card.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
               </div>
               <div>
                 <h4 class="font-black text-sm sm:text-base text-white">힘찬이</h4>
-                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5">씩씩하고 활기찬 열혈 멘토! 긍정 에너지로 긴장을 풀어줍니다.</p>
+                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate">긍정 에너지로 긴장을 풀어주는 열혈 멘토</p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -913,11 +913,11 @@
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
-                <img src="assets/narae_smile.png" alt="나래" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
+                <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
               </div>
               <div>
                 <h4 class="font-black text-sm sm:text-base text-white">나래</h4>
-                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5">다정하고 따뜻한 안심 멘토! 차분하게 곁에서 세심하게 챙겨줍니다.</p>
+                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate">차분하고 세심하게 챙겨주는 안심 멘토</p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -934,11 +934,11 @@
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
-                <img src="assets/seojun_smile.png" alt="서준" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
+                <img src="assets/seojun_card.png" alt="서준" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
               </div>
               <div>
                 <h4 class="font-black text-sm sm:text-base text-white">서준</h4>
-                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5">똑부러지고 명료한 스마트 멘토! 정확한 규정과 데이터로 안내합니다.</p>
+                <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate">정확한 규정과 데이터로 안내하는 스마트 멘토</p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -2722,17 +2722,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 w-full">
               
               <!-- 1. 힘찬이 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-slate-900/95 to-blue-950/40 hover:from-slate-800 hover:to-blue-900/50 border-2 border-blue-500/40 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
                 <div class="space-y-3">
                   <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
                   <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/himchan_smile.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                    <img src="assets/himchan_card.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
                   </div>
                   <!-- 이름 & 한줄 소개 -->
                   <div class="text-center space-y-1">
                     <h4 class="font-black text-base sm:text-lg text-white group-hover:text-blue-300 transition">힘찬이</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 leading-snug">
-                      ${isEn ? 'Energetic & encouraging mentor with full confidence!' : '씩씩하고 활기찬 열혈 멘토! 긍정 에너지로 긴장을 풀어줍니다.'}
+                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                      ${isEn ? 'Energetic mentor keeping your spirits high' : '긍정 에너지로 긴장을 풀어주는 열혈 멘토'}
                     </p>
                   </div>
                 </div>
@@ -2749,17 +2749,17 @@
               </div>
 
               <!-- 2. 나래 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-slate-900/95 to-rose-950/40 hover:from-slate-800 hover:to-rose-900/50 border-2 border-rose-500/40 hover:border-rose-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
                 <div class="space-y-3">
                   <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
                   <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/narae_smile.png" alt="나래" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                    <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
                   </div>
                   <!-- 이름 & 한줄 소개 -->
                   <div class="text-center space-y-1">
                     <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">나래</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 leading-snug">
-                      ${isEn ? 'Warm & caring friendly counselor guiding you step by step.' : '다정하고 따뜻한 안심 멘토! 차분하게 곁에서 세심하게 챙겨줍니다.'}
+                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                      ${isEn ? 'Calm & caring mentor guiding you kindly' : '차분하고 세심하게 챙겨주는 안심 멘토'}
                     </p>
                   </div>
                 </div>
@@ -2776,17 +2776,17 @@
               </div>
 
               <!-- 3. 서준 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-slate-900/95 to-emerald-950/40 hover:from-slate-800 hover:to-emerald-900/50 border-2 border-emerald-500/40 hover:border-emerald-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
                 <div class="space-y-3">
                   <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
                   <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/seojun_smile.png" alt="서준" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                    <img src="assets/seojun_card.png" alt="서준" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
                   </div>
                   <!-- 이름 & 한줄 소개 -->
                   <div class="text-center space-y-1">
                     <h4 class="font-black text-base sm:text-lg text-white group-hover:text-emerald-300 transition">서준</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 leading-snug">
-                      ${isEn ? 'Precise & professional smart mentor guided by official regulations.' : '똑부러지고 명료한 스마트 멘토! 정확한 규정과 데이터로 안내합니다.'}
+                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                      ${isEn ? 'Precise smart mentor guided by clear facts' : '정확한 규정과 데이터로 안내하는 스마트 멘토'}
                     </p>
                   </div>
                 </div>
@@ -2797,7 +2797,7 @@
                     <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
                   </button>
                   <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 cursor-pointer">
-                    <span>${isEn ? 'Select & Start' : '서준과 함께 시작'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    <span>${isEn ? 'Select & Start' : '서준과 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                   </button>
                 </div>
               </div>
