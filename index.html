@@ -2721,59 +2721,157 @@
 
       if (type === 'GUIDE_SELECT_INTRO') {
         const isEn = (currentLang === 'en');
+        // 가로형 3개 카드가 시원하게 배치되도록 컨테이너 확장 (PC: max-w-4xl / 모바일: 세로 스크롤 대응)
+        choiceContainer.className = "w-full max-w-sm sm:max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1";
+
         choiceContainer.innerHTML = `
-          <div class="flex flex-col gap-2.5 sm:gap-3 w-full max-w-lg animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col gap-2.5 sm:gap-3.5 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 멘토 캐릭터 선택 안내 헤더 -->
-            <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3 sm:p-4 text-center">
-              <span class="text-[11px] sm:text-xs font-bold text-blue-300 flex items-center justify-center gap-1.5 mb-1">
-                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? 'Choose Your AI Mentor' : '병역판정검사 동행 AI 멘토 선택'}
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-4 text-center shadow-xl">
+              <span class="text-xs sm:text-sm font-black text-blue-300 flex items-center justify-center gap-1.5 mb-1 tracking-wide">
+                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? 'Choose Your AI Mentor Guide' : '병역판정검사 동행 AI 가이드 멘토 선택'}
               </span>
-              <p class="text-[10px] sm:text-xs text-slate-300">
-                ${isEn ? 'You can proceed with the default mentor Himchan or explore friendly Narae & smart Seojun!' : '기본 멘토 힘찬이로 바로 진행하시거나, 다정한 나래·스마트한 서준 멘토를 선택하실 수 있습니다.'}
+              <p class="text-[10.5px] sm:text-xs text-slate-300 leading-relaxed">
+                ${isEn ? 'Select your preferred mentor! Their illustrations, tone of voice, and speech style will be tailored to you.' : '함께할 가이드 선생님을 선택해 보세요. 일러스트 스프라이트·말투·목소리가 맞춤 적용됩니다.'}
               </p>
             </div>
 
-            <!-- 선택지 1: 힘찬이와 바로 진행 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border border-blue-500/40 hover:border-blue-400 text-left flex items-center justify-between shadow-2xl transition cursor-pointer">
-              <div class="flex items-center gap-2.5 sm:gap-3.5">
-                <div class="relative w-11 h-12 sm:w-12 sm:h-14 rounded-xl overflow-hidden bg-blue-950/60 border border-blue-500/40 shrink-0">
-                  <img src="assets/himchan_smile.png" alt="힘찬이" class="w-full h-full object-cover object-top">
-                </div>
-                <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300 transition">${isEn ? 'Proceed with Mentor Himchan!' : '네! 힘찬이 멘토님과 바로 진행할게요!'}</span>
-                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">${isEn ? 'Default' : '기본 멘토'}</span>
+            <!-- 3인 멘토 가로 나열 카드 (PC: 3열 가로 / 모바일: 1열 세로) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3.5 w-full">
+              
+              <!-- 1. 힘찬이 (열혈 멘토) -->
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="group relative p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-slate-900/95 to-blue-950/40 hover:from-slate-800 hover:to-blue-900/50 border-2 border-blue-500/40 hover:border-blue-400 shadow-xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                <div class="space-y-2.5">
+                  <!-- 상단 썸네일 & 배지 -->
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-14 h-16 sm:w-16 sm:h-20 rounded-xl overflow-hidden bg-blue-950/80 border border-blue-500/40 shrink-0 shadow-inner group-hover:scale-105 transition">
+                      <img src="assets/himchan_smile.png" alt="힘찬이" class="w-full h-full object-cover object-top">
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1 flex-wrap">
+                        <span class="font-black text-sm sm:text-base text-white group-hover:text-blue-300 transition">힘찬이</span>
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">기본 멘토</span>
+                      </div>
+                      <div class="mt-1 flex items-center gap-1 flex-wrap">
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-600/30 text-blue-200 border border-blue-400/30">열혈 멘토</span>
+                        <span class="px-1.5 py-0.5 text-[9px] rounded bg-slate-800 text-slate-300 border border-slate-700">청년 남성톤</span>
+                      </div>
+                    </div>
                   </div>
-                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Energetic & encouraging guidance with Himchan.' : '씩씩하고 활기찬 열혈 가이드 힘찬이와 함께 일정을 시작합니다.'}</p>
-                </div>
-              </div>
-              <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 group-hover:text-blue-300 group-hover:translate-x-1 transition shrink-0 ml-2"></i>
-            </button>
 
-            <!-- 선택지 2: 다른 멘토 캐릭터(나래/서준) 살펴보고 선택 -->
-            <button onclick="playBeep(600, 'triangle', 0.05); openSettingsModal(true);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-purple-950/40 hover:from-slate-800 hover:to-indigo-900 border border-purple-500/40 hover:border-pink-400 text-left flex items-center justify-between shadow-2xl transition cursor-pointer">
-              <div class="flex items-center gap-2.5 sm:gap-3.5">
-                <div class="flex -space-x-3 shrink-0">
-                  <div class="relative w-10 h-11 sm:w-11 sm:h-13 rounded-xl overflow-hidden bg-rose-950/60 border border-rose-500/40 z-10">
-                    <img src="assets/narae_smile.png" alt="나래" class="w-full h-full object-cover object-top">
-                  </div>
-                  <div class="relative w-10 h-11 sm:w-11 sm:h-13 rounded-xl overflow-hidden bg-emerald-950/60 border border-emerald-500/40">
-                    <img src="assets/seojun_smile.png" alt="서준" class="w-full h-full object-cover object-top">
+                  <!-- 한 줄 소개 & 대사 인용 -->
+                  <p class="text-[10.5px] sm:text-xs text-slate-300 leading-snug">
+                    ${isEn ? 'Energetic & encouraging mentor with full confidence!' : '씩씩하고 활기찬 열혈 멘토! 긍정 에너지로 긴장을 풀어줍니다.'}
+                  </p>
+                  <div class="p-2 rounded-xl bg-blue-950/50 border border-blue-500/20 text-[10px] sm:text-[11px] text-blue-200 italic leading-snug">
+                    ${isEn ? '"Let\'s take on today\'s exam with full confidence!"' : '"오늘 검사도 자신감 있게 파이팅해 볼까요?!"'}
                   </div>
                 </div>
-                <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs sm:text-sm text-pink-200 group-hover:text-white transition">${isEn ? 'Explore other mentors (Narae / Seojun)' : '다른 멘토(나래 / 서준)를 살펴보고 선택할게요!'}</span>
-                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">${isEn ? 'Customize' : '멘토 선택'}</span>
-                  </div>
-                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Choose between caring Narae or smart analyst Seojun.' : '다정한 나래 또는 스마트한 서준 멘토와 목소리를 미리듣고 선택합니다.'}</p>
+
+                <!-- 하단 버튼부 -->
+                <div class="space-y-1.5 pt-2 border-t border-slate-800">
+                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="w-full py-1.5 px-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                  </button>
+                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
+                    <span>${isEn ? 'Select & Start' : '힘찬이와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
                 </div>
               </div>
-              <i data-lucide="sparkles" class="w-4 h-4 sm:w-5 sm:h-5 text-pink-400 group-hover:text-amber-300 transition shrink-0 ml-2"></i>
-            </button>
+
+              <!-- 2. 나래 (다정 멘토) -->
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-slate-900/95 to-rose-950/40 hover:from-slate-800 hover:to-rose-900/50 border-2 border-rose-500/40 hover:border-rose-400 shadow-xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                <div class="space-y-2.5">
+                  <!-- 상단 썸네일 & 배지 -->
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-14 h-16 sm:w-16 sm:h-20 rounded-xl overflow-hidden bg-rose-950/80 border border-rose-500/40 shrink-0 shadow-inner group-hover:scale-105 transition">
+                      <img src="assets/narae_smile.png" alt="나래" class="w-full h-full object-cover object-top">
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1 flex-wrap">
+                        <span class="font-black text-sm sm:text-base text-white group-hover:text-rose-300 transition">나래</span>
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">추천 멘토</span>
+                      </div>
+                      <div class="mt-1 flex items-center gap-1 flex-wrap">
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-600/30 text-rose-200 border border-rose-400/30">다정 멘토</span>
+                        <span class="px-1.5 py-0.5 text-[9px] rounded bg-slate-800 text-slate-300 border border-slate-700">상냥한 여성톤</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 한 줄 소개 & 대사 인용 -->
+                  <p class="text-[10.5px] sm:text-xs text-slate-300 leading-snug">
+                    ${isEn ? 'Warm & caring friendly counselor guiding you step by step.' : '다정하고 따뜻한 안심 멘토! 차분하게 곁에서 세심하게 챙겨줍니다.'}
+                  </p>
+                  <div class="p-2 rounded-xl bg-rose-950/50 border border-rose-500/20 text-[10px] sm:text-[11px] text-rose-200 italic leading-snug">
+                    ${isEn ? '"I\'ll guide you step by step with care :)"' : '"차근차근 알기 쉽게 도와드릴 테니 편안히 따라와 주세요 :)"'}
+                  </div>
+                </div>
+
+                <!-- 하단 버튼부 -->
+                <div class="space-y-1.5 pt-2 border-t border-slate-800">
+                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-1.5 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                  </button>
+                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
+                    <span>${isEn ? 'Select & Start' : '나래와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 3. 서준 (스마트 멘토) -->
+              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="group relative p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-slate-900/95 to-emerald-950/40 hover:from-slate-800 hover:to-emerald-900/50 border-2 border-emerald-500/40 hover:border-emerald-400 shadow-xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                <div class="space-y-2.5">
+                  <!-- 상단 썸네일 & 배지 -->
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-14 h-16 sm:w-16 sm:h-20 rounded-xl overflow-hidden bg-emerald-950/80 border border-emerald-500/40 shrink-0 shadow-inner group-hover:scale-105 transition">
+                      <img src="assets/seojun_smile.png" alt="서준" class="w-full h-full object-cover object-top">
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1 flex-wrap">
+                        <span class="font-black text-sm sm:text-base text-white group-hover:text-emerald-300 transition">서준</span>
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">분석 멘토</span>
+                      </div>
+                      <div class="mt-1 flex items-center gap-1 flex-wrap">
+                        <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-600/30 text-emerald-200 border border-emerald-400/30">스마트 멘토</span>
+                        <span class="px-1.5 py-0.5 text-[9px] rounded bg-slate-800 text-slate-300 border border-slate-700">차분한 남성톤</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 한 줄 소개 & 대사 인용 -->
+                  <p class="text-[10.5px] sm:text-xs text-slate-300 leading-snug">
+                    ${isEn ? 'Precise & professional smart mentor guided by official regulations.' : '똑부러지고 명료한 스마트 멘토! 정확한 규정과 데이터로 안내합니다.'}
+                  </p>
+                  <div class="p-2 rounded-xl bg-emerald-950/50 border border-emerald-500/20 text-[10px] sm:text-[11px] text-emerald-200 italic leading-snug">
+                    ${isEn ? '"Providing concise guidance based on official regulations."' : '"공공데이터와 규정을 토대로 정확하고 신속하게 안내하겠습니다."'}
+                  </div>
+                </div>
+
+                <!-- 하단 버튼부 -->
+                <div class="space-y-1.5 pt-2 border-t border-slate-800">
+                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="w-full py-1.5 px-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                  </button>
+                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 cursor-pointer">
+                    <span>${isEn ? 'Select & Start' : '서준과 함께 시작'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 하단 부가 안내 문구 -->
+            <p class="text-[10px] sm:text-[11px] text-slate-400 text-center mt-1">
+              ${isEn ? '※ You can change your mentor anytime via the ⚙️(Guide) button on the top right.' : '※ 검사 진행 도중 언제든 우측 상단 ⚙️(가이드) 버튼을 눌러 다른 멘토로 변경하실 수 있습니다.'}
+            </p>
           </div>
         `;
-      } else if (type === 'CHOICE_SCHEDULE_CONSENT') {
+      } else {
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[86vh] sm:max-h-[75vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1";
+      }
+
+      if (type === 'CHOICE_SCHEDULE_CONSENT') {
         choiceContainer.innerHTML = `
           <div class="flex flex-col gap-2 sm:gap-3 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 선택지 1: 실시간 공석 달력 조회 -->
