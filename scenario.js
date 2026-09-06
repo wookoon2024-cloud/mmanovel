@@ -26,8 +26,8 @@ const GUIDE_PERSONAS = {
       smile: "assets/himchan_smile.png",
       cheer: "assets/himchan_cheer.png"
     },
-    sampleQuote: "충성! 안녕하십니까! 여러분의 든든한 병역 길라잡이 힘찬이입니다! 오늘 검사도 자신감 있게 파이팅해 볼까요?!",
-    sampleQuote_en: "Salute! Hello! I'm your energetic guide Himchan! Let's take on today's examination with full confidence!"
+    sampleQuote: "충성! 열혈 멘토 힘찬이입니다! 오늘 검사도 파이팅!",
+    sampleQuote_en: "Salute! I'm your energetic guide Himchan! Let's do this!"
   },
   narae: {
     id: "narae",
@@ -51,8 +51,8 @@ const GUIDE_PERSONAS = {
       smile: "assets/narae_smile.png",
       cheer: "assets/narae_smile.png"
     },
-    sampleQuote: "안녕하세요! 병역판정검사가 낯설고 긴장되시죠? 제가 곁에서 차근차근 알기 쉽게 도와드릴 테니 편안하게 따라와 주세요 :)",
-    sampleQuote_en: "Hello! Feeling a bit nervous about the physical exam? Don't worry at all, I'll guide you step by step with care :)"
+    sampleQuote: "안녕하세요! 안심 멘토 나래입니다. 편안하게 따라와 주세요 :)",
+    sampleQuote_en: "Hello! I'm Narae, your friendly counselor. Follow me comfortably!"
   },
   seojun: {
     id: "seojun",
@@ -76,8 +76,8 @@ const GUIDE_PERSONAS = {
       smile: "assets/seojun_smile.png",
       cheer: "assets/seojun_smile.png"
     },
-    sampleQuote: "반갑습니다. 병무청 공공데이터와 법령 규정을 토대로 정확하고 신속한 검사 진행을 책임지는 AI 멘토 서준입니다. 효율적인 검사를 시작하겠습니다.",
-    sampleQuote_en: "Greetings. I am AI mentor Seojun, dedicated to providing precise and efficient procedures based on official data and regulations. Let's proceed."
+    sampleQuote: "반갑습니다. 스마트 멘토 서준입니다. 정확하게 안내하겠습니다.",
+    sampleQuote_en: "Greetings. I'm smart mentor Seojun. Let's proceed accurately."
   }
 };
 

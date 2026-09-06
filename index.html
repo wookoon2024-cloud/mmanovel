@@ -900,7 +900,7 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="px-2.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
+              <button id="btn-preview-settings-himchan" type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="px-2.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
                 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>미리듣기</span>
               </button>
               <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 text-blue-400"></span>
@@ -921,7 +921,7 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
+              <button id="btn-preview-settings-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
                 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>미리듣기</span>
               </button>
               <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 text-rose-400"></span>
@@ -942,7 +942,7 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="px-2.5 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
+              <button id="btn-preview-settings-seojun" type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="px-2.5 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
                 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>미리듣기</span>
               </button>
               <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 text-emerald-400"></span>
@@ -1062,6 +1062,8 @@
     // 가이드 캐릭터 페르소나 설정 컨트롤러
     let isFromIntroWidget = false;
     let previewAudio = null;
+    let currentPreviewId = null;
+    let previewVoiceSeq = 0;
 
     function openSettingsModal(fromIntro = false) {
       isFromIntroWidget = fromIntro;
@@ -1092,33 +1094,126 @@
     }
 
     function stopPreviewAudio() {
+      previewVoiceSeq++;
       if (previewAudio) {
         try {
           previewAudio.pause();
           previewAudio.currentTime = 0;
+          previewAudio.src = "";
         } catch (e) {}
         previewAudio = null;
       }
+      currentPreviewId = null;
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      resetAllPreviewButtons();
     }
 
-    function previewGuideVoice(guideId) {
+    function resetAllPreviewButtons() {
+      const isEn = (currentLang === 'en');
+      ['himchan', 'narae', 'seojun'].forEach(id => {
+        const btnIntro = document.getElementById(`btn-preview-intro-${id}`);
+        if (btnIntro) {
+          btnIntro.classList.remove('bg-amber-600/30', 'text-amber-300', 'border-amber-400');
+          btnIntro.innerHTML = `<i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>`;
+        }
+        const btnSettings = document.getElementById(`btn-preview-settings-${id}`);
+        if (btnSettings) {
+          btnSettings.classList.remove('bg-amber-600/30', 'text-amber-300', 'border-amber-400');
+          btnSettings.innerHTML = `<i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>${isEn ? 'Preview' : '미리듣기'}</span>`;
+        }
+      });
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function togglePreviewGuideVoice(guideId) {
+      // 이미 해당 멘토의 미리듣기가 재생 중이면 즉각 정지 (토글 동작)
+      if (currentPreviewId === guideId) {
+        stopPreviewAudio();
+        return;
+      }
+
       stopPreviewAudio();
-      stopVoiceAudio();
+      if (typeof stopVoiceAudio === 'function') {
+        stopVoiceAudio();
+      }
+
       if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) return;
       const g = GUIDE_PERSONAS[guideId];
       const isEn = (currentLang === 'en');
       const text = isEn ? g.sampleQuote_en : g.sampleQuote;
+      const seq = ++previewVoiceSeq;
+      currentPreviewId = guideId;
+
+      // 버튼 시각 상태 '재생 중/정지'로 변경
+      const btnIntro = document.getElementById(`btn-preview-intro-${guideId}`);
+      if (btnIntro) {
+        btnIntro.classList.add('bg-amber-600/30', 'text-amber-300', 'border-amber-400');
+        btnIntro.innerHTML = `<i data-lucide="volume-x" class="w-4 h-4 animate-pulse"></i> <span>${isEn ? 'Stop' : '미리듣기 정지'}</span>`;
+      }
+      const btnSettings = document.getElementById(`btn-preview-settings-${guideId}`);
+      if (btnSettings) {
+        btnSettings.classList.add('bg-amber-600/30', 'text-amber-300', 'border-amber-400');
+        btnSettings.innerHTML = `<i data-lucide="volume-x" class="w-3.5 h-3.5 animate-pulse"></i> <span>${isEn ? 'Stop' : '정지'}</span>`;
+      }
+      if (window.lucide) lucide.createIcons();
+
       const ttsUrl = `/api/tts?speaker=${encodeURIComponent(g.name)}&text=${encodeURIComponent(text)}&lang=${currentLang || 'ko'}&guide=${encodeURIComponent(guideId)}`;
-      
-      previewAudio = new Audio(ttsUrl);
-      previewAudio.play().catch(err => {
-        // Fallback WebSpeech
-        if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = isEn ? 'en-US' : 'ko-KR';
-          window.speechSynthesis.speak(utterance);
+      const audio = new Audio();
+      previewAudio = audio;
+
+      const finishPreview = () => {
+        if (seq === previewVoiceSeq) {
+          stopPreviewAudio();
         }
-      });
+      };
+
+      audio.onended = finishPreview;
+      audio.onerror = () => {
+        if (seq !== previewVoiceSeq) return;
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = isEn ? 'en-US' : 'ko-KR';
+            utterance.onend = finishPreview;
+            utterance.onerror = finishPreview;
+            window.speechSynthesis.speak(utterance);
+          } catch (e) {
+            finishPreview();
+          }
+        } else {
+          finishPreview();
+        }
+      };
+
+      audio.src = ttsUrl;
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(err => {
+          if (seq !== previewVoiceSeq) return;
+          if (err.name === 'AbortError') return;
+          if ('speechSynthesis' in window) {
+            try {
+              window.speechSynthesis.cancel();
+              const utterance = new SpeechSynthesisUtterance(text);
+              utterance.lang = isEn ? 'en-US' : 'ko-KR';
+              utterance.onend = finishPreview;
+              utterance.onerror = finishPreview;
+              window.speechSynthesis.speak(utterance);
+            } catch (e) {
+              finishPreview();
+            }
+          } else {
+            finishPreview();
+          }
+        });
+      }
+    }
+
+    function previewGuideVoice(guideId) {
+      togglePreviewGuideVoice(guideId);
     }
 
     function selectGuide(guideId, silent = false) {
@@ -1130,13 +1225,13 @@
 
       updateSettingsModalUI();
 
-      // 현재 대화가 가이드의 대화라면 즉시 UI 갱신
+      // 현재 대화가 가이드의 대화라면 현재 대화만 매끄럽게 갱신 (씬을 처음부터 리셋하지 않음)
       if (currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
         const cur = currentDialogueList[currentDialogueIdx];
         const spk = cur.speaker || '';
         const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('narae') || cur.char.includes('seojun')));
         if (isGuide) {
-          applyScene(currentSceneIdx);
+          playDialogueChunk();
         }
       }
 
@@ -1483,10 +1578,14 @@
     initTTSVoices();
 
     function stopVoiceAudio() {
+      if (typeof stopPreviewAudio === 'function') {
+        stopPreviewAudio();
+      }
       if (currentVoiceAudio) {
         try {
           currentVoiceAudio.pause();
           currentVoiceAudio.currentTime = 0;
+          currentVoiceAudio.src = "";
         } catch (e) {}
         currentVoiceAudio = null;
       }
@@ -2647,6 +2746,8 @@
     }
 
     function confirmGuideAndProceed(guideId) {
+      stopPreviewAudio();
+      stopVoiceAudio();
       selectGuide(guideId, true);
       proceedToRegionPicker();
     }
@@ -2739,7 +2840,7 @@
 
                 <!-- 하단 버튼부 -->
                 <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="w-full py-2 px-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <button id="btn-preview-intro-himchan" type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="w-full py-2 px-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                     <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
                   </button>
                   <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
@@ -2766,7 +2867,7 @@
 
                 <!-- 하단 버튼부 -->
                 <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <button id="btn-preview-intro-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                     <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
                   </button>
                   <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
@@ -2793,7 +2894,7 @@
 
                 <!-- 하단 버튼부 -->
                 <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="w-full py-2 px-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                  <button id="btn-preview-intro-seojun" type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="w-full py-2 px-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                     <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
                   </button>
                   <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 cursor-pointer">
