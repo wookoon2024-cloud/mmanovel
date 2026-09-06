@@ -161,7 +161,7 @@
   </header>
 
   <!-- ================= [LAYER 2.5: 게임 메인 타이틀 & 시나리오 선택 로비] ================= -->
-  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-start sm:justify-between pb-2 sm:pb-6 overflow-y-auto custom-scroll">
+  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between pb-0 sm:pb-6 overflow-y-auto sm:overflow-y-auto no-scrollbar sm:custom-scroll" style="overscroll-behavior-y: none;">
     
     <!-- 로비 상단 바 (흰색 배경) -->
     <div class="bg-white border-b border-slate-200 px-3 sm:px-8 py-1.5 sm:py-2.5 w-full shadow-md shrink-0 select-none">
@@ -184,12 +184,12 @@
     </div>
 
     <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 (모바일 상하 불필요 여백 제거) -->
-    <div class="max-w-5xl w-full mx-auto my-0 sm:my-auto pt-1 pb-1 sm:py-6 px-2 sm:px-6 space-y-1 sm:space-y-6">
+    <div class="max-w-5xl w-full mx-auto my-0 sm:my-auto pt-0.5 pb-0.5 sm:py-6 px-2 sm:px-6 space-y-0.5 sm:space-y-6">
       <div class="text-center pt-0.5 sm:pt-0">
-        <span class="text-[9px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase block mb-0.5">
+        <span class="text-[9px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase block">
           Scenario Episodes
         </span>
-        <h2 id="lobby-select-title" class="text-sm sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-0.5 sm:mb-1.5">
+        <h2 id="lobby-select-title" class="text-xs sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-0.5 sm:mb-1.5">
           체험할 시나리오를 선택해 주세요
         </h2>
         <p id="lobby-sub-title" class="hidden sm:block text-xs sm:text-sm text-slate-400 max-w-xl mx-auto break-keep leading-relaxed px-2">
@@ -239,13 +239,13 @@
                 </div>
 
                 <!-- 하단 설명 및 버튼 영역 (세로 크기 고정 상태에서 여백 없이 완벽 결합) -->
-                <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
-                  <div class="space-y-1 sm:space-y-1.5">
+                <div class="p-2 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-0.5 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep1-title-text" class="text-sm sm:text-lg font-bold text-white tracking-tight">
+                      <h3 id="ep1-title-text" class="text-xs sm:text-lg font-bold text-white tracking-tight">
                         청춘의 첫 관문
                       </h3>
-                      <p id="ep1-desc-text" class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep1-desc-text" class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-2">
                         통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!
                       </p>
                     </div>
@@ -258,8 +258,8 @@
                     </div>
                   </div>
 
-                  <div id="ep1-action-buttons" class="pt-1.5 sm:pt-2.5 mt-auto outline-none ring-0">
-                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
+                  <div id="ep1-action-buttons" class="pt-1 sm:pt-2.5 mt-auto outline-none ring-0">
+                    <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-1.5 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
                       <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> <span>시나리오 시작하기</span>
                     </button>
                   </div>
@@ -290,13 +290,13 @@
                   </div>
                 </div>
 
-                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
-                  <div class="space-y-1 sm:space-y-1.5">
+                <div class="p-2 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-0.5 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep2-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep2-title-text" class="text-xs sm:text-lg font-bold text-slate-200 tracking-tight">
                         슬기로운 예비군 훈련 생활
                       </h3>
-                      <p id="ep2-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep2-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-2">
                         동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드
                       </p>
                     </div>
@@ -309,8 +309,8 @@
                     </div>
                   </div>
 
-                  <div id="ep2-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
-                    <button disabled class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep2-action-buttons" class="pt-1.5 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -337,13 +337,13 @@
                   </div>
                 </div>
 
-                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
-                  <div class="space-y-1 sm:space-y-1.5">
+                <div class="p-2 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-0.5 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep3-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep3-title-text" class="text-xs sm:text-lg font-bold text-slate-200 tracking-tight">
                         내 꿈을 찾는 병역진로설계
                       </h3>
-                      <p id="ep3-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep3-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-2">
                         입영 전 적성·전공 연계 1:1 맞춤 군 특기 상담부터 모의 군 장비 체험, 자격 취득 및 복무 중 자기개발 로드맵!
                       </p>
                     </div>
@@ -356,8 +356,8 @@
                     </div>
                   </div>
 
-                  <div id="ep3-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
-                    <button disabled class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep3-action-buttons" class="pt-1.5 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -382,13 +382,13 @@
                   </div>
                 </div>
 
-                <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
-                  <div class="space-y-1 sm:space-y-1.5">
+                <div class="p-2 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                  <div class="space-y-0.5 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep4-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep4-title-text" class="text-xs sm:text-lg font-bold text-slate-200 tracking-tight">
                         사회복무 첫 출근
                       </h3>
-                      <p id="ep4-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep4-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-2">
                         사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드!
                       </p>
                     </div>
@@ -401,8 +401,8 @@
                     </div>
                   </div>
 
-                  <div id="ep4-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
-                    <button disabled class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
+                  <div id="ep4-action-buttons" class="pt-1.5 sm:pt-2.5 mt-auto">
+                    <button disabled class="w-full py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
                       <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
                     </button>
                   </div>
@@ -425,7 +425,7 @@
           </button>
         </div>
 
-        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-1 pb-0.5">
+        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-0.5 pb-0.5">
           <button onclick="goToEpisodePage(0)" id="ep-dot-0" class="h-1.5 w-6 rounded-full bg-blue-500 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(1)" id="ep-dot-1" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(2)" id="ep-dot-2" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
@@ -436,13 +436,13 @@
     </div>
 
     <!-- 로비 하단 정보 바 & 실시간 법령/OpenAPI 연동 배지 -->
-    <div class="pt-1.5 sm:pt-2.5 border-t border-slate-800/80 text-[11px] sm:text-xs text-slate-400 max-w-5xl w-full mx-auto flex flex-col items-center justify-center text-center gap-1 px-3 shrink-0 pb-3 sm:pb-2">
-      <div class="flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 leading-tight">
-        <button type="button" onclick="showPrivacyPolicyModal()" class="text-slate-300 hover:text-cyan-400 underline underline-offset-2 transition text-[11px] sm:text-xs cursor-pointer font-medium">
+    <div class="pt-1 sm:pt-2 border-t border-slate-800/80 text-[10.5px] sm:text-xs text-slate-400 max-w-5xl w-full mx-auto flex flex-col items-center justify-center text-center gap-0.5 px-3 shrink-0 pb-1 sm:pb-2">
+      <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 leading-tight flex-nowrap">
+        <button type="button" onclick="showPrivacyPolicyModal()" class="text-slate-300 hover:text-cyan-400 underline underline-offset-2 transition cursor-pointer font-medium whitespace-nowrap">
           개인정보 처리방침 및 이용안내
         </button>
-        <span class="text-slate-600 select-none hidden xs:inline">|</span>
-        <span class="text-[10px] sm:text-xs text-slate-500">© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+        <span class="text-slate-600 select-none">·</span>
+        <span class="text-[10px] sm:text-xs text-slate-500 whitespace-nowrap">© 2026 대한민국 병무청<span class="hidden sm:inline"> (MMA). All Rights Reserved.</span></span>
       </div>
       <div id="lobby-sync-banner-container" class="pointer-events-auto hidden sm:flex items-center justify-center"></div>
     </div>
@@ -6100,11 +6100,11 @@
         }
 
         btnContainer.innerHTML = `
-          <div class="space-y-1.5 w-full outline-none ring-0">
-            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30 outline-none focus:outline-none focus:ring-0">
+          <div class="space-y-1 sm:space-y-1.5 w-full outline-none ring-0">
+            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-1.5 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30 outline-none focus:outline-none focus:ring-0">
               <i data-lucide="play-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
             </button>
-            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-1.5 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60 outline-none focus:outline-none focus:ring-0">
+            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-1 sm:py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60 outline-none focus:outline-none focus:ring-0">
               <i data-lucide="rotate-ccw" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${dict.lobby.restartBtn}</span>
             </button>
           </div>
@@ -6123,7 +6123,7 @@
           `;
         }
         btnContainer.innerHTML = `
-          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
+          <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-1.5 sm:py-2.5 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer">
             <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> ${dict.lobby.startBtn}
           </button>
         `;
