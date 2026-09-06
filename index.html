@@ -73,6 +73,33 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
     .no-scrollbar::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
     .no-scrollbar { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+    /* 멘토 가이드 선택 캐러셀 (모바일 슬라이더 & 데스크톱 3열 그리드) */
+    @media (max-width: 767px) {
+      #mentor-carousel-track {
+        display: flex !important;
+        width: 100% !important;
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+      }
+      #mentor-carousel-track > div {
+        width: 100% !important;
+        flex-shrink: 0 !important;
+        box-sizing: border-box;
+      }
+    }
+    @media (min-width: 768px) {
+      #mentor-carousel-track {
+        transform: none !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1rem !important;
+      }
+      #mentor-carousel-track > div {
+        width: auto !important;
+        flex-shrink: 1 !important;
+      }
+    }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden text-white bg-slate-950">
@@ -2756,6 +2783,81 @@
       playDialogueChunk();
     }
 
+    // 멘토 가이드 모바일 캐러셀 슬라이더 컨트롤러
+    let currentMentorSlide = 0;
+    const MENTOR_SLIDE_IDS = ['himchan', 'narae', 'seojun'];
+
+    function setMentorSlide(idx) {
+      if (typeof stopPreviewAudio === 'function') stopPreviewAudio();
+      currentMentorSlide = (idx + 3) % 3;
+      const track = document.getElementById('mentor-carousel-track');
+      if (track) {
+        track.style.transform = `translateX(-${currentMentorSlide * 100}%)`;
+      }
+      const isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+      const dotsContainer = document.getElementById('mentor-carousel-dots');
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.mentor-dot');
+        dots.forEach((dot, i) => {
+          if (i === currentMentorSlide) {
+            dot.className = 'mentor-dot w-6 h-2 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 transition-all duration-300 shadow-md cursor-pointer';
+          } else {
+            dot.className = 'mentor-dot w-2 h-2 rounded-full bg-slate-600 hover:bg-slate-500 transition-all duration-300 cursor-pointer';
+          }
+        });
+      }
+      const countLabel = document.getElementById('mentor-carousel-count');
+      if (countLabel) {
+        countLabel.textContent = `${currentMentorSlide + 1} / 3 · ${isEn ? 'Swipe left/right' : '좌우로 넘겨보세요'}`;
+      }
+      if (typeof playBeep === 'function') playBeep(520 + currentMentorSlide * 50, 'sine', 0.02);
+    }
+
+    function nextMentorSlide() {
+      setMentorSlide(currentMentorSlide + 1);
+    }
+
+    function prevMentorSlide() {
+      setMentorSlide(currentMentorSlide - 1);
+    }
+
+    function initMentorCarouselSwipe() {
+      const wrapper = document.getElementById('mentor-carousel-wrapper');
+      if (!wrapper) return;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+
+      wrapper.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchEndX = touchStartX;
+          touchEndY = touchStartY;
+        }
+      }, { passive: true });
+
+      wrapper.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          touchEndX = e.touches[0].clientX;
+          touchEndY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', () => {
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX < 0) {
+            nextMentorSlide();
+          } else {
+            prevMentorSlide();
+          }
+        }
+      }, { passive: true });
+    }
+
     function confirmGuideAndProceed(guideId) {
       stopPreviewAudio();
       stopVoiceAudio();
@@ -2830,98 +2932,136 @@
               </p>
             </div>
 
-            <!-- 3인 멘토 가로 나열 카드 (PC: 3열 가로 / 모바일: 1열 세로) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 w-full">
-              
-              <!-- 1. 힘찬이 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
-                <div class="space-y-3">
-                  <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
-                  <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/himchan_card.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
-                  </div>
-                  <!-- 이름 & 한줄 소개 -->
-                  <div class="text-center space-y-1">
-                    <h4 class="font-black text-base sm:text-lg text-white group-hover:text-blue-300 transition">힘찬이</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                      ${isEn ? 'Energetic mentor keeping your spirits high' : '긍정 에너지로 긴장을 풀어주는 열혈 멘토'}
-                    </p>
+            <!-- 멘토 캐릭터 선택 캐러셀 래퍼 (모바일: 슬라이더 / PC: 3열 가로 그리드) -->
+            <div id="mentor-carousel-wrapper" class="relative w-full overflow-hidden md:overflow-visible select-none">
+              <div id="mentor-carousel-track">
+                
+                <!-- 1. 힘찬이 카드 슬라이드 -->
+                <div class="px-1 md:px-0">
+                  <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="group relative p-3.5 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                    <div class="space-y-2.5 sm:space-y-3">
+                      <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
+                      <div class="h-40 sm:h-52 flex items-center justify-center overflow-hidden">
+                        <img src="assets/himchan_card.png" alt="힘찬이" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                      </div>
+                      <!-- 이름 & 한줄 소개 -->
+                      <div class="text-center space-y-1">
+                        <h4 class="font-black text-base sm:text-lg text-white group-hover:text-blue-300 transition">힘찬이</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                          ${isEn ? 'Energetic mentor keeping your spirits high' : '긍정 에너지로 긴장을 풀어주는 열혈 멘토'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- 하단 버튼부 -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                      <button id="btn-preview-intro-himchan" type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="w-full py-2 px-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                      </button>
+                      <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
+                        <span>${isEn ? 'Select & Start' : '힘찬이와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <!-- 하단 버튼부 -->
-                <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button id="btn-preview-intro-himchan" type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="w-full py-2 px-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
-                  </button>
-                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" class="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer">
-                    <span>${isEn ? 'Select & Start' : '힘찬이와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                  </button>
+                <!-- 2. 나래 카드 슬라이드 -->
+                <div class="px-1 md:px-0">
+                  <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-3.5 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                    <div class="space-y-2.5 sm:space-y-3">
+                      <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
+                      <div class="h-40 sm:h-52 flex items-center justify-center overflow-hidden">
+                        <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                      </div>
+                      <!-- 이름 & 한줄 소개 -->
+                      <div class="text-center space-y-1">
+                        <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">나래</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                          ${isEn ? 'Calm & caring mentor guiding you kindly' : '차분하고 세심하게 챙겨주는 안심 멘토'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- 하단 버튼부 -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                      <button id="btn-preview-intro-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                      </button>
+                      <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
+                        <span>${isEn ? 'Select & Start' : '나래와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- 3. 서준 카드 슬라이드 -->
+                <div class="px-1 md:px-0">
+                  <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="group relative p-3.5 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                    <div class="space-y-2.5 sm:space-y-3">
+                      <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
+                      <div class="h-40 sm:h-52 flex items-center justify-center overflow-hidden">
+                        <img src="assets/seojun_card.png" alt="서준" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                      </div>
+                      <!-- 이름 & 한줄 소개 -->
+                      <div class="text-center space-y-1">
+                        <h4 class="font-black text-base sm:text-lg text-white group-hover:text-emerald-300 transition">서준</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-300 truncate">
+                          ${isEn ? 'Precise smart mentor guided by clear facts' : '정확한 규정과 데이터로 안내하는 스마트 멘토'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- 하단 버튼부 -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                      <button id="btn-preview-intro-seojun" type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="w-full py-2 px-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
+                      </button>
+                      <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 cursor-pointer">
+                        <span>${isEn ? 'Select & Start' : '서준과 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-              <!-- 2. 나래 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
-                <div class="space-y-3">
-                  <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
-                  <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+              <!-- 모바일 전용 캐러셀 하단 네비게이션 (이전/다음 버튼, 도트, 스와이프 안내) -->
+              <div class="flex md:hidden items-center justify-between px-2 pt-2 pb-0.5">
+                <button type="button" onclick="event.stopPropagation(); prevMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold">
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                  <span>${isEn ? 'Prev' : '이전'}</span>
+                </button>
+                
+                <div class="flex flex-col items-center gap-1">
+                  <div class="flex items-center gap-1.5" id="mentor-carousel-dots">
+                    <button type="button" onclick="event.stopPropagation(); setMentorSlide(0);" class="mentor-dot w-6 h-2 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 transition-all duration-300 shadow-md cursor-pointer"></button>
+                    <button type="button" onclick="event.stopPropagation(); setMentorSlide(1);" class="mentor-dot w-2 h-2 rounded-full bg-slate-600 hover:bg-slate-500 transition-all duration-300 cursor-pointer"></button>
+                    <button type="button" onclick="event.stopPropagation(); setMentorSlide(2);" class="mentor-dot w-2 h-2 rounded-full bg-slate-600 hover:bg-slate-500 transition-all duration-300 cursor-pointer"></button>
                   </div>
-                  <!-- 이름 & 한줄 소개 -->
-                  <div class="text-center space-y-1">
-                    <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">나래</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                      ${isEn ? 'Calm & caring mentor guiding you kindly' : '차분하고 세심하게 챙겨주는 안심 멘토'}
-                    </p>
-                  </div>
+                  <span class="text-[10px] text-slate-400 font-bold" id="mentor-carousel-count">1 / 3 · ${isEn ? 'Swipe left/right' : '좌우로 넘겨보세요'}</span>
                 </div>
 
-                <!-- 하단 버튼부 -->
-                <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button id="btn-preview-intro-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
-                  </button>
-                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
-                    <span>${isEn ? 'Select & Start' : '나래와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                  </button>
-                </div>
+                <button type="button" onclick="event.stopPropagation(); nextMentorSlide();" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 shadow-md flex items-center gap-1 cursor-pointer transition text-xs font-bold">
+                  <span>${isEn ? 'Next' : '다음'}</span>
+                  <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
               </div>
-
-              <!-- 3. 서준 -->
-              <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="group relative p-4 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3.5 transition duration-200 cursor-pointer hover:scale-[1.015]">
-                <div class="space-y-3">
-                  <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
-                  <div class="h-44 sm:h-52 flex items-center justify-center overflow-hidden">
-                    <img src="assets/seojun_card.png" alt="서준" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
-                  </div>
-                  <!-- 이름 & 한줄 소개 -->
-                  <div class="text-center space-y-1">
-                    <h4 class="font-black text-base sm:text-lg text-white group-hover:text-emerald-300 transition">서준</h4>
-                    <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                      ${isEn ? 'Precise smart mentor guided by clear facts' : '정확한 규정과 데이터로 안내하는 스마트 멘토'}
-                    </p>
-                  </div>
-                </div>
-
-                <!-- 하단 버튼부 -->
-                <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                  <button id="btn-preview-intro-seojun" type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="w-full py-2 px-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
-                  </button>
-                  <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('seojun');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 cursor-pointer">
-                    <span>${isEn ? 'Select & Start' : '서준과 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </div>
-
             </div>
 
             <!-- 하단 부가 안내 문구 -->
-            <p class="text-[10px] sm:text-[11px] text-slate-400 text-center mt-1">
+            <p class="text-[10px] sm:text-[11px] text-slate-400 text-center mt-0.5">
               ${isEn ? '※ You can change your mentor anytime via the ⚙️(Guide) button on the top right.' : '※ 검사 진행 도중 언제든 우측 상단 ⚙️(가이드) 버튼을 눌러 다른 멘토로 변경하실 수 있습니다.'}
             </p>
           </div>
         `;
+
+        setTimeout(() => {
+          const curG = (userData && userData.selectedGuide) || 'himchan';
+          const defaultSlide = (curG === 'narae') ? 1 : (curG === 'seojun') ? 2 : 0;
+          setMentorSlide(defaultSlide);
+          initMentorCarouselSwipe();
+          if (window.lucide) lucide.createIcons();
+        }, 10);
       } else {
         choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[86vh] sm:max-h-[75vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1";
       }
