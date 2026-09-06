@@ -33,30 +33,46 @@ const VOICE_MAP = {
 };
 
 function getVoiceConfig(speaker = '', lang = 'ko', guide = '') {
-  const spk = (speaker + ' ' + guide).toLowerCase();
   const isEn = (lang === 'en');
+  const spk = (speaker || '').toLowerCase();
+  const gd = (guide || '').toLowerCase();
 
-  if (spk.includes('나래') || spk.includes('narae')) {
-    return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae;
+  // 1. 가이드(멘토) 화자 판별: 가이드 전용 대사이거나 스피커명에 가이드 관련 명칭이 포함된 경우
+  const isGuide = spk.includes('가이드') || spk.includes('guide') || 
+                  spk.includes('힘찬이') || spk.includes('himchan') || 
+                  spk.includes('나래') || spk.includes('narae') || 
+                  spk.includes('서준') || spk.includes('seojun');
+
+  if (isGuide) {
+    if (spk.includes('나래') || spk.includes('narae') || gd.includes('narae')) {
+      return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae; // 여성 멘토 나래 (SunHi)
+    }
+    if (spk.includes('서준') || spk.includes('seojun') || gd.includes('seojun')) {
+      return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun; // 남성 스마트 멘토 서준 (BongJin)
+    }
+    return isEn ? VOICE_MAP.en_himchan : VOICE_MAP.himchan; // 남성 열혈 멘토 힘찬이 (Hyunsu)
   }
-  if (spk.includes('서준') || spk.includes('seojun')) {
-    return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun;
+
+  // 2. 여성 캐릭터/NPC 판별 (임상병리사, 영상의학 방사선사, 간호사 등)
+  if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('여성') || spk.includes('female') || spk.includes('radiologist') || spk.includes('pathologist')) {
+    return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae; // 여성 보이스 (SunHi)
   }
-  if (spk.includes('힘찬이') || spk.includes('himchan')) {
-    return isEn ? VOICE_MAP.en_himchan : VOICE_MAP.himchan;
+
+  // 3. 주인공 (김민우 / 수검 대상자 - 20대 청년 남성)
+  if (spk.includes('김민우') || spk.includes('민우') || spk.includes('minwoo') || spk.includes('주인공') || spk.includes('protagonist') || spk.includes('수검자') || spk.includes('예비역')) {
+    return isEn ? VOICE_MAP.en_minwoo : VOICE_MAP.minwoo; // 20대 남성 보이스 (InJoon)
   }
-  if (spk.includes('김민우') || spk.includes('민우') || spk.includes('minwoo') || spk.includes('주인공') || spk.includes('예비역')) {
-    return isEn ? VOICE_MAP.en_minwoo : VOICE_MAP.minwoo;
-  }
+
+  // 4. 수석판정관 (50대 남성 중후한 베이스 저음)
   if (spk.includes('수석판정관') || spk.includes('판정관') || spk.includes('adjudicator')) {
-    return isEn ? VOICE_MAP.en_adjudicator : VOICE_MAP.adjudicator;
+    return isEn ? VOICE_MAP.en_adjudicator : VOICE_MAP.adjudicator; // 묵직한 중후 남성 저음
   }
-  if (spk.includes('정형외과') || spk.includes('전문의') || spk.includes('의무관') || spk.includes('doctor') || spk.includes('의사') || spk.includes('임상병리사') || spk.includes('심리검사관')) {
-    return isEn ? VOICE_MAP.en_doctor : VOICE_MAP.doctor;
+
+  // 5. 전문의 / 군의관 / 의사 / 심리검사관 / 적성분류관 (차분한 남성 전문의 톤)
+  if (spk.includes('전문의') || spk.includes('의무관') || spk.includes('doctor') || spk.includes('의사') || spk.includes('심리검사관') || spk.includes('적성분류관') || spk.includes('상담관') || spk.includes('counselor') || spk.includes('officer')) {
+    return isEn ? VOICE_MAP.en_doctor : VOICE_MAP.doctor; // 신뢰감 있는 남성 전문의 톤
   }
-  if (spk.includes('상담관') || spk.includes('counselor')) {
-    return isEn ? VOICE_MAP.en_minwoo : VOICE_MAP.counselor;
-  }
+
   return isEn ? VOICE_MAP.en_minwoo : VOICE_MAP.minwoo;
 }
 

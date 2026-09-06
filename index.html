@@ -1701,6 +1701,10 @@
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
             utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.70;
+          } else if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('radiologist') || spk.includes('pathologist')) {
+            utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
+            utterance.rate = 1.0;
+            utterance.pitch = 1.05;
           } else {
             utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
@@ -1727,16 +1731,23 @@
               utterance.rate = 1.06;
               utterance.pitch = maleVoice ? 1.22 : 0.95;
             }
+          } else if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('여성')) {
+            // 여성 의료진(임상병리사, 방사선사 등): 상냥하고 또렷한 여성 톤
+            utterance.voice = femaleVoice || koVoices[0] || null;
+            utterance.rate = 1.0;
+            utterance.pitch = 1.12;
           } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
             utterance.voice = maleVoice || koVoices[0] || null;
             utterance.rate = 0.98;
             utterance.pitch = maleVoice ? 0.96 : 0.75;
           } else if (spk.includes('판정관') || spk.includes('adjudicator')) {
             // 50대 수석판정관: 묵직한 베이스 저음
+            utterance.voice = maleVoice || koVoices[0] || null;
             utterance.rate = 0.85;
             utterance.pitch = maleVoice ? 0.65 : 0.45;
           } else {
-            // 의사 / 심리검사관 / 병리사 / 상담관: 차분하고 신뢰감 있는 전문의 톤
+            // 의사 / 심리검사관 / 상담관: 차분하고 신뢰감 있는 남성 전문의 톤
+            utterance.voice = maleVoice || koVoices[0] || null;
             utterance.rate = 0.92;
             utterance.pitch = maleVoice ? 0.80 : 0.55;
           }
