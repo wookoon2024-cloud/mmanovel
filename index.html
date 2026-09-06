@@ -259,7 +259,7 @@
                     </div>
                   </div>
 
-                  <div id="ep1-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
+                  <div id="ep1-action-buttons" class="pt-2 sm:pt-2.5 mt-auto outline-none ring-0">
                     <button onclick="event.stopPropagation(); startEpisode(1)" class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition cursor-pointer group-hover:scale-[1.02] group-hover:shadow-blue-500/30">
                       <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> <span>시나리오 시작하기</span>
                     </button>
@@ -5727,14 +5727,7 @@
         const save = getSavedGameState();
         const hasSave = save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12);
         if (hasSave) {
-          // 이어하기가 있을 때는 임의로 시작하지 않고 하단의 둘 중 하나를 선택하도록 버튼 영역 포커스/강조
-          const btnContainer = document.getElementById('ep1-action-buttons');
-          if (btnContainer) {
-            btnContainer.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2', 'ring-offset-slate-900', 'rounded-2xl');
-            setTimeout(() => {
-              btnContainer.classList.remove('ring-2', 'ring-blue-400', 'ring-offset-2', 'ring-offset-slate-900');
-            }, 1200);
-          }
+          // 이어하기 데이터가 있을 때 카드 클릭 시 겉 테두리(링) 효과 일체 없이 대기
           return;
         }
         // 이어하기가 없을 때는 카드 화면 어디를 클릭해도 바로 시나리오 시작!
@@ -5909,11 +5902,11 @@
         }
 
         btnContainer.innerHTML = `
-          <div class="space-y-1.5 w-full">
-            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30">
+          <div class="space-y-1.5 w-full outline-none ring-0">
+            <button onclick="event.stopPropagation(); resumeEpisode(1)" class="w-full py-2.5 px-3 rounded-xl sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition cursor-pointer hover:shadow-blue-500/30 outline-none focus:outline-none focus:ring-0">
               <i data-lucide="play-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white shrink-0"></i> <span class="truncate">${dict.lobby.resumeBtn} (${stepText})</span>
             </button>
-            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60">
+            <button onclick="event.stopPropagation(); startEpisode(1, true)" class="w-full py-2 px-3 rounded-lg sm:rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs tracking-wide flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-700/60 outline-none focus:outline-none focus:ring-0">
               <i data-lucide="rotate-ccw" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${dict.lobby.restartBtn}</span>
             </button>
           </div>
