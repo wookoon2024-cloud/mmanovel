@@ -763,7 +763,7 @@
           취소
         </button>
         <button onclick="submitProtagonistName()" class="flex-[2] py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]">
-          <span>진행하기</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <span>진행하기</span>
         </button>
       </div>
     </div>
@@ -856,7 +856,7 @@
 
       <div class="mt-2">
         <button type="button" id="btn-close-cert" onclick="closeCertModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer active:scale-95">
-          <i data-lucide="check-circle-2" class="w-4 h-4"></i> <span>결과 요약서 확인 완료 ➔</span>
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i> <span>결과 요약서 확인 완료</span>
         </button>
       </div>
     </div>
@@ -864,13 +864,13 @@
 
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
-  <script src="api.js?v=20260905_v195_25"></script>
-  <script src="scenario.js?v=20260905_v195_25"></script>
-  <script src="tracker.js?v=20260905_v195_26"></script>
+  <script src="api.js?v=20260906_v195_28"></script>
+  <script src="scenario.js?v=20260906_v195_28"></script>
+  <script src="tracker.js?v=20260906_v195_28"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260905_v195_25';
+    const ASSET_VER = '20260906_v195_28';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
@@ -2444,7 +2444,7 @@
 
             <!-- 팝업 아래에 깔끔하게 분리된 이동 버튼 -->
             <button onclick="confirmRegionAndAskCalendar()" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-blue-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
-              <span>관할 지방병무청 선택 완료 ➔</span>
+              <span>관할 지방병무청 선택 완료</span>
             </button>
           </div>
         `;
@@ -2489,7 +2489,7 @@
 
             <!-- 팝업 아래에 분리된 달력 열기 버튼 -->
             <button onclick="playBeep(750, 'triangle', 0.05); openCalendarModal();" class="w-full py-2.5 sm:py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-2xl border border-cyan-400/30 transition hover:scale-[1.01] cursor-pointer shrink-0">
-              <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 일별 잔여석 달력 열기 ➔</span>
+              <i data-lucide="calendar" class="w-4 h-4"></i> <span>실시간 일별 잔여석 달력 열기</span>
             </button>
           </div>
         `;
@@ -2543,7 +2543,7 @@
                 <i data-lucide="external-link" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span class="truncate">${(currentLang === 'en') ? 'MMA Portal' : '민원포털 예약'}</span>
               </a>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-2.5 sm:py-3.5 px-2 sm:px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer">
-                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
+                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span>
               </button>
             </div>
           </div>
@@ -2620,8 +2620,7 @@
               </div>
             </div>
             <button onclick="confirmIdentityReg();" class="w-full py-3 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              <span>${isEn ? 'Proceed to Locker Room to Change ➔' : '탈의실로 이동하여 검사복 환복하기 ➔'}</span>
+              <span>${isEn ? 'Proceed to Locker Room to Change' : '탈의실로 이동하여 검사복 환복하기'}</span>
             </button>
           </div>
         `;
@@ -2752,7 +2751,7 @@
               </div>
             </div>
             <button onclick="playBeep(750, 'triangle', 0.05); goToScene(7);" class="w-full py-2.5 sm:py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/30 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Psychological Testing Hall' : '심리검사장으로 이동'}</span>
             </button>
           </div>
         `;
@@ -2846,8 +2845,7 @@
               </div>
             </div>
             <button onclick="playBeep(750, 'triangle', 0.05); goToScene(8);" class="w-full py-3 sm:py-3.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              <span>${isEn ? 'Move to Clinical Pathology Lab ➔' : '임상병리검사실로 이동하기 ➔'}</span>
+              <span>${isEn ? 'Move to Clinical Pathology Lab' : '임상병리검사실로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -2867,7 +2865,7 @@
               </div>
             </div>
             <button onclick="startLabRestroom();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Restroom ➔' : '화장실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Restroom' : '화장실로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -2887,7 +2885,7 @@
               </div>
             </div>
             <button onclick="startLabBlood();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Blood Sampling Room ➔' : '채혈실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Blood Sampling Room' : '채혈실로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -2907,7 +2905,7 @@
               </div>
             </div>
             <button onclick="startLabXray();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Chest X-Ray Room ➔' : '흉부 X-ray실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Chest X-Ray Room' : '흉부 X-ray실로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -2927,7 +2925,7 @@
               </div>
             </div>
             <button onclick="goToScene(9);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-emerald-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Basic Examination Room ➔' : '기본검사실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Basic Examination Room' : '기본검사실로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -2947,7 +2945,7 @@
               </div>
             </div>
             <button onclick="goToScene(11);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Aptitude Classification Room' : '적성분류실로 이동 (군 특기 분류)'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Aptitude Classification Room' : '적성분류실로 이동 (군 특기 분류)'}</span>
             </button>
           </div>
         `;
@@ -3012,7 +3010,7 @@
 
             <!-- 하단 확인 버튼 (고정 위치) -->
             <button onclick="finishAptitudeAndTalk();" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Confirm Specialty & Complete Counseling ➔' : '특기 및 모집일정 확인 완료 (상담 마무리) ➔'}</span> <i data-lucide="check-check" class="w-4 h-4"></i>
+              <span>${isEn ? 'Confirm Specialty & Complete Counseling' : '특기 및 모집일정 확인 완료 (상담 마무리)'}</span> <i data-lucide="check-check" class="w-4 h-4"></i>
             </button>
           </div>
         `;
@@ -3033,7 +3031,7 @@
               </div>
             </div>
             <button onclick="goToScene(12);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-purple-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Adjudication Room (Final Determination) ➔' : '판정실로 이동하기 (최종 병역처분 확인) ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Adjudication Room (Final Determination)' : '판정실로 이동하기 (최종 병역처분 확인)'}</span>
             </button>
           </div>
         `;
@@ -3065,7 +3063,7 @@
             </div>
 
             <button onclick="goToScene(14);" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Head Home' : '집으로 귀가하기'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Head Home' : '집으로 귀가하기'}</span>
             </button>
           </div>
         `;
@@ -3095,7 +3093,7 @@
               </div>
             </div>
             <button onclick="startBioBloodPressure();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Blood Pressure Test ➔' : '혈압 측정으로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Blood Pressure Test' : '혈압 측정으로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -3115,7 +3113,7 @@
               </div>
             </div>
             <button onclick="startBioEyesight();" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-teal-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Eyesight & Color Vision Test ➔' : '시력·색각 검사로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Eyesight & Color Vision Test' : '시력·색각 검사로 이동하기'}</span>
             </button>
           </div>
         `;
@@ -3140,7 +3138,7 @@
               </div>
             </div>
             <button onclick="${hasDisease ? 'goToScene(10);' : 'goToScene(11);'}" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${hasDisease ? (isEn ? 'Move to Specialist Clinic ➔' : '전문의 진료실로 이동하기 ➔') : (isEn ? 'Move to Aptitude Classification Room ➔' : '적성분류실로 이동하기 ➔')}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${hasDisease ? (isEn ? 'Move to Specialist Clinic' : '전문의 진료실로 이동하기') : (isEn ? 'Move to Aptitude Classification Room' : '적성분류실로 이동하기')}</span>
             </button>
           </div>
         `;
@@ -3218,7 +3216,7 @@
 
             <!-- 3. 최종 결과서 발급 전 확인 버튼 -->
             <button onclick="finishBenefitsAndTalk()" class="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold shadow-2xl flex items-center justify-center gap-2 transition hover:scale-[1.01] cursor-pointer border border-blue-400/40 shrink-0">
-              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span>${isEn ? 'Confirm Benefits & Review Result Summary ➔' : '혜택 확인 완료 & 결과 요약서 확인 ➔'}</span>
+              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span>${isEn ? 'Confirm Benefits & Review Result Summary' : '혜택 확인 완료 & 결과 요약서 확인'}</span>
             </button>
           </div>
         `;
@@ -3249,7 +3247,7 @@
               </div>
             </div>
             <button onclick="goToScene(13);" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-2xl border border-blue-400/40 cursor-pointer hover:scale-[1.01] shrink-0">
-              <span>${isEn ? 'Move to Locker Room ➔' : '탈의실로 이동하기 ➔'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? 'Move to Locker Room' : '탈의실로 이동하기'}</span>
             </button>
           </div>
         `;
