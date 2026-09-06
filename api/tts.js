@@ -13,9 +13,11 @@ try {
 // In-flight deduplication map: cacheKey -> Promise<string>
 const pendingPromises = new Map();
 
-// 화자별 Microsoft Neural 남성/캐릭터 보이스 설정
+// 화자별 Microsoft Neural 남성/여성/캐릭터 보이스 설정
 const VOICE_MAP = {
-  'himchan': { voice: 'ko-KR-HyunsuMultilingualNeural', rate: '+5%', pitch: '+3Hz' }, // 활기찬 가이드 청년 현수
+  'himchan': { voice: 'ko-KR-HyunsuMultilingualNeural', rate: '+5%', pitch: '+3Hz' }, // 활기찬 열혈 멘토 힘찬이
+  'narae': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                 // 다정하고 따뜻한 선배 멘토 나래 (여성)
+  'seojun': { voice: 'ko-KR-BongJinNeural', rate: '+1%', pitch: '-1Hz' },              // 똑부러지고 스마트한 전우 멘토 서준 (남성)
   'minwoo': { voice: 'ko-KR-InJoonNeural', rate: '+0%', pitch: '-2Hz' },               // 20대 대학생 주인공 인준 (남성)
   'doctor': { voice: 'ko-KR-InJoonNeural', rate: '-3%', pitch: '-6Hz' },               // 차분한 전문의/군의관 (남성)
   'adjudicator': { voice: 'ko-KR-InJoonNeural', rate: '-7%', pitch: '-12Hz' },         // 묵직한 50대 수석판정관 (남성)
@@ -23,15 +25,23 @@ const VOICE_MAP = {
   
   // 영어 모드 지원
   'en_himchan': { voice: 'en-US-GuyNeural', rate: '+5%', pitch: '+4Hz' },
+  'en_narae': { voice: 'en-US-JennyNeural', rate: '+2%', pitch: '+2Hz' },
+  'en_seojun': { voice: 'en-US-DavisNeural', rate: '+1%', pitch: '-1Hz' },
   'en_minwoo': { voice: 'en-US-ChristopherNeural', rate: '+0%', pitch: '-2Hz' },
   'en_doctor': { voice: 'en-US-EricNeural', rate: '-4%', pitch: '-6Hz' },
   'en_adjudicator': { voice: 'en-US-RogerNeural', rate: '-8%', pitch: '-12Hz' }
 };
 
-function getVoiceConfig(speaker = '', lang = 'ko') {
-  const spk = speaker.toLowerCase();
+function getVoiceConfig(speaker = '', lang = 'ko', guide = '') {
+  const spk = (speaker + ' ' + guide).toLowerCase();
   const isEn = (lang === 'en');
 
+  if (spk.includes('나래') || spk.includes('narae')) {
+    return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae;
+  }
+  if (spk.includes('서준') || spk.includes('seojun')) {
+    return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun;
+  }
   if (spk.includes('힘찬이') || spk.includes('himchan')) {
     return isEn ? VOICE_MAP.en_himchan : VOICE_MAP.himchan;
   }
@@ -249,7 +259,7 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  const { speaker = '김민우', text = '', lang = 'ko' } = (req.method === 'POST' ? (req.body || {}) : (req.query || {}));
+  const { speaker = '김민우', text = '', lang = 'ko', guide = '' } = (req.method === 'POST' ? (req.body || {}) : (req.query || {}));
 
   if (!text || text.trim() === '') {
     return res.status(400).json({ error: 'Missing text parameter' });
@@ -261,7 +271,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const voiceConfig = getVoiceConfig(speaker, lang);
+    const voiceConfig = getVoiceConfig(speaker, lang, guide);
     const audioFilePath = await synthesizeSpeech(cleanText, voiceConfig);
 
     const stat = fs.statSync(audioFilePath);

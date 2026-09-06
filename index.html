@@ -110,6 +110,10 @@
       <button id="btn-lang" onclick="toggleLanguage()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="언어 변경">
         <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span id="lang-label">EN</span>
       </button>
+      <!-- AI 가이드 캐릭터 설정 (모바일/PC 공통 지원) -->
+      <button id="btn-settings" onclick="openSettingsModal()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="AI 가이드 캐릭터 및 음성 변경">
+        <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-600"></i> <span id="label-settings" class="hidden md:inline">가이드</span>
+      </button>
       <!-- 음성 TTS On/Off (모바일 숨김) -->
       <button id="btn-sound" onclick="toggleSound()" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition items-center gap-1 text-slate-600 font-bold shadow-sm cursor-pointer shrink-0 text-xs focus:outline-none" title="TTS 음성 On/Off">
         <i id="sound-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-slate-400"></i> <span id="sound-label" class="hidden md:inline text-xs">음소거 OFF</span>
@@ -862,6 +866,118 @@
     </div>
   </div>
 
+  <!-- ================= [MODAL 4: AI 가이드 캐릭터 설정 (Guide Selection)] ================= -->
+  <div id="settings-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-700/80 rounded-2xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-6 shadow-2xl relative space-y-3 sm:space-y-4 max-h-[92vh] overflow-y-auto custom-scroll">
+      <!-- 헤더 -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-400 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base text-white tracking-wide">AI 가이드 멘토 설정</h3>
+            <p class="text-[10px] sm:text-xs text-slate-400">마음에 드는 가이드 선생님을 선택해 보세요. 일러스트·말투·목소리가 즉시 바뀝니다.</p>
+          </div>
+        </div>
+        <button onclick="closeSettingsModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 캐릭터 카드 리스트 (3인 멘토) -->
+      <div class="space-y-2.5 sm:space-y-3" id="guide-cards-container">
+        <!-- 1. 힘찬이 (기본) -->
+        <div id="guide-card-himchan" onclick="selectGuide('himchan')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+          <div class="flex items-start justify-between gap-2.5">
+            <div class="flex items-center gap-3">
+              <div class="relative w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden bg-blue-950/60 border border-blue-500/40 shrink-0">
+                <img src="assets/himchan_smile.png" alt="힘찬이" class="w-full h-full object-cover object-top">
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-xs sm:text-sm text-white">힘찬이</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">열혈 멘토</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-medium rounded bg-slate-800 text-slate-300 border border-slate-700">청년 남성 보이스</span>
+                </div>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">씩씩하고 활기찬 열혈 멘토! 긍정적인 에너지로 긴장을 풀어줍니다.</p>
+              </div>
+            </div>
+            <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 mt-0.5 text-blue-400"></span>
+          </div>
+          <!-- 대사 샘플 및 미리듣기 -->
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/70 text-[10px] sm:text-xs">
+            <span class="text-slate-400 italic truncate max-w-[260px] sm:max-w-[340px]">"오늘 검사도 자신감 있게 파이팅해 볼까요?!"</span>
+            <button type="button" onclick="event.stopPropagation(); previewGuideVoice('himchan');" class="px-2 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-semibold shrink-0 cursor-pointer transition">
+              <i data-lucide="volume-2" class="w-3 h-3"></i> <span>미리듣기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. 나래 (다정다감) -->
+        <div id="guide-card-narae" onclick="selectGuide('narae')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+          <div class="flex items-start justify-between gap-2.5">
+            <div class="flex items-center gap-3">
+              <div class="relative w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden bg-rose-950/60 border border-rose-500/40 shrink-0">
+                <img src="assets/narae_smile.png" alt="나래" class="w-full h-full object-cover object-top">
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-xs sm:text-sm text-white">나래</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">다정 멘토</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-medium rounded bg-slate-800 text-slate-300 border border-slate-700">상냥한 여성 보이스</span>
+                </div>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">다정하고 따뜻한 안심 멘토! 차분하게 곁에서 세심하게 챙겨줍니다.</p>
+              </div>
+            </div>
+            <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 mt-0.5 text-rose-400"></span>
+          </div>
+          <!-- 대사 샘플 및 미리듣기 -->
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/70 text-[10px] sm:text-xs">
+            <span class="text-slate-400 italic truncate max-w-[260px] sm:max-w-[340px]">"차근차근 알기 쉽게 도와드릴 테니 편안히 따라와 주세요 :)"</span>
+            <button type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="px-2 py-1 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 flex items-center gap-1 font-semibold shrink-0 cursor-pointer transition">
+              <i data-lucide="volume-2" class="w-3 h-3"></i> <span>미리듣기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. 서준 (스마트) -->
+        <div id="guide-card-seojun" onclick="selectGuide('seojun')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+          <div class="flex items-start justify-between gap-2.5">
+            <div class="flex items-center gap-3">
+              <div class="relative w-12 h-14 sm:w-14 sm:h-16 rounded-xl overflow-hidden bg-emerald-950/60 border border-emerald-500/40 shrink-0">
+                <img src="assets/seojun_smile.png" alt="서준" class="w-full h-full object-cover object-top">
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-xs sm:text-sm text-white">서준</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">스마트 멘토</span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-medium rounded bg-slate-800 text-slate-300 border border-slate-700">차분한 남성 보이스</span>
+                </div>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">똑부러지고 명료한 스마트 멘토! 정확한 규정과 데이터로 안내합니다.</p>
+              </div>
+            </div>
+            <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 mt-0.5 text-emerald-400"></span>
+          </div>
+          <!-- 대사 샘플 및 미리듣기 -->
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/70 text-[10px] sm:text-xs">
+            <span class="text-slate-400 italic truncate max-w-[260px] sm:max-w-[340px]">"공공데이터와 규정을 토대로 정확하고 신속하게 안내하겠습니다."</span>
+            <button type="button" onclick="event.stopPropagation(); previewGuideVoice('seojun');" class="px-2 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-semibold shrink-0 cursor-pointer transition">
+              <i data-lucide="volume-2" class="w-3 h-3"></i> <span>미리듣기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 버튼 -->
+      <div class="pt-1">
+        <button type="button" onclick="applySettingsAndClose()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-xs sm:text-sm text-white transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 cursor-pointer active:scale-95">
+          <i data-lucide="check" class="w-4 h-4"></i> <span>선택 완료 & 계속하기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
   <script src="api.js?v=20260906_v195_28"></script>
@@ -939,6 +1055,7 @@
     // 사용자 시뮬레이션 상태 저장소
     const userData = {
       name: "김민우",
+      selectedGuide: (typeof localStorage !== 'undefined' && localStorage.getItem('mma_selected_guide')) || 'himchan',
       region: "서울지방병무청",
       regionName: "서울특별시 영등포구 여의대방로43길 13",
       residentAddress: "서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)",
@@ -959,6 +1076,130 @@
       disposition: "현역병 입영 대상",
       fare: "실거리 기준 산정 지급 예정 (나라사랑카드 입금)"
     };
+
+    // 가이드 캐릭터 페르소나 설정 컨트롤러
+    let isFromIntroWidget = false;
+    let previewAudio = null;
+
+    function openSettingsModal(fromIntro = false) {
+      isFromIntroWidget = fromIntro;
+      const modal = document.getElementById('settings-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        updateSettingsModalUI();
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      stopPreviewAudio();
+    }
+
+    function applySettingsAndClose() {
+      closeSettingsModal();
+      if (isFromIntroWidget) {
+        isFromIntroWidget = false;
+        proceedToRegionPicker();
+      }
+    }
+
+    function stopPreviewAudio() {
+      if (previewAudio) {
+        try {
+          previewAudio.pause();
+          previewAudio.currentTime = 0;
+        } catch (e) {}
+        previewAudio = null;
+      }
+    }
+
+    function previewGuideVoice(guideId) {
+      stopPreviewAudio();
+      stopVoiceAudio();
+      if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) return;
+      const g = GUIDE_PERSONAS[guideId];
+      const isEn = (currentLang === 'en');
+      const text = isEn ? g.sampleQuote_en : g.sampleQuote;
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(g.name)}&text=${encodeURIComponent(text)}&lang=${currentLang || 'ko'}&guide=${encodeURIComponent(guideId)}`;
+      
+      previewAudio = new Audio(ttsUrl);
+      previewAudio.play().catch(err => {
+        // Fallback WebSpeech
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = isEn ? 'en-US' : 'ko-KR';
+          window.speechSynthesis.speak(utterance);
+        }
+      });
+    }
+
+    function selectGuide(guideId, silent = false) {
+      if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) guideId = 'himchan';
+      userData.selectedGuide = guideId;
+      try {
+        localStorage.setItem('mma_selected_guide', guideId);
+      } catch (e) {}
+
+      updateSettingsModalUI();
+
+      // 현재 대화가 가이드의 대화라면 즉시 UI 갱신
+      if (currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
+        const cur = currentDialogueList[currentDialogueIdx];
+        const spk = cur.speaker || '';
+        const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('narae') || cur.char.includes('seojun')));
+        if (isGuide) {
+          applyScene(currentSceneIdx);
+        }
+      }
+
+      if (!silent) {
+        showGuideToast(guideId);
+      }
+    }
+
+    function showGuideToast(guideId) {
+      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[guideId]) ? GUIDE_PERSONAS[guideId] : { name: '힘찬이' };
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-14 sm:top-16 left-1/2 -translate-x-1/2 z-50 px-3.5 py-2 rounded-xl bg-slate-900/95 border border-blue-500/60 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200';
+      toast.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> <span>AI 가이드가 [${g.name}] (으)로 변경되었습니다!</span>`;
+      document.body.appendChild(toast);
+      if (window.lucide) lucide.createIcons();
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+        setTimeout(() => toast.remove(), 320);
+      }, 2000);
+    }
+
+    function updateSettingsModalUI() {
+      const curGuide = userData.selectedGuide || 'himchan';
+      ['himchan', 'narae', 'seojun'].forEach(id => {
+        const card = document.getElementById(`guide-card-${id}`);
+        if (!card) return;
+        const ind = card.querySelector('.guide-check-indicator');
+        if (id === curGuide) {
+          card.classList.remove('border-slate-800', 'bg-slate-900/90');
+          card.classList.add('border-blue-500', 'bg-blue-950/30', 'ring-1', 'ring-blue-500/50');
+          if (ind) {
+            ind.className = 'guide-check-indicator w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-md';
+            ind.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>';
+          }
+        } else {
+          card.classList.remove('border-blue-500', 'bg-blue-950/30', 'ring-1', 'ring-blue-500/50');
+          card.classList.add('border-slate-800', 'bg-slate-900/90');
+          if (ind) {
+            ind.className = 'guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 mt-0.5 text-slate-500';
+            ind.innerHTML = '';
+          }
+        }
+      });
+      if (window.lucide) lucide.createIcons();
+    }
 
     const conversationHistory = [];
 
@@ -1040,6 +1281,7 @@
         auto: "AUTO",
         log: "대화기록",
         restart: "처음으로",
+        guideBtn: "가이드",
         langToggle: "EN",
         langBtnTitle: "Switch to English (영어 전환)",
         soundOn: "TTS 음성 ON",
@@ -1100,6 +1342,7 @@
         auto: "AUTO",
         log: "Log",
         restart: "Restart",
+        guideBtn: "Guide",
         langToggle: "KO",
         langBtnTitle: "한국어로 전환 (Switch to Korean)",
         soundOn: "TTS Voice ON",
@@ -1176,6 +1419,8 @@
       lobbyLangLabels.forEach(el => el.innerText = dict.langToggle);
       if (btnLang) btnLang.title = dict.langBtnTitle;
       if (labelHome) labelHome.innerText = dict.mainMenu;
+      const labelSettings = document.getElementById('label-settings');
+      if (labelSettings) labelSettings.innerText = dict.guideBtn || "가이드";
       if (soundLabel) soundLabel.innerText = soundEnabled ? dict.soundOn : dict.soundOff;
       const btnSound = document.getElementById('btn-sound');
       const soundIcon = document.getElementById('sound-icon');
@@ -1286,8 +1531,9 @@
 
       if (!cleanText) return;
 
-      // [오픈소스 뉴럴 음성 실시간 스트리밍] 남성 성우(인준/현수) 오픈소스 TTS API 우선 재생
-      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}`;
+      // [오픈소스 뉴럴 음성 실시간 스트리밍] 멘토별 뉴럴 보이스 (힘찬이/나래/서준) 오픈소스 TTS API 우선 재생
+      const guideParam = encodeURIComponent(userData.selectedGuide || 'himchan');
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}`;
       const audio = new Audio();
       currentVoiceAudio = audio;
       audio.src = ttsUrl;
@@ -1338,6 +1584,9 @@
         }
 
         const spk = speaker || '';
+        const curGuide = userData.selectedGuide || 'himchan';
+        const isGuideSpeaker = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide');
+
         const pickVoice = (voices, keywords) => {
           for (const kw of keywords) {
             const found = voices.find(v => v.name.toLowerCase().includes(kw.toLowerCase()));
@@ -1353,10 +1602,20 @@
 
         if (isEnglish) {
           const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
-          if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-            utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
-            utterance.rate = 1.08;
-            utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.85;
+          if (isGuideSpeaker) {
+            if (curGuide === 'narae') {
+              utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
+              utterance.rate = 1.0;
+              utterance.pitch = 1.1;
+            } else if (curGuide === 'seojun') {
+              utterance.voice = pickVoice(enVoices, ['guy', 'brian', 'male']) || enVoices[0] || null;
+              utterance.rate = 1.0;
+              utterance.pitch = 0.95;
+            } else {
+              utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
+              utterance.rate = 1.08;
+              utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.85;
+            }
           } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
@@ -1370,20 +1629,25 @@
         } else {
           // 한국어: 시스템에 설치된 한국어 보이스 탐색 및 화자별 피치·속도 맞춤 분기
           const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
+          const femaleVoice = pickVoice(koVoices, ['sunhi', '선희', 'heami', '혜미', 'yuna', '유나', 'female', '여성']);
           const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호']);
-          const selectedVoice = maleVoice || pickVoice(koVoices, ['heami', '혜미', 'sunhi', '선희', 'ko']) || koVoices[0] || null;
-
-          if (selectedVoice) {
-            utterance.voice = selectedVoice;
-          }
-
-          // 캐릭터별 뚜렷한 음성 톤(Pitch) 및 발화 속도(Rate) 차별화
-          if (spk.includes('힘찬이') || spk.includes('Himchan')) {
-            // 활기찬 소년/청년 가이드
-            utterance.rate = 1.06;
-            utterance.pitch = maleVoice ? 1.22 : 0.95;
+          
+          if (isGuideSpeaker) {
+            if (curGuide === 'narae') {
+              utterance.voice = femaleVoice || koVoices[0] || null;
+              utterance.rate = 1.0;
+              utterance.pitch = 1.15;
+            } else if (curGuide === 'seojun') {
+              utterance.voice = maleVoice || koVoices[0] || null;
+              utterance.rate = 1.02;
+              utterance.pitch = maleVoice ? 0.92 : 0.70;
+            } else {
+              utterance.voice = maleVoice || femaleVoice || koVoices[0] || null;
+              utterance.rate = 1.06;
+              utterance.pitch = maleVoice ? 1.22 : 0.95;
+            }
           } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
-            // 20대 대학생 주인공
+            utterance.voice = maleVoice || koVoices[0] || null;
             utterance.rate = 0.98;
             utterance.pitch = maleVoice ? 0.96 : 0.75;
           } else if (spk.includes('판정관') || spk.includes('adjudicator')) {
@@ -1643,13 +1907,57 @@
       renderScene(targetIdx);
     }
 
+    // 가이드 페르소나 (외형, 화자명, 말투, 플레이트 색상) 동적 변환 헬퍼
+    function getGuideResolvedItem(item) {
+      if (!item) return item;
+      const guideId = userData.selectedGuide || 'himchan';
+      const spk = item.speaker || '';
+      const spkEn = item.speaker_en || '';
+      const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('narae') || item.char.includes('seojun')));
+
+      if (!isGuide) return item;
+
+      let resolvedChar = item.char;
+      let resolvedSpk = item.speaker;
+      let resolvedSpkEn = item.speaker_en;
+      let resolvedPlate = item.plateClass;
+
+      if (typeof resolveGuideAssets === 'function') {
+        const res = resolveGuideAssets(item.char, item.speaker, item.speaker_en, guideId);
+        resolvedChar = res.char;
+        resolvedSpk = res.speaker;
+        resolvedSpkEn = res.speaker_en;
+        if (res.plateClass) resolvedPlate = res.plateClass;
+      }
+
+      let textKo = item.text || '';
+      let textEn = item.text_en || textKo;
+      if (typeof adaptGuideDialogue === 'function') {
+        textKo = adaptGuideDialogue(textKo, guideId, false);
+        textEn = adaptGuideDialogue(textEn, guideId, true);
+      }
+
+      return {
+        ...item,
+        char: resolvedChar,
+        speaker: resolvedSpk,
+        speaker_en: resolvedSpkEn,
+        plateClass: resolvedPlate,
+        text: textKo,
+        text_en: textEn
+      };
+    }
+
     // 실제 씬 화면 업데이트 및 대사 출력
     function applyScene(idx) {
       isAnnouncement = false;
       pendingTransitionSceneIdx = null;
       currentSceneIdx = idx;
       if (idx === 1 && typeof SCENARIOS !== 'undefined' && SCENARIOS[1]) {
-        SCENARIOS[1].widgetType = 'DEFAULT_REGION_PICKER';
+        // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
+        if (!SCENARIOS[1].widgetType) {
+          SCENARIOS[1].widgetType = 'GUIDE_SELECT_INTRO';
+        }
       }
       if (window.MmaTracker) window.MmaTracker.reportScene(idx);
       const scene = SCENARIOS[idx];
@@ -1672,13 +1980,16 @@
       const bgImg = document.getElementById('bg-image');
       if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl(scene.bg)}')`;
 
+      // 가이드 페르소나 적용된 씬 기본 정보 산출
+      const resolvedScene = getGuideResolvedItem(scene);
+
       // 캐릭터 스프라이트 및 위치 제어 (이전 캐릭터 잔상/깜빡임 완전 차단)
-      updateCharacterSprite(scene.char, scene.charPos, true);
+      updateCharacterSprite(resolvedScene.char, resolvedScene.charPos, true);
 
       // 화자 네임플레이트
       const spkName = document.getElementById('speaker-name');
       const spkPlate = document.getElementById('speaker-plate');
-      let currentSpeaker = (currentLang === 'en' && scene.speaker_en) ? scene.speaker_en : scene.speaker;
+      let currentSpeaker = (currentLang === 'en' && resolvedScene.speaker_en) ? resolvedScene.speaker_en : resolvedScene.speaker;
       if (currentSpeaker) {
         const uName = userData.name || '김민우';
         currentSpeaker = currentSpeaker.replace(/\{name\}/g, uName)
@@ -1688,7 +1999,7 @@
                                        .replace(/Minwoo/gi, uName);
       }
       if (spkName) spkName.innerText = currentSpeaker;
-      if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${scene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
+      if (spkPlate) spkPlate.className = `px-4 py-1.5 rounded-t-xl bg-gradient-to-r border-t border-x text-white font-extrabold text-xs sm:text-sm shadow-xl tracking-wide ${resolvedScene.plateClass || 'from-slate-700 to-slate-900 border-slate-500/40'}`;
       
       // 하단 API / 법령 근거 배지 (API 또는 법령 데이터가 있을 때만 표출, 클릭 시 원문 링크 이동)
       const apiBadgeContainer = document.getElementById('api-badge-container');
@@ -1773,6 +2084,8 @@
           text_en: txt
         }));
       }
+      // 가이드 페르소나 적용 일괄 매핑
+      currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
       currentDialogueIdx = 0;
 
       // 대화 기록 저장
@@ -2351,6 +2664,46 @@
       playDialogueChunk();
     }
 
+    function confirmGuideAndProceed(guideId) {
+      selectGuide(guideId, true);
+      proceedToRegionPicker();
+    }
+
+    function proceedToRegionPicker() {
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+      
+      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[userData.selectedGuide || 'himchan']) || (typeof GUIDE_PERSONAS !== 'undefined' ? GUIDE_PERSONAS.himchan : null);
+      let askMsgKo = `병역판정검사 일정을 확인하고 계획하기 위해 {name} 님, 먼저 관할 병무청을 선택해 주시겠습니까?`;
+      let askMsgEn = `To check and plan your draft physical examination schedule, {name}, would you please select your regional Military Manpower Administration office first?`;
+      if (typeof adaptGuideDialogue === 'function') {
+        askMsgKo = adaptGuideDialogue(askMsgKo, userData.selectedGuide || 'himchan', false);
+        askMsgEn = adaptGuideDialogue(askMsgEn, userData.selectedGuide || 'himchan', true);
+      }
+
+      const resolved = (typeof resolveGuideAssets === 'function') 
+        ? resolveGuideAssets('assets/himchan_smile.png', '힘찬이 (병무청 AI 가이드)', 'Himchan (MMA AI Guide)', userData.selectedGuide || 'himchan')
+        : { speaker: '힘찬이 (병무청 AI 가이드)', speaker_en: 'Himchan (MMA AI Guide)', plateClass: 'from-blue-700 to-indigo-800 border-blue-400/40', char: 'assets/himchan_smile.png' };
+
+      updateDialogueDirect(
+        resolved.speaker,
+        resolved.speaker_en,
+        resolved.plateClass,
+        resolved.char,
+        askMsgKo,
+        askMsgEn
+      );
+
+      setTimeout(() => {
+        renderWidget('DEFAULT_REGION_PICKER');
+      }, 400);
+    }
+
     // 화면 중앙 플로팅 선택지 렌더러 (정통 비주얼 노벨 스타일)
     function renderWidget(type) {
       const choiceOverlay = document.getElementById('center-choice-overlay');
@@ -2366,7 +2719,61 @@
 
       choiceContainer.innerHTML = '';
 
-      if (type === 'CHOICE_SCHEDULE_CONSENT') {
+      if (type === 'GUIDE_SELECT_INTRO') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.innerHTML = `
+          <div class="flex flex-col gap-2.5 sm:gap-3 w-full max-w-lg animate-in fade-in zoom-in-95 duration-150">
+            <!-- 멘토 캐릭터 선택 안내 헤더 -->
+            <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3 sm:p-4 text-center">
+              <span class="text-[11px] sm:text-xs font-bold text-blue-300 flex items-center justify-center gap-1.5 mb-1">
+                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? 'Choose Your AI Mentor' : '병역판정검사 동행 AI 멘토 선택'}
+              </span>
+              <p class="text-[10px] sm:text-xs text-slate-300">
+                ${isEn ? 'You can proceed with the default mentor Himchan or explore friendly Narae & smart Seojun!' : '기본 멘토 힘찬이로 바로 진행하시거나, 다정한 나래·스마트한 서준 멘토를 선택하실 수 있습니다.'}
+              </p>
+            </div>
+
+            <!-- 선택지 1: 힘찬이와 바로 진행 -->
+            <button onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('himchan');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border border-blue-500/40 hover:border-blue-400 text-left flex items-center justify-between shadow-2xl transition cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3.5">
+                <div class="relative w-11 h-12 sm:w-12 sm:h-14 rounded-xl overflow-hidden bg-blue-950/60 border border-blue-500/40 shrink-0">
+                  <img src="assets/himchan_smile.png" alt="힘찬이" class="w-full h-full object-cover object-top">
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-300 transition">${isEn ? 'Proceed with Mentor Himchan!' : '네! 힘찬이 멘토님과 바로 진행할게요!'}</span>
+                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">${isEn ? 'Default' : '기본 멘토'}</span>
+                  </div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Energetic & encouraging guidance with Himchan.' : '씩씩하고 활기찬 열혈 가이드 힘찬이와 함께 일정을 시작합니다.'}</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 group-hover:text-blue-300 group-hover:translate-x-1 transition shrink-0 ml-2"></i>
+            </button>
+
+            <!-- 선택지 2: 다른 멘토 캐릭터(나래/서준) 살펴보고 선택 -->
+            <button onclick="playBeep(600, 'triangle', 0.05); openSettingsModal(true);" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-purple-950/40 hover:from-slate-800 hover:to-indigo-900 border border-purple-500/40 hover:border-pink-400 text-left flex items-center justify-between shadow-2xl transition cursor-pointer">
+              <div class="flex items-center gap-2.5 sm:gap-3.5">
+                <div class="flex -space-x-3 shrink-0">
+                  <div class="relative w-10 h-11 sm:w-11 sm:h-13 rounded-xl overflow-hidden bg-rose-950/60 border border-rose-500/40 z-10">
+                    <img src="assets/narae_smile.png" alt="나래" class="w-full h-full object-cover object-top">
+                  </div>
+                  <div class="relative w-10 h-11 sm:w-11 sm:h-13 rounded-xl overflow-hidden bg-emerald-950/60 border border-emerald-500/40">
+                    <img src="assets/seojun_smile.png" alt="서준" class="w-full h-full object-cover object-top">
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-xs sm:text-sm text-pink-200 group-hover:text-white transition">${isEn ? 'Explore other mentors (Narae / Seojun)' : '다른 멘토(나래 / 서준)를 살펴보고 선택할게요!'}</span>
+                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">${isEn ? 'Customize' : '멘토 선택'}</span>
+                  </div>
+                  <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Choose between caring Narae or smart analyst Seojun.' : '다정한 나래 또는 스마트한 서준 멘토와 목소리를 미리듣고 선택합니다.'}</p>
+                </div>
+              </div>
+              <i data-lucide="sparkles" class="w-4 h-4 sm:w-5 sm:h-5 text-pink-400 group-hover:text-amber-300 transition shrink-0 ml-2"></i>
+            </button>
+          </div>
+        `;
+      } else if (type === 'CHOICE_SCHEDULE_CONSENT') {
         choiceContainer.innerHTML = `
           <div class="flex flex-col gap-2 sm:gap-3 w-full animate-in fade-in zoom-in-95 duration-150">
             <!-- 선택지 1: 실시간 공석 달력 조회 -->
@@ -3314,6 +3721,21 @@
     // 단계별 인터랙션 시 하단 대화창 및 화자 즉시 업데이트 헬퍼
     function updateDialogueDirect(speaker, speakerEn, plateClass, charSrc, text, textEn, audioKey = null) {
       const isEn = (currentLang === 'en');
+      const resolved = getGuideResolvedItem({
+        speaker: speaker,
+        speaker_en: speakerEn,
+        plateClass: plateClass,
+        char: charSrc,
+        text: text,
+        text_en: textEn
+      });
+      speaker = resolved.speaker;
+      speakerEn = resolved.speaker_en;
+      plateClass = resolved.plateClass;
+      charSrc = resolved.char;
+      text = resolved.text;
+      textEn = resolved.text_en;
+
       const spName = document.getElementById('speaker-name');
       const spPlate = document.getElementById('speaker-plate');
       const spriteImg = document.getElementById('sprite-img');
@@ -4621,6 +5043,9 @@
       // 저장된 사용자 상태 및 대화 기록 복원
       if (save.userData) {
         Object.assign(userData, save.userData);
+        if (userData.selectedGuide) {
+          try { localStorage.setItem('mma_selected_guide', userData.selectedGuide); } catch (e) {}
+        }
         if (!userData.residentAddress || !userData.distanceKm) {
           if (typeof MmaApiService !== 'undefined') {
             const fareData = MmaApiService.calculateFare(userData.region || '서울지방병무청');

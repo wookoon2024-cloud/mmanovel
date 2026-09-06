@@ -1,20 +1,181 @@
 /**
  * =========================================================================
- * 📜 [병무청 비주얼 노벨 - 전체 시나리오 대본 데이터 (scenario.js)]
+ * 🎭 [병무청 AI 가이드 페르소나 정의 (GUIDE_PERSONAS)]
  * =========================================================================
- * 
- * 💡 대본 및 연출 수정 가이드:
- * - bg: 배경 이미지 ('assets/room.jpg', 'assets/lobby.jpg', 'assets/exam_room.jpg')
- * - char: 캐릭터 이미지 ('assets/minwoo.png', 'assets/himchan.png', 'assets/doctor.png')
- * - charPos: 캐릭터 위치 ('right', 'left', 'center') -> 기본값 'right' (우측)
- * - speaker: 화자 이름 (깔끔한 텍스트 표출)
- * - plateClass: 이름표 색상 그라데이션
- * - text: 출력할 대사 (줄바꿈 \n 으로 자연스러운 호흡 분절)
- * - apiSource: 하단 데이터 출처 배지 텍스트
- * - apiIcon: 'database'(DB), 'scale'(법령), 'book-open'(스토리)
- * - isApi: true일 경우 '✓ 실시간 연동' 녹색 배지 표출
- * - widgetType: 화면에 띄울 인터랙티브 UI 위젯 (없으면 null)
  */
+const GUIDE_PERSONAS = {
+  himchan: {
+    id: "himchan",
+    name: "힘찬이",
+    name_en: "Himchan",
+    role: "병무청 공식 마스코트 & 열혈 AI 멘토",
+    role_en: "Official Mascot & Passionate AI Guide",
+    tag: "씩씩하고 활기찬 열혈 멘토",
+    tag_en: "Energetic & Encouraging Mentor",
+    desc: "긍정적인 에너지와 활기찬 응원으로 긴장감을 풀어주는 든든한 멘토입니다.",
+    desc_en: "Boosts your confidence with energetic encouragement and friendly spirit.",
+    gender: "male",
+    voice: "ko-KR-HyunsuMultilingualNeural",
+    voice_en: "en-US-RyanMultilingualNeural",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    badgeColor: "bg-blue-600",
+    themeBorder: "border-blue-500",
+    themeBg: "bg-blue-950/40",
+    sprites: {
+      default: "assets/himchan.png",
+      smile: "assets/himchan_smile.png",
+      cheer: "assets/himchan_cheer.png"
+    },
+    sampleQuote: "충성! 안녕하십니까! 여러분의 든든한 병역 길라잡이 힘찬이입니다! 오늘 검사도 자신감 있게 파이팅해 볼까요?!",
+    sampleQuote_en: "Salute! Hello! I'm your energetic guide Himchan! Let's take on today's examination with full confidence!"
+  },
+  narae: {
+    id: "narae",
+    name: "나래",
+    name_en: "Narae",
+    role: "병무청 친절상담관 & 다정다감 AI 멘토",
+    role_en: "MMA Counselor & Warm AI Guide",
+    tag: "다정하고 따뜻한 안심 멘토",
+    tag_en: "Warm & Caring Friendly Mentor",
+    desc: "차분하고 따뜻한 어조로 모든 검사 절차를 알기 쉽게 세심하게 챙겨줍니다.",
+    desc_en: "Guides you through each step with a warm, comforting tone and detailed care.",
+    gender: "female",
+    voice: "ko-KR-SunHiNeural",
+    voice_en: "en-US-JennyNeural",
+    plateClass: "from-rose-600 to-pink-700 border-rose-400/40",
+    badgeColor: "bg-rose-500",
+    themeBorder: "border-rose-500",
+    themeBg: "bg-rose-950/40",
+    sprites: {
+      default: "assets/narae.png",
+      smile: "assets/narae_smile.png",
+      cheer: "assets/narae_smile.png"
+    },
+    sampleQuote: "안녕하세요! 병역판정검사가 낯설고 긴장되시죠? 제가 곁에서 차근차근 알기 쉽게 도와드릴 테니 편안하게 따라와 주세요 :)",
+    sampleQuote_en: "Hello! Feeling a bit nervous about the physical exam? Don't worry at all, I'll guide you step by step with care :)"
+  },
+  seojun: {
+    id: "seojun",
+    name: "서준",
+    name_en: "Seojun",
+    role: "병무행정 전문분석관 & 스마트 AI 멘토",
+    role_en: "MMA Policy Analyst & Smart AI Guide",
+    tag: "똑부러지고 명료한 스마트 멘토",
+    tag_en: "Precise & Professional Smart Mentor",
+    desc: "정확한 규정과 공공데이터에 기반하여 신속하고 명확하게 핵심을 안내합니다.",
+    desc_en: "Delivers concise, accurate guidance based on official regulations and public data.",
+    gender: "male",
+    voice: "ko-KR-BongJinNeural",
+    voice_en: "en-US-GuyNeural",
+    plateClass: "from-emerald-700 to-teal-800 border-emerald-400/40",
+    badgeColor: "bg-emerald-600",
+    themeBorder: "border-emerald-500",
+    themeBg: "bg-emerald-950/40",
+    sprites: {
+      default: "assets/seojun.png",
+      smile: "assets/seojun_smile.png",
+      cheer: "assets/seojun_smile.png"
+    },
+    sampleQuote: "반갑습니다. 병무청 공공데이터와 법령 규정을 토대로 정확하고 신속한 검사 진행을 책임지는 AI 멘토 서준입니다. 효율적인 검사를 시작하겠습니다.",
+    sampleQuote_en: "Greetings. I am AI mentor Seojun, dedicated to providing precise and efficient procedures based on official data and regulations. Let's proceed."
+  }
+};
+
+/**
+ * 선택된 가이드에 맞춰 대사 어조 및 텍스트를 실시간 변환하는 어댑터
+ */
+function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
+  if (!rawText) return '';
+  const g = GUIDE_PERSONAS[guideId] || GUIDE_PERSONAS.himchan;
+
+  if (isEn) {
+    if (guideId === 'narae') {
+      return rawText
+        .replace(/Himchan/g, 'Narae')
+        .replace(/Salute!\s*Hello/g, 'Hello')
+        .replace(/Let's take on/g, "Let's comfortably go through")
+        .replace(/with full confidence!/g, "together with care :)");
+    } else if (guideId === 'seojun') {
+      return rawText
+        .replace(/Himchan/g, 'Seojun')
+        .replace(/Salute!\s*Hello/g, 'Greetings')
+        .replace(/Ready to head in together\?/g, 'We will now proceed to the next examination room.')
+        .replace(/Let's take on.*!/g, 'We will proceed with the official examination schedule.');
+    }
+    return rawText;
+  }
+
+  // 한국어 어조 변환
+  if (guideId === 'narae') {
+    return rawText
+      .replace(/힘찬이/g, '나래')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'힘찬이'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '나래'예요 :)")
+      .replace(/충성!\s*안녕하십니까/g, "안녕하세요")
+      .replace(/파이팅해 볼까요\?!/g, "천천히 힘을 내어 시작해 볼까요? :)")
+      .replace(/파이팅입니다!/g, "함께 힘내봐요 :)")
+      .replace(/가보실까요\?!/g, "함께 가보실래요? :)")
+      .replace(/이동해 볼까요\?!/g, "함께 이동해 볼까요? :)")
+      .replace(/확인해 보세요!/g, "편안하게 확인해 보세요 :)")
+      .replace(/출발합니다!/g, "함께 출발해 볼게요 :)")
+      .replace(/나이스!/g, "정말 훌륭해요! :)")
+      .replace(/감사합니다!/g, "감사해요 :)")
+      .replace(/선택하셨군요!/g, "선택하셨네요! 정말 좋은 선택이에요 :)")
+      .replace(/지정되었습니다\./g, "잘 배정되었답니다 :)")
+      .replace(/지정되었습니다!/g, "잘 배정되었답니다 :)")
+      .replace(/해주시기 바랍니다\./g, "해 보실래요? :)")
+      .replace(/해 주시겠습니까\?/g, "해 주실 수 있나요? :)")
+      .replace(/해보겠습니다!/g, "도와드릴게요 :)");
+  } else if (guideId === 'seojun') {
+    return rawText
+      .replace(/힘찬이/g, '서준')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'힘찬이'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
+      .replace(/충성!\s*안녕하십니까/g, "반갑습니다")
+      .replace(/파이팅해 볼까요\?!/g, "원활한 검사를 위해 집중해 주시기 바랍니다.")
+      .replace(/파이팅입니다!/g, "다음 절차로 원활하게 진행하겠습니다.")
+      .replace(/가보실까요\?!/g, "다음 검사장으로 신속히 이동하겠습니다.")
+      .replace(/이동해 볼까요\?!/g, "검사실로 이동하겠습니다.")
+      .replace(/확인해 보세요!/g, "상세 규정을 면밀히 확인 바랍니다.")
+      .replace(/출발합니다!/g, "안내 절차를 개시합니다.")
+      .replace(/오,?\s*\{name\}\s*님!\s*검사 희망일로/g, "{name} 님, 희망 검사일로")
+      .replace(/선택하셨군요!/g, "선택이 시스템에 정상 등록되었습니다.")
+      .replace(/지정되었습니다!/g, "지정 완료되었습니다.")
+      .replace(/지정되었습니다\./g, "지정 완료되었습니다.")
+      .replace(/나이스!/g, "정확한 절차 확인입니다.")
+      .replace(/해 주시겠습니까\?/g, "선택해 주시기 바랍니다.")
+      .replace(/해주시기 바랍니다\./g, "확인 바랍니다.");
+  }
+
+  return rawText;
+}
+
+/**
+ * 선택된 가이드의 화자명, 스프라이트, 플레이트 클래스 반환
+ */
+function resolveGuideAssets(originalChar, originalSpeaker, originalSpeakerEn, guideId = 'himchan') {
+  const g = GUIDE_PERSONAS[guideId] || GUIDE_PERSONAS.himchan;
+  const isHimchanSpeaker = (originalSpeaker && (originalSpeaker.includes('힘찬이') || originalSpeaker.includes('Himchan') || originalSpeaker.includes('가이드') || originalSpeaker.includes('Guide')));
+  
+  if (!isHimchanSpeaker && !originalChar.includes('himchan')) {
+    return {
+      char: originalChar,
+      speaker: originalSpeaker,
+      speaker_en: originalSpeakerEn,
+      plateClass: null
+    };
+  }
+
+  let sprite = g.sprites.default;
+  if (originalChar && (originalChar.includes('smile') || originalChar.includes('cheer'))) {
+    sprite = g.sprites.smile || g.sprites.cheer || g.sprites.default;
+  }
+
+  return {
+    char: sprite,
+    speaker: `${g.name} (병무청 AI 가이드)`,
+    speaker_en: `${g.name_en} (MMA AI Guide)`,
+    plateClass: g.plateClass
+  };
+}
 
 const SCENARIOS = [
   // [SCENE 0] 민우의 자취방 - 통지서 수령 (당황하고 긴장한 민우)
@@ -33,7 +194,7 @@ const SCENARIOS = [
     widgetType: null
   },
 
-  // [SCENE 1] 민우의 자취방 - 힘찬이 첫 등장 & 관할 병무청 선택 요청 (반갑게 웃으며 인사)
+  // [SCENE 1] 민우의 자취방 - 가이드 첫 등장 & 멘토 캐릭터 선택 확인
   {
     bg: "assets/room.jpg",
     char: "assets/himchan_smile.png",
@@ -41,12 +202,12 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "충성! 안녕하십니까 {name} 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n병역판정검사 일정을 확인하고 계획하기 위해 {name} 님, 먼저 관할 병무청을 선택해 주시겠습니까?",
-    text_en: "Salute! Hello {name}, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nTo check and plan your draft physical examination schedule, {name}, would you please select your regional Military Manpower Administration office first?",
+    text: "충성! 안녕하십니까 {name} 님, 병무청 AI 가이드 '힘찬이'입니다!\n\n앞으로의 병역판정검사 여정을 함께할 텐데요, 본격적인 시작에 앞서 혹시 저 말고 다른 멘토 캐릭터 디자인을 희망하시나요?",
+    text_en: "Salute! Hello {name}, I'm 'Himchan', your Military Manpower Administration AI guide!\n\nBefore we begin our physical exam journey, would you like to explore or select another mentor character?",
     apiSource: null,
     apiSource_en: null,
     isApi: false,
-    widgetType: "DEFAULT_REGION_PICKER"
+    widgetType: "GUIDE_SELECT_INTRO"
   },
 
   // [SCENE 2] 민우의 자취방 - 선택된 관할청의 일별 실시간 달력 확인 (안내하는 힘찬이)
@@ -661,3 +822,7 @@ const SCENARIOS = [
     widgetType: "EPISODE_COMPLETE"
   }
 ];
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { SCENARIOS, GUIDE_PERSONAS, adaptGuideDialogue, resolveGuideAssets };
+}
