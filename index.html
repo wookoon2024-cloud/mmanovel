@@ -161,10 +161,10 @@
   </header>
 
   <!-- ================= [LAYER 2.5: 게임 메인 타이틀 & 시나리오 선택 로비] ================= -->
-  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between pb-6 overflow-y-auto custom-scroll">
+  <div id="main-menu-overlay" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between pb-2 sm:pb-6 overflow-y-auto custom-scroll">
     
     <!-- 로비 상단 바 (흰색 배경) -->
-    <div class="bg-white border-b border-slate-200 px-3 sm:px-8 py-2 sm:py-2.5 w-full shadow-md shrink-0 select-none">
+    <div class="bg-white border-b border-slate-200 px-3 sm:px-8 py-1.5 sm:py-2.5 w-full shadow-md shrink-0 select-none">
       <div class="max-w-5xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-2 sm:gap-3">
           <button onclick="showMainMenu()" class="cursor-pointer hover:opacity-80 active:scale-95 transition flex items-center shrink-0 focus:outline-none" title="메인 메뉴(로비) 새로고침">
@@ -183,14 +183,13 @@
       </div>
     </div>
 
-    <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 -->
-    <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 (모바일 세로 컴팩트 패딩) -->
-    <div class="max-w-5xl w-full mx-auto my-auto py-2 sm:py-6 px-2 sm:px-6 space-y-2 sm:space-y-6">
+    <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 (모바일 완벽 맞춤 높이) -->
+    <div class="max-w-5xl w-full mx-auto my-auto py-1 sm:py-6 px-2 sm:px-6 space-y-1 sm:space-y-6">
       <div class="text-center">
-        <span class="text-[10px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase block mb-0.5 sm:mb-1">
+        <span class="text-[9px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase block mb-0.5">
           Scenario Episodes
         </span>
-        <h2 id="lobby-select-title" class="text-base sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-1 sm:mb-1.5">
+        <h2 id="lobby-select-title" class="text-sm sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-0.5 sm:mb-1.5">
           체험할 시나리오를 선택해 주세요
         </h2>
         <p id="lobby-sub-title" class="hidden sm:block text-xs sm:text-sm text-slate-400 max-w-xl mx-auto break-keep leading-relaxed px-2">
@@ -218,8 +217,8 @@
             <!-- [SLIDE 1: 제1화 병역판정검사] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
-                <!-- 포스터 이미지 영역 (포스터를 시원하게 채워 여백 제거) -->
-                <div id="ep1-poster-wrapper" class="relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+                <!-- 포스터 이미지 영역 (모바일 화면에 맞춰 최적 높이 적용) -->
+                <div id="ep1-poster-wrapper" class="relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep1-live-video" src="assets/ep1_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 pointer-events-none"></div>
@@ -271,7 +270,7 @@
             <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
-                <div id="ep2-poster-wrapper" class="relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+                <div id="ep2-poster-wrapper" class="relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep2-live-video" src="assets/ep2_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
@@ -322,7 +321,7 @@
             <!-- [SLIDE 3: 제3화 병역진로설계 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
-                <div id="ep3-poster-wrapper" class="relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+                <div id="ep3-poster-wrapper" class="relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep3_cover.jpg?v=20260904_v189" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -330,9 +329,11 @@
                     <span id="ep3-badge-title" class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white text-[9px] sm:text-xs font-bold tracking-wide shadow-md">
                       제3화 · 병역진로설계 편
                     </span>
-                    <span id="ep3-saved-badge" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
-                      <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
-                    </span>
+                    <div id="ep3-saved-badge">
+                      <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
+                        <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -367,7 +368,7 @@
             <!-- [SLIDE 4: 제4화 사회복무요원 첫 출근 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
-                <div id="ep4-poster-wrapper" class="relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+                <div id="ep4-poster-wrapper" class="relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep4_cover.jpg?v=20260904_v189" alt="제4화 사회복무요원 첫 출근" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -424,7 +425,7 @@
           </button>
         </div>
 
-        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-2">
+        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-1.5 pb-0.5">
           <button onclick="goToEpisodePage(0)" id="ep-dot-0" class="h-1.5 w-6 rounded-full bg-blue-500 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(1)" id="ep-dot-1" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(2)" id="ep-dot-2" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
@@ -435,7 +436,7 @@
     </div>
 
     <!-- 로비 하단 정보 바 & 실시간 법령/OpenAPI 연동 배지 -->
-    <div class="pt-2 sm:pt-2.5 border-t border-slate-800/80 text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col items-center justify-center text-center gap-0.5 px-4 shrink-0 pb-1.5">
+    <div class="pt-1 sm:pt-2.5 border-t border-slate-800/80 text-[10px] sm:text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col items-center justify-center text-center gap-0.5 px-3 shrink-0 pb-1 sm:pb-1.5">
       <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 leading-tight">
         <span>© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
         <button type="button" onclick="showPrivacyPolicyModal()" class="text-slate-400 hover:text-cyan-400 underline underline-offset-2 transition text-[11px] cursor-pointer">개인정보 처리 및 접속기록 안내</button>
@@ -5952,9 +5953,9 @@
       const save = getSavedGameState();
       const dict = I18N[currentLang];
       if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
-        // 포스터 높이 고정 (390px)으로 세로 크기 595px 유지 및 상단 빈 공간 완전 제거
+        // 포스터 높이 (모바일 190~210px, PC 390px)
         if (poster1) {
-          poster1.className = "relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         let stepText = (currentLang === 'en') ? "STEP 1: Rescheduling" : "STEP 1: 일정 변경";
         if (save.sceneIdx === 4) stepText = (currentLang === 'en') ? "STEP 2: Document Check" : "STEP 2: 구비서류 점검";
@@ -5985,9 +5986,9 @@
           </div>
         `;
       } else {
-        // 이어하기가 없을 때 포스터 높이 고정 (390px)
+        // 이어하기가 없을 때 포스터 높이 (모바일 190~210px, PC 390px)
         if (poster1) {
-          poster1.className = "relative w-full h-[340px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "relative w-full h-[190px] xs:h-[210px] sm:h-[390px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         const playableText = (currentLang === 'en') ? "Playable" : "플레이 가능";
         if (badgeContainer) {
