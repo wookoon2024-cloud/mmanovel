@@ -211,9 +211,9 @@
           <i data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
-        <!-- 슬라이더 뷰포트 (오버플로우 숨김 & 터치 스와이프) -->
-        <div id="episode-slider-viewport" class="overflow-hidden w-full rounded-2xl sm:rounded-3xl p-1 select-none">
-          <div id="episode-slider-track" class="flex transition-transform duration-500 ease-out w-full">
+        <!-- 슬라이더 뷰포트 (오버플로우 숨김 & 터치 스와이프 및 드래그) -->
+        <div id="episode-slider-viewport" class="overflow-hidden w-full rounded-2xl sm:rounded-3xl p-1 select-none cursor-grab active:cursor-grabbing" style="touch-action: pan-y;">
+          <div id="episode-slider-track" class="flex transition-transform duration-500 ease-out w-full will-change-transform">
             
             <!-- [SLIDE 1: 제1화 병역판정검사] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
@@ -5611,6 +5611,7 @@
 
       if (track && viewport) {
         const width = viewport.getBoundingClientRect().width;
+        track.style.transition = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
         track.style.transform = `translateX(-${currentEpisodePage * width}px)`;
       }
 
@@ -5684,37 +5685,105 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // 모바일 터치 스와이프 리스너 초기화
+    let wasDraggingEpisode = false;
+
+    // 모바일 터치 스와이프 & 드래그 리스너 초기화 (실시간 손가락 추적 + 부드러운 스냅 전환)
     function initEpisodeSliderSwipe() {
       const viewport = document.getElementById('episode-slider-viewport');
-      if (!viewport || viewport.dataset.swipeInit) return;
+      const track = document.getElementById('episode-slider-track');
+      if (!viewport || !track || viewport.dataset.swipeInit) return;
       viewport.dataset.swipeInit = "true";
 
-      let touchStartX = 0;
-      let touchStartY = 0;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let deltaX = 0;
+      let isHorizontal = null;
+      let startTime = 0;
+      let startTranslate = 0;
 
-      viewport.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-        }
-      }, { passive: true });
+      function onTouchStart(e) {
+        if (e.target.closest('button, a, input, select, textarea')) return;
+        const touch = e.touches ? e.touches[0] : e;
+        isDragging = true;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = touch.clientX;
+        deltaX = 0;
+        isHorizontal = null;
+        startTime = Date.now();
 
-      viewport.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length > 0) {
-          const touchEndX = e.changedTouches[0].clientX;
-          const touchEndY = e.changedTouches[0].clientY;
-          const diffX = touchEndX - touchStartX;
-          const diffY = touchEndY - touchStartY;
-          if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
-            if (diffX < 0) {
-              nextEpisodePage();
-            } else {
-              prevEpisodePage();
-            }
+        const width = viewport.getBoundingClientRect().width;
+        startTranslate = -currentEpisodePage * width;
+      }
+
+      function onTouchMove(e) {
+        if (!isDragging) return;
+        const touch = e.touches ? e.touches[0] : e;
+        currentX = touch.clientX;
+        deltaX = currentX - startX;
+        const deltaY = touch.clientY - startY;
+
+        if (isHorizontal === null) {
+          if (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6) {
+            isHorizontal = Math.abs(deltaX) >= Math.abs(deltaY);
           }
         }
-      }, { passive: true });
+
+        if (isHorizontal) {
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+          track.style.transition = 'none';
+
+          const maxPages = getTotalEpisodePages();
+          let effectiveDeltaX = deltaX;
+          // 첫/마지막 페이지 경계선 댐핑
+          if ((currentEpisodePage === 0 && deltaX > 0) || (currentEpisodePage >= maxPages - 1 && deltaX < 0)) {
+            effectiveDeltaX = deltaX * 0.28;
+          }
+          track.style.transform = `translateX(${startTranslate + effectiveDeltaX}px)`;
+        }
+      }
+
+      function onTouchEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
+
+        if (isHorizontal) {
+          const duration = Math.max(1, Date.now() - startTime);
+          const velocityX = deltaX / duration;
+          const threshold = 40;
+
+          if (deltaX < -threshold || velocityX < -0.3) {
+            nextEpisodePage();
+          } else if (deltaX > threshold || velocityX > 0.3) {
+            prevEpisodePage();
+          } else {
+            updateEpisodeSliderUI();
+          }
+
+          if (Math.abs(deltaX) > 8) {
+            wasDraggingEpisode = true;
+            setTimeout(() => { wasDraggingEpisode = false; }, 250);
+          }
+        } else {
+          updateEpisodeSliderUI();
+        }
+        isHorizontal = null;
+      }
+
+      viewport.addEventListener('touchstart', onTouchStart, { passive: true });
+      viewport.addEventListener('touchmove', onTouchMove, { passive: false });
+      viewport.addEventListener('touchend', onTouchEnd, { passive: true });
+      viewport.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+      // 데스크톱 마우스 드래그도 지원
+      viewport.addEventListener('mousedown', onTouchStart);
+      window.addEventListener('mousemove', onTouchMove);
+      window.addEventListener('mouseup', onTouchEnd);
 
       window.addEventListener('resize', () => {
         updateEpisodeSliderUI();
@@ -5723,6 +5792,10 @@
 
     // 시나리오 카드(화면 전체) 클릭 시 실행
     function handleCardClick(epNum) {
+      if (wasDraggingEpisode) {
+        wasDraggingEpisode = false;
+        return;
+      }
       if (epNum === 1) {
         const save = getSavedGameState();
         const hasSave = save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12);
@@ -5986,6 +6059,7 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      initEpisodeSliderSwipe();
       updateLobbyResumeButton();
       updateEpisodeSliderUI();
       if (window.MmaTracker) window.MmaTracker.reportLobby(currentEpisodePage + 1);
