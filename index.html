@@ -1252,7 +1252,7 @@
       togglePreviewGuideVoice(guideId);
     }
 
-    function selectGuide(guideId, silent = false) {
+    function selectGuide(guideId, silent = false, refreshDialogue = true) {
       if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) guideId = 'himchan';
       userData.selectedGuide = guideId;
       try {
@@ -1262,7 +1262,7 @@
       updateSettingsModalUI();
 
       // 현재 대화가 가이드의 대화라면 현재 대화만 매끄럽게 갱신 (씬을 처음부터 리셋하지 않음)
-      if (currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
+      if (refreshDialogue && currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
         const cur = currentDialogueList[currentDialogueIdx];
         const spk = cur.speaker || '';
         const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('narae') || cur.char.includes('seojun')));
@@ -2142,9 +2142,7 @@
       currentSceneIdx = idx;
       if (idx === 1 && typeof SCENARIOS !== 'undefined' && SCENARIOS[1]) {
         // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
-        if (!SCENARIOS[1].widgetType) {
-          SCENARIOS[1].widgetType = 'GUIDE_SELECT_INTRO';
-        }
+        SCENARIOS[1].widgetType = 'GUIDE_SELECT_INTRO';
       }
       if (window.MmaTracker) window.MmaTracker.reportScene(idx);
       const scene = SCENARIOS[idx];
@@ -2961,11 +2959,11 @@
     function confirmGuideAndProceed(guideId) {
       stopPreviewAudio();
       stopVoiceAudio();
-      selectGuide(guideId, true);
-      proceedToRegionPicker();
+      selectGuide(guideId, true, false);
+      proceedToRegionPicker(guideId);
     }
 
-    function proceedToRegionPicker() {
+    function proceedToRegionPicker(guideId) {
       const choiceOverlay = document.getElementById('center-choice-overlay');
       const choiceContainer = document.getElementById('center-choice-container');
       if (choiceOverlay) {
@@ -2974,13 +2972,29 @@
       }
       if (choiceContainer) choiceContainer.innerHTML = '';
       
-      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[userData.selectedGuide || 'himchan']) || (typeof GUIDE_PERSONAS !== 'undefined' ? GUIDE_PERSONAS.himchan : null);
-      let askMsgKo = `병역판정검사 일정을 확인하고 계획하기 위해 {name} 님, 먼저 관할 병무청을 선택해 주시겠습니까?`;
-      let askMsgEn = `To check and plan your draft physical examination schedule, {name}, would you please select your regional Military Manpower Administration office first?`;
-      if (typeof adaptGuideDialogue === 'function') {
-        askMsgKo = adaptGuideDialogue(askMsgKo, userData.selectedGuide || 'himchan', false);
-        askMsgEn = adaptGuideDialogue(askMsgEn, userData.selectedGuide || 'himchan', true);
+      const gid = guideId || userData.selectedGuide || 'himchan';
+      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[gid]) || (typeof GUIDE_PERSONAS !== 'undefined' ? GUIDE_PERSONAS.himchan : null);
+      
+      let askMsgKo = "";
+      let askMsgEn = "";
+      if (gid === 'himchan') {
+        askMsgKo = "충성! 저 힘찬이와 함께하기로 결정하셨군요! 든든하게 끝까지 함께하겠습니다, {name} 님!\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
+        askMsgEn = "Salute! You chose to journey with me, Himchan! I'll stand by you all the way, {name}!\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
+      } else if (gid === 'narae') {
+        askMsgKo = "반가워요, {name} 님! 멘토 나래가 검사 마지막까지 차분하고 편안하게 안내해 드릴게요 :)\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
+        askMsgEn = "Nice to meet you, {name}! I'm mentor Narae, and I'll comfortably guide you through every step :)\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
+      } else if (gid === 'seojun') {
+        askMsgKo = "선택해 주셔서 감사합니다, {name} 님. 스마트 멘토 서준입니다. 필요한 모든 절차를 정확하고 꼼꼼하게 도와드리겠습니다.\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
+        askMsgEn = "Thank you for choosing me, {name}. I'm smart mentor Seojun. I will guide you through all procedures with precision.\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
+      } else {
+        askMsgKo = "선택해 주셔서 감사합니다, {name} 님! 든든한 멘토가 되어 드리겠습니다.\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
+        askMsgEn = "Thank you for choosing me, {name}! I'll be your dependable guide.\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
       }
+
+      const speakerKo = g ? `${g.name} (병무청 AI 가이드)` : "힘찬이 (병무청 AI 가이드)";
+      const speakerEn = g ? `${g.name_en} (MMA AI Guide)` : "Himchan (MMA AI Guide)";
+      const plateClass = g ? g.plateClass : "from-blue-700 to-indigo-800 border-blue-400/40";
+      const charSrc = (g && g.sprites && (g.sprites.smile || g.sprites.cheer || g.sprites.default)) || "assets/himchan_smile.png";
 
       // 씬의 widgetType을 DEFAULT_REGION_PICKER로 설정하여
       // 가이드의 질문 대사 낭독 및 타이핑이 완전히 끝난 후 사용자가 화면을 클릭했을 때 팝업이 뜨도록 자연스럽게 연계
@@ -2989,10 +3003,10 @@
       }
 
       updateDialogueDirect(
-        resolved.speaker,
-        resolved.speaker_en,
-        resolved.plateClass,
-        resolved.char,
+        speakerKo,
+        speakerEn,
+        plateClass,
+        charSrc,
         askMsgKo,
         askMsgEn
       );
