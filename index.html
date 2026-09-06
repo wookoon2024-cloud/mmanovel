@@ -508,137 +508,176 @@
       </div>
 
       <!-- 탭 1: 개인정보 처리방침 내용 -->
-      <div id="privacy-tab-content" class="text-xs text-slate-300 space-y-2.5 overflow-y-auto pr-1 leading-relaxed custom-scroll flex-1">
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+      <div id="privacy-tab-content" class="text-xs text-slate-300 space-y-2 overflow-y-auto pr-1 leading-relaxed custom-scroll flex-1">
+        
+        <!-- 제1조: 수집 목적 및 비수집 원칙 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-blue-400 font-mono">01.</span>
-            <span>개인정보 비수집 원칙 (「개인정보 보호법」 제15조)</span>
+            <span>수집 목적 및 개인식별정보 비수집 원칙 (「개인정보 보호법」 제15조·제30조)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 비주얼 노벨은 대국민 공공 행정 체험형 서비스로서, <strong>별도의 회원가입, 로그인, 본인인증 없이</strong> 누구나 자유롭게 이용할 수 있습니다. 주민등록번호, 연락처, 실명, 계좌번호 등 특정 개인을 식별할 수 있는 고유식별정보는 일체 수집하거나 서버에 저장하지 않습니다.
+            본 서비스는 별도 회원가입이나 본인인증 없이 자유롭게 이용하는 공공 행정 체험형 웹 콘텐츠입니다. <strong>주민등록번호, 실명, 연락처 등 특정 개인을 식별할 수 있는 정보는 일체 수집하지 않습니다.</strong>
           </p>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+        <!-- 제2조: 처리 데이터 구분 (로컬스토리지 vs 서버 관제) -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1.5">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-blue-400 font-mono">02.</span>
-            <span>사용자 입력 데이터 및 로컬 저장소(LocalStorage) 격리</span>
+            <span>실제 처리 데이터 항목 및 보관 방식</span>
           </div>
-          <p class="text-slate-400 text-[11px] leading-relaxed">
-            시나리오 진행 중 이용자가 직접 입력한 <strong>주인공 명칭(이름), 개별 선택지, 이어하기 복원 상태, 재생 속도 및 효과음 설정</strong>은 이용자 단말기의 웹 브라우저 로컬 저장소(LocalStorage)에만 저장됩니다.
-          </p>
-          <ul class="list-disc list-inside text-slate-400 text-[11px] space-y-0.5 pt-0.5 pl-1">
-            <li>해당 개인 입력 데이터는 외부 서버 데이터베이스나 관리자에게 전송되지 않고 이용자 기기 내부에만 보관됩니다.</li>
-            <li>브라우저 설정의 '방문 기록 및 캐시/쿠키 삭제'를 통해 언제든지 직접 초기화하실 수 있습니다.</li>
+          <div class="grid grid-cols-1 gap-1.5 text-[10.5px]">
+            <div class="bg-slate-900/90 rounded-lg p-2 border border-slate-800">
+              <div class="font-semibold text-blue-300 flex items-center gap-1 mb-0.5">
+                <i data-lucide="hard-drive" class="w-3 h-3"></i>
+                <span>이용자 단말기 로컬 보관 (LocalStorage · 외부 서버 전송 없음)</span>
+              </div>
+              <p class="text-slate-400 leading-normal">
+                플레이어 닉네임(이름), 시나리오 선택 기록, 이어하기 진행 상태, 음향 설정값은 이용자 기기 브라우저 내부에만 안전하게 격리 저장됩니다.
+              </p>
+            </div>
+            <div class="bg-slate-900/90 rounded-lg p-2 border border-slate-800">
+              <div class="font-semibold text-amber-300 flex items-center gap-1 mb-0.5">
+                <i data-lucide="activity" class="w-3 h-3"></i>
+                <span>실시간 관제 대시보드 수집 (서버 전송 · 비식별 통계)</span>
+              </div>
+              <p class="text-slate-400 leading-normal">
+                실시간 동시접속자 수, 진행 중인 에피소드·씬 번호(완독률 분석용), 접속 기기/OS/브라우저 유형, 시·도 단위 위치 및 마스킹 IP(예: 123.456.*.*)가 비식별 익명 상태로 관리자 대시보드에 집계됩니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 제3조: 보유 기간 및 파기 절차 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <div class="flex items-center gap-1.5 font-bold text-slate-200">
+            <span class="text-blue-400 font-mono">03.</span>
+            <span>보유 기간 및 영구 파기 절차 (「통신비밀보호법」 제15조의2)</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-400 text-[11px] space-y-0.5">
+            <li><strong>서버 접속 기록:</strong> 정보보안 규정에 따라 최대 <strong>3개월 보관 후 복구 불가능한 방법으로 영구 파기</strong>합니다.</li>
+            <li><strong>로컬 저장 데이터:</strong> 이용자가 브라우저 설정에서 캐시 및 쿠키를 삭제하면 기기 내에서 즉시 삭제됩니다.</li>
           </ul>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
-          <div class="flex items-center gap-1.5 font-bold text-slate-200">
-            <span class="text-blue-400 font-mono">03.</span>
-            <span>실시간 서비스 관제 및 통계 데이터 수집 안내 (관리자 페이지)</span>
-          </div>
-          <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 서비스는 안정적인 트래픽 분산과 서비스 품질 개선을 위해 **실시간 관제 대시보드(관리자 시스템)**를 운영하며, 아래의 <strong>비식별 기술·통계 정보</strong>를 시스템에서 실시간으로 수집·모니터링합니다.
-          </p>
-          <div class="bg-slate-900/90 rounded-lg p-2.5 text-[10.5px] text-slate-300 space-y-1 mt-1 border border-slate-800">
-            <div>• <strong>실시간 접속 현황:</strong> 랜덤 익명 세션 식별값(Session ID), 접속 일시, 체류 시간</div>
-            <div>• <strong>시나리오 열람 단계:</strong> 현재 체험 중인 에피소드 및 진행 씬 번호 (콘텐츠 완독률 및 이탈률 통계 분석용)</div>
-            <div>• <strong>접속 기기 및 환경:</strong> 기기 유형(모바일/태블릿/PC), 운영체제(OS), 브라우저 종류</div>
-            <div>• <strong>접속 지역 및 네트워크:</strong> IP 기반 시·도 단위 대략적 위치(예: 서울특별시, 경기도 등), 비식별 마스킹 IP(예: 123.456.*.*)</div>
-          </div>
-          <p class="text-slate-400 text-[10.5px] leading-relaxed pt-1">
-            ※ 수집되는 모든 관제 데이터는 특정 개인을 식별하거나 역추적할 수 없는 <strong>완전한 익명 통계 데이터</strong>이며, 영리 목적의 제3자 제공 없이 오직 공공 행정 서비스 품질 모니터링 및 디도스(DDoS) 침해사고 예방 목적으로만 활용됩니다.
-          </p>
-        </div>
-
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+        <!-- 제4조: 제3자 제공 및 처리 위탁 부존재 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-blue-400 font-mono">04.</span>
-            <span>관제 기록의 보유 및 영구 파기 (「통신비밀보호법」 제15조의2)</span>
+            <span>제3자 제공 및 처리 위탁 부존재 (「개인정보 보호법」 제17조·제26조)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            서버에 기록된 실시간 관제 로그 및 접속 기록은 정보보안 규정에 따라 <strong>최대 3개월간 보관된 후 재생 불가능한 기술적 방법으로 영구 파기</strong>됩니다. (단, 일별/월별 누적 방문자 수 등 비식별 집계 통계 수치는 보관될 수 있습니다.)
+            본 서비스는 수집된 비식별 통계 데이터를 외부에 제공하거나 민간 업체에 위탁하지 않으며, 공공 서비스 품질 모니터링 및 보안 목적으로만 직접 운영합니다.
           </p>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+        <!-- 제5조: 정보주체의 권리 및 안전성 확보조치 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-blue-400 font-mono">05.</span>
-            <span>개인정보 보호책임자 및 권익침해 구제 (「개인정보 보호법」 제31조)</span>
+            <span>정보주체의 권리 행사 및 안전성 확보조치 (「개인정보 보호법」 제29조)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 서비스 관련 개인정보 보호 및 고충처리는 아래 소관 부서에서 담당합니다.
+            이용자는 언제든 브라우저 설정에서 로컬 데이터 삭제 및 통계 세션을 차단할 수 있습니다. 시스템은 전송구간 SSL/TLS 암호화 및 IP 마스킹 조치로 보호됩니다.
           </p>
-          <div class="bg-slate-900/90 rounded-lg p-2.5 text-[10.5px] text-slate-300 space-y-1 mt-1 border border-slate-800">
+        </div>
+
+        <!-- 제6조: 개인정보 보호책임자 및 권익침해 구제 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <div class="flex items-center gap-1.5 font-bold text-slate-200">
+            <span class="text-blue-400 font-mono">06.</span>
+            <span>개인정보 보호책임자 및 권익침해 구제 (「개인정보 보호법」 제31조)</span>
+          </div>
+          <div class="bg-slate-900/90 rounded-lg p-2 text-[10.5px] text-slate-300 space-y-1 border border-slate-800">
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">소관 기관:</span>
-              <span class="font-semibold text-white">대한민국 병무청 (MMA)</span>
+              <span class="text-slate-400">소관 기관 / 부서:</span>
+              <span class="font-semibold text-white">대한민국 병무청 정보화기획과</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">담당 부서:</span>
-              <span class="font-semibold text-slate-200">정보화기획과 / 병무민원상담센터</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-slate-400">대표 문의전화:</span>
+              <span class="text-slate-400">병무민원상담센터:</span>
               <span class="font-semibold text-cyan-400">☎ 1588-9090 (평일 09:00~18:00)</span>
             </div>
             <div class="flex items-center justify-between pt-1 border-t border-slate-800 text-[10px] text-slate-400">
-              <span>개인정보침해신고센터: 국번없이 118</span>
-              <span>개인정보분쟁조정위원회: 1833-6972</span>
+              <span>개인정보 침해신고센터: 국번없이 118</span>
+              <span>개인정보 분쟁조정위원회: 1833-6972</span>
             </div>
           </div>
         </div>
+
       </div>
 
       <!-- 탭 2: 서비스 이용안내 내용 -->
-      <div id="terms-tab-content" class="hidden text-xs text-slate-300 space-y-2.5 overflow-y-auto pr-1 leading-relaxed custom-scroll flex-1">
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+      <div id="terms-tab-content" class="hidden text-xs text-slate-300 space-y-2 overflow-y-auto pr-1 leading-relaxed custom-scroll flex-1">
+        
+        <!-- 제1조: 서비스 목적 및 시나리오 구성 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-cyan-400 font-mono">01.</span>
-            <span>서비스 성격 및 가상 시뮬레이션 고지 (「병역법」)</span>
+            <span>서비스 목적 및 시나리오 구성 (「병역법」)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 서비스는 대한민국 병역의무 대상자와 국민이 병역판정검사, 일정 변경, 구비서류 준비, 병역진로설계 등 병무행정 전 과정을 쉽고 명확하게 이해할 수 있도록 돕는 <strong>대국민 공공 모의 체험(비주얼 노벨 시뮬레이션)</strong>입니다.
+            본 서비스는 병역의무 대상자와 국민이 병무행정 전 과정을 쉽고 명확하게 이해할 수 있도록 제작된 <strong>공공 비주얼 노벨 모의 시뮬레이션</strong>입니다.
           </p>
+          <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-300 pt-0.5">
+            <div class="bg-slate-900/80 p-1.5 rounded border border-slate-800">1화: 병역판정검사·신체등급 판정</div>
+            <div class="bg-slate-900/80 p-1.5 rounded border border-slate-800">2화: 검사 일정·장소 본인선택</div>
+            <div class="bg-slate-900/80 p-1.5 rounded border border-slate-800">3화: 병역처분변경원·재검 서류</div>
+            <div class="bg-slate-900/80 p-1.5 rounded border border-slate-800">4화: 병역진로설계·군 특기 추천</div>
+          </div>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
-          <div class="flex items-center gap-1.5 font-bold text-slate-200">
+        <!-- 제2조: 법적 효력의 부존재 및 면책 고지 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <div class="flex items-center gap-1.5 font-bold text-amber-300">
             <span class="text-amber-400 font-mono">02.</span>
-            <span>법적 효력의 부존재 및 실제 판정 절차</span>
+            <span>법적 효력의 부존재 및 면책 고지</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 게임 내에서 산출되는 BMI 계산, 질환별 검사 단계, 모의 신체등급 판정 및 여비 지급 모의정산 결과 등은 이해를 돕기 위한 <strong>가상의 참고 자료</strong>입니다.
+            게임 내에서 도출되는 모의 BMI 계산, 질환별 검사 단계, 모의 신체등급 판정 및 여비 정산 결과는 이해를 돕기 위한 <strong>가상의 참고 자료</strong>입니다.
           </p>
-          <div class="bg-amber-950/40 border border-amber-500/30 rounded-lg p-2 text-[10.5px] text-amber-300 font-medium leading-normal mt-1">
-            ⚠️ <strong>법적 효력 고지:</strong> 본 시뮬레이션 결과는 실제 병역처분의 효력을 발생시키지 않으며, 공식 병역처분은 관할 지방병무청 병역판정검사장에서 병역판정전담의사의 정밀 검진과 병역판정관의 공식 처분에 의해서만 결정됩니다.
+          <div class="bg-amber-950/30 border border-amber-500/30 rounded-lg p-2 text-[10.5px] text-amber-200/90 leading-normal">
+            ⚠️ <strong>법적 효력 없음 고지:</strong> 본 시뮬레이션 결과는 실제 병역처분의 효력을 발생시키지 않습니다. 실제 처분은 관할 지방병무청 병역판정검사장에서 병역판정전담의사의 정밀 검진과 병역판정관의 공식 처분에 의해서만 법적 효력이 발생합니다.
           </div>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+        <!-- 제3조: 실시간 법령 및 공공데이터 연동 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-cyan-400 font-mono">03.</span>
-            <span>실시간 법령 및 공공데이터 연동 (「공공데이터법」)</span>
+            <span>실시간 법령 및 공공데이터 기준 (「공공데이터법」)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            시나리오에 수록된 신체검사 기준(별표 1, 2, 3), 공석 및 교통비 데이터는 <strong>법제처 국가법령정보 Open API</strong>(국방부령 제1139호 등) 및 <strong>공공데이터포털(data.go.kr)</strong>의 공공데이터를 기반으로 실시간 연동되어 최신성을 유지합니다.
+            시나리오에 반영된 신체검사 평가 기준은 국방부령 제1139호 「병역판정 신체검사 등 검사규칙」을 준용하며, <strong>법제처 국가법령정보 Open API</strong> 및 <strong>공공데이터포털(data.go.kr)</strong>의 공공데이터를 기반으로 최신 기준을 안내합니다.
           </p>
         </div>
 
-        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+        <!-- 제4조: 저작권 및 지식재산권 안내 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
           <div class="flex items-center gap-1.5 font-bold text-slate-200">
             <span class="text-cyan-400 font-mono">04.</span>
-            <span>지식재산권 및 저작물 이용 안내 (「저작권법」 제24조의2)</span>
+            <span>지식재산권 및 공공저작물 이용 (「저작권법」 제24조의2)</span>
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            본 서비스에 포함된 스토리 시나리오, 배경 일러스트, 병무청 캐릭터('힘찬이'), 음성 및 UI 디자인 일체에 대한 권리는 대한민국 병무청에 귀속됩니다.
+            본 서비스의 스토리 시나리오, 배경 일러스트, 병무청 캐릭터('힘찬이'), 음성 및 디자인 권리는 대한민국 병무청에 귀속됩니다.
           </p>
-          <ul class="list-disc list-inside text-slate-400 text-[11px] space-y-0.5 pt-0.5 pl-1">
-            <li>비영리적 목적의 교육·학습 및 개인적 열람은 자유롭게 허용됩니다.</li>
-            <li>영리 목적의 무단 전재, 복제, 상업적 재배포 및 데이터 무단 변형 행위는 엄격히 금지됩니다.</li>
+          <ul class="list-disc list-inside text-slate-400 text-[10.5px] space-y-0.5">
+            <li><strong>자유 이용:</strong> 비영리적 목적의 개인 열람, 학교 및 군 교육자료 활용은 자유롭게 허용됩니다.</li>
+            <li><strong>금지 행위:</strong> 영리 목적의 무단 전재, 상업적 재배포, 2차적 변형 가공은 엄격히 금지됩니다.</li>
           </ul>
         </div>
+
+        <!-- 제5조: 이용자 준수사항 및 시스템 보호 -->
+        <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800/80 space-y-1">
+          <div class="flex items-center gap-1.5 font-bold text-slate-200">
+            <span class="text-cyan-400 font-mono">05.</span>
+            <span>이용자 준수사항 및 시스템 보호 (「정보통신망법」 제48조)</span>
+          </div>
+          <p class="text-slate-400 text-[11px] leading-relaxed">
+            이용자는 시스템의 안정적 운영을 위해 비인가 접근, 자동화 매크로를 통한 비정상적 대량 트래픽 유발 및 디도스(DDoS) 공격, 데이터 무단 스크래핑 행위를 하여서는 안 됩니다.
+          </p>
+        </div>
+
       </div>
 
       <!-- 모달 하단 확인 버튼 -->
