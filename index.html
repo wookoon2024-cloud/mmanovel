@@ -949,26 +949,26 @@
 
       <!-- 성명 입력 폼 -->
       <div class="w-full mt-6 space-y-2 text-left">
-        <label for="protagonist-name-input" class="text-xs font-bold text-slate-300 ml-1">성명 (주인공)</label>
+        <label id="name-modal-label" for="protagonist-name-input" class="text-xs font-bold text-slate-300 ml-1">성명 (주인공)</label>
         <div class="relative">
           <input type="text" id="protagonist-name-input" value="김민우" maxlength="10" 
                  spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
                  class="w-full px-12 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-600 text-white font-bold text-base text-center focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition shadow-inner placeholder-slate-500 tracking-wider"
                  placeholder="이름 입력 (예: 김민우)"
                  onkeydown="if(event.key==='Enter') submitProtagonistName()">
-          <span class="absolute right-3.5 top-3.5 text-xs text-slate-400 font-mono">만 19세</span>
+          <span id="name-modal-age-badge" class="absolute right-3.5 top-3.5 text-xs text-slate-400 font-mono">만 19세</span>
         </div>
-        <p class="text-[11px] text-slate-400 ml-1 leading-relaxed">
+        <p id="name-modal-note" class="text-[11px] text-slate-400 ml-1 leading-relaxed">
           * 입력하신 이름은 통지서, 검사결과표, 대화창 및 대본 전반에 반영됩니다.
         </p>
       </div>
 
       <!-- 진행하기 버튼 영역 -->
       <div class="w-full mt-6 flex gap-3">
-        <button onclick="closeNameInputOverlay()" class="flex-1 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm transition cursor-pointer">
+        <button id="name-modal-cancel-btn" onclick="closeNameInputOverlay()" class="flex-1 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm transition cursor-pointer">
           취소
         </button>
-        <button onclick="submitProtagonistName()" class="flex-[2] py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]">
+        <button id="name-modal-submit-btn" onclick="submitProtagonistName()" class="flex-[2] py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]">
           <span>진행하기</span>
         </button>
       </div>
@@ -1751,6 +1751,9 @@
 
       // 로비 텍스트 갱신
       updateLobbyTexts();
+
+      // 주인공 이름 입력 모달 텍스트 갱신
+      updateNameInputModalTexts();
 
       // 현재 진행 중인 씬 즉시 재적용
       if (typeof SCENARIOS !== 'undefined' && SCENARIOS[currentSceneIdx]) {
@@ -6052,6 +6055,39 @@
       }
     }
 
+    function updateNameInputModalTexts() {
+      const isEn = currentLang === 'en';
+      const titleEl = document.getElementById('name-modal-title');
+      const descEl = document.getElementById('name-modal-desc');
+      const labelEl = document.getElementById('name-modal-label');
+      const ageBadge = document.getElementById('name-modal-age-badge');
+      const noteEl = document.getElementById('name-modal-note');
+      const cancelBtn = document.getElementById('name-modal-cancel-btn');
+      const submitBtn = document.getElementById('name-modal-submit-btn');
+      const input = document.getElementById('protagonist-name-input');
+
+      if (titleEl) titleEl.innerText = isEn ? "Set Protagonist Name" : "주인공 이름 설정";
+      if (descEl) descEl.innerHTML = isEn 
+        ? "Please enter the <strong class=\"text-blue-400\">Protagonist's Name</strong><br>to embark on the draft physical exam journey."
+        : "병역판정검사 여정을 함께할<br><strong class=\"text-blue-400\">주인공(수검 대상자)의 이름</strong>을 입력해 주세요.";
+      if (labelEl) labelEl.innerText = isEn ? "Name (Protagonist)" : "성명 (주인공)";
+      if (ageBadge) ageBadge.innerText = isEn ? "Age 19" : "만 19세";
+      if (noteEl) noteEl.innerText = isEn 
+        ? "* The entered name will be reflected across notices, exam reports, and dialogues."
+        : "* 입력하신 이름은 통지서, 검사결과표, 대화창 및 대본 전반에 반영됩니다.";
+      if (cancelBtn) cancelBtn.innerText = isEn ? "Cancel" : "취소";
+      if (submitBtn) {
+        const span = submitBtn.querySelector('span');
+        if (span) span.innerText = isEn ? "Proceed" : "진행하기";
+      }
+      if (input) {
+        input.placeholder = isEn ? "Enter name (e.g. Minwoo)" : "이름 입력 (예: 김민우)";
+        if (!userData.name || userData.name === "김민우" || userData.name === "Minwoo") {
+          input.value = isEn ? "Minwoo" : "김민우";
+        }
+      }
+    }
+
     // ================= [주인공 이름 설정 오버레이 제어] =================
     function openNameInputOverlay(epNum = 1, forceNew = true) {
       const overlay = document.getElementById('name-input-overlay');
@@ -6060,9 +6096,13 @@
         startEpisodeDirect(epNum, forceNew);
         return;
       }
-      if (input) {
-        input.value = userData.name || "김민우";
+      
+      updateNameInputModalTexts();
+
+      if (input && userData.name && userData.name !== "김민우" && userData.name !== "Minwoo") {
+        input.value = userData.name;
       }
+
       overlay.classList.remove('hidden');
       setTimeout(() => {
         overlay.classList.remove('opacity-0');
@@ -6078,7 +6118,7 @@
     function submitProtagonistName() {
       const input = document.getElementById('protagonist-name-input');
       let enteredName = input ? input.value.trim() : "";
-      if (!enteredName) enteredName = "김민우";
+      if (!enteredName) enteredName = (currentLang === 'en' ? "Minwoo" : "김민우");
       userData.name = enteredName;
 
       playBeep(880, 'sine', 0.1);
