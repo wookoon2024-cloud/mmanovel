@@ -120,9 +120,11 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
       .replace(/출발합니다!/g, "함께 출발해 볼게요 :)")
       .replace(/나이스!/g, "정말 훌륭해요! :)")
       .replace(/감사합니다!/g, "감사해요 :)")
-      .replace(/선택하셨군요!/g, "선택하셨네요! 정말 좋은 선택이에요 :)")
-      .replace(/지정되었습니다\./g, "잘 배정되었답니다 :)")
-      .replace(/지정되었습니다!/g, "잘 배정되었답니다 :)")
+      .replace(/일정을 직접 모의 선택해 보셨군요!/g, "일정을 직접 모의 선택해 보셨네요! :)")
+      .replace(/모의 선택해 보셨군요!/g, "모의 선택해 보셨네요! :)")
+      .replace(/가상 모의 배정이 완료되었습니다\./g, "가상 배정이 잘 완료되었답니다 :)")
+      .replace(/지정되었습니다\./g, "가상 배정되었답니다 :)")
+      .replace(/지정되었습니다!/g, "가상 배정되었답니다 :)")
       .replace(/해주시기 바랍니다\./g, "해 보실래요? :)")
       .replace(/해 주시겠습니까\?/g, "해 주실 수 있나요? :)")
       .replace(/해보겠습니다!/g, "도와드릴게요 :)");
@@ -138,10 +140,11 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
       .replace(/이동해 볼까요\?!/g, "검사실로 이동하겠습니다.")
       .replace(/확인해 보세요!/g, "상세 규정을 면밀히 확인 바랍니다.")
       .replace(/출발합니다!/g, "안내 절차를 개시합니다.")
-      .replace(/오,?\s*\{name\}\s*님!\s*검사 희망일로/g, "{name} 님, 희망 검사일로")
-      .replace(/선택하셨군요!/g, "선택이 시스템에 정상 등록되었습니다.")
-      .replace(/지정되었습니다!/g, "지정 완료되었습니다.")
-      .replace(/지정되었습니다\./g, "지정 완료되었습니다.")
+      .replace(/오,?\s*\{name\}\s*님!\s*검사 희망일로/g, "{name} 님, 검사 희망일로")
+      .replace(/일정을 직접 모의 선택해 보셨군요!/g, "일정을 모의 선택하셨습니다.")
+      .replace(/모의 선택해 보셨군요!/g, "모의 선택하셨습니다.")
+      .replace(/지정되었습니다!/g, "가상 배정되었습니다.")
+      .replace(/지정되었습니다\./g, "가상 배정되었습니다.")
       .replace(/나이스!/g, "정확한 절차 확인입니다.")
       .replace(/해 주시겠습니까\?/g, "선택해 주시기 바랍니다.")
       .replace(/해주시기 바랍니다\./g, "확인 바랍니다.");
@@ -254,8 +257,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "오, {name} 님! 검사 희망일로 [{examDate}] 일정을 직접 선택하셨군요!\n\n선택하신 관할 지방병무청({region})의 해당 일자 실시간 공석에 맞춰 검사 일정이 성공적으로 지정되었습니다.",
-        text_en: "Oh, {name}! You have selected [{examDate}] for your preferred exam date!\n\nYour exam schedule has been successfully booked to match the real-time vacancies at your regional office ({region})."
+        text: "오, {name} 님! 검사 희망일로 [{examDate}] 일정을 직접 모의 선택해 보셨군요!\n\n선택하신 관할 지방병무청({region})의 해당 일자 실시간 공석을 기준으로 가상 모의 배정이 완료되었습니다. (※ 실제 검사 신청은 병무청 민원포털에서 직접 진행하셔야 합니다!)",
+        text_en: "Oh, {name}! You have simulated selecting [{examDate}] as your preferred date!\n\nVirtual schedule matching is complete based on real-time vacancies at ({region}). (※ Please note that actual booking must be submitted on the official MMA portal!)"
       },
       {
         speaker: "{name} (주인공)",
@@ -263,8 +266,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "원하는 날짜와 시간대로 직접 골라서 정하니까 마음이 훨씬 편하네!\n\n내가 신청한 내역과 관할 병무청 연락처를 미리 잘 확인해 둬야겠어.",
-        text_en: "Choosing the exact date and time myself puts my mind so much more at ease!\n\nI should make sure to double check my application details and the regional office contact info."
+        text: "원하는 날짜와 시간대를 미리 가상으로 선택해보니까 실제 신청 절차가 한눈에 쏙 들어오네!\n\n나중에 실제 병무청 누리집에서 신청할 때 참고할 수 있게 가상 신청 내역과 관할 병무청 연락처를 잘 확인해 둬야겠어.",
+        text_en: "Simulating my preferred date and time makes the actual application process so easy to understand!\n\nI should save these simulated application details and the regional office contact for when I apply on the official MMA portal."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -272,8 +275,8 @@ const SCENARIOS = [
         char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "만약 검사 일정 변경이나 추가 문의사항이 있으실 경우,\n아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 언제든 간편하게 신청하고 변경하실 수 있습니다!",
-        text_en: "If you need to change your exam schedule or have any questions,\nyou can easily apply or change it anytime via the regional office contact or the MMA Civil Petition Portal below!"
+        text: "네! 방금 모의 선택하신 일정으로 실제 신청하시려면,\n아래 [신청 내용 복사] 후 [민원포털 예약] 버튼을 눌러 정식 접수하시면 됩니다!\n추가 문의사항은 관할 병무청 직통 번호로 언제든 상담 가능합니다.",
+        text_en: "If you wish to officially book this simulated schedule,\nsimply click [Copy Application Info] below and proceed via the [MMA Portal] button to submit your formal application!\nFor any questions, the regional office direct line is available."
       }
     ],
     defaultDialogues: [
@@ -283,8 +286,8 @@ const SCENARIOS = [
         char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "네, {name} 님! 통지서에 지정된 기본 일정인 [{examDate}]으로 안내를 도와드리겠습니다!\n\n선택하신 관할 지방병무청({region})의 기본 배정 정보가 확인되었습니다.",
-        text_en: "Yes, {name}! I will guide you with your notice's default date [{examDate}]!\n\nThe basic assignment information for your regional office ({region}) has been confirmed."
+        text: "네, {name} 님! 통지서에 지정된 기본 일정인 [{examDate}]을 기준으로 가상 체험을 이어가겠습니다!\n\n선택하신 관할 지방병무청({region})의 기본 배정 정보가 확인되었습니다.",
+        text_en: "Yes, {name}! We will proceed with the virtual experience using your notice's default date [{examDate}]!\n\nThe basic assignment information for your regional office ({region}) has been confirmed."
       },
       {
         speaker: "{name} (주인공)",
@@ -306,8 +309,8 @@ const SCENARIOS = [
       }
     ],
     dialogues: [],
-    text: "통지서에 지정된 기본 일정인 [{examDate}]으로 안내를 도와드리겠습니다.\n\n만약 검사 일정 변경이나 추가 문의사항이 있으실 경우, 아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 간편하게 신청하실 수 있습니다.",
-    text_en: "I will guide you with your notice's default date [{examDate}].\n\nIf you need to change your exam schedule or have any questions, you can easily apply through the regional office direct contact below or the MMA Civil Petition Portal.",
+    text: "통지서에 지정된 기본 일정인 [{examDate}]을 기준으로 가상 체험을 이어가겠습니다.\n\n실제 검사 일정 변경이나 문의사항이 있으실 경우, 아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 간편하게 신청하실 수 있습니다.",
+    text_en: "We will proceed with the virtual experience using your notice's default date [{examDate}].\n\nFor actual schedule changes or questions, you can easily apply through the regional office direct contact below or the MMA Civil Petition Portal.",
     apiSource: "[API] 공공데이터포털: 병무청_지방병무(지)청 조직 및 연락처 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Regional Offices & Contact Info Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
