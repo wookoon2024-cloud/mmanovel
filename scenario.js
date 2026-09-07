@@ -29,10 +29,10 @@ const GUIDE_PERSONAS = {
     sampleQuote: "충성! 열혈 멘토 힘찬이입니다! 오늘 검사도 파이팅!",
     sampleQuote_en: "Salute! I'm your energetic guide Himchan! Let's do this!"
   },
-  narae: {
-    id: "narae",
-    name: "나래",
-    name_en: "Narae",
+  yuna: {
+    id: "yuna",
+    name: "유나",
+    name_en: "Yuna",
     role: "병무청 친절상담관 & 다정다감 AI 멘토",
     role_en: "MMA Counselor & Warm AI Guide",
     tag: "다정하고 따뜻한 안심 멘토",
@@ -47,12 +47,37 @@ const GUIDE_PERSONAS = {
     themeBorder: "border-rose-500",
     themeBg: "bg-rose-950/40",
     sprites: {
-      default: "assets/narae.png",
-      smile: "assets/narae_smile.png",
-      cheer: "assets/narae_smile.png"
+      default: "assets/yuna.png",
+      smile: "assets/yuna_smile.png",
+      cheer: "assets/yuna_smile.png"
     },
-    sampleQuote: "안녕하세요! 안심 멘토 나래입니다. 편안하게 따라와 주세요 :)",
-    sampleQuote_en: "Hello! I'm Narae, your friendly counselor. Follow me comfortably!"
+    sampleQuote: "안녕하세요! 안심 멘토 유나입니다. 편안하게 따라와 주세요 :)",
+    sampleQuote_en: "Hello! I'm Yuna, your friendly counselor. Follow me comfortably!"
+  },
+  narae: {
+    id: "yuna",
+    name: "유나",
+    name_en: "Yuna",
+    role: "병무청 친절상담관 & 다정다감 AI 멘토",
+    role_en: "MMA Counselor & Warm AI Guide",
+    tag: "다정하고 따뜻한 안심 멘토",
+    tag_en: "Warm & Caring Friendly Mentor",
+    desc: "차분하고 따뜻한 어조로 모든 검사 절차를 알기 쉽게 세심하게 챙겨줍니다.",
+    desc_en: "Guides you through each step with a warm, comforting tone and detailed care.",
+    gender: "female",
+    voice: "ko-KR-SunHiNeural",
+    voice_en: "en-US-JennyNeural",
+    plateClass: "from-rose-600 to-pink-700 border-rose-400/40",
+    badgeColor: "bg-rose-500",
+    themeBorder: "border-rose-500",
+    themeBg: "bg-rose-950/40",
+    sprites: {
+      default: "assets/yuna.png",
+      smile: "assets/yuna_smile.png",
+      cheer: "assets/yuna_smile.png"
+    },
+    sampleQuote: "안녕하세요! 안심 멘토 유나입니다. 편안하게 따라와 주세요 :)",
+    sampleQuote_en: "Hello! I'm Yuna, your friendly counselor. Follow me comfortably!"
   },
   seojun: {
     id: "seojun",
@@ -86,12 +111,14 @@ const GUIDE_PERSONAS = {
  */
 function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
   if (!rawText) return '';
+  if (guideId === 'narae') guideId = 'yuna';
   const g = GUIDE_PERSONAS[guideId] || GUIDE_PERSONAS.himchan;
 
   if (isEn) {
-    if (guideId === 'narae') {
+    if (guideId === 'yuna') {
       return rawText
-        .replace(/Himchan/g, 'Narae')
+        .replace(/Himchan/g, 'Yuna')
+        .replace(/Narae/g, 'Yuna')
         .replace(/Salute!\s*Hello/g, 'Hello')
         .replace(/Let's take on/g, "Let's comfortably go through")
         .replace(/with full confidence!/g, "together with care :)");
@@ -106,10 +133,10 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
   }
 
   // 한국어 어조 변환
-  if (guideId === 'narae') {
+  if (guideId === 'yuna') {
     return rawText
-      .replace(/(힘찬이|서준)/g, '나래')
-      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|서준)'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '나래'예요 :)")
+      .replace(/(힘찬이|서준|나래)/g, '유나')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|유나|서준)'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '유나'예요 :)")
       .replace(/충성!\s*안녕하십니까/g, "안녕하세요")
       .replace(/파이팅해 볼까요\?!/g, "천천히 힘을 내어 시작해 볼까요? :)")
       .replace(/파이팅입니다!/g, "함께 힘내봐요 :)")
@@ -130,8 +157,8 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
       .replace(/해보겠습니다!/g, "도와드릴게요 :)");
   } else if (guideId === 'seojun') {
     return rawText
-      .replace(/(힘찬이|나래)/g, '서준')
-      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|서준)'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
+      .replace(/(힘찬이|나래|유나)/g, '서준')
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|유나|서준)'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
       .replace(/충성!\s*안녕하십니까/g, "반갑습니다")
       .replace(/파이팅해 볼까요\?!/g, "원활한 검사를 위해 집중해 주시기 바랍니다.")
       .replace(/파이팅입니다!/g, "다음 절차로 원활하게 진행하겠습니다.")
@@ -157,16 +184,18 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
  * 선택된 가이드의 화자명, 스프라이트, 플레이트 클래스 반환
  */
 function resolveGuideAssets(originalChar, originalSpeaker, originalSpeakerEn, guideId = 'himchan') {
+  if (guideId === 'narae') guideId = 'yuna';
   const g = GUIDE_PERSONAS[guideId] || GUIDE_PERSONAS.himchan;
   const isGuideSpeaker = (originalSpeaker && (
     originalSpeaker.includes('힘찬이') || originalSpeaker.includes('Himchan') || 
+    originalSpeaker.includes('유나') || originalSpeaker.includes('Yuna') || 
     originalSpeaker.includes('나래') || originalSpeaker.includes('Narae') || 
     originalSpeaker.includes('서준') || originalSpeaker.includes('Seojun') || 
     originalSpeaker.includes('가이드') || originalSpeaker.includes('Guide')
   ));
   
   const isGuideChar = originalChar && (
-    originalChar.includes('himchan') || originalChar.includes('narae') || originalChar.includes('seojun')
+    originalChar.includes('himchan') || originalChar.includes('yuna') || originalChar.includes('narae') || originalChar.includes('seojun')
   );
 
   if (!isGuideSpeaker && !isGuideChar) {

@@ -16,7 +16,8 @@ const pendingPromises = new Map();
 // 화자별 Microsoft Neural 남성/여성/캐릭터 보이스 설정
 const VOICE_MAP = {
   'himchan': { voice: 'ko-KR-HyunsuMultilingualNeural', rate: '+5%', pitch: '+3Hz' }, // 활기찬 열혈 멘토 힘찬이
-  'narae': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                 // 다정하고 따뜻한 선배 멘토 나래 (여성)
+  'yuna': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                 // 다정하고 따뜻한 선배 멘토 유나 (여성)
+  'narae': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                // 하위 호환
   'seojun': { voice: 'ko-KR-BongJinNeural', rate: '+1%', pitch: '-1Hz' },              // 똑부러지고 스마트한 전우 멘토 서준 (남성)
   'minwoo': { voice: 'ko-KR-InJoonNeural', rate: '+0%', pitch: '-2Hz' },               // 20대 대학생 주인공 인준 (남성)
   'doctor': { voice: 'ko-KR-InJoonNeural', rate: '-3%', pitch: '-6Hz' },               // 차분한 전문의/군의관 (남성)
@@ -25,6 +26,7 @@ const VOICE_MAP = {
   
   // 영어 모드 지원
   'en_himchan': { voice: 'en-US-GuyNeural', rate: '+5%', pitch: '+4Hz' },
+  'en_yuna': { voice: 'en-US-JennyNeural', rate: '+2%', pitch: '+2Hz' },
   'en_narae': { voice: 'en-US-JennyNeural', rate: '+2%', pitch: '+2Hz' },
   'en_seojun': { voice: 'en-US-DavisNeural', rate: '+1%', pitch: '-1Hz' },
   'en_minwoo': { voice: 'en-US-ChristopherNeural', rate: '+0%', pitch: '-2Hz' },
@@ -40,12 +42,13 @@ function getVoiceConfig(speaker = '', lang = 'ko', guide = '') {
   // 1. 가이드(멘토) 화자 판별: 가이드 전용 대사이거나 스피커명에 가이드 관련 명칭이 포함된 경우
   const isGuide = spk.includes('가이드') || spk.includes('guide') || 
                   spk.includes('힘찬이') || spk.includes('himchan') || 
+                  spk.includes('유나') || spk.includes('yuna') || 
                   spk.includes('나래') || spk.includes('narae') || 
                   spk.includes('서준') || spk.includes('seojun');
 
   if (isGuide) {
-    if (spk.includes('나래') || spk.includes('narae') || gd.includes('narae')) {
-      return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae; // 여성 멘토 나래 (SunHi)
+    if (spk.includes('유나') || spk.includes('yuna') || gd.includes('yuna') || spk.includes('나래') || spk.includes('narae') || gd.includes('narae')) {
+      return isEn ? VOICE_MAP.en_yuna : VOICE_MAP.yuna; // 여성 멘토 유나 (SunHi)
     }
     if (spk.includes('서준') || spk.includes('seojun') || gd.includes('seojun')) {
       return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun; // 남성 스마트 멘토 서준 (BongJin)

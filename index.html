@@ -1110,20 +1110,20 @@
           </div>
         </div>
 
-        <!-- 2. 나래 -->
-        <div id="guide-card-narae" onclick="selectGuide('narae')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+        <!-- 2. 유나 -->
+        <div id="guide-card-yuna" onclick="selectGuide('yuna')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
-                <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
+                <img src="assets/yuna_card.png" alt="유나" class="h-full w-auto object-contain drop-shadow-lg group-hover:scale-105 transition">
               </div>
               <div>
-                <h4 class="font-black text-sm sm:text-base text-white">나래</h4>
+                <h4 class="font-black text-sm sm:text-base text-white">유나</h4>
                 <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate">차분하고 세심하게 챙겨주는 안심 멘토</p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="btn-preview-settings-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
+              <button id="btn-preview-settings-yuna" type="button" onclick="event.stopPropagation(); previewGuideVoice('yuna');" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 flex items-center gap-1 font-bold text-xs cursor-pointer transition">
                 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> <span>미리듣기</span>
               </button>
               <span class="guide-check-indicator w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center shrink-0 text-rose-400"></span>
@@ -1196,8 +1196,8 @@
         return;
       }
 
-      // 가이드 캐릭터 스프라이트 동적 치환 (나래/서준 선택 시 힘찬이 스프라이트 자동 치환)
-      if (charPath && (charPath.includes('himchan') || charPath.includes('narae') || charPath.includes('seojun'))) {
+      // 가이드 캐릭터 스프라이트 동적 치환 (유나/나래/서준 선택 시 힘찬이 스프라이트 자동 치환)
+      if (charPath && (charPath.includes('himchan') || charPath.includes('yuna') || charPath.includes('narae') || charPath.includes('seojun'))) {
         const guideId = (typeof userData !== 'undefined' && userData.selectedGuide) || 'himchan';
         if (typeof resolveGuideAssets === 'function') {
           const res = resolveGuideAssets(charPath, '', '', guideId);
@@ -1428,6 +1428,7 @@
     }
 
     function selectGuide(guideId, silent = false, refreshDialogue = true) {
+      if (guideId === 'narae') guideId = 'yuna';
       if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) guideId = 'himchan';
       userData.selectedGuide = guideId;
       try {
@@ -1440,7 +1441,7 @@
       if (refreshDialogue && currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
         const cur = currentDialogueList[currentDialogueIdx];
         const spk = cur.speaker || '';
-        const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('narae') || cur.char.includes('seojun')));
+        const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('yuna') || cur.char.includes('narae') || cur.char.includes('seojun')));
         if (isGuide) {
           playDialogueChunk();
         }
@@ -1452,6 +1453,7 @@
     }
 
     function showGuideToast(guideId) {
+      if (guideId === 'narae') guideId = 'yuna';
       const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[guideId]) ? GUIDE_PERSONAS[guideId] : { name: '힘찬이' };
       const toast = document.createElement('div');
       toast.className = 'fixed top-14 sm:top-16 left-1/2 -translate-x-1/2 z-50 px-3.5 py-2 rounded-xl bg-slate-900/95 border border-blue-500/60 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200';
@@ -1465,12 +1467,14 @@
     }
 
     function updateSettingsModalUI() {
-      const curGuide = userData.selectedGuide || 'himchan';
-      ['himchan', 'narae', 'seojun'].forEach(id => {
+      let curGuide = userData.selectedGuide || 'himchan';
+      if (curGuide === 'narae') curGuide = 'yuna';
+      ['himchan', 'yuna', 'seojun', 'narae'].forEach(id => {
         const card = document.getElementById(`guide-card-${id}`);
         if (!card) return;
         const ind = card.querySelector('.guide-check-indicator');
-        if (id === curGuide) {
+        const isSelected = (id === curGuide) || (id === 'yuna' && curGuide === 'narae') || (id === 'narae' && curGuide === 'yuna');
+        if (isSelected) {
           card.classList.remove('border-slate-800', 'bg-slate-900/90');
           card.classList.add('border-blue-500', 'bg-blue-950/30', 'ring-1', 'ring-blue-500/50');
           if (ind) {
@@ -1877,7 +1881,7 @@
 
         const spk = speaker || '';
         const curGuide = userData.selectedGuide || 'himchan';
-        const isGuideSpeaker = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide');
+        const isGuideSpeaker = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide');
 
         const pickVoice = (voices, keywords) => {
           for (const kw of keywords) {
@@ -1895,7 +1899,7 @@
         if (isEnglish) {
           const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
           if (isGuideSpeaker) {
-            if (curGuide === 'narae') {
+            if (curGuide === 'yuna' || curGuide === 'narae') {
               utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
               utterance.rate = 1.0;
               utterance.pitch = 1.1;
@@ -1929,7 +1933,7 @@
           const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호']);
           
           if (isGuideSpeaker) {
-            if (curGuide === 'narae') {
+            if (curGuide === 'yuna' || curGuide === 'narae') {
               utterance.voice = femaleVoice || koVoices[0] || null;
               utterance.rate = 1.0;
               utterance.pitch = 1.15;
@@ -2247,7 +2251,7 @@
       const guideId = userData.selectedGuide || 'himchan';
       const spk = item.speaker || '';
       const spkEn = item.speaker_en || '';
-      const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('narae') || item.char.includes('seojun')));
+      const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('yuna') || item.char.includes('narae') || item.char.includes('seojun')));
 
       let resolvedChar = item.char;
       let resolvedSpk = item.speaker;
@@ -3155,9 +3159,9 @@
       if (gid === 'himchan') {
         askMsgKo = "충성! 저 힘찬이와 함께하기로 결정하셨군요! 든든하게 끝까지 함께하겠습니다, {name} 님!\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
         askMsgEn = "Salute! You chose to journey with me, Himchan! I'll stand by you all the way, {name}!\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
-      } else if (gid === 'narae') {
-        askMsgKo = "반가워요, {name} 님! 멘토 나래가 검사 마지막까지 차분하고 편안하게 안내해 드릴게요 :)\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
-        askMsgEn = "Nice to meet you, {name}! I'm mentor Narae, and I'll comfortably guide you through every step :)\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
+      } else if (gid === 'yuna' || gid === 'narae') {
+        askMsgKo = "반가워요, {name} 님! 멘토 유나가 검사 마지막까지 차분하고 편안하게 안내해 드릴게요 :)\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
+        askMsgEn = "Nice to meet you, {name}! I'm mentor Yuna, and I'll comfortably guide you through every step :)\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
       } else if (gid === 'seojun') {
         askMsgKo = "선택해 주셔서 감사합니다, {name} 님. 스마트 멘토 서준입니다. 필요한 모든 절차를 정확하고 꼼꼼하게 도와드리겠습니다.\n\n그럼 먼저 검사 일정을 확인하고 계획하기 위해 관할 지방병무청을 선택해 주시겠습니까?";
         askMsgEn = "Thank you for choosing me, {name}. I'm smart mentor Seojun. I will guide you through all procedures with precision.\n\nShall we first select your regional Military Manpower Administration office to check exam schedules?";
@@ -3252,17 +3256,17 @@
                   </div>
                 </div>
 
-                <!-- 2. 나래 카드 슬라이드 -->
+                <!-- 2. 유나 카드 슬라이드 -->
                 <div class="px-1 md:px-0">
-                  <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="group relative p-3.5 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
+                  <div onclick="playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('yuna');" class="group relative p-3.5 sm:p-5 rounded-2xl bg-slate-900/95 hover:bg-slate-800/95 border-2 border-slate-700/80 hover:border-blue-400 shadow-2xl flex flex-col justify-between gap-3 transition duration-200 cursor-pointer hover:scale-[1.015]">
                     <div class="space-y-2.5 sm:space-y-3">
                       <!-- 테두리 없는 카드 절반 크기 대형 캐릭터 이미지 -->
                       <div class="h-40 sm:h-52 flex items-center justify-center overflow-hidden">
-                        <img src="assets/narae_card.png" alt="나래" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
+                        <img src="assets/yuna_card.png" alt="유나" class="h-full w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition duration-200">
                       </div>
                       <!-- 이름 & 한줄 소개 -->
                       <div class="text-center space-y-1">
-                        <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">나래</h4>
+                        <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">유나</h4>
                         <p class="text-[11px] sm:text-xs text-slate-300 truncate">
                           ${isEn ? 'Calm & caring mentor guiding you kindly' : '차분하고 세심하게 챙겨주는 안심 멘토'}
                         </p>
@@ -3271,11 +3275,11 @@
 
                     <!-- 하단 버튼부 -->
                     <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                      <button id="btn-preview-intro-narae" type="button" onclick="event.stopPropagation(); previewGuideVoice('narae');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                      <button id="btn-preview-intro-yuna" type="button" onclick="event.stopPropagation(); previewGuideVoice('yuna');" class="w-full py-2 px-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
                         <i data-lucide="volume-2" class="w-4 h-4"></i> <span>${isEn ? 'Voice Preview' : '목소리 미리듣기'}</span>
                       </button>
-                      <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('narae');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
-                        <span>${isEn ? 'Select & Start' : '나래와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                      <button type="button" onclick="event.stopPropagation(); playBeep(750, 'triangle', 0.05); confirmGuideAndProceed('yuna');" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/30 cursor-pointer">
+                        <span>${isEn ? 'Select & Start' : '유나와 함께 시작'}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                       </button>
                     </div>
                   </div>
