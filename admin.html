@@ -495,7 +495,7 @@
             <!-- IP / 키워드 검색 인풋 -->
             <div class="relative flex items-center">
               <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 pointer-events-none"></i>
-              <input type="text" id="log-search-input" onkeyup="filterLogs()" placeholder="IP, 도시, 씬 검색..." class="pl-8 pr-7 py-1 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 w-36 sm:w-44 font-sans" />
+              <input type="text" id="log-search-input" oninput="filterLogs()" onkeyup="filterLogs()" placeholder="IP, 도시, 씬 검색..." class="pl-8 pr-7 py-1 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 w-36 sm:w-44 font-sans" />
               <button id="btn-clear-log-search" onclick="clearLogSearch()" class="hidden absolute right-2 text-slate-500 hover:text-slate-300 cursor-pointer" title="검색어 지우기">
                 <i data-lucide="x" class="w-3 h-3"></i>
               </button>
@@ -571,7 +571,7 @@
             <!-- 검색 필터 인풋 -->
             <div class="relative flex items-center">
               <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 pointer-events-none"></i>
-              <input type="text" id="ip-search-input" onkeyup="renderIpAnalytics()" placeholder="IP 주소, 도시, 환경 검색..." class="pl-8 pr-7 py-1 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 w-36 sm:w-48 font-sans" />
+              <input type="text" id="ip-search-input" oninput="renderIpAnalytics()" onkeyup="renderIpAnalytics()" placeholder="IP 주소, 도시, 환경 검색..." class="pl-8 pr-7 py-1 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 w-36 sm:w-48 font-sans" />
               <button id="btn-clear-ip-search" onclick="clearIpSearch()" class="hidden absolute right-2 text-slate-500 hover:text-slate-300 cursor-pointer" title="검색어 지우기">
                 <i data-lucide="x" class="w-3 h-3"></i>
               </button>
@@ -1219,13 +1219,11 @@
         console.error('renderLiveVisitors error:', e);
       }
 
-      // 3. 최근 로그 (로컬스토리지 보관 로그와 API 로그 병합 및 정밀 중복 제거)
+      // 3. 최근 로그 (검색어, 날짜 범위, 정렬 조건 필터링 렌더링 유지)
       try {
-        const savedLogs = JSON.parse(localStorage.getItem('mma_admin_saved_logs') || '[]');
-        const finalLogs = mergeAndDeduplicateLogs(data.recentLogs || [], savedLogs);
-        renderRecentLogs(finalLogs.slice(0, 100));
+        filterLogs();
       } catch (e) {
-        console.error('renderRecentLogs error:', e);
+        console.error('filterLogs error:', e);
       }
 
       // 4. 씬별 깔때기 (선택 기간 필터링 적용)
@@ -2397,11 +2395,23 @@
 
       const allLogs = getLogsInDateRange(startDate, endDate);
 
+      const isCompleteIp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(q);
+
       const filtered = allLogs.filter(item => {
         if (q) {
-          const rawIp = item.ip || '';
-          const effIp = getEffectiveIp(rawIp);
-          const str = `${rawIp} ${effIp} ${item.city || ''} ${item.sceneTitle || ''} ${item.os || ''} ${item.browser || ''} ${item.eventType || ''} ${item.sessionId || ''} ${item.visitorId || ''}`.toLowerCase();
+          const rawIp = (item.ip || '').trim().toLowerCase();
+          const cleanRaw = rawIp.replace(/:\d+$/, '');
+          const effIp = getEffectiveIp(rawIp).toLowerCase();
+          const cleanEff = effIp.replace(/:\d+$/, '');
+          const maskedIp = (item.maskedIp || '').trim().toLowerCase();
+          const ipDisp = formatIpDisplay(rawIp, maskedIp, showFullIp).toLowerCase();
+
+          if (isCompleteIp) {
+            // 완전한 IP 주소 검색 시 정확히 해당 IP만 일치시킴 (서브넷이나 타 IP와의 부분 일치 방지)
+            return (cleanRaw === q || cleanEff === q || maskedIp === q || ipDisp === q);
+          }
+
+          const str = `${rawIp} ${effIp} ${maskedIp} ${ipDisp} ${item.city || ''} ${item.sceneTitle || ''} ${item.os || ''} ${item.browser || ''} ${item.eventType || ''} ${item.sessionId || ''} ${item.visitorId || ''}`.toLowerCase();
           if (!str.includes(q)) return false;
         }
         return true;
@@ -2616,9 +2626,16 @@
       }
 
       // 검색어 필터링
+      const isCompleteIp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(q);
       let filtered = aggregated.filter(item => {
         if (!q) return true;
-        const target = `${item.ip} ${item.maskedIp || ''} ${item.city || ''} ${Array.from(item.devices).join(' ')} ${Array.from(item.browsers).join(' ')}`.toLowerCase();
+        const itemIp = (item.ip || '').trim().toLowerCase().replace(/:\d+$/, '');
+        const maskedIp = (item.maskedIp || '').trim().toLowerCase();
+        const ipDisp = formatIpDisplay(item.ip, item.maskedIp, showFullIp).toLowerCase();
+        if (isCompleteIp) {
+          return (itemIp === q || maskedIp === q || ipDisp === q);
+        }
+        const target = `${itemIp} ${maskedIp} ${ipDisp} ${item.city || ''} ${Array.from(item.devices).join(' ')} ${Array.from(item.browsers).join(' ')}`.toLowerCase();
         return target.includes(q);
       });
 
