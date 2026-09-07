@@ -417,11 +417,11 @@
         <div id="ep-desktop-indicators" class="hidden md:flex items-center justify-center gap-3 pt-3">
           <button onclick="goToEpisodePage(0)" id="ep-page-indicator-0" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
-            <span class="text-xs font-bold text-white">에피소드 1 · 2</span>
+            <span id="ep-indicator-text-0" class="text-xs font-bold text-white">에피소드 1 · 2</span>
           </button>
           <button onclick="goToEpisodePage(1)" id="ep-page-indicator-1" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-800/60 border border-transparent transition cursor-pointer">
             <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
-            <span class="text-xs font-medium text-slate-400">에피소드 3 · 4</span>
+            <span id="ep-indicator-text-1" class="text-xs font-medium text-slate-400">에피소드 3 · 4</span>
           </button>
         </div>
 
@@ -437,10 +437,10 @@
 
     <!-- 로비 하단 정보 바 & 실시간 법령/OpenAPI 연동 배지 -->
     <div class="pt-1 sm:pt-2 border-t border-slate-800/80 text-[10px] sm:text-xs text-slate-500 max-w-5xl w-full mx-auto flex flex-col items-center justify-center text-center gap-0.5 px-3 shrink-0 pb-1.5 sm:pb-2">
-      <button type="button" onclick="showPrivacyPolicyModal()" class="text-slate-400 hover:text-cyan-400 underline underline-offset-2 transition text-[11px] sm:text-xs cursor-pointer">
+      <button id="footer-privacy-btn" type="button" onclick="showPrivacyPolicyModal()" class="text-slate-400 hover:text-cyan-400 underline underline-offset-2 transition text-[11px] sm:text-xs cursor-pointer">
         개인정보 처리방침 및 이용안내
       </button>
-      <span class="text-[10px] sm:text-xs text-slate-500">© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
+      <span id="footer-copyright-text" class="text-[10px] sm:text-xs text-slate-500">© 2026 대한민국 병무청 (MMA). All Rights Reserved.</span>
       <div id="lobby-sync-banner-container" class="pointer-events-auto hidden sm:flex items-center justify-center"></div>
     </div>
 
@@ -1616,6 +1616,16 @@
           startBtn: "시나리오 시작하기",
           resumeBtn: "이어서 플레이하기",
           restartBtn: "처음부터 다시 시작하기",
+          epPage12: "에피소드 1 · 2",
+          epPage34: "에피소드 3 · 4",
+          privacyBtn: "개인정보 처리방침 및 이용안내",
+          copyright: "© 2026 대한민국 병무청 (MMA). All Rights Reserved.",
+          syncStatusNormal: "[API] 실시간 법령 & 공공데이터 연동 현황",
+          syncStatusUpdated: "[📢 최신 법령 개정 반영 완료]",
+          syncStatusError: "[⚠️ 법령 동기화 오류 감지]",
+          syncStatusNormalTitle: "클릭하여 연동된 API 및 날짜·명칭 상세 확인",
+          syncStatusUpdatedTitle: "클릭하여 연동 내역 및 점검 상태 확인",
+          syncStatusErrorTitle: "클릭하여 연동 내역 및 점검 상태 확인",
           syncNormal: "법제처 국가법령 & 공공데이터 Open API 정상 연동 중",
           syncUpdated: "[법령 개정 자동 반영] 오늘 새벽 최신 법령 개정 사항이 시나리오 대본에 자동 반영되었습니다.",
           syncError: "[동기화 오류] 법령 및 Open API 자동 동기화에 문제가 감지되었습니다.",
@@ -1676,6 +1686,16 @@
           startBtn: "Start Scenario",
           resumeBtn: "Resume Play",
           restartBtn: "Start Over from Beginning",
+          epPage12: "Episode 1 · 2",
+          epPage34: "Episode 3 · 4",
+          privacyBtn: "Privacy Policy & Terms of Service",
+          copyright: "© 2026 Military Manpower Administration (MMA). All Rights Reserved.",
+          syncStatusNormal: "[API] Real-Time Law & Public Data Status",
+          syncStatusUpdated: "[📢 Latest Law Revisions Applied]",
+          syncStatusError: "[⚠️ Law Sync Error Detected]",
+          syncStatusNormalTitle: "Click to view connected APIs, dates, and details",
+          syncStatusUpdatedTitle: "Click to check sync history and inspection status",
+          syncStatusErrorTitle: "Click to check sync history and inspection status",
           syncNormal: "MoEL National Law & Public Data Open API Connected",
           syncUpdated: "[Law Revised] Today's dawn law revision was auto-applied to the scenario.",
           syncError: "[Sync Error] Problem detected with Law & Open API synchronization.",
@@ -1771,6 +1791,18 @@
       if (ep4Badge) ep4Badge.innerText = dict.lobby.ep4Badge || "제4화 · 사회복무요원 편";
       if (ep4Title) ep4Title.innerText = dict.lobby.ep4Title || "사회복무 첫 출근";
       if (ep4Desc) ep4Desc.innerText = dict.lobby.ep4Desc || "사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드!";
+
+      // 하단 에피소드 인디케이터 (데스크톱)
+      const epText0 = document.getElementById('ep-indicator-text-0');
+      const epText1 = document.getElementById('ep-indicator-text-1');
+      if (epText0) epText0.innerText = dict.lobby.epPage12 || (currentLang === 'en' ? 'Episode 1 · 2' : '에피소드 1 · 2');
+      if (epText1) epText1.innerText = dict.lobby.epPage34 || (currentLang === 'en' ? 'Episode 3 · 4' : '에피소드 3 · 4');
+
+      // 로비 하단 정보 바 및 저작권
+      const privacyBtn = document.getElementById('footer-privacy-btn');
+      const copyrightText = document.getElementById('footer-copyright-text');
+      if (privacyBtn) privacyBtn.innerText = dict.lobby.privacyBtn || (currentLang === 'en' ? 'Privacy Policy & Terms of Service' : '개인정보 처리방침 및 이용안내');
+      if (copyrightText) copyrightText.innerText = dict.lobby.copyright || (currentLang === 'en' ? '© 2026 Military Manpower Administration (MMA). All Rights Reserved.' : '© 2026 대한민국 병무청 (MMA). All Rights Reserved.');
 
       updateLobbyResumeButton();
       renderLobbySyncBanner();
@@ -5526,28 +5558,29 @@
       const container = document.getElementById('lobby-sync-banner-container');
       if (!container || !systemSyncData) return;
 
+      const dict = (I18N[currentLang] && I18N[currentLang].lobby) ? I18N[currentLang].lobby : I18N.ko.lobby;
       const isError = systemSyncData.sync_status === 'ERROR' || (systemSyncData.law && systemSyncData.law.verified === false) || (systemSyncData.openapi && systemSyncData.openapi.verified === false);
       const isUpdated = systemSyncData.changed || systemSyncData.sync_status === 'UPDATED';
 
       if (isError) {
         container.innerHTML = `
-          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-rose-400 hover:text-rose-300 text-xs font-semibold transition cursor-pointer bg-transparent animate-pulse leading-tight" title="클릭하여 연동 내역 및 점검 상태 확인">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-rose-400 hover:text-rose-300 text-xs font-semibold transition cursor-pointer bg-transparent animate-pulse leading-tight" title="${dict.syncStatusErrorTitle || '클릭하여 연동 내역 및 점검 상태 확인'}">
             <i data-lucide="alert-octagon" class="w-3.5 h-3.5 text-rose-400 shrink-0"></i>
-            <span class="font-bold tracking-tight">[⚠️ 법령 동기화 오류 감지]</span>
+            <span class="font-bold tracking-tight">${dict.syncStatusError || '[⚠️ 법령 동기화 오류 감지]'}</span>
           </button>
         `;
       } else if (isUpdated) {
         container.innerHTML = `
-          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-amber-400 hover:text-amber-300 text-xs font-semibold transition cursor-pointer bg-transparent leading-tight" title="클릭하여 연동 내역 및 점검 상태 확인">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-amber-400 hover:text-amber-300 text-xs font-semibold transition cursor-pointer bg-transparent leading-tight" title="${dict.syncStatusUpdatedTitle || '클릭하여 연동 내역 및 점검 상태 확인'}">
             <i data-lucide="bell" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-            <span class="font-bold tracking-tight">[📢 최신 법령 개정 반영 완료]</span>
+            <span class="font-bold tracking-tight">${dict.syncStatusUpdated || '[📢 최신 법령 개정 반영 완료]'}</span>
           </button>
         `;
       } else {
         container.innerHTML = `
-          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-emerald-400 hover:text-emerald-300 text-xs font-medium transition cursor-pointer bg-transparent leading-tight" title="클릭하여 연동된 API 및 날짜·명칭 상세 확인">
+          <button type="button" onclick="openApiSyncDetailModal()" class="group inline-flex items-center gap-1.5 py-0.5 px-2 text-emerald-400 hover:text-emerald-300 text-xs font-medium transition cursor-pointer bg-transparent leading-tight" title="${dict.syncStatusNormalTitle || '클릭하여 연동된 API 및 날짜·명칭 상세 확인'}">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
-            <span class="font-bold tracking-tight">[API] 실시간 법령 & 공공데이터 연동 현황</span>
+            <span class="font-bold tracking-tight">${dict.syncStatusNormal || '[API] 실시간 법령 & 공공데이터 연동 현황'}</span>
           </button>
         `;
       }
@@ -5843,28 +5876,29 @@
       const ind0 = document.getElementById('ep-page-indicator-0');
       const ind1 = document.getElementById('ep-page-indicator-1');
       if (ind0 && ind1) {
+        const dict = (I18N[currentLang] && I18N[currentLang].lobby) ? I18N[currentLang].lobby : I18N.ko.lobby;
+        const dot0 = ind0.querySelector('span:first-child');
+        const txt0 = ind0.querySelector('span:last-child');
+        const dot1 = ind1.querySelector('span:first-child');
+        const txt1 = ind1.querySelector('span:last-child');
+
+        if (txt0) txt0.innerText = dict.epPage12 || (currentLang === 'en' ? 'Episode 1 · 2' : '에피소드 1 · 2');
+        if (txt1) txt1.innerText = dict.epPage34 || (currentLang === 'en' ? 'Episode 3 · 4' : '에피소드 3 · 4');
+
         if (currentEpisodePage === 0) {
           ind0.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer";
-          const dot0 = ind0.querySelector('span:first-child');
-          const txt0 = ind0.querySelector('span:last-child');
           if (dot0) dot0.className = "w-2.5 h-2.5 rounded-full bg-blue-400";
           if (txt0) txt0.className = "text-xs font-bold text-white";
 
           ind1.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-800/60 border border-transparent transition cursor-pointer";
-          const dot1 = ind1.querySelector('span:first-child');
-          const txt1 = ind1.querySelector('span:last-child');
           if (dot1) dot1.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
           if (txt1) txt1.className = "text-xs font-medium text-slate-400";
         } else {
           ind1.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer";
-          const dot1 = ind1.querySelector('span:first-child');
-          const txt1 = ind1.querySelector('span:last-child');
           if (dot1) dot1.className = "w-2.5 h-2.5 rounded-full bg-blue-400";
           if (txt1) txt1.className = "text-xs font-bold text-white";
 
           ind0.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-800/60 border border-transparent transition cursor-pointer";
-          const dot0 = ind0.querySelector('span:first-child');
-          const txt0 = ind0.querySelector('span:last-child');
           if (dot0) dot0.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
           if (txt0) txt0.className = "text-xs font-medium text-slate-400";
         }
