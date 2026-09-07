@@ -1323,7 +1323,7 @@
 
     function resetAllPreviewButtons() {
       const isEn = (currentLang === 'en');
-      ['himchan', 'narae', 'seojun'].forEach(id => {
+      ['himchan', 'yuna', 'seojun', 'narae'].forEach(id => {
         const btnIntro = document.getElementById(`btn-preview-intro-${id}`);
         if (btnIntro) {
           btnIntro.classList.remove('bg-amber-600/30', 'text-amber-300', 'border-amber-400');
@@ -2283,6 +2283,10 @@
     // 가이드 페르소나 (외형, 화자명, 말투, 플레이트 색상) 동적 변환 헬퍼
     function getGuideResolvedItem(item) {
       if (!item) return item;
+      // Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
+      if (currentSceneIdx === 1) {
+        return item;
+      }
       const guideId = userData.selectedGuide || 'himchan';
       const spk = item.speaker || '';
       const spkEn = item.speaker_en || '';
@@ -3070,7 +3074,7 @@
 
     // 멘토 가이드 모바일 캐러셀 슬라이더 컨트롤러
     let currentMentorSlide = 0;
-    const MENTOR_SLIDE_IDS = ['himchan', 'narae', 'seojun'];
+    const MENTOR_SLIDE_IDS = ['himchan', 'yuna', 'seojun'];
 
     function setMentorSlide(idx) {
       if (typeof stopPreviewAudio === 'function') stopPreviewAudio();
@@ -5480,6 +5484,11 @@
       try {
         localStorage.removeItem(SAVE_STORAGE_KEY);
       } catch(e) {}
+      userData.selectedGuide = 'himchan';
+      try {
+        localStorage.setItem('mma_selected_guide', 'himchan');
+      } catch(e) {}
+      if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
     }
 
     // ================= [새벽 법령 & Open API 실시간 동기화 상태 감지 엔진] =================
@@ -6151,6 +6160,11 @@
           return;
         }
 
+        // 시나리오를 처음부터 시작할 때는 항상 기본 멘토 캐릭터를 '힘찬이'로 초기화
+        userData.selectedGuide = 'himchan';
+        try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch(e) {}
+        if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
+
         // 새 게임 시작 시 검은화면의 주인공 이름 설정 팝업 먼저 띄우기
         openNameInputOverlay(1, forceNew);
       } else if (epNum === 2) {
@@ -6172,6 +6186,9 @@
         clearSaveGameState();
         conversationHistory.length = 0;
         currentBg = "";
+        userData.selectedGuide = 'himchan';
+        try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
+        if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
       }
       renderScene(0);
     }
@@ -6214,6 +6231,9 @@
       clearSaveGameState();
       conversationHistory.length = 0;
       currentBg = "";
+      userData.selectedGuide = 'himchan';
+      try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
+      if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
       renderScene(0);
     }
 

@@ -47,10 +47,19 @@ function getVoiceConfig(speaker = '', lang = 'ko', guide = '') {
                   spk.includes('서준') || spk.includes('seojun');
 
   if (isGuide) {
-    if (spk.includes('유나') || spk.includes('yuna') || gd.includes('yuna') || spk.includes('나래') || spk.includes('narae') || gd.includes('narae')) {
+    if (spk.includes('힘찬이') || spk.includes('himchan')) {
+      return isEn ? VOICE_MAP.en_himchan : VOICE_MAP.himchan; // 남성 열혈 멘토 힘찬이 (Hyunsu)
+    }
+    if (spk.includes('유나') || spk.includes('yuna') || spk.includes('나래') || spk.includes('narae')) {
       return isEn ? VOICE_MAP.en_yuna : VOICE_MAP.yuna; // 여성 멘토 유나 (SunHi)
     }
-    if (spk.includes('서준') || spk.includes('seojun') || gd.includes('seojun')) {
+    if (spk.includes('서준') || spk.includes('seojun')) {
+      return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun; // 남성 스마트 멘토 서준 (BongJin)
+    }
+    if (gd.includes('yuna') || gd.includes('narae')) {
+      return isEn ? VOICE_MAP.en_yuna : VOICE_MAP.yuna; // 여성 멘토 유나 (SunHi)
+    }
+    if (gd.includes('seojun')) {
       return isEn ? VOICE_MAP.en_seojun : VOICE_MAP.seojun; // 남성 스마트 멘토 서준 (BongJin)
     }
     return isEn ? VOICE_MAP.en_himchan : VOICE_MAP.himchan; // 남성 열혈 멘토 힘찬이 (Hyunsu)
