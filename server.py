@@ -9,8 +9,14 @@
 """
 
 import json
+import sys
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import urllib.parse
+
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 PORT = 8000
 

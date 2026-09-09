@@ -280,8 +280,8 @@
                       제2화 · 예비군 훈련 편
                     </span>
                     <div id="ep2-saved-badge">
-                      <span class="group-hover:hidden px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
-                        <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
+                      <span class="group-hover:hidden px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-800/90 border border-emerald-500 text-emerald-200 text-[9px] sm:text-xs font-bold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> 플레이 가능
                       </span>
                       <span class="hidden group-hover:flex px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600 text-white text-[9px] sm:text-xs font-bold items-center gap-1 shadow-lg border border-blue-300/40 animate-pulse">
                         <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-300"></span> AI 비디오
@@ -310,8 +310,8 @@
                   </div>
 
                   <div id="ep2-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
-                    <button disabled class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
-                      <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
+                    <button onclick="event.stopPropagation(); startEpisode(2, true)" class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm tracking-wide shadow-xl shadow-emerald-950/50 border border-emerald-400/40 flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer hover:scale-[1.01]">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> <span>제2화 시작하기 (Start Episode 2)</span>
                     </button>
                   </div>
                 </div>
@@ -1166,6 +1166,8 @@
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
   <script src="api.js?v=20260906_v195_28"></script>
   <script src="scenario.js?v=20260906_v195_28"></script>
+  <script src="api_ep2.js?v=20260909_ep2"></script>
+  <script src="scenario_ep2.js?v=20260909_ep2"></script>
   <script src="tracker.js?v=20260906_v195_28"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
@@ -1233,6 +1235,35 @@
       };
       preloader.src = targetSrc;
     }
+
+    let currentPlayingEpisode = 1;
+    let pendingStartEpisode = 1;
+
+    function getCurrentScenarios() {
+      if (currentPlayingEpisode === 2 && typeof SCENARIOS_EP2 !== 'undefined') {
+        return SCENARIOS_EP2;
+      }
+      return typeof SCENARIOS !== 'undefined' ? SCENARIOS : [];
+    }
+
+    const EP2_STEPS_KO = [
+      "01. 소집통지서 확인 (스마트 알림톡)",
+      "02. 학업/일정 충돌 점검",
+      "03. 신분 판별 & 학생예비군 보류",
+      "04. 방침보류 8시간 혜택 확인",
+      "05. 전국단위 자율훈련 신청",
+      "06. D-1 군복 점검",
+      "07. 피복 무료 대여 확인",
+      "08. 훈련 당일 집결 (지각 위기)",
+      "09. 무료 수송 셔틀버스 탑승",
+      "10. 과학화 훈련장 입소 브리핑",
+      "11. 실탄 영점사격 평가",
+      "12. 생명구호 CPR & 모의 교전",
+      "13. 군마트(PX) 복지 면세 쇼핑",
+      "14. 16:00 조기퇴소 & 교통비 지급",
+      "15. 청년 권익보장 법령 해설",
+      "16. 모바일 교육필증 발급 & 수료"
+    ];
 
     let currentSceneIdx = 0;
     let isTyping = false;
@@ -2011,11 +2042,16 @@
 
     // 장면 렌더링 (배경 변경 감지 시 장소 이동 트랜지션 실행)
     function renderScene(idx) {
-      if (typeof SCENARIOS === 'undefined' || !SCENARIOS || idx >= SCENARIOS.length) {
-        showCertModal();
+      const scenarios = getCurrentScenarios();
+      if (!scenarios || idx >= scenarios.length) {
+        if (currentPlayingEpisode === 2) {
+          renderWidget('EP2_FINAL_REPORT');
+        } else {
+          showCertModal();
+        }
         return;
       }
-      const scene = SCENARIOS[idx];
+      const scene = scenarios[idx];
 
       // 배경 변경 감지 시 시네마틱 페이드아웃 & 장소 이동 로딩 바 전환 실행
       if (currentBg && currentBg !== scene.bg) {
@@ -2044,7 +2080,41 @@
       const bg = newScene && newScene.bg ? newScene.bg : '';
 
       // 목적지에 따른 이동 타이틀 및 안내 동적 설정 (targetIdx 기준 우선 매칭)
-      if (targetIdx === 7 || bg.includes('exam_room')) {
+      if (currentPlayingEpisode === 2) {
+        if (bg.includes('ep2_shuttle_stop')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Heading to Shuttle Bus Stop..." : "셔틀버스 승강장으로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Direct Free Shuttle Bus to Reserve Training Center" : "지자체 합동 운행: 과학화 예비군훈련장 직통 무료 셔틀버스";
+          if (icon) icon.setAttribute('data-lucide', 'bus');
+        } else if (bg.includes('ep2_auditorium')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Entering Scientific Training Hall..." : "과학화 훈련장 강당 입소 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Orientation & 16:00 Early Dismissal Briefing" : "분대별 측정식 평가 오리엔테이션 및 16시 조기퇴소 브리핑";
+          if (icon) icon.setAttribute('data-lucide', 'shield-check');
+        } else if (bg.includes('ep2_shooting_range')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Live-Fire Shooting Range..." : "실탄 영점사격장으로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "3-Round Zeroing Assessment" : "제1과목: 3발 실탄 영점사격 측정 평가";
+          if (icon) icon.setAttribute('data-lucide', 'crosshair');
+        } else if (bg.includes('ep2_cpr_lab')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Moving to Medical & Combat Lab..." : "응급처치 실습관 및 교전장 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "CPR/AED Life-Saving & MILES Laser Urban Combat" : "제2과목: 심폐소생술(CPR) & 마일즈 레이저 시가지 모의교전";
+          if (icon) icon.setAttribute('data-lucide', 'heart-pulse');
+        } else if (bg.includes('ep2_px_mart')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Visiting Military PX Mart..." : "국군복지단 군마트(PX) 방문 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Up to 79% Duty-Free Discount Shopping" : "점심시간 면세 쇼핑: 달팽이 크림, 홍삼, 뷰티/건강 특가";
+          if (icon) icon.setAttribute('data-lucide', 'shopping-bag');
+        } else if (bg.includes('ep2_camp_gate')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Reporting to Camp Gate..." : "훈련장 정문 위병소 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "16:00 Early Dismissal & Real-time Allowance Deposit" : "16:00 우수분대 조기퇴소 및 실거리 교통비 실시간 지급";
+          if (icon) icon.setAttribute('data-lucide', 'award');
+        } else if (bg.includes('ep2_bus_sunset')) {
+          if (title) title.innerText = (currentLang === 'en') ? "Boarding Return Shuttle Bus..." : "귀가 버스 탑승 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Youth Rights Protection & Digital Certificate" : "청년 권익보장(예비군법) 및 모바일 전자 교육필증 발급";
+          if (icon) icon.setAttribute('data-lucide', 'sun-medium');
+        } else {
+          if (title) title.innerText = (currentLang === 'en') ? "Changing Location..." : "다음 장소로 이동 중...";
+          if (desc) desc.innerText = (currentLang === 'en') ? "Please wait a moment." : "잠시만 기다려 주세요.";
+          if (icon) icon.setAttribute('data-lucide', 'map-pin');
+        }
+      } else if (targetIdx === 7 || bg.includes('exam_room')) {
         if (title) title.innerText = (currentLang === 'en') ? "Moving to Psychological Testing Hall..." : "심리검사장으로 이동 중...";
         if (desc) desc.innerText = (currentLang === 'en') ? "Nara Sarang Card Issuance & Cognitive / Personality Psychological Test" : "나라사랑카드 발급·등록 및 1:1 컴퓨터 심리검사";
         if (icon) icon.setAttribute('data-lucide', 'brain');
@@ -2358,12 +2428,14 @@
       isAnnouncement = false;
       pendingTransitionSceneIdx = null;
       currentSceneIdx = idx;
-      if (idx === 1 && typeof SCENARIOS !== 'undefined' && SCENARIOS[1]) {
+      const scenarios = getCurrentScenarios();
+      if (!scenarios || idx >= scenarios.length) return;
+      if (currentPlayingEpisode === 1 && idx === 1 && scenarios[1]) {
         // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
-        SCENARIOS[1].widgetType = 'GUIDE_SELECT_INTRO';
+        scenarios[1].widgetType = 'GUIDE_SELECT_INTRO';
       }
       if (window.MmaTracker) window.MmaTracker.reportScene(idx);
-      const scene = SCENARIOS[idx];
+      const scene = scenarios[idx];
       currentBg = scene.bg;
 
       // 중앙 선택지 오버레이 숨김 초기화 및 캐릭터 레이어 복원
@@ -2424,11 +2496,21 @@
         }
       }
 
-      // 상단 스텝 타이틀
+      // 상단 앱 타이틀 & 스텝 타이틀
+      const topAppTitle = document.getElementById('top-app-title');
+      if (topAppTitle) {
+        topAppTitle.innerText = (currentPlayingEpisode === 2)
+          ? ((currentLang === 'en') ? "Smart Reservist Life" : "슬기로운 예비군 훈련 생활")
+          : ((currentLang === 'en') ? "First Step of Youth" : "청춘의 첫 발걸음");
+      }
       const topTitle = document.getElementById('top-step-title');
       if (topTitle) {
-        const stepList = I18N[currentLang].steps;
-        topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
+        if (currentPlayingEpisode === 2) {
+          topTitle.innerText = EP2_STEPS_KO[idx] || `제2화 STEP ${idx + 1}`;
+        } else {
+          const stepList = I18N[currentLang].steps;
+          topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
+        }
       }
 
       // SCENE 3 일정 선택 동적 분기 (달력 직접선택 vs 기본 통지일정)
@@ -2507,7 +2589,8 @@
 
     // 현재 문단 대사 출력 함수 (화자, 캐릭터 스프라이트, 이름표 동적 실시간 전환)
     function playDialogueChunk() {
-      const rawScene = SCENARIOS[currentSceneIdx];
+      const scenarios = getCurrentScenarios();
+      const rawScene = (scenarios && scenarios[currentSceneIdx]) ? scenarios[currentSceneIdx] : (typeof SCENARIOS !== 'undefined' ? SCENARIOS[currentSceneIdx] : {});
       const scene = (typeof getGuideResolvedItem === 'function') ? getGuideResolvedItem(rawScene) : (rawScene || {});
       let rawItem = currentDialogueList[currentDialogueIdx] || {};
       const item = (typeof getGuideResolvedItem === 'function') ? getGuideResolvedItem(rawItem) : rawItem;
@@ -2642,7 +2725,8 @@
 
     // 다음 클릭 (1클릭: 현재 대사 즉시 전체 출력 / 2클릭: 대사 다 읽고 터치 시 다음 문단 또는 선택지 팝업 표출)
     function handleNextClick() {
-      const scene = SCENARIOS[currentSceneIdx];
+      const scenarios = getCurrentScenarios();
+      const scene = (scenarios && scenarios[currentSceneIdx]) ? scenarios[currentSceneIdx] : (typeof SCENARIOS !== 'undefined' ? SCENARIOS[currentSceneIdx] : {});
       const textElem = document.getElementById('dialogue-text');
       const scrollContainer = document.getElementById('dialogue-scroll-container');
       const nextIndicator = document.getElementById('next-indicator');
@@ -3244,6 +3328,568 @@
       }
 
       choiceContainer.innerHTML = '';
+
+      // =========================================================================
+      // [EPISODE 2 WIDGETS 1 ~ 9: 슬기로운 예비군 훈련 생활 전용 인터랙티브 위젯]
+      // =========================================================================
+
+      // [WIDGET 1: EP2_STATUS_CHECK]
+      if (type === 'EP2_STATUS_CHECK') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-3.5 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "Reservist Status & Category Check" : "2026년도 예비군 소집 신분 확인"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 font-bold border border-emerald-400/40">Open API</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Select your status to assign tailored training requirements." : "선배님의 현재 신분을 선택하시면 맞춤형 훈련이 즉시 배정됩니다."}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2.5">
+              <!-- Option 1: College Student (Recommended) -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Status('student');" class="group p-3.5 sm:p-4 rounded-2xl bg-emerald-950/50 hover:bg-emerald-900/60 border-2 border-emerald-500 shadow-xl cursor-pointer transition flex items-center justify-between hover:scale-[1.01]">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">🎓</span>
+                  <div>
+                    <div class="font-black text-sm sm:text-base text-white group-hover:text-emerald-300 flex items-center gap-2">
+                      ${isEn ? "College Student (Student Reservist)" : "대학교/대학원 재학생 (학생 예비군)"}
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">${isEn ? "Eligible" : "선배님 해당"}</span>
+                    </div>
+                    <p class="text-xs text-emerald-200 mt-0.5 font-medium">
+                      ${isEn ? "Policy Partial Deferment: Complete 1-day 8h basic training only!" : "★ 방침일부보류 적용: 2박 3일 동원 대신 연간 단 8시간 기본훈련 이수!"}
+                    </p>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-emerald-400 group-hover:translate-x-1 transition"></i>
+              </div>
+
+              <!-- Option 2: General / Worker -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Status('worker');" class="group p-3 sm:p-3.5 rounded-2xl bg-slate-800/60 hover:bg-slate-800/90 border border-slate-700 shadow-md cursor-pointer transition flex items-center justify-between hover:scale-[1.01]">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">🏢</span>
+                  <div>
+                    <div class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-white">
+                      ${isEn ? "Office Worker / General Discharged" : "일반 직장인 / 자영업자 (1~4년차 동미참)"}
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                      ${isEn ? "Non-mobilization: 4 days commute / 32 hours" : "동미참 훈련 대상 (출퇴근 4일 / 총 32시간 이수)"}
+                    </p>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition"></i>
+              </div>
+
+              <!-- Option 3: Mobilization -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Status('mobilization');" class="group p-3 sm:p-3.5 rounded-2xl bg-slate-800/60 hover:bg-slate-800/90 border border-slate-700 shadow-md cursor-pointer transition flex items-center justify-between hover:scale-[1.01]">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">🎖️</span>
+                  <div>
+                    <div class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-white">
+                      ${isEn ? "Designated Mobilization Base" : "동원지정 부대 입영 (1~4년차 동원훈련)"}
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                      ${isEn ? "Mobilization: 2-night 3-day mountain barracks" : "동원사단 막사 입영 (2박 3일 / 총 28시간 숙영)"}
+                    </p>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition"></i>
+              </div>
+            </div>
+
+            <div class="pt-1 text-center">
+              <span class="text-[11px] text-slate-400">
+                <i data-lucide="info" class="w-3.5 h-3.5 inline text-emerald-400 mr-1"></i>
+                ${isEn ? "Reserve Forces Act Art 6 & Enforcement Decree Art 4" : "근거: 「병역법」 제44조~54조 및 「예비군법 시행령」 제4조(보류 및 연기)"}
+              </span>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 2: EP2_NATIONWIDE_CALENDAR]
+      if (type === 'EP2_NATIONWIDE_CALENDAR') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-blue-500/20 border border-blue-400 text-blue-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="calendar" class="w-5 h-5 text-blue-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "Nationwide Autonomous Training Booking" : "전국단위 자율 훈련 & 휴일 훈련 신청"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-300 font-bold border border-blue-400/40">실시간 공석</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Avoid exam dates by selecting your desired scientific center." : "중간고사 일정을 피해 시험이 끝난 주말 또는 원하는 훈련장을 선택하세요."}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2.5">
+              <!-- Center 1: Geumgok (Recommended) -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Date('남양주 금곡 과학화예비군훈련장', '2026-10-24 (토) 휴일 훈련');" class="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/40 hover:bg-emerald-900/50 border-2 border-emerald-500/80 shadow-lg cursor-pointer transition flex flex-col gap-2 hover:scale-[1.01]">
+                <div class="flex items-center justify-between">
+                  <div class="font-extrabold text-sm sm:text-base text-white flex items-center gap-1.5">
+                    <span>🏛️ 남양주 금곡 과학화예비군훈련장</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">추천 훈련장</span>
+                  </div>
+                  <span class="text-xs font-bold text-emerald-400">잔여 24석</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-300">
+                  <span>일정: <strong>2026년 10월 24일 (토) 휴일 훈련</strong></span>
+                  <span class="text-emerald-300 font-bold">신청하기 ➔</span>
+                </div>
+                <p class="text-[11px] text-slate-400">교통: 망우역 1번 출구 앞 직통 무료 셔틀버스 15분 운행</p>
+              </div>
+
+              <!-- Center 2: Bakdal -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Date('안양 박달 과학화예비군훈련장', '2026-10-31 (토) 휴일 훈련');" class="p-3 sm:p-3.5 rounded-2xl bg-slate-800/60 hover:bg-slate-800/90 border border-slate-700 shadow-md cursor-pointer transition flex flex-col gap-1.5 hover:scale-[1.01]">
+                <div class="flex items-center justify-between">
+                  <div class="font-bold text-sm text-slate-200">🏛️ 안양 박달 과학화예비군훈련장</div>
+                  <span class="text-xs font-bold text-cyan-400">잔여 28석</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-300">
+                  <span>일정: 2026년 10월 31일 (토) 휴일 훈련</span>
+                  <span class="text-slate-400">선택 ➔</span>
+                </div>
+              </div>
+
+              <!-- Center 3: Nogosan -->
+              <div onclick="playBeep(880, 'sine', 0.1); selectEp2Date('양주 노고산 과학화예비군훈련장', '2026-10-24 (토) 휴일 훈련');" class="p-3 sm:p-3.5 rounded-2xl bg-slate-800/60 hover:bg-slate-800/90 border border-slate-700 shadow-md cursor-pointer transition flex flex-col gap-1.5 hover:scale-[1.01]">
+                <div class="flex items-center justify-between">
+                  <div class="font-bold text-sm text-slate-200">🏛️ 양주 노고산 과학화예비군훈련장</div>
+                  <span class="text-xs font-bold text-cyan-400">잔여 15석</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-300">
+                  <span>일정: 2026년 10월 24일 (토) 휴일 훈련</span>
+                  <span class="text-slate-400">선택 ➔</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-1 text-center">
+              <span class="text-[11px] text-slate-400">
+                <i data-lucide="database" class="w-3.5 h-3.5 inline text-blue-400 mr-1"></i>
+                공공데이터포털 국방부 예비군훈련 일정 및 공석 현황 실시간 Open API 연동
+              </span>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 3: EP2_D1_CHECKLIST]
+      if (type === 'EP2_D1_CHECKLIST') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-lg max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="check-square" class="w-5 h-5 text-emerald-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white">
+                  ${isEn ? "D-1 Checklist & Free Uniform Rental" : "D-1 필수 준비물 점검 & 피복 무료 대여"}
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Confirm free rental reservation and mandatory check items." : "군복이 안 맞아도 걱정 끝! 현장 무료 대여 및 필수 지참 항목 확인"}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2.5">
+              <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/60 flex items-center gap-3">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                <div class="text-xs">
+                  <strong class="text-white">신분증 필수 지참:</strong>
+                  <span class="text-slate-300">주민등록증, 운전면허증, 모바일 신분증 (미지참 시 입소 불가)</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/60 flex items-center gap-3">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                <div class="text-xs">
+                  <strong class="text-white">피복 무상 대여 예약:</strong>
+                  <span class="text-slate-300">전투복(105호)·전투화(270mm)·요대·베레모 100% 무료 대여</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/60 flex items-center gap-3">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                <div class="text-xs">
+                  <strong class="text-white">교통비 지급 계좌:</strong>
+                  <span class="text-slate-300">퇴소 즉시 실거리 교통비 8,000원 본인 계좌 실시간 입금</span>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(7);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>점검 완료! 훈련 당일 아침으로 이동</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 4: EP2_SHUTTLE_ROUTE]
+      if (type === 'EP2_SHUTTLE_ROUTE') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-lg max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400 text-cyan-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="bus" class="w-5 h-5 text-cyan-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white">
+                  ${isEn ? "Free Direct Shuttle Bus Transit" : "과학화 훈련장 직통 무료 셔틀버스"}
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Direct express transit supported by Local Gov & MMA." : "병무청·지자체 합동 지원: 전철역 ➔ 위병소 직통 15분"}
+                </p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">출발 정류장</span>
+                <strong class="text-white text-sm">망우역 1번 출구 광장 앞</strong>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">탑승 시각</span>
+                <strong class="text-emerald-400 text-sm">08시 30분 직통 출발</strong>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">도착 장소</span>
+                <strong class="text-white text-sm">금곡 과학화훈련장 위병소 (08:45 도착)</strong>
+              </div>
+              <div class="flex items-center justify-between text-xs border-t border-slate-800 pt-2">
+                <span class="text-slate-400">이용 요금</span>
+                <strong class="text-cyan-400 text-sm">0원 (전액 무료 무상 수송)</strong>
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(9);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="door-open" class="w-4 h-4"></i>
+              <span>셔틀 탑승 & 훈련장 위병소 입소하기</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 5: EP2_SHOOTING_RANGE]
+      if (type === 'EP2_SHOOTING_RANGE') {
+        const isEn = (currentLang === 'en');
+        window.ep2ShotsFired = 0;
+        choiceContainer.className = "w-full max-w-sm sm:max-w-md max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 text-center">
+            <div class="border-b border-slate-700/80 pb-2">
+              <h3 class="text-base sm:text-lg font-black text-white flex items-center justify-center gap-2">
+                <i data-lucide="crosshair" class="w-5 h-5 text-emerald-400"></i>
+                제1과목: 실탄 영점사격 미니게임
+              </h3>
+              <p class="text-xs text-slate-300 mt-1">
+                아래 표적지의 흑색 원형 중앙을 <strong>3회 클릭</strong>하여 사격하세요!
+              </p>
+            </div>
+
+            <!-- 사격 표적판 -->
+            <div id="shooting-target-board" onclick="fireEp2Shot(event)" class="relative w-56 h-56 mx-auto rounded-full bg-slate-800 border-4 border-slate-600 shadow-inner flex items-center justify-center cursor-crosshair overflow-hidden hover:border-emerald-400 transition">
+              <div class="w-44 h-44 rounded-full border border-slate-700 flex items-center justify-center">
+                <div class="w-32 h-32 rounded-full border border-slate-700 flex items-center justify-center bg-slate-900">
+                  <div class="w-20 h-20 rounded-full border border-slate-600 flex items-center justify-center bg-slate-950">
+                    <div class="w-8 h-8 rounded-full bg-red-600 border border-red-400 flex items-center justify-center shadow-lg animate-pulse">
+                      <span class="text-[9px] font-black text-white">X</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 조준 십자선 -->
+              <div class="absolute inset-x-0 top-1/2 h-[1px] bg-emerald-400/40 pointer-events-none"></div>
+              <div class="absolute inset-y-0 left-1/2 w-[1px] bg-emerald-400/40 pointer-events-none"></div>
+            </div>
+
+            <!-- 사격 진행 상태 -->
+            <div id="shooting-status-badge" class="text-xs font-bold text-emerald-300 py-1 px-3 bg-slate-800/80 rounded-xl border border-slate-700">
+              남은 탄약: 3발 (중앙을 조준하여 클릭)
+            </div>
+
+            <div id="shooting-result-btn" class="hidden">
+              <button onclick="playBeep(880, 'sine', 0.1); goToScene(11);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="award" class="w-4 h-4"></i>
+                <span>사격 만점 합격! 제2과목 CPR 평가로 이동</span>
+              </button>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 6: EP2_CPR_QUIZ]
+      if (type === 'EP2_CPR_QUIZ') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-lg max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-rose-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="heart-pulse" class="w-5 h-5 text-rose-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white">
+                  제2과목: 생명을 살리는 심폐소생술(CPR) 평가
+                </h3>
+                <p class="text-xs text-slate-300">
+                  질병관리청 2025 가이드라인 준수: 심정지 골든타임 4분!
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700">
+              <p class="text-sm font-bold text-white mb-2">
+                Q. 성인 심정지 환자 발견 시 올바른 흉부 압박 속도는?
+              </p>
+              <div class="space-y-2">
+                <div onclick="checkEp2Cpr(1)" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300 hover:border-slate-500 cursor-pointer transition">
+                  ① 분당 50 ~ 60회 (비정상적으로 느림)
+                </div>
+                <div id="cpr-correct-opt" onclick="checkEp2Cpr(2)" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300 hover:border-emerald-400 cursor-pointer transition flex items-center justify-between">
+                  <span>② <strong>분당 100 ~ 120회</strong> (약 5cm 깊이로 강하고 빠르게)</span>
+                  <span id="cpr-correct-badge" class="hidden text-[10px] px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">정답! 만점 합격</span>
+                </div>
+                <div onclick="checkEp2Cpr(3)" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300 hover:border-slate-500 cursor-pointer transition">
+                  ③ 분당 180회 이상 (비정상적으로 빠름)
+                </div>
+              </div>
+            </div>
+
+            <div id="cpr-proceed-btn" class="hidden">
+              <button onclick="playBeep(880, 'sine', 0.1); goToScene(12);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                <span>CPR 만점 합격! 점심시간 PX 쇼핑으로 이동</span>
+              </button>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 7: EP2_PX_SHOPPING]
+      if (type === 'EP2_PX_SHOPPING') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-amber-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="shopping-cart" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  국군복지단 군마트(PX) 복지 면세 쇼핑
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/30 text-amber-300 font-bold border border-amber-400/40">최대 79% OFF</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  예비군 훈련 최고의 복지 혜택! 부모님과 지인 선물 득템 찬스
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-xs sm:text-sm text-white">닥터지 블랙스네일 달팽이 크림 (50ml)</div>
+                  <div class="text-[11px] text-slate-400">시중가 32,000원 ➔ <strong class="text-amber-300">PX가 7,800원</strong> (76% 할인)</div>
+                </div>
+                <span class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/80 text-white font-bold">담기 완료</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-xs sm:text-sm text-white">정관장 홍삼정 옥고 (250g)</div>
+                  <div class="text-[11px] text-slate-400">시중가 65,000원 ➔ <strong class="text-amber-300">PX가 19,500원</strong> (70% 할인)</div>
+                </div>
+                <span class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/80 text-white font-bold">담기 완료</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-xs sm:text-sm text-white">듀이트리 울트라 아쿠아 마스크팩 (10매)</div>
+                  <div class="text-[11px] text-slate-400">시중가 20,000원 ➔ <strong class="text-amber-300">PX가 4,200원</strong> (79% 할인)</div>
+                </div>
+                <span class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-600/80 text-white font-bold">담기 완료</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-amber-950/40 border border-amber-500/60 flex items-center justify-between text-xs">
+              <span class="text-slate-300">총 시중가 117,000원 ➔ <strong>총 구매가 31,500원</strong></span>
+              <strong class="text-amber-300 text-sm">총 85,500원 절약! 🎉</strong>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(13);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="award" class="w-4 h-4"></i>
+              <span>쇼핑 완료! 16:00 조기퇴소 신고대로 이동</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 8: EP2_LAW_RIGHTS]
+      if (type === 'EP2_LAW_RIGHTS') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="scale" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white">
+                  청년 권익보장: 「예비군법」 제10조의2 & 10조의3
+                </h3>
+                <p class="text-xs text-slate-300">
+                  훈련 참가로 인한 결석 처리 및 연차 강요는 국가 법령 위반 엄벌 대상입니다.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2.5">
+              <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                <div class="font-extrabold text-sm text-emerald-300 flex items-center gap-1.5">
+                  <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                  <span>예비군법 제10조의3 (학업 보장)</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  대학교 이상의 학교의 장은 학생이 예비군 훈련에 참가한 기간을 결석으로 처리하거나 출석·성적 등 불리하게 처우하지 못한다.
+                </p>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                <div class="font-extrabold text-sm text-cyan-300 flex items-center gap-1.5">
+                  <i data-lucide="briefcase" class="w-4 h-4"></i>
+                  <span>예비군법 제10조의2 (직장 보장)</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  고용주는 근로자가 예비군 훈련을 받는 기간을 유급으로 처리하여야 하며 휴무나 결근 등 불리한 처우를 하지 못한다.
+                </p>
+              </div>
+
+              <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/60 text-xs text-rose-200">
+                🚨 <strong>위반 시 처벌:</strong> 2년 이하의 징역 또는 2,000만원 이하의 벌금 (예비군법 제15조 제8항)
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(15);" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-sm tracking-wide shadow-xl flex items-center justify-center gap-2 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="file-check" class="w-4 h-4"></i>
+              <span>권익 보장 숙지 완료! 모바일 전자 교육필증 발급</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 9: EP2_FINAL_REPORT]
+      if (type === 'EP2_FINAL_REPORT') {
+        const isEn = (currentLang === 'en');
+        const heroName = (userData.name || (isEn ? "Taehoon" : "강태훈"));
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-emerald-500/70 rounded-3xl p-5 sm:p-7 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 text-center">
+            <div class="border-b border-slate-700/80 pb-3.5">
+              <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-400 flex items-center justify-center font-bold text-xl shadow-lg mb-2">
+                <i data-lucide="award" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h3 class="text-lg sm:text-xl font-black text-white">
+                2026년도 예비군 기본훈련 이수 확인서
+              </h3>
+              <p class="text-xs text-emerald-400 font-bold mt-1">
+                대한민국 국방부 · 병무청 공식 전자 교육필증 (e-병무지갑 발급 완료)
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5 text-left text-xs sm:text-sm">
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">성명 / 신분</span>
+                <strong class="text-white">${heroName} (예비역 병장)</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">훈련 과정</span>
+                <strong class="text-emerald-400">학생예비군 기본훈련 (방침보류 8시간 완수)</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">평가 결과</span>
+                <strong class="text-cyan-400">전 과목 만점 합격 (16:00 조기퇴소 우수분대)</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">실거리 교통비</span>
+                <strong class="text-emerald-300">8,000원 본인 계좌 실시간 입금 완료</strong>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">학업 공결 처리</span>
+                <strong class="text-white">모바일 필증 대학 학사정보 자동 연동 완료</strong>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>메인 로비로 이동</span>
+              </button>
+              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(2, true);" class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <span>제2화 다시 플레이</span>
+              </button>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
 
       if (type === 'GUIDE_SELECT_INTRO') {
         const isEn = (currentLang === 'en');
@@ -4314,6 +4960,71 @@
     }
 
     // 모든 씬 전환 공통 안전 이동 함수 (선택지 팝업 즉시 닫기 및 안전한 씬 렌더링)
+    // =========================================================================
+    // [EPISODE 2 INTERACTIVE HELPER FUNCTIONS]
+    // =========================================================================
+    function selectEp2Status(status) {
+      userData.ep2_status = status;
+      goToScene(3);
+    }
+
+    function selectEp2Date(center, dateStr) {
+      userData.ep2_center = center;
+      userData.ep2_date = dateStr;
+      goToScene(5);
+    }
+
+    function fireEp2Shot(event) {
+      if (typeof window.ep2ShotsFired === 'undefined') window.ep2ShotsFired = 0;
+      if (window.ep2ShotsFired >= 3) return;
+
+      window.ep2ShotsFired++;
+      playBeep(220, 'square', 0.08);
+
+      // Create bullet hole at click location
+      const board = document.getElementById('shooting-target-board');
+      if (board) {
+        const rect = board.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const hole = document.createElement('div');
+        hole.className = 'absolute w-3.5 h-3.5 rounded-full bg-black border-2 border-white shadow-md animate-ping';
+        hole.style.left = (x - 7) + 'px';
+        hole.style.top = (y - 7) + 'px';
+        board.appendChild(hole);
+      }
+
+      const badge = document.getElementById('shooting-status-badge');
+      if (badge) {
+        if (window.ep2ShotsFired === 1) badge.innerText = '사격 1발 명중! (남은 탄약: 2발)';
+        else if (window.ep2ShotsFired === 2) badge.innerText = '사격 2발 명중! (남은 탄약: 1발)';
+        else if (window.ep2ShotsFired >= 3) {
+          badge.className = 'text-xs font-bold text-emerald-300 py-1.5 px-3 bg-emerald-950/80 rounded-xl border border-emerald-500';
+          badge.innerText = '🎯 3발 동전 크기 탄착군 형성 완료! [만점 합격]!';
+          playBeep(880, 'sine', 0.15);
+          const btn = document.getElementById('shooting-result-btn');
+          if (btn) btn.classList.remove('hidden');
+        }
+      }
+    }
+
+    function checkEp2Cpr(choice) {
+      if (choice === 2) {
+        playBeep(880, 'sine', 0.15);
+        const opt = document.getElementById('cpr-correct-opt');
+        if (opt) {
+          opt.className = 'p-2.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-400 text-xs text-white font-bold flex items-center justify-between';
+        }
+        const badge = document.getElementById('cpr-correct-badge');
+        if (badge) badge.classList.remove('hidden');
+        const btn = document.getElementById('cpr-proceed-btn');
+        if (btn) btn.classList.remove('hidden');
+      } else {
+        playBeep(300, 'sawtooth', 0.1);
+        alert('다시 확인해 보세요! 성인 심폐소생술의 적정 흉부 압박 속도는 분당 100~120회입니다.');
+      }
+    }
+
     function goToScene(idx) {
       playBeep(750, 'triangle', 0.05);
       const choiceOverlay = document.getElementById('center-choice-overlay');
@@ -6051,8 +6762,7 @@
         // 이어하기가 없을 때는 카드 화면 어디를 클릭해도 바로 시나리오 시작!
         startEpisode(1);
       } else if (epNum === 2) {
-        playBeep(440, 'triangle', 0.1);
-        alert("🚧 [EPISODE 02: 슬기로운 예비군 훈련 생활]\n\n현재 동원훈련 소집통지서 확인 및 전국 단위 자율 훈련 신청, 훈련 보상비 실시간 모의 산정 시나리오를 검수·제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🎖️");
+        startEpisode(2);
       } else if (epNum === 3) {
         playBeep(440, 'triangle', 0.1);
         alert("🚧 [EPISODE 03: 내 꿈을 찾는 병역진로설계]\n\n입영 전 1:1 맞춤 군 특기 추천 상담, 모의 군 장비 체험관, 적성·전공 연계 군 복무 및 취업 자기개발 로드맵 시나리오를 제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🎯");
@@ -6064,6 +6774,7 @@
 
     function updateNameInputModalTexts() {
       const isEn = currentLang === 'en';
+      const isEp2 = (pendingStartEpisode === 2 || currentPlayingEpisode === 2);
       const titleEl = document.getElementById('name-modal-title');
       const descEl = document.getElementById('name-modal-desc');
       const labelEl = document.getElementById('name-modal-label');
@@ -6073,30 +6784,37 @@
       const submitBtn = document.getElementById('name-modal-submit-btn');
       const input = document.getElementById('protagonist-name-input');
 
-      if (titleEl) titleEl.innerText = isEn ? "Set Protagonist Name" : "주인공 이름 설정";
+      if (titleEl) titleEl.innerText = isEn ? (isEp2 ? "Set Reservist Name" : "Set Protagonist Name") : (isEp2 ? "예비역 주인공 성명 설정" : "주인공 이름 설정");
       if (descEl) descEl.innerHTML = isEn 
-        ? "Please enter the <strong class=\"text-blue-400\">Protagonist's Name</strong><br>to embark on the draft physical exam journey."
-        : "병역판정검사 여정을 함께할<br><strong class=\"text-blue-400\">주인공(수검 대상자)의 이름</strong>을 입력해 주세요.";
-      if (labelEl) labelEl.innerText = isEn ? "Name (Protagonist)" : "성명 (주인공)";
-      if (ageBadge) ageBadge.innerText = isEn ? "Age 19" : "만 19세";
+        ? (isEp2 ? "Please enter the <strong class=\"text-emerald-400\">Reservist Protagonist's Name</strong><br>to start your smart training journey." : "Please enter the <strong class=\"text-blue-400\">Protagonist's Name</strong><br>to embark on the draft physical exam journey.")
+        : (isEp2 ? "슬기로운 예비군 훈련 생활을 함께할<br><strong class=\"text-emerald-400\">주인공(예비역 병장)의 성명</strong>을 입력해 주세요." : "병역판정검사 여정을 함께할<br><strong class=\"text-blue-400\">주인공(수검 대상자)의 이름</strong>을 입력해 주세요.");
+      if (labelEl) labelEl.innerText = isEn ? (isEp2 ? "Name (Reservist Sergeant)" : "Name (Protagonist)") : (isEp2 ? "성명 (예비역 병장)" : "성명 (주인공)");
+      if (ageBadge) {
+        ageBadge.innerText = isEn ? (isEp2 ? "Discharged Year 1" : "Age 19") : (isEp2 ? "예비역 1년차" : "만 19세");
+        ageBadge.className = isEp2 
+          ? "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-900/60 border border-emerald-500/50 text-emerald-300"
+          : "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-blue-900/60 border border-blue-500/50 text-blue-300";
+      }
       if (noteEl) noteEl.innerText = isEn 
-        ? "* The entered name will be reflected across notices, exam reports, and dialogues."
-        : "* 입력하신 이름은 통지서, 검사결과표, 대화창 및 대본 전반에 반영됩니다.";
+        ? "* The entered name will be reflected across notices, certificates, and dialogues."
+        : "* 입력하신 이름은 소집통지서, 교육필증, 대화창 및 대본 전반에 반영됩니다.";
       if (cancelBtn) cancelBtn.innerText = isEn ? "Cancel" : "취소";
       if (submitBtn) {
         const span = submitBtn.querySelector('span');
-        if (span) span.innerText = isEn ? "Proceed" : "진행하기";
+        if (span) span.innerText = isEn ? "Start Episode" : "시나리오 시작";
       }
       if (input) {
-        input.placeholder = isEn ? "Enter name (e.g. Minwoo)" : "이름 입력 (예: 김민우)";
-        if (!userData.name || userData.name === "김민우" || userData.name === "Minwoo") {
-          input.value = isEn ? "Minwoo" : "김민우";
+        const defaultName = isEp2 ? (isEn ? "Taehoon" : "강태훈") : (isEn ? "Minwoo" : "김민우");
+        input.placeholder = isEn ? `Enter name (e.g. ${defaultName})` : `이름 입력 (예: ${defaultName})`;
+        if (!userData.name || userData.name === "김민우" || userData.name === "Minwoo" || userData.name === "강태훈" || userData.name === "Taehoon") {
+          input.value = defaultName;
         }
       }
     }
 
     // ================= [주인공 이름 설정 오버레이 제어] =================
     function openNameInputOverlay(epNum = 1, forceNew = true) {
+      pendingStartEpisode = epNum;
       const overlay = document.getElementById('name-input-overlay');
       const input = document.getElementById('protagonist-name-input');
       if (!overlay) {
@@ -6106,8 +6824,13 @@
       
       updateNameInputModalTexts();
 
-      if (input && userData.name && userData.name !== "김민우" && userData.name !== "Minwoo") {
-        input.value = userData.name;
+      const defaultName = (epNum === 2) ? (currentLang === 'en' ? "Taehoon" : "강태훈") : (currentLang === 'en' ? "Minwoo" : "김민우");
+      if (input) {
+        if (!userData.name || userData.name === "김민우" || userData.name === "Minwoo" || userData.name === "강태훈" || userData.name === "Taehoon") {
+          input.value = defaultName;
+        } else {
+          input.value = userData.name;
+        }
       }
 
       overlay.classList.remove('hidden');
@@ -6123,9 +6846,14 @@
     }
 
     function submitProtagonistName() {
+      const epToStart = pendingStartEpisode || 1;
       const input = document.getElementById('protagonist-name-input');
       let enteredName = input ? input.value.trim() : "";
-      if (!enteredName) enteredName = (currentLang === 'en' ? "Minwoo" : "김민우");
+      if (!enteredName) {
+        enteredName = (epToStart === 2) 
+          ? (currentLang === 'en' ? "Taehoon" : "강태훈")
+          : (currentLang === 'en' ? "Minwoo" : "김민우");
+      }
       userData.name = enteredName;
 
       playBeep(880, 'sine', 0.1);
@@ -6136,7 +6864,7 @@
           overlay.classList.add('hidden');
         }, 300);
       }
-      startEpisodeDirect(1, true);
+      startEpisodeDirect(epToStart, true);
     }
 
     function closeNameInputOverlay() {
@@ -6164,18 +6892,25 @@
         if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
 
         // 새 게임 시작 시 검은화면의 주인공 이름 설정 팝업 먼저 띄우기
+        pendingStartEpisode = 1;
         openNameInputOverlay(1, forceNew);
       } else if (epNum === 2) {
-        handleCardClick(2);
+        pendingStartEpisode = 2;
+        currentPlayingEpisode = 2;
+        openNameInputOverlay(2, forceNew);
       } else if (epNum === 3) {
-        handleCardClick(3);
+        playBeep(440, 'triangle', 0.1);
+        alert("🚧 [EPISODE 03: 내 꿈을 찾는 병역진로설계]\n\n입영 전 1:1 맞춤 군 특기 추천 상담 및 취업 로드맵 시나리오를 제작 중입니다.");
       } else if (epNum === 4) {
-        handleCardClick(4);
+        playBeep(440, 'triangle', 0.1);
+        alert("🚧 [EPISODE 04: 사회복무 첫 출근]\n\n사회복무요원 소집통지서 확인 및 스마트 실무 가이드 시나리오를 제작 중입니다.");
       }
     }
 
     // 이름 설정 후 실제 씬 시작
     function startEpisodeDirect(epNum, forceNew = false) {
+      currentPlayingEpisode = epNum;
+      pendingStartEpisode = epNum;
       playBeep(880, 'sine', 0.1);
       const menu = document.getElementById('main-menu-overlay');
       if (menu) menu.classList.add('hidden');
@@ -6184,10 +6919,13 @@
         clearSaveGameState();
         conversationHistory.length = 0;
         currentBg = "";
-        userData.selectedGuide = 'himchan';
-        try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
-        if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
+        if (epNum === 1) {
+          userData.selectedGuide = 'himchan';
+          try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
+          if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
+        }
       }
+      currentSceneIdx = 0;
       renderScene(0);
     }
 
