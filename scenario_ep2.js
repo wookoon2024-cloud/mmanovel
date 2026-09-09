@@ -1,4 +1,4 @@
-﻿/**
+/**
  * =========================================================================
  * 📜 [병무청 비주얼 노벨 제2화 - 전체 시나리오 대본 데이터 (scenario_ep2.js)]
  * =========================================================================
@@ -257,17 +257,17 @@ const SCENARIOS_EP2 = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "축하합니다! 전 종목 합격으로 [16:00 1조 조기퇴소] 확정!\n\n퇴소와 동시에 아침에 등록하신 본인 계좌로 실거리 교통비와 급식비를 포함한 [훈련보상비 16,000원]이 실시간으로 입금되었습니다!",
-    text_en: "Congratulations! With all subjects passed, you are confirmed for [16:00 Squad 1 Early Dismissal]!\n\nUpon gate exit, your [Training Compensation Allowance of 16,000 KRW] has been directly deposited into your bank account!",
-    apiSource: "[API] 공공데이터포털: 국방부/병무청_예비군 훈련보상비 지급 기준 Open API",
-    apiSource_en: "[API] Public Data Portal: MND/MMA Reservist Allowance Standards Open API",
+    text: "축하합니다! 전 종목 합격으로 [16:00 1조 조기퇴소] 확정!\n\n오늘 든든히 드신 점심(8,000원 상당 도시락)은 현물 무상 지원되었고,\n퇴소와 동시에 등록하신 본인 계좌로 [실거리 교통비 8,000원]이 실시간 입금 완료되었습니다!\n(※ 점심 미신청 시 급식비 8,000원 환급 합산 16,000원 지급)",
+    text_en: "Congratulations! With all subjects passed, you are confirmed for [16:00 Squad 1 Early Dismissal]!\n\nYour hearty lunch (worth 8,000 KRW) was provided in-kind for free,\nand upon gate exit, your [Direct Transit Allowance of 8,000 KRW] has been immediately deposited into your account!",
+    apiSource: "[API] 공공데이터포털: 국방부/병무청_예비군 훈련보상비 및 급식 지원 기준 Open API",
+    apiSource_en: "[API] Public Data Portal: MND/MMA Reservist Allowance & Meal Support Standards Open API",
     apiSourceUrl: "https://www.data.go.kr",
     apiIcon: "database",
     isApi: true,
     widgetType: null
   },
 
-  // [SCENE 14] 청년 권익보장 '예비군법 제10조의2' 사이다 해설
+  // [SCENE 14] 청년 권익보장 '예비군법 제10조의2 & 제10조의3' 사이다 해설
   {
     bg: "assets/room.jpg",
     char: "assets/himchan_smile.png",
@@ -275,10 +275,10 @@ const SCENARIOS_EP2 = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "귀가하시기 전 가장 중요한 권익 보호 꿀팁!\n\n학교 교수의 결석 처리나 직장 상사의 연차 강요가 걱정되시나요?\n대한민국 「예비군법」 제10조의2에 따라 예비군 훈련 참가로 인한 불이익 처우는 [2년 이하 징역 또는 2천만원 이하 벌금]으로 엄벌됩니다!",
-    text_en: "Most crucial rights-protection tip before you head home!\n\nWorried about professors marking you absent or employers forcing annual leave?\nUnder Article 10-2 of Korea's Reserve Forces Act, disadvantageous treatment is punishable by [Up to 2 Years Imprisonment or 20M KRW Fine]!",
-    apiSource: "[근거 법령] 국가법령정보센터: 「예비군법」 제10조의2(학업 및 직장의 보장) 및 제15조(벌칙)",
-    apiSource_en: "[Law] Reserve Forces Act Art 10-2 (Protection of Study & Workplace) & Art 15 (Penalties)",
+    text: "귀가하시기 전 가장 중요한 청년 권익 보호 꿀팁!\n\n학교 교수의 결석 처리나 직장의 연차 강요가 걱정되시나요?\n대한민국 「예비군법」 제10조의2(직장 보장) 및 제10조의3(학업 보장)에 따라,\n예비군 훈련 참가로 인한 불이익 처우는 [2년 이하 징역 또는 2천만원 이하 벌금]으로 엄벌됩니다!",
+    text_en: "Most crucial youth rights-protection tip before heading home!\n\nWorried about professors marking you absent or employers forcing paid leave?\nUnder Articles 10-2 (Workplace) & 10-3 (Academic Protection) of the Reserve Forces Act,\ndisadvantageous treatment is strictly punished by [Up to 2 Years Prison or 20M KRW Fine]!",
+    apiSource: "[근거 법령] 국가법령정보센터: 「예비군법」 제10조의2(직장 보장), 제10조의3(학업 보장) 및 제15조(벌칙)",
+    apiSource_en: "[Law] Reserve Forces Act Art 10-2 (Workplace), Art 10-3 (Academic Protection) & Art 15 (Penalties)",
     apiSourceUrl: "https://www.law.go.kr",
     apiIcon: "scale",
     isApi: true,
