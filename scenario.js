@@ -137,6 +137,7 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
     return rawText
       .replace(/(힘찬이|서준|나래)/g, '유나')
       .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|유나|서준)'입니다!/g, "안녕하세요 {name} 님! 병무청 AI 멘토 '유나'예요 :)")
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*선배님!?[^\n]*힘찬이입니다!?/g, "안녕하세요 {name} 선배님! 병무청 예비군 AI 멘토 유나예요 :)")
       .replace(/충성!\s*안녕하십니까/g, "안녕하세요")
       .replace(/파이팅해 볼까요\?!/g, "천천히 힘을 내어 시작해 볼까요? :)")
       .replace(/파이팅입니다!/g, "함께 힘내봐요 :)")
@@ -159,6 +160,7 @@ function adaptGuideDialogue(rawText, guideId = 'himchan', isEn = false) {
     return rawText
       .replace(/(힘찬이|나래|유나)/g, '서준')
       .replace(/충성!\s*안녕하십니까\s*\{name\}\s*님,?\s*병무청\s*AI\s*가이드\s*'(힘찬이|나래|유나|서준)'입니다!/g, "반갑습니다, {name} 님. 병무청 스마트 AI 가이드 '서준'입니다.")
+      .replace(/충성!\s*안녕하십니까\s*\{name\}\s*선배님!?[^\n]*힘찬이입니다!?/g, "안녕하십니까 {name} 선배님, 병무청 예비군 스마트 AI 가이드 서준입니다.")
       .replace(/충성!\s*안녕하십니까/g, "반갑습니다")
       .replace(/파이팅해 볼까요\?!/g, "원활한 검사를 위해 집중해 주시기 바랍니다.")
       .replace(/파이팅입니다!/g, "다음 절차로 원활하게 진행하겠습니다.")
