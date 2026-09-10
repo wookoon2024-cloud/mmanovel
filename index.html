@@ -2353,8 +2353,8 @@
     // 가이드 페르소나 (외형, 화자명, 말투, 플레이트 색상) 동적 변환 헬퍼
     function getGuideResolvedItem(item) {
       if (!item) return item;
-      // Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
-      if (currentSceneIdx === 1) {
+      // Episode 1의 Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
+      if (currentPlayingEpisode === 1 && currentSceneIdx === 1) {
         return item;
       }
       const guideId = userData.selectedGuide || 'himchan';
@@ -2430,7 +2430,7 @@
       currentSceneIdx = idx;
       const scenarios = getCurrentScenarios();
       if (!scenarios || idx >= scenarios.length) return;
-      if (currentPlayingEpisode === 1 && idx === 1 && scenarios[1]) {
+      if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2) && idx === 1 && scenarios[1]) {
         // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
         scenarios[1].widgetType = 'GUIDE_SELECT_INTRO';
       }
@@ -3262,7 +3262,58 @@
       stopPreviewAudio();
       stopVoiceAudio();
       selectGuide(guideId, true, false);
-      proceedToRegionPicker(guideId);
+      if (currentPlayingEpisode === 2) {
+        proceedToEp2GuideGreeting(guideId);
+      } else {
+        proceedToRegionPicker(guideId);
+      }
+    }
+
+    function proceedToEp2GuideGreeting(guideId) {
+      const choiceOverlay = document.getElementById('center-choice-overlay');
+      const choiceContainer = document.getElementById('center-choice-container');
+      if (choiceOverlay) {
+        choiceOverlay.classList.add('hidden');
+        choiceOverlay.classList.remove('flex');
+      }
+      if (choiceContainer) choiceContainer.innerHTML = '';
+      
+      const gid = guideId || userData.selectedGuide || 'himchan';
+      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[gid]) || (typeof GUIDE_PERSONAS !== 'undefined' ? GUIDE_PERSONAS.himchan : null);
+      
+      let askMsgKo = "";
+      let askMsgEn = "";
+      if (gid === 'himchan') {
+        askMsgKo = "충성! 선배님! 저 힘찬이가 전역 후 첫 예비군 훈련도 든든하게 보좌해 드리겠습니다!\n\n시험 일정과 훈련이 겹쳐서 많이 당황하셨죠? 걱정 마십시오! 선배님의 현재 [신분과 직업(학업)]에 맞는 맞춤형 훈련 혜택부터 바로 확인해 드릴게요!";
+        askMsgEn = "Salute! Senior {name}! Mentor Himchan will stand by you through your first reservist training!\n\nPanicked over exam dates overlapping? No worries! Let's immediately check the tailored training deferment matching your [Status & Occupation]!";
+      } else if (gid === 'yuna' || gid === 'narae') {
+        askMsgKo = "반가워요, {name} 선배님! 멘토 유나가 첫 예비군 훈련의 모든 절차를 하나하나 편안하게 챙겨드릴게요 :)\n\n시험 일정 때문에 너무 걱정하지 마세요! 먼저 선배님의 현재 [신분과 직업(학업)]에 맞는 훈련 과정부터 함께 확인해 볼까요?";
+        askMsgEn = "Nice to meet you, Senior {name}! I'm mentor Yuna, and I'll comfortably guide you through all reservist steps :)\n\nDon't stress over exam dates! Shall we first check the training program tailored to your [Status & Studies]?";
+      } else if (gid === 'seojun') {
+        askMsgKo = "안녕하십니까 {name} 선배님, 스마트 멘토 서준입니다. 학업과 예비군 훈련의 효율적인 병행을 위해 관련 규정과 일정을 신속 정확하게 안내해 드리겠습니다.\n\n먼저 선배님의 현재 [신분과 직업]에 따른 맞춤형 훈련 과정부터 확인해 볼까요?";
+        askMsgEn = "Greetings Senior {name}, I'm smart mentor Seojun. To efficiently balance your studies and reservist duty, I will guide you with precision and clear facts.\n\nShall we verify your tailored training program based on your current status first?";
+      } else {
+        askMsgKo = "선택해 주셔서 감사합니다, {name} 선배님! 든든한 멘토가 되어 드리겠습니다.\n\n선배님의 현재 [신분과 직업]에 맞는 맞춤형 훈련 과정부터 확인해 볼까요?";
+        askMsgEn = "Thank you for choosing me, Senior {name}! I'll be your dependable guide.\n\nShall we check your tailored training program first?";
+      }
+
+      const speakerKo = g ? `${g.name} (병무청 AI 가이드)` : "힘찬이 (병무청 AI 가이드)";
+      const speakerEn = g ? `${g.name_en} (MMA AI Guide)` : "Himchan (MMA AI Guide)";
+      const plateClass = g ? g.plateClass : "from-blue-700 to-indigo-800 border-blue-400/40";
+      const charSrc = (g && g.sprites && (g.sprites.smile || g.sprites.cheer || g.sprites.default)) || "assets/himchan_smile.png";
+
+      if (typeof SCENARIOS_EP2 !== 'undefined' && SCENARIOS_EP2[1]) {
+        SCENARIOS_EP2[1].widgetType = null;
+      }
+
+      updateDialogueDirect(
+        speakerKo,
+        speakerEn,
+        plateClass,
+        charSrc,
+        askMsgKo,
+        askMsgEn
+      );
     }
 
     function proceedToRegionPicker(guideId) {
@@ -3901,7 +3952,7 @@
             <!-- 멘토 캐릭터 선택 안내 헤더 -->
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-2.5 sm:p-4 text-center shadow-xl">
               <span class="text-xs sm:text-sm font-black text-blue-300 flex items-center justify-center gap-1.5 mb-1 tracking-wide">
-                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? 'Choose Your AI Mentor Guide' : '병역판정검사 동행 AI 가이드 멘토 선택'}
+                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? (currentPlayingEpisode === 2 ? 'Choose Your Reservist AI Mentor' : 'Choose Your AI Mentor Guide') : (currentPlayingEpisode === 2 ? '슬기로운 예비군 훈련 동행 AI 가이드 멘토 선택' : '병역판정검사 동행 AI 가이드 멘토 선택')}
               </span>
               <p class="text-[11px] sm:text-xs text-slate-300 truncate leading-tight">
                 ${isEn ? 'Tailored illustration, voice, and tone applied.' : '선택한 멘토에 맞춰 일러스트·말투·목소리가 적용됩니다.'}
@@ -3924,7 +3975,7 @@
                       <div class="text-center space-y-1">
                         <h4 class="font-black text-base sm:text-lg text-white group-hover:text-blue-300 transition">힘찬이</h4>
                         <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                          ${isEn ? 'Energetic mentor keeping your spirits high' : '긍정 에너지로 긴장을 풀어주는 열혈 멘토'}
+                          ${isEn ? (currentPlayingEpisode === 2 ? 'Energetic reservist mentor boosting morale' : 'Energetic mentor keeping your spirits high') : (currentPlayingEpisode === 2 ? '사기를 북돋우고 든든하게 보좌하는 열혈 예비군 멘토' : '긍정 에너지로 긴장을 풀어주는 열혈 멘토')}
                         </p>
                       </div>
                     </div>
@@ -3953,7 +4004,7 @@
                       <div class="text-center space-y-1">
                         <h4 class="font-black text-base sm:text-lg text-white group-hover:text-rose-300 transition">유나</h4>
                         <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                          ${isEn ? 'Calm & caring mentor guiding you kindly' : '차분하고 세심하게 챙겨주는 안심 멘토'}
+                          ${isEn ? (currentPlayingEpisode === 2 ? 'Kind & caring mentor guiding procedures gently' : 'Calm & caring mentor guiding you kindly') : (currentPlayingEpisode === 2 ? '친절하고 세심하게 훈련 혜택을 챙겨주는 안심 멘토' : '차분하고 세심하게 챙겨주는 안심 멘토')}
                         </p>
                       </div>
                     </div>
@@ -3982,7 +4033,7 @@
                       <div class="text-center space-y-1">
                         <h4 class="font-black text-base sm:text-lg text-white group-hover:text-emerald-300 transition">서준</h4>
                         <p class="text-[11px] sm:text-xs text-slate-300 truncate">
-                          ${isEn ? 'Precise smart mentor guided by clear facts' : '정확한 규정과 데이터로 안내하는 스마트 멘토'}
+                          ${isEn ? (currentPlayingEpisode === 2 ? 'Smart mentor with precise regulations and schedules' : 'Precise smart mentor guided by clear facts') : (currentPlayingEpisode === 2 ? '정확한 법령 규정과 최적 일정으로 안내하는 스마트 멘토' : '정확한 규정과 데이터로 안내하는 스마트 멘토')}
                         </p>
                       </div>
                     </div>
@@ -6895,6 +6946,9 @@
         pendingStartEpisode = 1;
         openNameInputOverlay(1, forceNew);
       } else if (epNum === 2) {
+        userData.selectedGuide = 'himchan';
+        try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch(e) {}
+        if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
         pendingStartEpisode = 2;
         currentPlayingEpisode = 2;
         openNameInputOverlay(2, forceNew);
@@ -6919,7 +6973,7 @@
         clearSaveGameState();
         conversationHistory.length = 0;
         currentBg = "";
-        if (epNum === 1) {
+        if (epNum === 1 || epNum === 2) {
           userData.selectedGuide = 'himchan';
           try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
           if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();

@@ -56,19 +56,19 @@ const SCENARIOS_EP2 = [
     apiSource: null,
     apiSource_en: null,
     isApi: false,
-    widgetType: null
+    widgetType: "GUIDE_SELECT_INTRO"
   },
 
-  // [SCENE 2] 행정지원 조교 이일병 등장 - 맞춤형 신분 판별
+  // [SCENE 2] AI 가이드 멘토의 맞춤형 신분 판별
   {
     bg: "assets/ep2_room.jpg",
-    char: "assets/ep2_assistant_polite.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
-    speaker: "이 일병 (예비군 행정지원 조교)",
-    speaker_en: "PFC Lee (Reserve Support Assistant)",
-    plateClass: "from-emerald-800 to-slate-900 border-emerald-500/40",
-    text: "충성! 안녕하십니까 {name} 선배님! 병무청 예비군 자원관리과 스마트 행정지원 조교 이일병입니다!\n전역 후 첫 소집통지서 알림톡을 받으시고 많이 놀라셨죠?\n\n하지만 걱정 마십시오! 예비군 훈련은 선배님의 현재 [신분과 직업(학업)]에 따라 훈련 과정이 맞춤형으로 편성됩니다!",
-    text_en: "Salute! Hello Senior Reservist {name}! I'm Private First Class Lee from the MMA Reserve Support Team!\nStartled by your first call-up alert after discharge?\n\nDon't worry at all! Reservist training schedules are customized strictly according to your [Current Status & Occupation]!",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    text: "충성! 안녕하십니까 {name} 선배님! 병무청 예비군 스마트 AI 가이드 힘찬이입니다!\n전역 후 첫 소집통지서 알림톡을 받으시고 많이 놀라셨죠?\n\n하지만 걱정 마십시오! 예비군 훈련은 선배님의 현재 [신분과 직업(학업)]에 따라 훈련 과정이 맞춤형으로 편성됩니다!",
+    text_en: "Salute! Hello Senior Reservist {name}! I'm Himchan, your MMA Smart AI Guide!\nStartled by your first call-up alert after discharge?\n\nDon't worry at all! Reservist training schedules are customized strictly according to your [Current Status & Occupation]!",
     apiSource: "[근거 법령] 「병역법」 제44조~제54조(동원훈련) 및 「예비군법」 제6조(훈련)",
     apiSource_en: "[Law] Military Service Act Arts 44-54 & Reserve Forces Act Art 6",
     apiSourceUrl: "https://www.law.go.kr",
@@ -80,11 +80,11 @@ const SCENARIOS_EP2 = [
   // [SCENE 3] 대학생 방침보류(8시간) 판정 안내
   {
     bg: "assets/ep2_room.jpg",
-    char: "assets/ep2_assistant_polite.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
-    speaker: "이 일병 (예비군 행정지원 조교)",
-    speaker_en: "PFC Lee (Reserve Support Assistant)",
-    plateClass: "from-emerald-800 to-slate-900 border-emerald-500/40",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "맞습니다! 대학교 재학생이신 {name} 선배님은 [방침일부보류(학생예비군)] 대상자이십니다!\n\n일반 동원훈련(2박 3일 28시간)이나 동미참(4일 32시간) 대신,\n1년에 단 하루! [8시간 기본훈련]만 이수하시면 2026년도 예비군 훈련이 100% 완료 처리됩니다!",
     text_en: "Exactly! As an enrolled college student, you qualify for [Policy Partial Suspension (Student Reservist)]!\n\nInstead of 2-night 3-day mobilization or 4-day non-mobilization,\nyou only need to complete [8-hour Basic Training for 1 day] per year to finish 100% of your requirement!",
     apiSource: "[근거 법령] 국가법령정보센터: 「예비군법 시행령」 제4조 및 병무청 동원보류처리지침",
@@ -98,11 +98,11 @@ const SCENARIOS_EP2 = [
   // [SCENE 4] 전국단위 자율 훈련 신청 & 휴일 훈련 선택
   {
     bg: "assets/ep2_room.jpg",
-    char: "assets/ep2_assistant_polite.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
-    speaker: "이 일병 (예비군 행정지원 조교)",
-    speaker_en: "PFC Lee (Reserve Support Assistant)",
-    plateClass: "from-emerald-800 to-slate-900 border-emerald-500/40",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "중간고사 시험 날짜와 겹치더라도 전혀 걱정하실 필요 없습니다!\n\n병무청과 국방부는 예비군 선배님들의 학업과 생업 보장을 위해 [전국단위 훈련 신청] 및 [휴일 훈련 신청] 제도를 상시 운영하고 있습니다.\n시험이 끝난 직후 주말이나 원하시는 날짜의 공석을 직접 선택해 보시겠습니까?",
     text_en: "Even if it overlaps with midterms, there is no need to panic!\n\nMMA and MND provide [Nationwide Training Application] & [Holiday Training Application] systems.\nWould you like to pick your desired date and location across scientific training centers nationwide?",
     apiSource: "[API] 공공데이터포털: 국방부_예비군훈련 일정 및 전국단위 훈련 공석 현황 Open API",
@@ -132,11 +132,11 @@ const SCENARIOS_EP2 = [
   // [SCENE 6] 피복 무료 대여 조교의 친절한 안내 & D-1 체크리스트
   {
     bg: "assets/ep2_room.jpg",
-    char: "assets/ep2_assistant_polite.png",
+    char: "assets/himchan_smile.png",
     charPos: "right",
-    speaker: "이 일병 (피복보급 조교)",
-    speaker_en: "PFC Lee (Supply Assistant)",
-    plateClass: "from-emerald-800 to-slate-900 border-emerald-500/40",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     text: "예비군 선배님, 충성! 전국의 모든 예비역 선배님들이 겪으시는 고민이니 전혀 걱정 마십시오!\n\n국방부 예비군 교육훈련 훈령에 따라 훈련장 안내데스크에서 [전투복·전투화·요대(벨트)·방한모를 100% 무료 대여]해 드립니다!\n신분증만 지참하시면 선배님 치수에 딱 맞는 깨끗한 새 군복으로 즉시 무상 교환해 드리겠습니다!",
     text_en: "Salute, Senior Reservist! Don't worry at all, this is a universal concern for all veterans!\n\nUnder MND Reservist Orders, our supply desk provides [100% Free Rental for Uniforms, Boots, Belts & Caps]!\nJust bring your ID, and we'll instantly hand you a clean uniform tailored to your exact measurements!",
     apiSource: "[근거 훈령] 국가법령정보센터: 「국방부 예비군 훈련 관리 훈령」(피복 및 장구류 무료 대여 규정)",
