@@ -8,7 +8,7 @@
  * 💡 시나리오 흐름 및 등장인물:
  * 0. [ep3_campus_bench.jpg] 캠퍼스 벤치: 1학년 2학기 종강 앞둔 군 입영 및 경력 단절 고민 (주인공: ep3_hero_worried)
  * 1. [ep3_campus_bench.jpg] 병무청 AI 가이드 힘찬이의 전격 등장 & 멘토 선택 (힘찬이: himchan_smile)
- * 2. [career_center.jpg] 미래를 여는 스마트 허브: 전국 병역진로설계지원센터 입구 & 3대 코스 브리핑 (힘찬이: himchan_cheer)
+ * 2. [ep3_center_entrance.jpg] 미래를 여는 스마트 허브: 전국 병역진로설계지원센터 입구 & 3대 코스 브리핑 (힘찬이: himchan_cheer)
  * 3. [ep3_diagnosis_room.jpg] Step 1: 직업선호도 및 군 적성 정밀 진단 키오스크 (주인공: ep3_hero_base) [위젯: EP3_PROFILE_TEST]
  * 4. [ep3_consulting_room.jpg] Step 2: 전문 병역진로상담관의 1:1 맞춤 특기 컨설팅 (정우진 상담관: ep3_counselor_smile) [위젯: EP3_SPECIALTY_CARDS]
  * 5. [ep3_vr_experience.jpg] Step 3: 첨단 국방 테크를 체험하다! 모의 정찰 드론 & 레이저 사격 (강태식 상사: ep3_instructor_tech) [위젯: EP3_DRONE_SIM]
@@ -54,7 +54,7 @@ const SCENARIOS_EP3 = [
 
   // [SCENE 2] 미래를 여는 스마트 허브: 병역진로설계지원센터 입구
   {
-    bg: "assets/career_center.jpg",
+    bg: "assets/ep3_center_entrance.jpg",
     char: "assets/himchan_cheer.png",
     charPos: "right",
     speaker: "힘찬이 (병무청 AI 가이드)",
