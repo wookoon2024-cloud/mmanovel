@@ -315,11 +315,11 @@
               </div>
             </div>
 
-            <!-- [SLIDE 3: 제3화 병역진로설계 (준비 중)] -->
+            <!-- [SLIDE 3: 제3화 병역진로설계] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
+              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
                 <div id="ep3-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
-                  <img src="assets/ep3_cover.jpg?v=20260904_v189" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
+                  <img src="assets/ep3_cover.jpg?v=20260911_ep3" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
                   <div class="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
@@ -327,8 +327,8 @@
                       제3화 · 병역진로설계 편
                     </span>
                     <div id="ep3-saved-badge">
-                      <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[9px] sm:text-xs font-bold flex items-center gap-1">
-                        <i data-lucide="lock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400"></i> 오픈 준비 중
+                      <span class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-blue-600/80 border border-blue-400/50 text-blue-100 text-[9px] sm:text-xs font-bold flex items-center gap-1 shadow-md">
+                        <i data-lucide="sparkles" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-300"></i> 신규 오픈
                       </span>
                     </div>
                   </div>
@@ -354,8 +354,8 @@
                   </div>
 
                   <div id="ep3-action-buttons" class="pt-2 sm:pt-2.5 mt-auto">
-                    <button disabled class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-700">
-                      <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span>오픈 준비 중 (Coming Soon)</span>
+                    <button onclick="event.stopPropagation(); startEpisode(3, true)" class="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-lg shadow-blue-600/30">
+                      <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> <span>제3화 시작하기 (Start Ep.3)</span>
                     </button>
                   </div>
                 </div>
@@ -1165,6 +1165,7 @@
   <script src="scenario.js?v=20260906_v195_28"></script>
   <script src="api_ep2.js?v=20260910_ep2_art"></script>
   <script src="scenario_ep2.js?v=20260910_ep2_art"></script>
+  <script src="scenario_ep3.js?v=20260911_ep3_art"></script>
   <script src="tracker.js?v=20260906_v195_28"></script>
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
@@ -1240,6 +1241,9 @@
       if (currentPlayingEpisode === 2 && typeof SCENARIOS_EP2 !== 'undefined') {
         return SCENARIOS_EP2;
       }
+      if (currentPlayingEpisode === 3 && typeof SCENARIOS_EP3 !== 'undefined') {
+        return SCENARIOS_EP3;
+      }
       return typeof SCENARIOS !== 'undefined' ? SCENARIOS : [];
     }
 
@@ -1260,6 +1264,18 @@
       "14. 16:00 조기퇴소 & 교통비 지급",
       "15. 청년 권익보장 법령 해설",
       "16. 모바일 교육필증 발급 & 수료"
+    ];
+
+    const EP3_STEPS_KO = [
+      "01. 스무 살의 군 입영 & 진로 고민",
+      "02. AI 멘토와의 만남 & 진로센터 출발",
+      "03. 병역진로설계지원센터 도착",
+      "04. 직업선호도 & 군 적성 정밀 진단",
+      "05. 1:1 심층 상담 & 맞춤 특기 매칭",
+      "06. 첨단 모의 VR 드론봇 조종 체험",
+      "07. 입영 희망월 & 합격 가산점 설계",
+      "08. 3대 황금 혜택 (학점·자격증·1400만)",
+      "09. 병역진로설계 추천서 완성 & 수료"
     ];
 
     let currentSceneIdx = 0;
@@ -2350,8 +2366,8 @@
     // 가이드 페르소나 (외형, 화자명, 말투, 플레이트 색상) 동적 변환 헬퍼
     function getGuideResolvedItem(item) {
       if (!item) return item;
-      // Episode 1의 Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
-      if (currentPlayingEpisode === 1 && currentSceneIdx === 1) {
+      // Episode 1, 2, 3의 Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
+      if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2 || currentPlayingEpisode === 3) && currentSceneIdx === 1) {
         return item;
       }
       const guideId = userData.selectedGuide || 'himchan';
@@ -2427,7 +2443,7 @@
       currentSceneIdx = idx;
       const scenarios = getCurrentScenarios();
       if (!scenarios || idx >= scenarios.length) return;
-      if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2) && idx === 1 && scenarios[1]) {
+      if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2 || currentPlayingEpisode === 3) && idx === 1 && scenarios[1]) {
         // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
         scenarios[1].widgetType = 'GUIDE_SELECT_INTRO';
       }
@@ -2496,14 +2512,20 @@
       // 상단 앱 타이틀 & 스텝 타이틀
       const topAppTitle = document.getElementById('top-app-title');
       if (topAppTitle) {
-        topAppTitle.innerText = (currentPlayingEpisode === 2)
-          ? ((currentLang === 'en') ? "Smart Reservist Life" : "슬기로운 예비군 훈련 생활")
-          : ((currentLang === 'en') ? "First Step of Youth" : "청춘의 첫 발걸음");
+        if (currentPlayingEpisode === 2) {
+          topAppTitle.innerText = (currentLang === 'en') ? "Smart Reservist Life" : "슬기로운 예비군 훈련 생활";
+        } else if (currentPlayingEpisode === 3) {
+          topAppTitle.innerText = (currentLang === 'en') ? "Military Career Planning" : "내 꿈을 찾는 병역진로설계";
+        } else {
+          topAppTitle.innerText = (currentLang === 'en') ? "First Step of Youth" : "청춘의 첫 발걸음";
+        }
       }
       const topTitle = document.getElementById('top-step-title');
       if (topTitle) {
         if (currentPlayingEpisode === 2) {
           topTitle.innerText = EP2_STEPS_KO[idx] || `제2화 STEP ${idx + 1}`;
+        } else if (currentPlayingEpisode === 3) {
+          topTitle.innerText = EP3_STEPS_KO[idx] || `제3화 STEP ${idx + 1}`;
         } else {
           const stepList = I18N[currentLang].steps;
           topTitle.innerText = stepList[idx] || stepList[stepList.length - 1];
@@ -3259,7 +3281,7 @@
       stopPreviewAudio();
       stopVoiceAudio();
       selectGuide(guideId, true, false);
-      if (currentPlayingEpisode === 2) {
+      if (currentPlayingEpisode === 2 || currentPlayingEpisode === 3) {
         goToScene(2);
       } else {
         proceedToRegionPicker(guideId);
@@ -3868,6 +3890,458 @@
         return;
       }
 
+      
+      // =========================================================================
+      // [EPISODE 3 WIDGETS 1 ~ 5: 병역진로설계 전용 인터랙티브 위젯]
+      // =========================================================================
+
+      // [WIDGET 1: EP3_PROFILE_TEST]
+      if (type === 'EP3_PROFILE_TEST') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-2xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-cyan-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400 text-cyan-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "Smart Kiosk · Military Aptitude & Major Profiler" : "스마트 진단 키오스크 · 전공 및 군 적성 프로파일러"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/30 text-cyan-300 font-bold border border-cyan-400/40">Step 1</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Select your academic major and skills to match optimal military specialties." : "전공 계열과 보유 역량을 선택하시면 AI가 최적의 군 특기 매칭 결과를 도출합니다."}
+                </p>
+              </div>
+            </div>
+
+            <!-- Major Categories Grid -->
+            <div>
+              <label class="text-xs font-bold text-slate-300 block mb-1.5 flex items-center gap-1.5">
+                <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-cyan-400"></i>
+                <span>${isEn ? "Select Academic Major Category" : "전공 계열 선택"}</span>
+              </label>
+              <div class="grid grid-cols-2 gap-2" id="ep3-major-grid">
+                <button type="button" onclick="selectEp3Major('it')" id="ep3-major-it" class="p-3 rounded-xl bg-cyan-950/70 border-2 border-cyan-400 text-left transition hover:scale-[1.01] cursor-pointer">
+                  <div class="flex items-center gap-2 font-black text-xs sm:text-sm text-cyan-300">
+                    <span>💻 IT·소프트웨어·보안</span>
+                  </div>
+                  <p class="text-[10.5px] text-slate-300 mt-1">${isEn ? "Computer Science, Coding, Web, Security" : "컴퓨터공학, 코딩개발, 정보보호"}</p>
+                </button>
+
+                <button type="button" onclick="selectEp3Major('mech')" id="ep3-major-mech" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-left transition hover:scale-[1.01] cursor-pointer">
+                  <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-300">
+                    <span>⚙️ 기계·로봇·무인항공</span>
+                  </div>
+                  <p class="text-[10.5px] text-slate-400 mt-1">${isEn ? "Mechanical, Drone, Robotics, CAD" : "기계공학, 드론봇, 전자회로"}</p>
+                </button>
+
+                <button type="button" onclick="selectEp3Major('media')" id="ep3-major-media" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-left transition hover:scale-[1.01] cursor-pointer">
+                  <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-300">
+                    <span>🎨 미디어·디자인·어학</span>
+                  </div>
+                  <p class="text-[10.5px] text-slate-400 mt-1">${isEn ? "Design, Languages, Video, Admin" : "영상편집, 외국어통번역, 경영행정"}</p>
+                </button>
+
+                <button type="button" onclick="selectEp3Major('service')" id="ep3-major-service" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-left transition hover:scale-[1.01] cursor-pointer">
+                  <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-300">
+                    <span>🍳 조리·의무·물류운전</span>
+                  </div>
+                  <p class="text-[10.5px] text-slate-400 mt-1">${isEn ? "Culinary, Medical, Logistics, Transport" : "조리외식, 보건의무, 수송물류"}</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Skills & Certificates Checkboxes -->
+            <div>
+              <label class="text-xs font-bold text-slate-300 block mb-1.5 flex items-center gap-1.5">
+                <i data-lucide="check-square" class="w-3.5 h-3.5 text-cyan-400"></i>
+                <span>${isEn ? "Held Certificates & Skills (Multiple)" : "보유 역량 및 자격증 (복수 선택)"}</span>
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <label class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex items-center gap-2 cursor-pointer hover:border-slate-500">
+                  <input type="checkbox" checked class="rounded border-slate-600 text-cyan-500 focus:ring-0">
+                  <span class="text-slate-200">정보처리기능사</span>
+                </label>
+                <label class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex items-center gap-2 cursor-pointer hover:border-slate-500">
+                  <input type="checkbox" checked class="rounded border-slate-600 text-cyan-500 focus:ring-0">
+                  <span class="text-slate-200">Python/C++ 코딩</span>
+                </label>
+                <label class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex items-center gap-2 cursor-pointer hover:border-slate-500">
+                  <input type="checkbox" checked class="rounded border-slate-600 text-cyan-500 focus:ring-0">
+                  <span class="text-slate-200">1종 보통 운전면허</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Real-time AI Analysis Result Box -->
+            <div id="ep3-matching-result-box" class="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-500/40 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-cyan-300 flex items-center gap-1.5">
+                  <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400"></i>
+                  ${isEn ? "AI Specialty Compatibility Results" : "AI 빅데이터 군 적성 매칭 분석 결과"}
+                </span>
+                <span class="text-[11px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-500/40">
+                  매칭 신뢰도 99.4%
+                </span>
+              </div>
+              <div class="space-y-1.5 text-xs">
+                <div class="p-2 rounded-xl bg-slate-900/80 border border-cyan-500/60 flex items-center justify-between">
+                  <span class="font-bold text-white">🥇 1위: 육군 SW개발운용병 / 정보보호병</span>
+                  <span class="font-black text-cyan-400">98.5% 매칭 (최우수)</span>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/60 border border-slate-700/60 flex items-center justify-between">
+                  <span class="text-slate-300">🥈 2위: 국방 드론봇 운용 및 전자전 특기</span>
+                  <span class="text-slate-400 font-bold">91.2% 매칭</span>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/60 border border-slate-700/60 flex items-center justify-between">
+                  <span class="text-slate-300">🥉 3위: 공군 정보체계운영병 (전산)</span>
+                  <span class="text-slate-400 font-bold">88.7% 매칭</span>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(4);" class="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <span>${isEn ? "Confirm Result & Enter 1:1 Consulting Room" : "진단 결과 확정 & 1:1 심층 상담실로 이동"}</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 2: EP3_SPECIALTY_CARDS]
+      if (type === 'EP3_SPECIALTY_CARDS') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-3xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-indigo-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-400 text-indigo-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="layers" class="w-5 h-5 text-indigo-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "Specialty Comparison · Top 3 Recommendations" : "전문상담관 추천 · 3대 맞춤 군 특기 심층 비교"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 font-bold border border-indigo-400/40">Step 2</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Click each specialty to compare duties, service duration, and career benefits." : "특기를 클릭하여 주요 직무, 복무 개월 수, 전역 후 사회 경력 연계 혜택을 비교해 보세요."}
+                </p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Card A: Army SW Developer (Recommended) -->
+              <div onclick="selectEp3Specialty('army_sw')" id="ep3-spec-card-army" class="p-3.5 sm:p-4 rounded-2xl bg-indigo-950/70 border-2 border-indigo-400 shadow-xl cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between space-y-2.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-black px-2 py-0.5 rounded bg-indigo-600 text-white">육군 강력 추천</span>
+                    <span class="text-xs font-mono text-indigo-300 font-bold">18개월</span>
+                  </div>
+                  <h4 class="font-black text-sm sm:text-base text-white">SW개발 및 정보보호병</h4>
+                  <p class="text-[11px] text-indigo-200 mt-1 leading-snug">군 C4I 지휘통제체계 소프트웨어 코딩, 사이버 방호 및 모의 해킹 방어</p>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/80 border border-indigo-500/40 text-[10.5px] space-y-1">
+                  <div class="text-emerald-400 font-bold">✓ 사회 IT 실무 경력 100% 인정</div>
+                  <div class="text-slate-300">✓ 최신 개발 환경 & 실무 프로젝트</div>
+                </div>
+              </div>
+
+              <!-- Card B: Navy Cyber Tech -->
+              <div onclick="selectEp3Specialty('navy_net')" id="ep3-spec-card-navy" class="p-3.5 sm:p-4 rounded-2xl bg-slate-800/60 border border-slate-700 shadow-md cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between space-y-2.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-slate-300">해군 기술병</span>
+                    <span class="text-xs font-mono text-slate-400 font-bold">20개월</span>
+                  </div>
+                  <h4 class="font-bold text-sm sm:text-base text-slate-200">정보통신·전산 기술병</h4>
+                  <p class="text-[11px] text-slate-400 mt-1 leading-snug">이지스함 및 육상 작전사령부 통신망 관리, 위성 데이터 링크 운용</p>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/80 border border-slate-700 text-[10.5px] space-y-1">
+                  <div class="text-slate-300">✓ 국제공인 네트워크 자격증 취득</div>
+                  <div class="text-slate-400">✓ 함정 복무 수당 및 가산 혜택</div>
+                </div>
+              </div>
+
+              <!-- Card C: Air Force IT Systems -->
+              <div onclick="selectEp3Specialty('air_sys')" id="ep3-spec-card-air" class="p-3.5 sm:p-4 rounded-2xl bg-slate-800/60 border border-slate-700 shadow-md cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between space-y-2.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-slate-300">공군 전산병</span>
+                    <span class="text-xs font-mono text-slate-400 font-bold">21개월</span>
+                  </div>
+                  <h4 class="font-bold text-sm sm:text-base text-slate-200">정보체계운영병</h4>
+                  <p class="text-[11px] text-slate-400 mt-1 leading-snug">공군 기지 클라우드 서버 인프라 유지보수, 전산망 보안 패치 관리</p>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/80 border border-slate-700 text-[10.5px] space-y-1">
+                  <div class="text-slate-300">✓ 쾌적한 전산실 환경 & 1인 1실</div>
+                  <div class="text-slate-400">✓ 정기 외박 및 자기개발 시간 최다</div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(5);" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>${isEn ? "Select Army SW Developer & Enter VR Simulation Lab" : "선택 특기 [육군 SW개발병] 확정 & 모의 체험관으로 이동"}</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 3: EP3_DRONE_SIM]
+      if (type === 'EP3_DRONE_SIM') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-2xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-amber-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="crosshair" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "VR Drone-Bot & Tactical Target Simulator" : "첨단 국방 테크 VR 드론봇 조종 시뮬레이터"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/30 text-amber-300 font-bold border border-amber-400/40">Step 3</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Click the 3 tactical targets on the radar screen to lock-on and transmit telemetry!" : "레이더 스크린의 3개 가상 전술 표적을 터치하여 락온(Lock-on) 및 좌표를 전송하세요!"}
+                </p>
+              </div>
+            </div>
+
+            <!-- Radar HUD Screen -->
+            <div class="relative w-full h-56 sm:h-64 rounded-2xl bg-slate-950 border-2 border-amber-500/50 overflow-hidden flex items-center justify-center shadow-inner">
+              <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle, #f59e0b 1px, transparent 1px); background-size: 20px 20px;"></div>
+              <div class="absolute w-44 h-44 rounded-full border border-amber-500/30 pointer-events-none animate-pulse"></div>
+              <div class="absolute w-24 h-24 rounded-full border border-amber-500/40 pointer-events-none"></div>
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-full h-px bg-amber-500/20"></div>
+                <div class="h-full w-px bg-amber-500/20 absolute"></div>
+              </div>
+
+              <!-- Target 1 -->
+              <div onclick="lockEp3DroneTarget(1)" id="ep3-target-1" class="absolute top-10 left-12 p-2 rounded-xl bg-slate-900/80 border border-amber-400 hover:bg-amber-500/20 cursor-pointer transition hover:scale-110 flex items-center gap-1.5 shadow-lg group">
+                <i data-lucide="radio" class="w-4 h-4 text-amber-400 group-hover:animate-ping"></i>
+                <span class="text-[10px] font-bold text-amber-300">적 레이더 기지 [락온]</span>
+              </div>
+
+              <!-- Target 2 -->
+              <div onclick="lockEp3DroneTarget(2)" id="ep3-target-2" class="absolute bottom-12 left-28 p-2 rounded-xl bg-slate-900/80 border border-amber-400 hover:bg-amber-500/20 cursor-pointer transition hover:scale-110 flex items-center gap-1.5 shadow-lg group">
+                <i data-lucide="tower-control" class="w-4 h-4 text-amber-400 group-hover:animate-ping"></i>
+                <span class="text-[10px] font-bold text-amber-300">전술 통신 중계소 [락온]</span>
+              </div>
+
+              <!-- Target 3 -->
+              <div onclick="lockEp3DroneTarget(3)" id="ep3-target-3" class="absolute top-16 right-12 p-2 rounded-xl bg-slate-900/80 border border-amber-400 hover:bg-amber-500/20 cursor-pointer transition hover:scale-110 flex items-center gap-1.5 shadow-lg group">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400 group-hover:animate-ping"></i>
+                <span class="text-[10px] font-bold text-amber-300">모의 지휘소 [락온]</span>
+              </div>
+
+              <!-- Status Banner on Radar -->
+              <div class="absolute bottom-2 inset-x-2 text-center pointer-events-none">
+                <span id="ep3-drone-status" class="px-3 py-1 rounded-full bg-slate-900/90 border border-amber-500/60 text-[11px] font-bold text-amber-300 shadow">
+                  표적을 락온하여 모의 정찰 임무를 개시하십시오! (0/3 완료)
+                </span>
+              </div>
+            </div>
+
+            <div id="ep3-drone-proceed-btn" class="hidden">
+              <button onclick="playBeep(880, 'sine', 0.1); goToScene(6);" class="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="award" class="w-4 h-4"></i>
+                <span>${isEn ? "Mission Complete! Proceed to Extra Points Lounge" : "임무 100% 완수! 입영 희망월 & 가산점 상담실로 이동"}</span>
+              </button>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        window.ep3TargetsLocked = 0;
+        return;
+      }
+
+      // [WIDGET 4: EP3_SAVINGS_CALC]
+      if (type === 'EP3_SAVINGS_CALC') {
+        const isEn = (currentLang === 'en');
+        choiceContainer.className = "w-full max-w-sm sm:max-w-2xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-sky-500/70 rounded-3xl p-4 sm:p-6 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-3">
+              <div class="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-400 text-sky-400 flex items-center justify-center font-bold text-lg shadow-lg">
+                <i data-lucide="calculator" class="w-5 h-5 text-sky-400"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  ${isEn ? "Recruitment Extra Points & Savings Simulator" : "모집병 합격 가산점 & 장병내일준비적금 계산기"}
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/30 text-sky-300 font-bold border border-sky-400/40">Step 4</span>
+                </h3>
+                <p class="text-xs text-slate-300">
+                  ${isEn ? "Select desired enlistment month, add bonus points, and simulate your 14M KRW savings!" : "희망 입영월 선택, 가산점 항목 체크 및 1,460만원 만기 목돈을 실시간 계산해 보세요."}
+                </p>
+              </div>
+            </div>
+
+            <!-- Enlistment Month Selector -->
+            <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
+                  <span>복학 연계 최적 입영 희망월</span>
+                </div>
+                <p class="text-[10.5px] text-slate-400 mt-0.5">1학년 2학기 종강 후 2학년 1학기 복학 연계 최적기</p>
+              </div>
+              <span class="px-3 py-1 rounded-xl bg-sky-600/30 border border-sky-400 text-sky-300 font-black text-xs">
+                2027년 3월 입영 (선택 완료)
+              </span>
+            </div>
+
+            <!-- Extra Points Checkboxes -->
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-slate-300 block flex items-center justify-between">
+                <span>가산점 취득 항목 체크</span>
+                <span class="text-sky-400 font-bold" id="ep3-score-display">총점: 94점 (합격 안정권 99.8%)</span>
+              </label>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="p-2.5 rounded-xl bg-slate-800/80 border border-sky-500/40 flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" checked onchange="updateEp3Score()" class="rounded border-slate-600 text-sky-500 focus:ring-0 ep3-calc-chk" data-pts="2">
+                    <span class="text-slate-200">헌혈 2회 실시</span>
+                  </div>
+                  <strong class="text-sky-300">+2점</strong>
+                </label>
+                <label class="p-2.5 rounded-xl bg-slate-800/80 border border-sky-500/40 flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" checked onchange="updateEp3Score()" class="rounded border-slate-600 text-sky-500 focus:ring-0 ep3-calc-chk" data-pts="2">
+                    <span class="text-slate-200">사회봉사 16시간</span>
+                  </div>
+                  <strong class="text-sky-300">+2점</strong>
+                </label>
+                <label class="p-2.5 rounded-xl bg-slate-800/80 border border-sky-500/40 flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" checked onchange="updateEp3Score()" class="rounded border-slate-600 text-sky-500 focus:ring-0 ep3-calc-chk" data-pts="4">
+                    <span class="text-slate-200">전공 기술자격증</span>
+                  </div>
+                  <strong class="text-sky-300">+4점</strong>
+                </label>
+                <label class="p-2.5 rounded-xl bg-slate-800/80 border border-sky-500/40 flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" checked onchange="updateEp3Score()" class="rounded border-slate-600 text-sky-500 focus:ring-0 ep3-calc-chk" data-pts="4">
+                    <span class="text-slate-200">진로센터 1:1 추천</span>
+                  </div>
+                  <strong class="text-sky-300">+4점</strong>
+                </label>
+              </div>
+            </div>
+
+            <!-- Savings Simulator Card -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/70 to-teal-950/70 border border-emerald-500/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-emerald-300 flex items-center gap-1.5">
+                  <i data-lucide="piggy-bank" class="w-4 h-4 text-emerald-400"></i>
+                  ${isEn ? "Tomorrow Prep Savings 18M Projection" : "장병내일준비적금 18개월 만기 시뮬레이션"}
+                </span>
+                <span class="text-[10.5px] font-bold text-emerald-400 bg-emerald-900/60 px-2 py-0.5 rounded-full">정부 100% 매칭지원</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="p-2 rounded-xl bg-slate-900/70 border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">본인 저축 원금</div>
+                  <div class="font-bold text-white mt-0.5">720만원</div>
+                  <div class="text-[9px] text-slate-500">(월 40만원×18)</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/70 border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">정부 매칭 지원금</div>
+                  <div class="font-bold text-emerald-400 mt-0.5">+720만원</div>
+                  <div class="text-[9px] text-emerald-500">(100% 전액 국비)</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900/70 border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">전역 시 수령 총액</div>
+                  <div class="font-black text-cyan-300 mt-0.5">약 1,468만원</div>
+                  <div class="text-[9px] text-cyan-400">(이자 28만원 포함)</div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="playBeep(880, 'sine', 0.1); goToScene(7);" class="w-full py-3 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>${isEn ? "Confirm Roadmap & Learn 3 Major Benefits" : "설계 확정 & 군 복무 3대 황금 혜택 확인"}</span>
+            </button>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
+      // [WIDGET 5: EP3_ROADMAP_CERT]
+      if (type === 'EP3_ROADMAP_CERT') {
+        const isEn = (currentLang === 'en');
+        const heroName = (userData.name || (isEn ? "Minwoo" : "김민우"));
+        choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[85vh] overflow-y-auto custom-scroll flex flex-col gap-3 pointer-events-auto p-1";
+        choiceContainer.innerHTML = `
+          <div class="bg-slate-900/95 border-2 border-cyan-500/70 rounded-3xl p-5 sm:p-7 text-slate-100 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 text-center">
+            <div class="border-b border-slate-700/80 pb-3.5">
+              <div class="w-12 h-12 mx-auto rounded-2xl bg-cyan-500/20 border border-cyan-400 text-cyan-400 flex items-center justify-center font-bold text-xl shadow-lg mb-2">
+                <i data-lucide="award" class="w-6 h-6 text-cyan-400"></i>
+              </div>
+              <h3 class="text-lg sm:text-xl font-black text-white">
+                2026년도 병역진로설계 추천서
+              </h3>
+              <p class="text-xs text-cyan-400 font-bold mt-1">
+                대한민국 병무청 공식 1:1 맞춤 진로설계 인증 (e-병무지갑 등록 완료)
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5 text-left text-xs sm:text-sm">
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">성명 / 전공</span>
+                <strong class="text-white">${heroName} (컴퓨터공학과 1학년)</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">최적 추천 군 특기</span>
+                <strong class="text-cyan-400">육군 소프트웨어개발운용병 / 정보보호병</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">추천 입영 시기</span>
+                <strong class="text-emerald-400">2027년 3월 (복학 연계 최적기 / 합격 안정권)</strong>
+              </div>
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">복무 중 달성 목표</span>
+                <strong class="text-amber-300">군 학점 12학점 + 정보처리기사 + 1,460만원 목돈</strong>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">담당 진로상담관</span>
+                <strong class="text-white">병역진로설계지원센터 수석상담관 정우진</strong>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>메인 로비로 이동</span>
+              </button>
+              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(3, true);" class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <span>제3화 다시 플레이</span>
+              </button>
+            </div>
+          </div>
+        `;
+        choiceOverlay.classList.remove('hidden');
+        choiceOverlay.classList.add('flex');
+        lucide.createIcons();
+        return;
+      }
+
       if (type === 'GUIDE_SELECT_INTRO') {
         const isEn = (currentLang === 'en');
         // 가로형 3개 카드가 시원하게 배치되도록 컨테이너 확장 (PC: max-w-4xl / 모바일: 세로 스크롤 대응)
@@ -3878,7 +4352,7 @@
             <!-- 멘토 캐릭터 선택 안내 헤더 -->
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-2.5 sm:p-4 text-center shadow-xl">
               <span class="text-xs sm:text-sm font-black text-blue-300 flex items-center justify-center gap-1.5 mb-1 tracking-wide">
-                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? (currentPlayingEpisode === 2 ? 'Choose Your Reservist AI Mentor' : 'Choose Your AI Mentor Guide') : (currentPlayingEpisode === 2 ? '슬기로운 예비군 훈련 동행 AI 가이드 멘토 선택' : '병역판정검사 동행 AI 가이드 멘토 선택')}
+                <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> ${isEn ? (currentPlayingEpisode === 2 ? 'Choose Your Reservist AI Mentor' : (currentPlayingEpisode === 3 ? 'Choose Your Career AI Mentor' : 'Choose Your AI Mentor Guide')) : (currentPlayingEpisode === 2 ? '슬기로운 예비군 훈련 동행 AI 가이드 멘토 선택' : (currentPlayingEpisode === 3 ? '병역진로설계 동행 AI 가이드 멘토 선택' : '병역판정검사 동행 AI 가이드 멘토 선택'))}
               </span>
               <p class="text-[11px] sm:text-xs text-slate-300 truncate leading-tight">
                 ${isEn ? 'Tailored illustration, voice, and tone applied.' : '선택한 멘토에 맞춰 일러스트·말투·목소리가 적용됩니다.'}
@@ -5374,6 +5848,83 @@
       } else {
         playBeep(300, 'sawtooth', 0.1);
         alert('다시 확인해 보세요! 성인 심폐소생술의 적정 흉부 압박 속도는 분당 100~120회입니다.');
+      }
+    }
+
+    
+    // =========================================================================
+    // [EPISODE 3 INTERACTIVE HELPER FUNCTIONS]
+    // =========================================================================
+    function selectEp3Major(cat) {
+      playBeep(700, 'sine', 0.05);
+      const majors = ['it', 'mech', 'media', 'service'];
+      majors.forEach(m => {
+        const el = document.getElementById('ep3-major-' + m);
+        if (!el) return;
+        if (m === cat) {
+          el.className = 'p-3 rounded-xl bg-cyan-950/70 border-2 border-cyan-400 text-left transition hover:scale-[1.01] cursor-pointer';
+          const title = el.querySelector('div');
+          if (title) title.className = 'flex items-center gap-2 font-black text-xs sm:text-sm text-cyan-300';
+        } else {
+          el.className = 'p-3 rounded-xl bg-slate-800/60 border border-slate-700 text-left transition hover:scale-[1.01] cursor-pointer';
+          const title = el.querySelector('div');
+          if (title) title.className = 'flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-300';
+        }
+      });
+    }
+
+    function selectEp3Specialty(spec) {
+      playBeep(700, 'sine', 0.05);
+      const cards = ['army', 'navy', 'air'];
+      cards.forEach(c => {
+        const el = document.getElementById('ep3-spec-card-' + c);
+        if (!el) return;
+        if ((spec === 'army_sw' && c === 'army') || (spec === 'navy_net' && c === 'navy') || (spec === 'air_sys' && c === 'air')) {
+          el.className = 'p-3.5 sm:p-4 rounded-2xl bg-indigo-950/70 border-2 border-indigo-400 shadow-xl cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between space-y-2.5';
+        } else {
+          el.className = 'p-3.5 sm:p-4 rounded-2xl bg-slate-800/60 border border-slate-700 shadow-md cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between space-y-2.5';
+        }
+      });
+    }
+
+    function lockEp3DroneTarget(idx) {
+      if (typeof window.ep3TargetsLocked === 'undefined') window.ep3TargetsLocked = 0;
+      const targetEl = document.getElementById('ep3-target-' + idx);
+      if (targetEl && !targetEl.classList.contains('bg-emerald-950/90')) {
+        window.ep3TargetsLocked++;
+        playBeep(880, 'sine', 0.1);
+        targetEl.className = 'absolute p-2 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 flex items-center gap-1.5 shadow-lg';
+        targetEl.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> <span class="text-[10px] font-bold text-emerald-300">표적 ${idx} 탐지 성공!</span>`;
+        if (window.lucide) lucide.createIcons();
+
+        const statusEl = document.getElementById('ep3-drone-status');
+        if (statusEl) {
+          statusEl.innerText = `가상 표적 탐색 진행 중... (${window.ep3TargetsLocked}/3 완료)`;
+        }
+
+        if (window.ep3TargetsLocked >= 3) {
+          playBeep(990, 'sine', 0.2);
+          if (statusEl) {
+            statusEl.className = 'px-3 py-1 rounded-full bg-emerald-900/90 border border-emerald-400 text-[11px] font-black text-emerald-300 shadow';
+            statusEl.innerText = '🎯 전 표적 좌표 전송 완료! 최우수 조종 적성 인증 (A+ 등급)';
+          }
+          const proceedBtn = document.getElementById('ep3-drone-proceed-btn');
+          if (proceedBtn) proceedBtn.classList.remove('hidden');
+        }
+      }
+    }
+
+    function updateEp3Score() {
+      playBeep(700, 'sine', 0.05);
+      const chks = document.querySelectorAll('.ep3-calc-chk');
+      let bonus = 0;
+      chks.forEach(chk => {
+        if (chk.checked) bonus += parseInt(chk.getAttribute('data-pts') || '0', 10);
+      });
+      const total = 82 + bonus;
+      const disp = document.getElementById('ep3-score-display');
+      if (disp) {
+        disp.innerText = `총점: ${total}점 (합격 안정권 ${total >= 90 ? '99.8%' : '95.2%'})`;
       }
     }
 
@@ -7116,8 +7667,7 @@
       } else if (epNum === 2) {
         startEpisode(2);
       } else if (epNum === 3) {
-        playBeep(440, 'triangle', 0.1);
-        alert("🚧 [EPISODE 03: 내 꿈을 찾는 병역진로설계]\n\n입영 전 1:1 맞춤 군 특기 추천 상담, 모의 군 장비 체험관, 적성·전공 연계 군 복무 및 취업 자기개발 로드맵 시나리오를 제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🎯");
+        startEpisode(3);
       } else if (epNum === 4) {
         playBeep(440, 'triangle', 0.1);
         alert("🚧 [EPISODE 04: 사회복무 첫 출근]\n\n사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드 시나리오를 제작 중입니다.\n\n곧 정식 업데이트될 예정이오니 많은 기대 부탁드립니다! 🤝");
@@ -7127,6 +7677,7 @@
     function updateNameInputModalTexts() {
       const isEn = currentLang === 'en';
       const isEp2 = (pendingStartEpisode === 2 || currentPlayingEpisode === 2);
+      const isEp3 = (pendingStartEpisode === 3 || currentPlayingEpisode === 3);
       const titleEl = document.getElementById('name-modal-title');
       const descEl = document.getElementById('name-modal-desc');
       const labelEl = document.getElementById('name-modal-label');
@@ -7136,20 +7687,26 @@
       const submitBtn = document.getElementById('name-modal-submit-btn');
       const input = document.getElementById('protagonist-name-input');
 
-      if (titleEl) titleEl.innerText = isEn ? (isEp2 ? "Set Reservist Name" : "Set Protagonist Name") : (isEp2 ? "예비역 주인공 성명 설정" : "주인공 이름 설정");
+      if (titleEl) titleEl.innerText = isEn ? (isEp2 ? "Set Reservist Name" : (isEp3 ? "Set Future Soldier Name" : "Set Protagonist Name")) : (isEp2 ? "예비역 주인공 성명 설정" : (isEp3 ? "입영 대상자 성명 설정" : "주인공 이름 설정"));
       if (descEl) descEl.innerHTML = isEn 
-        ? (isEp2 ? "Please enter the <strong class=\"text-emerald-400\">Reservist Protagonist's Name</strong><br>to start your smart training journey." : "Please enter the <strong class=\"text-blue-400\">Protagonist's Name</strong><br>to embark on the draft physical exam journey.")
-        : (isEp2 ? "슬기로운 예비군 훈련 생활을 함께할<br><strong class=\"text-emerald-400\">주인공(예비역 병장)의 성명</strong>을 입력해 주세요." : "병역판정검사 여정을 함께할<br><strong class=\"text-blue-400\">주인공(수검 대상자)의 이름</strong>을 입력해 주세요.");
-      if (labelEl) labelEl.innerText = isEn ? (isEp2 ? "Name (Reservist Sergeant)" : "Name (Protagonist)") : (isEp2 ? "성명 (예비역 병장)" : "성명 (주인공)");
+        ? (isEp2 ? "Please enter the <strong class=\"text-emerald-400\">Reservist Protagonist's Name</strong><br>to start your smart training journey." : (isEp3 ? "Please enter the <strong class=\"text-cyan-400\">Future Soldier's Name</strong><br>to start your career planning journey." : "Please enter the <strong class=\"text-blue-400\">Protagonist's Name</strong><br>to embark on the draft physical exam journey."))
+        : (isEp2 ? "슬기로운 예비군 훈련 생활을 함께할<br><strong class=\"text-emerald-400\">주인공(예비역 병장)의 성명</strong>을 입력해 주세요." : (isEp3 ? "내 꿈을 찾는 병역진로설계를 함께할<br><strong class=\"text-cyan-400\">주인공(입영 대상자)의 성명</strong>을 입력해 주세요." : "병역판정검사 여정을 함께할<br><strong class=\"text-blue-400\">주인공(수검 대상자)의 이름</strong>을 입력해 주세요."));
+      if (labelEl) labelEl.innerText = isEn ? (isEp2 ? "Name (Reservist Sergeant)" : (isEp3 ? "Name (College Freshman)" : "Name (Protagonist)")) : (isEp2 ? "성명 (예비역 병장)" : (isEp3 ? "성명 (컴퓨터공학과 1학년)" : "성명 (주인공)"));
       if (ageBadge) {
-        ageBadge.innerText = isEn ? (isEp2 ? "Discharged Year 1" : "Age 19") : (isEp2 ? "예비역 1년차" : "만 19세");
-        ageBadge.className = isEp2 
-          ? "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-900/60 border border-emerald-500/50 text-emerald-300"
-          : "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-blue-900/60 border border-blue-500/50 text-blue-300";
+        if (isEp2) {
+          ageBadge.innerText = isEn ? "Discharged Year 1" : "예비역 1년차";
+          ageBadge.className = "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-900/60 border border-emerald-500/50 text-emerald-300";
+        } else if (isEp3) {
+          ageBadge.innerText = isEn ? "Age 20 (Freshman)" : "만 20세 (대1)";
+          ageBadge.className = "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-cyan-900/60 border border-cyan-500/50 text-cyan-300";
+        } else {
+          ageBadge.innerText = isEn ? "Age 19" : "만 19세";
+          ageBadge.className = "text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-blue-900/60 border border-blue-500/50 text-blue-300";
+        }
       }
       if (noteEl) noteEl.innerText = isEn 
         ? "* The entered name will be reflected across notices, certificates, and dialogues."
-        : "* 입력하신 이름은 소집통지서, 교육필증, 대화창 및 대본 전반에 반영됩니다.";
+        : "* 입력하신 이름은 추천서, 확인증, 대화창 및 대본 전반에 반영됩니다.";
       if (cancelBtn) cancelBtn.innerText = isEn ? "Cancel" : "취소";
       if (submitBtn) {
         const span = submitBtn.querySelector('span');
@@ -7254,8 +7811,12 @@
         currentPlayingEpisode = 2;
         openNameInputOverlay(2, forceNew);
       } else if (epNum === 3) {
-        playBeep(440, 'triangle', 0.1);
-        alert("🚧 [EPISODE 03: 내 꿈을 찾는 병역진로설계]\n\n입영 전 1:1 맞춤 군 특기 추천 상담 및 취업 로드맵 시나리오를 제작 중입니다.");
+        userData.selectedGuide = 'himchan';
+        try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch(e) {}
+        if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
+        pendingStartEpisode = 3;
+        currentPlayingEpisode = 3;
+        openNameInputOverlay(3, forceNew);
       } else if (epNum === 4) {
         playBeep(440, 'triangle', 0.1);
         alert("🚧 [EPISODE 04: 사회복무 첫 출근]\n\n사회복무요원 소집통지서 확인 및 스마트 실무 가이드 시나리오를 제작 중입니다.");
@@ -7274,7 +7835,7 @@
         clearSaveGameState();
         conversationHistory.length = 0;
         currentBg = "";
-        if (epNum === 1 || epNum === 2) {
+        if (epNum === 1 || epNum === 2 || epNum === 3) {
           userData.selectedGuide = 'himchan';
           try { localStorage.setItem('mma_selected_guide', 'himchan'); } catch (e) {}
           if (typeof updateSettingsModalUI === 'function') updateSettingsModalUI();
