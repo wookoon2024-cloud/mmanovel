@@ -9,3 +9,9 @@ scenario.json
 __pycache__/
 *.pyc
 cache/
+
+# 공모전 제안서 및 문서 파일 제외
+*제안서*
+*.hwp
+*.hwpx
+*.pdf
