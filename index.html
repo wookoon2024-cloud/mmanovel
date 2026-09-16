@@ -1084,10 +1084,21 @@
         </button>
       </div>
 
+      <!-- 주인공 음성 및 가이드 안내 -->
+      <div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-start gap-2.5 text-xs text-blue-200">
+        <i data-lucide="info" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+        <div class="space-y-0.5">
+          <p class="font-bold text-blue-300">AI 멘토 가이드 음성 안내</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            선택하신 가이드(유나·서준·힘찬이)는 여정을 동행하며 검사를 안내해 주는 <strong>AI 멘토의 외형과 목소리</strong>로 적용됩니다. (수검 대상자인 <strong>주인공 김민우</strong>의 대사는 청년 주인공 음성으로 별도 발성됩니다.)
+          </p>
+        </div>
+      </div>
+
       <!-- 캐릭터 카드 리스트 (3인 멘토) -->
       <div class="space-y-2.5 sm:space-y-3" id="guide-cards-container">
         <!-- 1. 힘찬이 -->
-        <div id="guide-card-himchan" onclick="selectGuide('himchan')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+        <div id="guide-card-himchan" onclick="selectGuide('himchan', false, false)" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
@@ -1108,7 +1119,7 @@
         </div>
 
         <!-- 2. 유나 -->
-        <div id="guide-card-yuna" onclick="selectGuide('yuna')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+        <div id="guide-card-yuna" onclick="selectGuide('yuna', false, false)" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
@@ -1129,7 +1140,7 @@
         </div>
 
         <!-- 3. 서준 -->
-        <div id="guide-card-seojun" onclick="selectGuide('seojun')" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
+        <div id="guide-card-seojun" onclick="selectGuide('seojun', false, false)" class="group p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border-2 transition cursor-pointer flex flex-col gap-2">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3.5">
               <div class="w-14 h-16 sm:w-16 sm:h-20 flex items-center justify-center shrink-0">
@@ -1342,9 +1353,25 @@
 
     function applySettingsAndClose() {
       closeSettingsModal();
+      stopPreviewAudio();
+      isMentorIntroCompleted = true;
       if (isFromIntroWidget) {
         isFromIntroWidget = false;
         proceedToRegionPicker();
+        return;
+      }
+      
+      // 모달 닫을 때 현재 대화 목록 전체를 새 가이드로 즉각 갱신하고 현재 대사 동기화
+      if (currentDialogueList && currentDialogueList.length > 0) {
+        currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
+        if (currentDialogueIdx < currentDialogueList.length) {
+          const cur = currentDialogueList[currentDialogueIdx];
+          const spk = cur.speaker || '';
+          const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (cur.char && (cur.char.includes('himchan') || cur.char.includes('yuna') || cur.char.includes('narae') || cur.char.includes('seojun')));
+          if (isGuide) {
+            playDialogueChunk();
+          }
+        }
       }
     }
 
@@ -1455,13 +1482,19 @@
       if (guideId === 'narae') guideId = 'yuna';
       if (typeof GUIDE_PERSONAS === 'undefined' || !GUIDE_PERSONAS[guideId]) guideId = 'himchan';
       userData.selectedGuide = guideId;
+      isMentorIntroCompleted = true; // 가이드 선택 완료 플래그 즉각 반영
       try {
         localStorage.setItem('mma_selected_guide', guideId);
       } catch (e) {}
 
       updateSettingsModalUI();
 
-      // 현재 대화가 가이드의 대화라면 현재 대화만 매끄럽게 갱신 (씬을 처음부터 리셋하지 않음)
+      // 현재 씬의 전체 대화 목록 일괄 갱신
+      if (currentDialogueList && currentDialogueList.length > 0) {
+        currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
+      }
+
+      // 현재 대화가 가이드의 대화라면 갱신
       if (refreshDialogue && currentDialogueList && currentDialogueList.length > 0 && currentDialogueIdx < currentDialogueList.length) {
         const cur = currentDialogueList[currentDialogueIdx];
         const spk = cur.speaker || '';
@@ -1518,6 +1551,24 @@
     }
 
     const conversationHistory = [];
+
+    let isAudioUnlocked = false;
+    function unlockAudio() {
+      if (isAudioUnlocked) return;
+      isAudioUnlocked = true;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+        }
+      } catch (e) {}
+      try {
+        const silent = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==');
+        silent.play().catch(() => {});
+      } catch (e) {}
+    }
+    window.addEventListener('click', unlockAudio, { once: true });
+    window.addEventListener('touchstart', unlockAudio, { once: true });
 
     // 오디오 비프음 생성 (Web Audio API)
     function playBeep(freq = 560, type = 'sine', duration = 0.03) {
@@ -2074,37 +2125,37 @@
 
           if (charRole === 'himchan') {
             // [열혈 멘토 힘찬이]: 남성 음성 필수!
-            // 시스템에 남성 보이스가 있으면 남성 보이스 사용, 없으면 음조를 0.82로 안정적으로 낮춰 남성 청년 톤 유지!
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 1.05;
-            utterance.pitch = hasRealMaleVoice ? 1.02 : 0.82;
+            utterance.pitch = hasRealMaleVoice ? 1.02 : 0.96;
           } else if (charRole === 'yuna') {
             // [다정 멘토 유나]: 여성 음성 고정
             utterance.voice = femaleVoice;
             utterance.rate = 1.0;
-            utterance.pitch = 1.06;
+            utterance.pitch = 1.05;
           } else if (charRole === 'seojun') {
             // [스마트 멘토 서준]: 스마트 청년 남성 음성
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 1.02;
-            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.78;
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.90;
           } else if (charRole === 'female_npc') {
             utterance.voice = femaleVoice;
             utterance.rate = 1.0;
             utterance.pitch = 1.04;
           } else if (charRole === 'minwoo') {
+            // [주인공 김민우 / 수검자]: 자연스러운 20대 청년 음조
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.98;
-            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.76;
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.92;
           } else if (charRole === 'adjudicator') {
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.90;
-            utterance.pitch = hasRealMaleVoice ? 0.88 : 0.68;
+            utterance.pitch = hasRealMaleVoice ? 0.88 : 0.84;
           } else {
             // 의사 / 심리검사관 / 상담관 / 교관
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.94;
-            utterance.pitch = hasRealMaleVoice ? 0.94 : 0.72;
+            utterance.pitch = hasRealMaleVoice ? 0.94 : 0.88;
           }
 
           if (window.speechSynthesis.paused) {
@@ -2438,29 +2489,34 @@
         return item;
       }
       const guideId = (userData && userData.selectedGuide) || 'himchan';
-      const spk = item.speaker || '';
-      const spkEn = item.speaker_en || '';
-      const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('yuna') || item.char.includes('narae') || item.char.includes('seojun')));
+      const baseSpk = item.rawSpeaker || item.speaker || '';
+      const baseSpkEn = item.rawSpeaker_en || item.speaker_en || '';
+      const baseChar = item.rawChar || item.char;
+      const basePlate = item.rawPlate || item.plateClass;
+      const baseText = item.rawText || item.text || '';
+      const baseTextEn = item.rawText_en || item.text_en || baseText;
 
-      let resolvedChar = item.char;
-      let resolvedSpk = item.speaker;
-      let resolvedSpkEn = item.speaker_en;
-      let resolvedPlate = item.plateClass;
+      const isGuide = baseSpk.includes('힘찬이') || baseSpk.includes('Himchan') || baseSpk.includes('유나') || baseSpk.includes('Yuna') || baseSpk.includes('나래') || baseSpk.includes('Narae') || baseSpk.includes('서준') || baseSpk.includes('Seojun') || baseSpk.includes('가이드') || baseSpk.includes('Guide') || (baseChar && (baseChar.includes('himchan') || baseChar.includes('yuna') || baseChar.includes('narae') || baseChar.includes('seojun')));
+
+      let resolvedChar = baseChar;
+      let resolvedSpk = baseSpk;
+      let resolvedSpkEn = baseSpkEn;
+      let resolvedPlate = basePlate;
 
       if (isGuide) {
         if (typeof resolveGuideAssets === 'function') {
-          const res = resolveGuideAssets(item.char, item.speaker, item.speaker_en, guideId);
+          const res = resolveGuideAssets(baseChar, baseSpk, baseSpkEn, guideId);
           resolvedChar = res.char;
           resolvedSpk = res.speaker;
           resolvedSpkEn = res.speaker_en;
           if (res.plateClass) resolvedPlate = res.plateClass;
         }
 
-        let textKo = item.text || '';
-        let textEn = item.text_en || textKo;
+        let textKo = baseText;
+        let textEn = baseTextEn;
         if (typeof adaptGuideDialogue === 'function') {
-          textKo = adaptGuideDialogue(textKo, guideId, false);
-          textEn = adaptGuideDialogue(textEn, guideId, true);
+          textKo = adaptGuideDialogue(baseText, guideId, false);
+          textEn = adaptGuideDialogue(baseTextEn, guideId, true);
         }
 
         let resolvedDialogues = item.dialogues;
@@ -2478,6 +2534,12 @@
 
         return {
           ...item,
+          rawSpeaker: baseSpk,
+          rawSpeaker_en: baseSpkEn,
+          rawChar: baseChar,
+          rawPlate: basePlate,
+          rawText: baseText,
+          rawText_en: baseTextEn,
           char: resolvedChar,
           speaker: resolvedSpk,
           speaker_en: resolvedSpkEn,
@@ -2491,16 +2553,18 @@
       }
 
       // 비 가이드 항목이라도 내부에 dialogues가 있을 경우 매핑
-      if (item.dialogues || item.customDialogues || item.defaultDialogues) {
-        return {
-          ...item,
-          ...(item.dialogues ? { dialogues: item.dialogues.map(d => getGuideResolvedItem(d)) } : {}),
-          ...(item.customDialogues ? { customDialogues: item.customDialogues.map(d => getGuideResolvedItem(d)) } : {}),
-          ...(item.defaultDialogues ? { defaultDialogues: item.defaultDialogues.map(d => getGuideResolvedItem(d)) } : {})
-        };
-      }
-
-      return item;
+      return {
+        ...item,
+        rawSpeaker: baseSpk,
+        rawSpeaker_en: baseSpkEn,
+        rawChar: baseChar,
+        rawPlate: basePlate,
+        rawText: baseText,
+        rawText_en: baseTextEn,
+        ...(item.dialogues ? { dialogues: item.dialogues.map(d => getGuideResolvedItem(d)) } : {}),
+        ...(item.customDialogues ? { customDialogues: item.customDialogues.map(d => getGuideResolvedItem(d)) } : {}),
+        ...(item.defaultDialogues ? { defaultDialogues: item.defaultDialogues.map(d => getGuideResolvedItem(d)) } : {})
+      };
     }
 
     // 실제 씬 화면 업데이트 및 대사 출력

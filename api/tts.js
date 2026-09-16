@@ -16,11 +16,11 @@ const pendingPromises = new Map();
 
 // 화자별 Microsoft Neural 남성/여성/캐릭터 보이스 설정
 const VOICE_MAP = {
-  'himchan': { voice: 'ko-KR-InJoonNeural', rate: '+4%', pitch: '+0Hz' }, // 활기찬 열혈 멘토 힘찬이
+  'himchan': { voice: 'ko-KR-HyunsuMultilingualNeural', rate: '+4%', pitch: '+1Hz' }, // 활기찬 열혈 멘토 힘찬이 (Hyunsu 남성)
   'yuna': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                 // 다정하고 따뜻한 선배 멘토 유나 (여성)
   'narae': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                // 하위 호환
-  'seojun': { voice: 'ko-KR-InJoonNeural', rate: '+1%', pitch: '-3Hz' },              // 똑부러지고 스마트한 전우 멘토 서준 (남성)
-  'minwoo': { voice: 'ko-KR-InJoonNeural', rate: '+0%', pitch: '-2Hz' },               // 20대 대학생 주인공 인준 (남성)
+  'seojun': { voice: 'ko-KR-InJoonNeural', rate: '+1%', pitch: '-3Hz' },              // 똑부러지고 스마트한 전우 멘토 서준 (차분한 청년 지성 톤)
+  'minwoo': { voice: 'ko-KR-InJoonNeural', rate: '+0%', pitch: '-1Hz' },               // 20대 대학생 주인공 인준 (자연스러운 청년 남성)
   'doctor': { voice: 'ko-KR-InJoonNeural', rate: '-3%', pitch: '-6Hz' },               // 차분한 전문의/군의관 (남성)
   'adjudicator': { voice: 'ko-KR-InJoonNeural', rate: '-7%', pitch: '-12Hz' },         // 묵직한 50대 수석판정관 (남성)
   'counselor': { voice: 'ko-KR-InJoonNeural', rate: '-2%', pitch: '-4Hz' },           // 신뢰감 있는 상담관 (남성)
@@ -71,8 +71,10 @@ function getVoiceConfig(speaker = '', lang = 'ko', guide = '') {
     return isEn ? VOICE_MAP.en_narae : VOICE_MAP.narae; // 여성 보이스 (SunHi)
   }
 
-  // 3. 주인공 (김민우 / 수검 대상자 - 20대 청년 남성)
-  if (spk.includes('김민우') || spk.includes('민우') || spk.includes('minwoo') || spk.includes('주인공') || spk.includes('protagonist') || spk.includes('수검자') || spk.includes('예비역')) {
+  // 3. 주인공 (김민우 / 강태훈 / 수검 대상자 / 예비역 - 20대 청년 남성)
+  if (spk.includes('김민우') || spk.includes('민우') || spk.includes('minwoo') || 
+      spk.includes('강태훈') || spk.includes('태훈') || spk.includes('taehoon') ||
+      spk.includes('주인공') || spk.includes('protagonist') || spk.includes('수검자') || spk.includes('예비역') || spk.includes('학생')) {
     return isEn ? VOICE_MAP.en_minwoo : VOICE_MAP.minwoo; // 20대 남성 보이스 (InJoon)
   }
 

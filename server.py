@@ -145,11 +145,11 @@ OFFICES = {
 # 🎙️ 고품질 뉴럴 TTS 음성 합성 엔진 (Microsoft Edge Neural TTS)
 # =========================================================================
 VOICE_MAP = {
-    'himchan': {'voice': 'ko-KR-InJoonNeural', 'rate': '+4%', 'pitch': '+0Hz'}, # 활기찬 열혈 멘토 힘찬이
+    'himchan': {'voice': 'ko-KR-HyunsuMultilingualNeural', 'rate': '+4%', 'pitch': '+1Hz'}, # 활기찬 열혈 멘토 힘찬이 (Hyunsu 남성)
     'yuna': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                 # 다정하고 따뜻한 선배 멘토 유나 (여성)
     'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환
     'seojun': {'voice': 'ko-KR-InJoonNeural', 'rate': '+1%', 'pitch': '-3Hz'},              # 스마트한 전우 멘토 서준 (차분한 청년 지성 톤)
-    'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-2Hz'},               # 20대 대학생 주인공 인준
+    'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-1Hz'},               # 20대 대학생 주인공 인준 (자연스러운 청년 남성)
     'doctor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-3%', 'pitch': '-6Hz'},               # 전문의/군의관
     'adjudicator': {'voice': 'ko-KR-InJoonNeural', 'rate': '-6%', 'pitch': '-10Hz'},         # 수석판정관
     'counselor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-2%', 'pitch': '-4Hz'},           # 상담관
@@ -195,7 +195,7 @@ def get_voice_config(speaker='', lang='ko', guide='himchan'):
     if any(k in spk for k in ['병리사', '방사선사', '간호', '여성', 'female', 'radiologist', 'pathologist']):
         return VOICE_MAP['en_yuna'] if is_en else VOICE_MAP['yuna']
     
-    if any(k in spk for k in ['김민우', '민우', '주인공', '예비역', '이동민', '동민', 'minwoo', 'protagonist', '수검자', '학생']):
+    if any(k in spk for k in ['김민우', '민우', '강태훈', '태훈', 'taehoon', '주인공', '예비역', '이동민', '동민', 'minwoo', 'protagonist', '수검자', '학생']):
         return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
         
     if any(k in spk for k in ['수석판정관', '판정관', 'adjudicator']):
