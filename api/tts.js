@@ -15,7 +15,7 @@ const pendingPromises = new Map();
 
 // 화자별 Microsoft Neural 남성/여성/캐릭터 보이스 설정
 const VOICE_MAP = {
-  'himchan': { voice: 'ko-KR-HyunsuMultilingualNeural', rate: '+5%', pitch: '+3Hz' }, // 활기찬 열혈 멘토 힘찬이
+  'himchan': { voice: 'ko-KR-InJoonNeural', rate: '+4%', pitch: '+0Hz' }, // 활기찬 열혈 멘토 힘찬이
   'yuna': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                 // 다정하고 따뜻한 선배 멘토 유나 (여성)
   'narae': { voice: 'ko-KR-SunHiNeural', rate: '+2%', pitch: '+2Hz' },                // 하위 호환
   'seojun': { voice: 'ko-KR-BongJinNeural', rate: '+1%', pitch: '-1Hz' },              // 똑부러지고 스마트한 전우 멘토 서준 (남성)
@@ -303,13 +303,21 @@ module.exports = async (req, res) => {
     const audioFilePath = await synthesizeSpeech(cleanText, voiceConfig);
 
     const stat = fs.statSync(audioFilePath);
-    res.writeHead(200, {
-      'Content-Type': 'audio/mpeg',
-      'Content-Length': stat.size,
-      'Cache-Control': 'public, max-age=31536000, immutable',
-      'Accept-Ranges': 'bytes'
-    });
+    res.setHeader('Content-Type', 'audio/mpeg');
+    res.setHeader('Content-Length', stat.size);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('Accept-Ranges', 'bytes');
+    if (typeof res.status === 'function') res.status(200);
+    else res.statusCode = 200;
 
+    if (typeof res.send === 'function') {
+      return res.send(fs.readFileSync(audioFilePath));
+    }
+    if (typeof res.writeHead === 'function') {
+      try {
+        res.writeHead(200);
+      } catch (e) {}
+    }
     const readStream = fs.createReadStream(audioFilePath);
     readStream.pipe(res);
   } catch (err) {

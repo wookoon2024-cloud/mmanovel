@@ -145,7 +145,7 @@ OFFICES = {
 # 🎙️ 고품질 뉴럴 TTS 음성 합성 엔진 (Microsoft Edge Neural TTS)
 # =========================================================================
 VOICE_MAP = {
-    'himchan': {'voice': 'ko-KR-HyunsuMultilingualNeural', 'rate': '+5%', 'pitch': '+3Hz'}, # 활기찬 열혈 멘토 힘찬이
+    'himchan': {'voice': 'ko-KR-InJoonNeural', 'rate': '+4%', 'pitch': '+0Hz'}, # 활기찬 열혈 멘토 힘찬이
     'yuna': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                 # 다정하고 따뜻한 선배 멘토 유나 (여성)
     'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환
     'seojun': {'voice': 'ko-KR-BongJinNeural', 'rate': '+1%', 'pitch': '-1Hz'},              # 스마트한 전우 멘토 서준
