@@ -2427,14 +2427,17 @@
       renderScene(targetIdx);
     }
 
+    let isMentorIntroCompleted = false;
+
     // 가이드 페르소나 (외형, 화자명, 말투, 플레이트 색상) 동적 변환 헬퍼
     function getGuideResolvedItem(item) {
       if (!item) return item;
-      // Episode 1, 2, 3의 Scene 1(가이드 멘토 첫 등장 및 선택 안내)은 사용자가 멘토를 결정하기 전이므로 항상 기본 캐릭터인 '힘찬이'로 고정
-      if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2 || currentPlayingEpisode === 3) && currentSceneIdx === 1) {
+      // Episode 1, 2, 3의 Scene 1 초기 대사(멘토를 결정하기 전)만 기본 캐릭터인 '힘찬이'로 고정하고,
+      // 멘토를 선택한 이후의 후속 대사 및 모든 씬은 선택된 가이드 페르소나(유나/서준/힘찬이)로 정상 변환
+      if (!isMentorIntroCompleted && (currentPlayingEpisode === 1 || currentPlayingEpisode === 2 || currentPlayingEpisode === 3) && currentSceneIdx === 1) {
         return item;
       }
-      const guideId = userData.selectedGuide || 'himchan';
+      const guideId = (userData && userData.selectedGuide) || 'himchan';
       const spk = item.speaker || '';
       const spkEn = item.speaker_en || '';
       const isGuide = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide') || (item.char && (item.char.includes('himchan') || item.char.includes('yuna') || item.char.includes('narae') || item.char.includes('seojun')));
@@ -2509,6 +2512,7 @@
       if (!scenarios || idx >= scenarios.length) return;
       if ((currentPlayingEpisode === 1 || currentPlayingEpisode === 2 || currentPlayingEpisode === 3) && idx === 1 && scenarios[1]) {
         // Scene 1에서는 가이드 선택 인트로 위젯 우선 표출
+        isMentorIntroCompleted = false;
         scenarios[1].widgetType = 'GUIDE_SELECT_INTRO';
       }
       if (window.MmaTracker) window.MmaTracker.reportScene(idx);
@@ -3354,6 +3358,7 @@
     function confirmGuideAndProceed(guideId) {
       stopPreviewAudio();
       stopVoiceAudio();
+      isMentorIntroCompleted = true;
       selectGuide(guideId, true, false);
       if (currentPlayingEpisode === 2 || currentPlayingEpisode === 3) {
         goToScene(2);
@@ -6669,19 +6674,32 @@
 
       const uName = userData.name || '김민우';
       const uRegion = userData.region || '서울지방병무청';
+      const gid = (userData && userData.selectedGuide) || 'himchan';
+      const g = (typeof GUIDE_PERSONAS !== 'undefined' && GUIDE_PERSONAS[gid]) || (typeof GUIDE_PERSONAS !== 'undefined' ? GUIDE_PERSONAS.himchan : null);
+      const speakerKo = g ? `${g.name} (병무청 AI 가이드)` : "힘찬이 (병무청 AI 가이드)";
+      const speakerEn = g ? `${g.name_en} (MMA AI Guide)` : "Himchan (MMA AI Guide)";
+      const plateClass = g ? g.plateClass : "from-blue-700 to-indigo-800 border-blue-400/40";
+      const charSrc = (g && g.sprites && (g.sprites.smile || g.sprites.cheer || g.sprites.default)) || "assets/himchan_smile.png";
+
+      let rawMsgKo = `${uName} 님, 선택하신 관할 병무청은 [${uRegion}]입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면 통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n${uName} 님, [${uRegion}]의 일별 실시간 잔여석 달력도 혹시 확인해 보시겠습니까?`;
+      let rawMsgEn = `${uName}, your selected regional MMA office is [${uRegion}]!\n\nMany young people don't know this, but as long as there are vacancies, you can freely change your draft exam date 100% online up to 1 day before your desired date regardless of the notice.\n\n${uName}, would you also like to check the daily real-time vacancy calendar for [${uRegion}]?`;
+
+      if (typeof adaptGuideDialogue === 'function') {
+        rawMsgKo = adaptGuideDialogue(rawMsgKo, gid, false);
+        rawMsgEn = adaptGuideDialogue(rawMsgEn, gid, true);
+      }
 
       currentDialogueList = [
         {
-          speaker: (currentLang === 'en') ? "Himchan (MMA AI Guide)" : "힘찬이 (병무청 AI 가이드)",
-          speaker_en: "Himchan (MMA AI Guide)",
-          char: "assets/himchan_smile.png",
+          speaker: (currentLang === 'en') ? speakerEn : speakerKo,
+          speaker_en: speakerEn,
+          char: charSrc,
           charPos: "right",
-          plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-          text: `${uName} 님, 선택하신 관할 병무청은 [${uRegion}]입니다!\n\n많은 청년들이 잘 모르시는데, 병역판정검사는 공석만 있다면 통지된 날짜와 상관없이 희망일 전날까지 원하는 날짜로 100% 자유롭게 변경할 수 있습니다.\n\n${uName} 님, [${uRegion}]의 일별 실시간 잔여석 달력도 혹시 확인해 보시겠습니까?`,
-          text_en: `${uName}, your selected regional MMA office is [${uRegion}]!\n\nMany young people don't know this, but as long as there are vacancies, you can freely change your draft exam date 100% online up to 1 day before your desired date regardless of the notice.\n\n${uName}, would you also like to check the daily real-time vacancy calendar for [${uRegion}]?`
+          plateClass: plateClass,
+          text: rawMsgKo,
+          text_en: rawMsgEn
         }
       ];
-      currentDialogueList = currentDialogueList.map(item => getGuideResolvedItem(item));
       currentDialogueIdx = 0;
       playDialogueChunk();
     }

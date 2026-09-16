@@ -148,7 +148,7 @@ VOICE_MAP = {
     'himchan': {'voice': 'ko-KR-InJoonNeural', 'rate': '+4%', 'pitch': '+0Hz'}, # 활기찬 열혈 멘토 힘찬이
     'yuna': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                 # 다정하고 따뜻한 선배 멘토 유나 (여성)
     'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환
-    'seojun': {'voice': 'ko-KR-BongJinNeural', 'rate': '+1%', 'pitch': '-1Hz'},              # 스마트한 전우 멘토 서준
+    'seojun': {'voice': 'ko-KR-InJoonNeural', 'rate': '+1%', 'pitch': '-3Hz'},              # 스마트한 전우 멘토 서준 (차분한 청년 지성 톤)
     'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-2Hz'},               # 20대 대학생 주인공 인준
     'doctor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-3%', 'pitch': '-6Hz'},               # 전문의/군의관
     'adjudicator': {'voice': 'ko-KR-InJoonNeural', 'rate': '-6%', 'pitch': '-10Hz'},         # 수석판정관
