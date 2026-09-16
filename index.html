@@ -2052,13 +2052,20 @@
           charRole = 'seojun';
         } else if (spk.includes('가이드') || spkLower.includes('guide') || spk.includes('멘토') || spkLower.includes('mentor')) {
           charRole = curGuide;
-        } else if (/병리사|방사선사|간호|여성|female|radiologist|pathologist/i.test(spk)) {
+        } else if (/심리검사|psychologist|간호|여성|female|이서윤|서윤/i.test(spk)) {
+          // 여성 캐릭터 (심리검사관, 간호사, 여성 주인공 등)
           charRole = 'female_npc';
-        } else if (/김민우|민우|주인공|예비역|이동민|minwoo|protagonist/i.test(spk)) {
-          charRole = 'minwoo';
         } else if (/판정관|adjudicator/i.test(spk)) {
+          // 50대 남성 수석판정관
           charRole = 'adjudicator';
+        } else if (/교관|instructor|상사/i.test(spk)) {
+          // 군 교관 (남성)
+          charRole = 'instructor';
+        } else if (/김민우|민우|주인공|예비역|박민재|이동민|minwoo|protagonist/i.test(spk)) {
+          // 청년 남성 주인공
+          charRole = 'minwoo';
         } else {
+          // 임상병리사(김민서), 방사선사, 전담의사, 의무관, 적성분류관, 상담관 등 남성 전문직
           charRole = 'doctor';
         }
 
@@ -2093,11 +2100,16 @@
             utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
             utterance.rate = 1.0;
             utterance.pitch = isEnMale(utterance.voice) ? 0.95 : 0.70;
+          } else if (charRole === 'instructor') {
+            utterance.voice = pickVoice(enVoices, ['eric', 'george', 'brian', 'male']) || enVoices[0] || null;
+            utterance.rate = 1.02;
+            utterance.pitch = isEnMale(utterance.voice) ? 0.88 : 0.65;
           } else if (charRole === 'adjudicator') {
             utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
             utterance.pitch = isEnMale(utterance.voice) ? 0.70 : 0.50;
           } else {
+            // doctor / lab_officer / counselor (남성 의료/전문가)
             utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
             utterance.rate = 0.94;
             utterance.pitch = isEnMale(utterance.voice) ? 0.85 : 0.65;
@@ -2139,22 +2151,29 @@
             utterance.rate = 1.02;
             utterance.pitch = hasRealMaleVoice ? 0.98 : 0.90;
           } else if (charRole === 'female_npc') {
+            // [여성 심리검사관 / 간호사 / 여성 NPC]: 고운 여성 음성
             utterance.voice = femaleVoice;
             utterance.rate = 1.0;
             utterance.pitch = 1.04;
           } else if (charRole === 'minwoo') {
-            // [주인공 김민우 / 수검자]: 자연스러운 20대 청년 음조
+            // [주인공 김민우 / 수검자]: 자연스러운 20대 청년 남성 음조
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.98;
             utterance.pitch = hasRealMaleVoice ? 0.98 : 0.92;
           } else if (charRole === 'adjudicator') {
+            // [수석판정관]: 중후하고 묵직한 50대 남성 음조
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.90;
             utterance.pitch = hasRealMaleVoice ? 0.88 : 0.84;
-          } else {
-            // 의사 / 심리검사관 / 상담관 / 교관
+          } else if (charRole === 'instructor') {
+            // [군 교관]: 절도 있고 힘 있는 남성 음조
             utterance.voice = maleVoice || defaultVoice;
-            utterance.rate = 0.94;
+            utterance.rate = 1.02;
+            utterance.pitch = hasRealMaleVoice ? 0.92 : 0.86;
+          } else {
+            // [남성 임상병리사 / 의무관 / 전담의사 / 상담관]
+            utterance.voice = maleVoice || defaultVoice;
+            utterance.rate = 0.96;
             utterance.pitch = hasRealMaleVoice ? 0.94 : 0.88;
           }
 

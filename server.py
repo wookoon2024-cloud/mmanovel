@@ -147,12 +147,16 @@ OFFICES = {
 VOICE_MAP = {
     'himchan': {'voice': 'ko-KR-HyunsuMultilingualNeural', 'rate': '+4%', 'pitch': '+1Hz'}, # 활기찬 열혈 멘토 힘찬이 (Hyunsu 남성)
     'yuna': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                 # 다정하고 따뜻한 선배 멘토 유나 (여성)
-    'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환
-    'seojun': {'voice': 'ko-KR-InJoonNeural', 'rate': '+1%', 'pitch': '-3Hz'},              # 스마트한 전우 멘토 서준 (차분한 청년 지성 톤)
-    'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-1Hz'},               # 20대 대학생 주인공 인준 (자연스러운 청년 남성)
-    'doctor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-3%', 'pitch': '-6Hz'},               # 전문의/군의관
-    'adjudicator': {'voice': 'ko-KR-InJoonNeural', 'rate': '-6%', 'pitch': '-10Hz'},         # 수석판정관
-    'counselor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-2%', 'pitch': '-4Hz'},           # 상담관
+    'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환 (여성)
+    'seojun': {'voice': 'ko-KR-InJoonNeural', 'rate': '+1%', 'pitch': '-3Hz'},              # 똑부러진 전우 멘토 서준 (차분한 청년 지성 톤 남성)
+    'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-1Hz'},               # 20대 청년 주인공 인준 (자연스러운 청년 남성)
+    'psychologist': {'voice': 'ko-KR-SunHiNeural', 'rate': '+1%', 'pitch': '+1Hz'},         # 지적이고 상냥한 여성 심리검사관 (여성)
+    'lab_officer': {'voice': 'ko-KR-InJoonNeural', 'rate': '+1%', 'pitch': '-2Hz'},          # 스마트한 남성 임상병리사/방사선사 (남성)
+    'doctor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-3%', 'pitch': '-6Hz'},               # 전문의/군의관 (남성)
+    'adjudicator': {'voice': 'ko-KR-InJoonNeural', 'rate': '-6%', 'pitch': '-10Hz'},         # 수석판정관 (남성 저음)
+    'counselor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-1%', 'pitch': '-3Hz'},           # 정우진 병역진로상담관/적성분류관 (남성)
+    'instructor': {'voice': 'ko-KR-InJoonNeural', 'rate': '+2%', 'pitch': '-5Hz'},          # 군 교관 (최 상사, 박 상사, 강태식 상사 - 남성)
+    'donghyun': {'voice': 'ko-KR-HyunsuMultilingualNeural', 'rate': '+3%', 'pitch': '+0Hz'}, # 예비역 동기 박동현 (남성)
     
     # English 모드
     'en_himchan': {'voice': 'en-US-GuyNeural', 'rate': '+5%', 'pitch': '+4Hz'},
@@ -160,6 +164,7 @@ VOICE_MAP = {
     'en_narae': {'voice': 'en-US-JennyNeural', 'rate': '+2%', 'pitch': '+2Hz'},
     'en_seojun': {'voice': 'en-US-DavisNeural', 'rate': '+1%', 'pitch': '-1Hz'},
     'en_minwoo': {'voice': 'en-US-ChristopherNeural', 'rate': '+0%', 'pitch': '-2Hz'},
+    'en_psychologist': {'voice': 'en-US-JennyNeural', 'rate': '+1%', 'pitch': '+2Hz'},
     'en_doctor': {'voice': 'en-US-EricNeural', 'rate': '-4%', 'pitch': '-6Hz'},
     'en_adjudicator': {'voice': 'en-US-RogerNeural', 'rate': '-8%', 'pitch': '-12Hz'}
 }
@@ -178,6 +183,7 @@ def get_voice_config(speaker='', lang='ko', guide='himchan'):
     spk = (speaker or '').lower()
     gd = (guide or 'himchan').lower()
     
+    # 1. 가이드/멘토 캐릭터 (유나/나래는 여성, 힘찬/서준은 남성)
     is_guide = any(k in spk for k in ['가이드', 'guide', '힘찬이', 'himchan', '유나', 'yuna', '나래', 'narae', '서준', 'seojun', '멘토', 'mentor'])
     if is_guide:
         if '힘찬이' in spk or 'himchan' in spk:
@@ -192,18 +198,38 @@ def get_voice_config(speaker='', lang='ko', guide='himchan'):
             return VOICE_MAP['en_seojun'] if is_en else VOICE_MAP['seojun']
         return VOICE_MAP['en_himchan'] if is_en else VOICE_MAP['himchan']
 
-    if any(k in spk for k in ['병리사', '방사선사', '간호', '여성', 'female', 'radiologist', 'pathologist']):
-        return VOICE_MAP['en_yuna'] if is_en else VOICE_MAP['yuna']
+    # 2. 여성 캐릭터 / NPC (심리검사관, 간호사, 여성 주인공 이서윤) -> 여성 보이스
+    if any(k in spk for k in ['심리검사', '심리검사관', 'psychologist', '간호', '여성', 'female', '이서윤', '서윤', 'seoyun']):
+        return VOICE_MAP['en_psychologist'] if is_en else VOICE_MAP['psychologist']
     
-    if any(k in spk for k in ['김민우', '민우', '강태훈', '태훈', 'taehoon', '주인공', '예비역', '이동민', '동민', 'minwoo', 'protagonist', '수검자', '학생']):
-        return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
-        
-    if any(k in spk for k in ['수석판정관', '판정관', 'adjudicator']):
+    # 3. 남성 임상병리사 / 영상의학 방사선사 (김민서 임상병리사) -> 스마트 남성 보이스
+    if any(k in spk for k in ['병리사', '방사선사', '임상병리', '영상의학', 'radiologist', 'pathologist', 'lab']):
+        return VOICE_MAP['en_seojun'] if is_en else VOICE_MAP['lab_officer']
+
+    # 4. 남성 군 교관 (최 상사, 박 상사, 강태식 상사)
+    if any(k in spk for k in ['교관', '최 상사', '박 상사', '강태식', 'instructor', '상사', '조교']):
+        return VOICE_MAP['en_doctor'] if is_en else VOICE_MAP['instructor']
+
+    # 5. 남성 진로상담관 / 적성분류관 (정우진 상담관, 적성분류관)
+    if any(k in spk for k in ['정우진', '상담관', 'counselor', '적성분류', '적성분류관']):
+        return VOICE_MAP['en_seojun'] if is_en else VOICE_MAP['counselor']
+
+    # 6. 남성 동기 (예비역 박동현)
+    if any(k in spk for k in ['박동현', '동현', 'donghyun']):
+        return VOICE_MAP['en_himchan'] if is_en else VOICE_MAP['donghyun']
+
+    # 7. 50대 남성 수석판정관 (중후한 저음)
+    if any(k in spk for k in ['수석판정관', '판정보좌관', '판정관', 'adjudicator']):
         return VOICE_MAP['en_adjudicator'] if is_en else VOICE_MAP['adjudicator']
-        
-    if any(k in spk for k in ['전문의', '의무관', 'doctor', '의사', '상담관', '심리검사관', '교관', 'instructor', '상사', '조교']):
+
+    # 8. 남성 전담의사 / 의무관 (의무관 정태윤, 과목별 전담의사)
+    if any(k in spk for k in ['전담의사', '의무관', '내과', '정형외과', '안과', '일반종합', '과목별', '전문의', 'doctor', '의사']):
         return VOICE_MAP['en_doctor'] if is_en else VOICE_MAP['doctor']
-        
+
+    # 9. 주인공 (김민우 / 강태훈 / 박민재 / 수검자 / 예비역 청년 남성)
+    if any(k in spk for k in ['김민우', '민우', '강태훈', '태훈', 'taehoon', '주인공', '예비역', '이동민', '동민', 'minwoo', 'protagonist', '수검자', '학생', '박민재']):
+        return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
+
     return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
 
 class MmaApiHandler(SimpleHTTPRequestHandler):
