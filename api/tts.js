@@ -354,7 +354,7 @@ module.exports = async (req, res) => {
     const stat = fs.statSync(audioFilePath);
     res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Content-Length', stat.size);
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.setHeader('Accept-Ranges', 'bytes');
     if (typeof res.status === 'function') res.status(200);
     else res.statusCode = 200;

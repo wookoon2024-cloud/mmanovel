@@ -1956,7 +1956,7 @@
         .trim();
       if (!cleanText) return;
       const guideParam = encodeURIComponent((userData && userData.selectedGuide) || 'himchan');
-      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}`;
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}&v=gender_v3`;
       if (preloadedTtsUrls.has(ttsUrl)) return;
       preloadedTtsUrls.add(ttsUrl);
       try {
@@ -1985,7 +1985,7 @@
 
       // [오픈소스 뉴럴 음성 실시간 스트리밍] 멘토별 고품질 뉴럴 보이스 (/api/tts)
       const guideParam = encodeURIComponent((userData && userData.selectedGuide) || 'himchan');
-      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}`;
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}&v=gender_v3`;
       const audio = new Audio();
       currentVoiceAudio = audio;
       audio.src = ttsUrl;
@@ -2119,62 +2119,60 @@
           // 한국어: 시스템에 설치된 한국어 보이스 탐색 (삼성/구글/마이크로소프트 TTS 호환)
           const koVoices = availableVoices.filter(v => (v.lang || '').toLowerCase().replace('_', '-').startsWith('ko'));
           
-          // 구글 TTS의 ism, kfb, kfc는 여성 보이스이므로 남성 보이스 탐색 시 절대 매칭되지 않도록 방어!
-          const maleVoice = koVoices.find(v => {
-            const n = (v.name || '').toLowerCase();
-            if (/female|여성|girl|woman|ism|kfb|kfc|sfg#female/i.test(n)) return false;
-            return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|kob|kod|koe|male|남성|boy|man|sfg#male/i.test(n);
-          }) || null;
-
+          // 여성 음성 탐색 (선희, 혜미, 유나, ism, kfb, kfc, female, 여성, 음성 1 등)
           const femaleVoice = koVoices.find(v => {
             const n = (v.name || '').toLowerCase();
             if (/male|남성|boy|man|kob|kod|koe|sfg#male/i.test(n)) return false;
-            return /sunhi|선희|heami|혜미|yuna|유나|female|여성|ism|kfb|kfc|sfg/i.test(n);
-          }) || koVoices[0] || null;
+            return /sunhi|선희|heami|혜미|yuna|유나|female|여성|girl|woman|ism|kfb|kfc|sfg#female|음성 1|음성1/i.test(n);
+          }) || null;
 
+          // 남성 음성 탐색 (인준, 봉진, 국민, 윤호, male, 남성, kod, koe, kob, 음성 2 등)
+          const maleVoice = koVoices.find(v => {
+            const n = (v.name || '').toLowerCase();
+            if (/female|여성|girl|woman|ism|kfb|kfc|sfg#female/i.test(n)) return false;
+            return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|kob|kod|koe|male|남성|boy|man|sfg#male|음성 2|음성2/i.test(n);
+          }) || null;
+
+          const hasRealFemaleVoice = !!femaleVoice;
           const hasRealMaleVoice = !!maleVoice;
-          const defaultVoice = maleVoice || femaleVoice || (koVoices.length > 0 ? koVoices[0] : null);
+          const fallbackKoVoice = koVoices.length > 0 ? koVoices[0] : null;
 
-          if (charRole === 'himchan') {
-            // [열혈 멘토 힘찬이]: 남성 음성 필수!
-            utterance.voice = maleVoice || defaultVoice;
+          if (charRole === 'female_npc' || charRole === 'yuna') {
+            // [여성 심리검사관 / 유나 / 간호사 / 여성 캐릭터]:
+            // 확실한 여성 보이스 지정. 만약 시스템에 남성 단일 음성만 설치된 기기라면 피치를 1.38로 끌어올려 명확한 여성 톤으로 발성!
+            utterance.voice = femaleVoice || fallbackKoVoice;
+            utterance.rate = 1.0;
+            utterance.pitch = hasRealFemaleVoice ? 1.08 : 1.38;
+          } else if (charRole === 'himchan') {
+            // [열혈 멘토 힘찬이]: 남성 음성
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 1.05;
-            utterance.pitch = hasRealMaleVoice ? 1.02 : 0.96;
-          } else if (charRole === 'yuna') {
-            // [다정 멘토 유나]: 여성 음성 고정
-            utterance.voice = femaleVoice;
-            utterance.rate = 1.0;
-            utterance.pitch = 1.05;
+            utterance.pitch = hasRealMaleVoice ? 1.02 : 0.88;
           } else if (charRole === 'seojun') {
-            // [스마트 멘토 서준]: 스마트 청년 남성 음성
-            utterance.voice = maleVoice || defaultVoice;
+            // [스마트 멘토 서준]: 청년 남성 음성
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 1.02;
-            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.90;
-          } else if (charRole === 'female_npc') {
-            // [여성 심리검사관 / 간호사 / 여성 NPC]: 고운 여성 음성
-            utterance.voice = femaleVoice;
-            utterance.rate = 1.0;
-            utterance.pitch = 1.04;
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.84;
           } else if (charRole === 'minwoo') {
-            // [주인공 김민우 / 수검자]: 자연스러운 20대 청년 남성 음조
-            utterance.voice = maleVoice || defaultVoice;
+            // [주인공 김민우 / 수검자]: 20대 청년 남성
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 0.98;
-            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.92;
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.86;
           } else if (charRole === 'adjudicator') {
-            // [수석판정관]: 중후하고 묵직한 50대 남성 음조
-            utterance.voice = maleVoice || defaultVoice;
+            // [수석판정관]: 50대 남성 저음
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 0.90;
-            utterance.pitch = hasRealMaleVoice ? 0.88 : 0.84;
+            utterance.pitch = hasRealMaleVoice ? 0.88 : 0.74;
           } else if (charRole === 'instructor') {
-            // [군 교관]: 절도 있고 힘 있는 남성 음조
-            utterance.voice = maleVoice || defaultVoice;
+            // [군 교관]: 절도 있는 남성
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 1.02;
-            utterance.pitch = hasRealMaleVoice ? 0.92 : 0.86;
+            utterance.pitch = hasRealMaleVoice ? 0.92 : 0.82;
           } else {
             // [남성 임상병리사 / 의무관 / 전담의사 / 상담관]
-            utterance.voice = maleVoice || defaultVoice;
+            utterance.voice = maleVoice || fallbackKoVoice;
             utterance.rate = 0.96;
-            utterance.pitch = hasRealMaleVoice ? 0.94 : 0.88;
+            utterance.pitch = hasRealMaleVoice ? 0.94 : 0.82;
           }
 
           if (window.speechSynthesis.paused) {

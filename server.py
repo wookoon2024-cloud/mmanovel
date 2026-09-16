@@ -418,7 +418,7 @@ class MmaApiHandler(SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header('Content-Type', 'audio/mpeg')
                 self.send_header('Content-Length', str(len(content)))
-                self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
+                self.send_header('Cache-Control', 'public, max-age=86400')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(content)
