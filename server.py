@@ -9,8 +9,12 @@
 """
 
 import json
+import os
+import re
+import hashlib
+
 import sys
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 import urllib.parse
 
 try:
@@ -135,6 +139,72 @@ OFFICES = {
         "fare": 8500
     }
 }
+
+
+# =========================================================================
+# 🎙️ 고품질 뉴럴 TTS 음성 합성 엔진 (Microsoft Edge Neural TTS)
+# =========================================================================
+VOICE_MAP = {
+    'himchan': {'voice': 'ko-KR-HyunsuMultilingualNeural', 'rate': '+5%', 'pitch': '+3Hz'}, # 활기찬 열혈 멘토 힘찬이
+    'yuna': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                 # 다정하고 따뜻한 선배 멘토 유나 (여성)
+    'narae': {'voice': 'ko-KR-SunHiNeural', 'rate': '+2%', 'pitch': '+2Hz'},                # 유나 호환
+    'seojun': {'voice': 'ko-KR-BongJinNeural', 'rate': '+1%', 'pitch': '-1Hz'},              # 스마트한 전우 멘토 서준
+    'minwoo': {'voice': 'ko-KR-InJoonNeural', 'rate': '+0%', 'pitch': '-2Hz'},               # 20대 대학생 주인공 인준
+    'doctor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-3%', 'pitch': '-6Hz'},               # 전문의/군의관
+    'adjudicator': {'voice': 'ko-KR-InJoonNeural', 'rate': '-6%', 'pitch': '-10Hz'},         # 수석판정관
+    'counselor': {'voice': 'ko-KR-InJoonNeural', 'rate': '-2%', 'pitch': '-4Hz'},           # 상담관
+    
+    # English 모드
+    'en_himchan': {'voice': 'en-US-GuyNeural', 'rate': '+5%', 'pitch': '+4Hz'},
+    'en_yuna': {'voice': 'en-US-JennyNeural', 'rate': '+2%', 'pitch': '+2Hz'},
+    'en_narae': {'voice': 'en-US-JennyNeural', 'rate': '+2%', 'pitch': '+2Hz'},
+    'en_seojun': {'voice': 'en-US-DavisNeural', 'rate': '+1%', 'pitch': '-1Hz'},
+    'en_minwoo': {'voice': 'en-US-ChristopherNeural', 'rate': '+0%', 'pitch': '-2Hz'},
+    'en_doctor': {'voice': 'en-US-EricNeural', 'rate': '-4%', 'pitch': '-6Hz'},
+    'en_adjudicator': {'voice': 'en-US-RogerNeural', 'rate': '-8%', 'pitch': '-12Hz'}
+}
+
+def clean_dialogue_text(text=""):
+    t = text or ""
+    t = re.sub(r'\((일|월|화|수|목|금|토)\)', r'\1요일', t)
+    t = re.sub(r'<[^>]*>', ' ', t)
+    t = re.sub(r'[\[\]\{\}\(\)\✓\➔\▶\🏢\💡\📋\🌐\🎖️\•\※\①\②\③\④\⚠️\📸]', ' ', t)
+    t = re.sub(r'\r?\n|\r', ' ', t)
+    t = re.sub(r'\s+', ' ', t).strip()
+    return t
+
+def get_voice_config(speaker='', lang='ko', guide='himchan'):
+    is_en = (lang == 'en')
+    spk = (speaker or '').lower()
+    gd = (guide or 'himchan').lower()
+    
+    is_guide = any(k in spk for k in ['가이드', 'guide', '힘찬이', 'himchan', '유나', 'yuna', '나래', 'narae', '서준', 'seojun', '멘토', 'mentor'])
+    if is_guide:
+        if '힘찬이' in spk or 'himchan' in spk:
+            return VOICE_MAP['en_himchan'] if is_en else VOICE_MAP['himchan']
+        if '유나' in spk or 'yuna' in spk or '나래' in spk or 'narae' in spk:
+            return VOICE_MAP['en_yuna'] if is_en else VOICE_MAP['yuna']
+        if '서준' in spk or 'seojun' in spk:
+            return VOICE_MAP['en_seojun'] if is_en else VOICE_MAP['seojun']
+        if 'yuna' in gd or 'narae' in gd:
+            return VOICE_MAP['en_yuna'] if is_en else VOICE_MAP['yuna']
+        if 'seojun' in gd:
+            return VOICE_MAP['en_seojun'] if is_en else VOICE_MAP['seojun']
+        return VOICE_MAP['en_himchan'] if is_en else VOICE_MAP['himchan']
+
+    if any(k in spk for k in ['병리사', '방사선사', '간호', '여성', 'female', 'radiologist', 'pathologist']):
+        return VOICE_MAP['en_yuna'] if is_en else VOICE_MAP['yuna']
+    
+    if any(k in spk for k in ['김민우', '민우', '주인공', '예비역', '이동민', '동민', 'minwoo', 'protagonist', '수검자', '학생']):
+        return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
+        
+    if any(k in spk for k in ['수석판정관', '판정관', 'adjudicator']):
+        return VOICE_MAP['en_adjudicator'] if is_en else VOICE_MAP['adjudicator']
+        
+    if any(k in spk for k in ['전문의', '의무관', 'doctor', '의사', '상담관', '심리검사관', '교관', 'instructor', '상사', '조교']):
+        return VOICE_MAP['en_doctor'] if is_en else VOICE_MAP['doctor']
+        
+    return VOICE_MAP['en_minwoo'] if is_en else VOICE_MAP['minwoo']
 
 class MmaApiHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -281,13 +351,63 @@ class MmaApiHandler(SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(res_data, ensure_ascii=False).encode('utf-8'))
             return
 
+        # 3. 고품질 뉴럴 TTS 음성 실시간 합성 API 엔드포인트 (/api/tts)
+        elif parsed.path == '/api/tts':
+            speaker = params.get('speaker', [''])[0]
+            text = params.get('text', [''])[0]
+            lang = params.get('lang', ['ko'])[0]
+            guide = params.get('guide', ['himchan'])[0]
+            
+            clean_text = clean_dialogue_text(text)
+            if not clean_text:
+                self.send_response(400)
+                self.end_headers()
+                return
+
+            v_conf = get_voice_config(speaker, lang, guide)
+            voice = v_conf['voice']
+            rate = v_conf.get('rate', '+0%')
+            pitch = v_conf.get('pitch', '+0Hz')
+            
+            cache_dir = os.path.join(os.path.dirname(__file__), 'cache', 'tts')
+            os.makedirs(cache_dir, exist_ok=True)
+            cache_key = hashlib.md5(f"{voice}:{rate}:{pitch}:{clean_text}".encode('utf-8')).hexdigest()
+            cache_file = os.path.join(cache_dir, f"{cache_key}.mp3")
+            
+            if not os.path.exists(cache_file) or os.path.getsize(cache_file) == 0:
+                try:
+                    import edge_tts, asyncio
+                    comm = edge_tts.Communicate(clean_text, voice, rate=rate, pitch=pitch)
+                    asyncio.run(comm.save(cache_file))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header('Content-Type', 'text/plain; charset=utf-8')
+                    self.end_headers()
+                    self.wfile.write(f"TTS Error: {e}".encode('utf-8'))
+                    return
+            
+            try:
+                with open(cache_file, 'rb') as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'audio/mpeg')
+                self.send_header('Content-Length', str(len(content)))
+                self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(content)
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+            return
+
         # 3. 정적 파일 (index.html, assets, scenario.js 등) 제공
         return super().do_GET()
 
 if __name__ == '__main__':
     print(f"🚀 [병무청 비주얼 노벨] 웹 서버가 http://localhost:{PORT} 에서 실행 중입니다.")
     print(f"💡 브라우저에서 http://localhost:{PORT} 에 접속하여 시뮬레이션을 즐기세요.")
-    httpd = HTTPServer(('0.0.0.0', PORT), MmaApiHandler)
+    httpd = ThreadingHTTPServer(('0.0.0.0', PORT), MmaApiHandler)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

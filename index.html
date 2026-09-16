@@ -100,6 +100,59 @@
         flex-shrink: 1 !important;
       }
     }
+
+    /* ================= [태블릿 가로 및 높이 850px 이하 반응형 완벽 최적화] ================= */
+    @media (max-height: 850px) and (min-width: 640px) {
+      #main-menu-overlay {
+        padding-top: 0 !important;
+        padding-bottom: 0.5rem !important;
+      }
+      .lobby-content-container {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+      #lobby-select-title {
+        font-size: 1.15rem !important;
+        margin-bottom: 0.2rem !important;
+      }
+      #lobby-sub-title {
+        display: none !important;
+      }
+      .episode-card {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: calc(100vh - 135px) !important;
+      }
+      .episode-poster-wrapper {
+        height: 220px !important;
+        max-height: 33vh !important;
+      }
+      .episode-card-body {
+        padding: 0.5rem 0.75rem !important;
+      }
+      .episode-hashtags {
+        display: none !important;
+      }
+      .episode-title {
+        font-size: 0.95rem !important;
+      }
+      .episode-desc {
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+        -webkit-line-clamp: 2 !important;
+      }
+    }
+    @media (max-height: 680px) and (min-width: 640px) {
+      .episode-poster-wrapper {
+        height: 175px !important;
+        max-height: 28vh !important;
+      }
+      .episode-card {
+        max-height: calc(100vh - 110px) !important;
+      }
+    }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden text-white bg-slate-950">
@@ -141,6 +194,10 @@
       <button id="btn-settings" onclick="openSettingsModal()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="AI 가이드 캐릭터 및 음성 변경">
         <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-600"></i> <span id="label-settings" class="hidden md:inline">가이드</span>
       </button>
+            <!-- 전체화면 토글 (모바일/태블릿/PC 공통) -->
+      <button id="btn-fullscreen-header" onclick="toggleFullscreen()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="전체화면 On/Off">
+        <i id="fullscreen-icon-header" data-lucide="maximize" class="w-3.5 h-3.5 text-blue-600"></i> <span class="hidden md:inline">전체화면</span>
+      </button>
       <!-- 음성 TTS On/Off (모바일 숨김) -->
       <button id="btn-sound" onclick="toggleSound()" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition items-center gap-1 text-slate-600 font-bold shadow-sm cursor-pointer shrink-0 text-xs focus:outline-none" title="TTS 음성 On/Off">
         <i id="sound-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-slate-400"></i> <span id="sound-label" class="hidden md:inline text-xs">음소거 OFF</span>
@@ -177,6 +234,9 @@
             </div>
           </div>
         </div>
+                <button id="btn-fullscreen-lobby" onclick="toggleFullscreen()" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold text-xs shadow-sm cursor-pointer" title="전체화면 On/Off">
+          <i id="fullscreen-icon-lobby" data-lucide="maximize" class="w-3.5 h-3.5 text-blue-600"></i> <span id="fullscreen-label-lobby" class="hidden sm:inline">전체화면</span>
+        </button>
         <button onclick="toggleLanguage()" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold text-xs shadow-sm cursor-pointer" title="다국어 언어 변경 (KO / EN)">
           <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span class="lobby-lang-label">EN</span>
         </button>
@@ -184,7 +244,7 @@
     </div>
 
     <!-- 로비 메인 콘텐츠: 시나리오 선택 카드 그리드 & 하단 정보 (일체형 흐름) -->
-    <div class="max-w-5xl w-full mx-auto my-0 sm:my-auto pt-1 pb-1 sm:pt-2 sm:pb-2 px-2 sm:px-6 space-y-1 sm:space-y-3">
+    <div class="lobby-content-container max-w-5xl w-full mx-auto my-0 sm:my-auto pt-1 pb-1 sm:pt-2 sm:pb-2 px-2 sm:px-6 space-y-1 sm:space-y-3">
       <div class="text-center pt-0.5 sm:pt-0">
         <span class="text-[9px] sm:text-xs font-bold text-blue-400 tracking-wide uppercase block mb-0.5">
           Scenario Episodes
@@ -216,9 +276,9 @@
             
             <!-- [SLIDE 1: 제1화 병역판정검사] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
+              <div class="episode-card group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
                 <!-- 포스터 이미지 영역 (인물과 폰이 온전히 다 보이는 높이 유지) -->
-                <div id="ep1-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+                <div id="ep1-poster-wrapper" class="episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep1_cover.jpg" alt="제1화 병역판정검사" class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep1-live-video" src="assets/ep1_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/30 pointer-events-none"></div>
@@ -239,18 +299,18 @@
                 </div>
 
                 <!-- 하단 설명 및 버튼 영역 (세로 크기 고정 상태에서 여백 없이 완벽 결합) -->
-                <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="episode-card-body p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
                   <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep1-title-text" class="text-sm sm:text-lg font-bold text-white tracking-tight">
+                      <h3 id="ep1-title-text" class="episode-title text-sm sm:text-lg font-bold text-white tracking-tight">
                         청춘의 첫 관문
                       </h3>
-                      <p id="ep1-desc-text" class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep1-desc-text" class="episode-desc text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-snug line-clamp-2">
                         통지서 확인부터 실시간 공석 변경, 질환별 구비서류 점검, 정밀 신검(BMI) 및 지급여비 정산까지 완벽 시뮬레이션!
                       </p>
                     </div>
 
-                    <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
+                    <div class="episode-hashtags hidden sm:flex flex-wrap gap-1.5 pt-0.5">
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#검사일정선택</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#구비서류준비</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-medium">#가상시나리오</span>
@@ -269,8 +329,8 @@
 
             <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
-                <div id="ep2-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="episode-card group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
+                <div id="ep2-poster-wrapper" class="episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
                   <video id="ep2-live-video" src="assets/ep2_video.mp4" loop muted playsinline preload="auto" class="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></video>
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/50 pointer-events-none"></div>
@@ -287,18 +347,18 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="episode-card-body p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
                   <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep2-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep2-title-text" class="episode-title text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         슬기로운 예비군 훈련 생활
                       </h3>
-                      <p id="ep2-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep2-desc-text" class="episode-desc text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         동원·동미참·학생 예비군 소집통지서 확인부터 전국 단위 자율 훈련 신청 및 훈련 연기, 실시간 훈련보상비 가이드
                       </p>
                     </div>
 
-                    <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
+                    <div class="episode-hashtags hidden sm:flex flex-wrap gap-1.5 pt-0.5">
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#동원훈련소집</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#자율훈련신청</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-500 font-medium">#훈련연기사유</span>
@@ -317,8 +377,8 @@
 
             <!-- [SLIDE 3: 제3화 병역진로설계] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
-                <div id="ep3-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="episode-card group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
+                <div id="ep3-poster-wrapper" class="episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep3_cover.jpg?v=20260911_ep3" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -334,18 +394,18 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="episode-card-body p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
                   <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep3-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep3-title-text" class="episode-title text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         내 꿈을 찾는 병역진로설계
                       </h3>
-                      <p id="ep3-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep3-desc-text" class="episode-desc text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         입영 전 적성·전공 연계 1:1 맞춤 군 특기 상담부터 모의 군 장비 체험, 자격 취득 및 복무 중 자기개발 로드맵!
                       </p>
                     </div>
 
-                    <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
+                    <div class="episode-hashtags hidden sm:flex flex-wrap gap-1.5 pt-0.5">
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#병역진로설계</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#1:1군특기상담</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#직업선호도</span>
@@ -364,8 +424,8 @@
 
             <!-- [SLIDE 4: 제4화 사회복무요원 첫 출근 (준비 중)] -->
             <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
-              <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
-                <div id="ep4-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
+              <div class="episode-card group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
+                <div id="ep4-poster-wrapper" class="episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep4_cover.jpg?v=20260904_v189" alt="제4화 사회복무요원 첫 출근" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/40 pointer-events-none"></div>
                   
@@ -379,18 +439,18 @@
                   </div>
                 </div>
 
-                <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="episode-card-body p-2.5 sm:p-4 flex-1 flex flex-col justify-between overflow-hidden">
                   <div class="space-y-1 sm:space-y-1.5">
                     <div>
-                      <h3 id="ep4-title-text" class="text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
+                      <h3 id="ep4-title-text" class="episode-title text-sm sm:text-lg font-bold text-slate-200 tracking-tight">
                         사회복무 첫 출근
                       </h3>
-                      <p id="ep4-desc-text" class="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                      <p id="ep4-desc-text" class="episode-desc text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug line-clamp-2">
                         사회복무요원 소집통지서 확인부터 복무기관 첫 출근, 기본 직무교육, 복무 분야별(행정/복지/안전) 스마트 실무 가이드!
                       </p>
                     </div>
 
-                    <div class="hidden sm:flex flex-wrap gap-1.5 pt-0.5">
+                    <div class="episode-hashtags hidden sm:flex flex-wrap gap-1.5 pt-0.5">
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#사회복무요원</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#첫출근가이드</span>
                       <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-950 text-slate-400 font-medium">#복무기관배치</span>
@@ -1541,7 +1601,7 @@
 
     // 오디오 비프음 생성 (Web Audio API)
     function playBeep(freq = 560, type = 'sine', duration = 0.03) {
-      if (!soundEnabled || window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) return;
+      if (!soundEnabled) return;
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
@@ -1859,6 +1919,64 @@
     let currentVoiceAudio = null;
     let availableVoices = [];
 
+    
+    // ================= [전체화면 (Fullscreen) 토글 및 모바일 오디오 잠금 해제] =================
+    function toggleFullscreen() {
+      const doc = document;
+      const docEl = doc.documentElement;
+      const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+      try {
+        if (!isFs) {
+          if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
+          else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+          else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
+          else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen();
+        } else {
+          if (doc.exitFullscreen) doc.exitFullscreen().catch(() => {});
+          else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen();
+          else if (doc.mozCancelFullScreen) doc.mozCancelFullScreen();
+          else if (doc.msExitFullscreen) doc.msExitFullscreen();
+        }
+      } catch(e) {}
+    }
+
+    function updateFullscreenState() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      const iconLobby = document.getElementById('fullscreen-icon-lobby');
+      const iconHeader = document.getElementById('fullscreen-icon-header');
+      const labelLobby = document.getElementById('fullscreen-label-lobby');
+      if (iconLobby) iconLobby.setAttribute('data-lucide', isFs ? 'minimize' : 'maximize');
+      if (iconHeader) iconHeader.setAttribute('data-lucide', isFs ? 'minimize' : 'maximize');
+      if (labelLobby) labelLobby.innerText = isFs ? (currentLang === 'en' ? 'Window' : '창모드') : (currentLang === 'en' ? 'Fullscreen' : '전체화면');
+      if (window.lucide) lucide.createIcons();
+    }
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+      document.addEventListener(evt, updateFullscreenState);
+    });
+
+    // 모바일/태블릿 최초 터치 시 브라우저 오디오 & Web Speech 권한 자동 언락
+    function setupMobileAudioUnlock() {
+      const unlock = () => {
+        try {
+          const dummy = new Audio();
+          dummy.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+          dummy.play().catch(() => {});
+        } catch(e) {}
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.resume();
+          } catch(e) {}
+        }
+        window.removeEventListener('touchstart', unlock);
+        window.removeEventListener('touchend', unlock);
+        window.removeEventListener('click', unlock);
+      };
+      window.addEventListener('touchstart', unlock, { once: true, passive: true });
+      window.addEventListener('touchend', unlock, { once: true, passive: true });
+      window.addEventListener('click', unlock, { once: true, passive: true });
+    }
+    setupMobileAudioUnlock();
+
     function initTTSVoices() {
       if (!('speechSynthesis' in window)) return;
       const load = () => {
@@ -1890,7 +2008,7 @@
 
     let currentVoiceSeq = 0;
     function speakDialogue(speaker, text, audioKey = null) {
-      if (!soundEnabled || window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
+      if (!soundEnabled) {
         stopVoiceAudio();
         return;
       }
@@ -1936,7 +2054,7 @@
     }
 
     function speakWithWebSpeech(speaker, text) {
-      if (!soundEnabled || !('speechSynthesis' in window) || window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) return;
+      if (!soundEnabled || !('speechSynthesis' in window)) return;
       try {
         window.speechSynthesis.cancel();
         
@@ -2006,46 +2124,47 @@
           }
           window.speechSynthesis.speak(utterance);
         } else {
-          // 한국어: 시스템에 설치된 한국어 보이스 탐색 및 화자별 피치·속도 맞춤 분기
+          // 한국어: 시스템에 설치된 한국어 보이스 탐색 (삼성/구글 TTS 호환) 및 자연스러운 음조 보정
           const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
-          const femaleVoice = pickVoice(koVoices, ['sunhi', '선희', 'heami', '혜미', 'yuna', '유나', 'female', '여성']);
-          const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호']);
+          const femaleVoice = pickVoice(koVoices, ['sunhi', '선희', 'heami', '혜미', 'yuna', '유나', 'female', '여성', 'kfb', 'kfc', 'sfg']) || koVoices[0] || null;
+          const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호', 'ism', 'kob']) || (koVoices.length > 1 ? koVoices[1] : koVoices[0]) || null;
           
           if (isGuideSpeaker) {
             if (curGuide === 'yuna' || curGuide === 'narae') {
-              utterance.voice = femaleVoice || koVoices[0] || null;
+              utterance.voice = femaleVoice;
               utterance.rate = 1.0;
-              utterance.pitch = 1.15;
+              utterance.pitch = 1.05;
             } else if (curGuide === 'seojun') {
-              utterance.voice = maleVoice || koVoices[0] || null;
+              utterance.voice = maleVoice;
               utterance.rate = 1.02;
-              utterance.pitch = maleVoice ? 0.92 : 0.70;
+              utterance.pitch = 0.98;
             } else {
-              utterance.voice = maleVoice || femaleVoice || koVoices[0] || null;
-              utterance.rate = 1.06;
-              utterance.pitch = maleVoice ? 1.22 : 0.95;
+              utterance.voice = maleVoice || femaleVoice;
+              utterance.rate = 1.05;
+              utterance.pitch = 1.03;
             }
           } else if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('여성')) {
-            // 여성 의료진(임상병리사, 방사선사 등): 상냥하고 또렷한 여성 톤
-            utterance.voice = femaleVoice || koVoices[0] || null;
+            utterance.voice = femaleVoice;
             utterance.rate = 1.0;
-            utterance.pitch = 1.12;
-          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
-            utterance.voice = maleVoice || koVoices[0] || null;
+            utterance.pitch = 1.04;
+          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('이동민') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
+            utterance.voice = maleVoice;
             utterance.rate = 0.98;
-            utterance.pitch = maleVoice ? 0.96 : 0.75;
+            utterance.pitch = 0.98;
           } else if (spk.includes('판정관') || spk.includes('adjudicator')) {
-            // 50대 수석판정관: 묵직한 베이스 저음
-            utterance.voice = maleVoice || koVoices[0] || null;
-            utterance.rate = 0.85;
-            utterance.pitch = maleVoice ? 0.65 : 0.45;
+            utterance.voice = maleVoice;
+            utterance.rate = 0.90;
+            utterance.pitch = 0.92;
           } else {
-            // 의사 / 심리검사관 / 상담관: 차분하고 신뢰감 있는 남성 전문의 톤
-            utterance.voice = maleVoice || koVoices[0] || null;
-            utterance.rate = 0.92;
-            utterance.pitch = maleVoice ? 0.80 : 0.55;
+            // 의사 / 심리검사관 / 상담관 / 교관
+            utterance.voice = maleVoice;
+            utterance.rate = 0.94;
+            utterance.pitch = 0.95;
           }
 
+          if (window.speechSynthesis.paused) {
+            try { window.speechSynthesis.resume(); } catch (e) {}
+          }
           window.speechSynthesis.speak(utterance);
         }
       } catch (e) {}
@@ -7901,7 +8020,7 @@
       if (save && save.sceneIdx > 0 && save.sceneIdx < (typeof SCENARIOS !== 'undefined' ? SCENARIOS.length : 12)) {
         // 포스터 높이 유지 (인물과 통지서 스마트폰 온전히 노출)
         if (poster1) {
-          poster1.className = "relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         let stepText = (currentLang === 'en') ? "STEP 1: Rescheduling" : "STEP 1: 일정 변경";
         if (save.sceneIdx === 4) stepText = (currentLang === 'en') ? "STEP 2: Document Check" : "STEP 2: 구비서류 점검";
@@ -7934,7 +8053,7 @@
       } else {
         // 이어하기가 없을 때 포스터 높이 유지
         if (poster1) {
-          poster1.className = "relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
+          poster1.className = "episode-poster-wrapper relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0";
         }
         const playableText = (currentLang === 'en') ? "Playable" : "플레이 가능";
         if (badgeContainer) {
