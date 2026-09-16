@@ -1427,20 +1427,10 @@
       audio.onended = finishPreview;
       audio.onerror = () => {
         if (seq !== previewVoiceSeq) return;
-        if ('speechSynthesis' in window) {
-          try {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = isEn ? 'en-US' : 'ko-KR';
-            utterance.onend = finishPreview;
-            utterance.onerror = finishPreview;
-            window.speechSynthesis.speak(utterance);
-          } catch (e) {
-            finishPreview();
-          }
-        } else {
-          finishPreview();
-        }
+        try {
+          speakWithWebSpeech(g.name, text);
+        } catch (e) {}
+        setTimeout(finishPreview, 3500);
       };
 
       audio.src = ttsUrl;
@@ -1449,20 +1439,10 @@
         p.catch(err => {
           if (seq !== previewVoiceSeq) return;
           if (err.name === 'AbortError') return;
-          if ('speechSynthesis' in window) {
-            try {
-              window.speechSynthesis.cancel();
-              const utterance = new SpeechSynthesisUtterance(text);
-              utterance.lang = isEn ? 'en-US' : 'ko-KR';
-              utterance.onend = finishPreview;
-              utterance.onerror = finishPreview;
-              window.speechSynthesis.speak(utterance);
-            } catch (e) {
-              finishPreview();
-            }
-          } else {
-            finishPreview();
-          }
+          try {
+            speakWithWebSpeech(g.name, text);
+          } catch (e) {}
+          setTimeout(finishPreview, 3500);
         });
       }
     }
@@ -1896,6 +1876,7 @@
     initTTSVoices();
 
     function stopVoiceAudio() {
+      currentVoiceSeq++; // 진행 중인 비동기 오디오 프로미스 및 콜백 즉시 무효화 (이전 오디오로 인한 오작동 원천 차단)
       if (typeof stopPreviewAudio === 'function') {
         stopPreviewAudio();
       }
@@ -1913,6 +1894,27 @@
     }
 
     let currentVoiceSeq = 0;
+    const preloadedTtsUrls = new Set();
+    function preloadTts(speaker, text) {
+      if (!text || !soundEnabled) return;
+      const cleanText = (text || '')
+        .replace(/\((일|월|화|수|목|금|토)\)/g, '$1요일')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\[|\]|\{|\}|\(|\)|✓|➔|▶|🏢|💡|📋|🌐|🎖️|•|※|①|②|③|④|⚠️|📸/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (!cleanText) return;
+      const guideParam = encodeURIComponent((userData && userData.selectedGuide) || 'himchan');
+      const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}`;
+      if (preloadedTtsUrls.has(ttsUrl)) return;
+      preloadedTtsUrls.add(ttsUrl);
+      try {
+        const audio = new Audio();
+        audio.preload = 'auto';
+        audio.src = ttsUrl;
+      } catch (e) {}
+    }
+
     function speakDialogue(speaker, text, audioKey = null) {
       if (!soundEnabled) {
         stopVoiceAudio();
@@ -1930,8 +1932,8 @@
 
       if (!cleanText) return;
 
-      // [오픈소스 뉴럴 음성 실시간 스트리밍] 멘토별 뉴럴 보이스 (힘찬이/나래/서준) 오픈소스 TTS API 우선 재생
-      const guideParam = encodeURIComponent(userData.selectedGuide || 'himchan');
+      // [오픈소스 뉴럴 음성 실시간 스트리밍] 멘토별 고품질 뉴럴 보이스 (/api/tts)
+      const guideParam = encodeURIComponent((userData && userData.selectedGuide) || 'himchan');
       const ttsUrl = `/api/tts?speaker=${encodeURIComponent(speaker || '')}&text=${encodeURIComponent(cleanText)}&lang=${currentLang || 'ko'}&guide=${guideParam}`;
       const audio = new Audio();
       currentVoiceAudio = audio;
@@ -1946,15 +1948,17 @@
       };
 
       audio.onerror = () => {
+        if (currentVoiceSeq !== seq) return;
         fallbackToWebSpeech();
       };
 
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(err => {
-          if (err.name !== 'AbortError') {
-            fallbackToWebSpeech();
-          }
+          if (currentVoiceSeq !== seq) return;
+          // 다음 대사 클릭이나 일시정지로 인한 AbortError는 폴백 발동 금지
+          if (err.name === 'AbortError') return;
+          fallbackToWebSpeech();
         });
       }
     }
@@ -1982,95 +1986,125 @@
           availableVoices = window.speechSynthesis.getVoices() || [];
         }
 
-        const spk = speaker || '';
-        const curGuide = userData.selectedGuide || 'himchan';
-        const isGuideSpeaker = spk.includes('힘찬이') || spk.includes('Himchan') || spk.includes('유나') || spk.includes('Yuna') || spk.includes('나래') || spk.includes('Narae') || spk.includes('서준') || spk.includes('Seojun') || spk.includes('가이드') || spk.includes('Guide');
+        const spk = (speaker || '');
+        const spkLower = spk.toLowerCase();
+        const curGuide = (userData && userData.selectedGuide) || 'himchan';
 
-        const pickVoice = (voices, keywords) => {
-          for (const kw of keywords) {
-            const found = voices.find(v => v.name.toLowerCase().includes(kw.toLowerCase()));
-            if (found) return found;
-          }
-          return null;
-        };
-
-        const isNativeMale = (v) => {
-          if (!v) return false;
-          return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|male|남성|guy|david|mark|george|ryan|james|brian|eric/i.test(v.name);
-        };
+        // 1. 화자 역할 엄격 판별 (화자 이름 우선 매칭!)
+        // 사용자가 이전에 유나를 선택했더라도 현재 대사의 화자가 '힘찬이'면 무조건 힘찬이(남성)로 발성!
+        let charRole = 'other';
+        if (spk.includes('힘찬이') || spkLower.includes('himchan')) {
+          charRole = 'himchan';
+        } else if (spk.includes('유나') || spkLower.includes('yuna') || spk.includes('나래') || spkLower.includes('narae')) {
+          charRole = 'yuna';
+        } else if (spk.includes('서준') || spkLower.includes('seojun')) {
+          charRole = 'seojun';
+        } else if (spk.includes('가이드') || spkLower.includes('guide') || spk.includes('멘토') || spkLower.includes('mentor')) {
+          charRole = curGuide;
+        } else if (/병리사|방사선사|간호|여성|female|radiologist|pathologist/i.test(spk)) {
+          charRole = 'female_npc';
+        } else if (/김민우|민우|주인공|예비역|이동민|minwoo|protagonist/i.test(spk)) {
+          charRole = 'minwoo';
+        } else if (/판정관|adjudicator/i.test(spk)) {
+          charRole = 'adjudicator';
+        } else {
+          charRole = 'doctor';
+        }
 
         if (isEnglish) {
-          const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
-          if (isGuideSpeaker) {
-            if (curGuide === 'yuna' || curGuide === 'narae') {
-              utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
-              utterance.rate = 1.0;
-              utterance.pitch = 1.1;
-            } else if (curGuide === 'seojun') {
-              utterance.voice = pickVoice(enVoices, ['guy', 'brian', 'male']) || enVoices[0] || null;
-              utterance.rate = 1.0;
-              utterance.pitch = 0.95;
-            } else {
-              utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
-              utterance.rate = 1.08;
-              utterance.pitch = isNativeMale(utterance.voice) ? 1.15 : 0.85;
+          const enVoices = availableVoices.filter(v => (v.lang || '').toLowerCase().startsWith('en'));
+          const pickVoice = (voices, keywords) => {
+            for (const kw of keywords) {
+              const found = voices.find(v => (v.name || '').toLowerCase().includes(kw.toLowerCase()));
+              if (found) return found;
             }
-          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
-            utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
+            return null;
+          };
+          const isEnMale = (v) => v && /male|guy|david|mark|george|ryan|james|brian|eric/i.test(v.name);
+
+          if (charRole === 'yuna') {
+            utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
             utterance.rate = 1.0;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.95 : 0.70;
-          } else if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('radiologist') || spk.includes('pathologist')) {
+            utterance.pitch = 1.1;
+          } else if (charRole === 'seojun') {
+            utterance.voice = pickVoice(enVoices, ['guy', 'brian', 'male']) || enVoices[0] || null;
+            utterance.rate = 1.0;
+            utterance.pitch = 0.95;
+          } else if (charRole === 'himchan') {
+            utterance.voice = pickVoice(enVoices, ['ryan', 'guy', 'david', 'male']) || enVoices[0] || null;
+            utterance.rate = 1.08;
+            utterance.pitch = isEnMale(utterance.voice) ? 1.15 : 0.85;
+          } else if (charRole === 'female_npc') {
             utterance.voice = pickVoice(enVoices, ['jenny', 'samantha', 'victoria', 'female']) || enVoices[0] || null;
             utterance.rate = 1.0;
             utterance.pitch = 1.05;
-          } else {
+          } else if (charRole === 'minwoo') {
+            utterance.voice = pickVoice(enVoices, ['mark', 'james', 'david', 'male']) || enVoices[0] || null;
+            utterance.rate = 1.0;
+            utterance.pitch = isEnMale(utterance.voice) ? 0.95 : 0.70;
+          } else if (charRole === 'adjudicator') {
             utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
             utterance.rate = 0.88;
-            utterance.pitch = isNativeMale(utterance.voice) ? 0.70 : 0.50;
+            utterance.pitch = isEnMale(utterance.voice) ? 0.70 : 0.50;
+          } else {
+            utterance.voice = pickVoice(enVoices, ['george', 'brian', 'eric', 'male']) || enVoices[0] || null;
+            utterance.rate = 0.94;
+            utterance.pitch = isEnMale(utterance.voice) ? 0.85 : 0.65;
           }
           window.speechSynthesis.speak(utterance);
         } else {
-          // 한국어: 시스템에 설치된 한국어 보이스 탐색 (삼성/구글 TTS 호환)
-          const koVoices = availableVoices.filter(v => v.lang.includes('ko') || v.lang.includes('KO'));
-          const femaleVoice = pickVoice(koVoices, ['sunhi', '선희', 'heami', '혜미', 'yuna', '유나', 'female', '여성', 'kfb', 'kfc', 'sfg']) || koVoices[0] || null;
-          const maleVoice = pickVoice(koVoices, ['injoon', '인준', 'male', '남성', 'bongjin', '봉진', 'gookmin', '국민', 'yunho', '윤호', 'ism', 'kob']) || null;
-          const isNativeMaleVoice = !!maleVoice;
-          const defaultVoice = maleVoice || femaleVoice || (koVoices.length > 0 ? koVoices[0] : null);
+          // 한국어: 시스템에 설치된 한국어 보이스 탐색 (삼성/구글/마이크로소프트 TTS 호환)
+          const koVoices = availableVoices.filter(v => (v.lang || '').toLowerCase().replace('_', '-').startsWith('ko'));
           
-          if (isGuideSpeaker) {
-            if (curGuide === 'yuna' || curGuide === 'narae') {
-              // 여성 멘토 유나 (다정하고 따뜻한 여성 음성)
-              utterance.voice = femaleVoice;
-              utterance.rate = 1.0;
-              utterance.pitch = 1.06;
-            } else if (curGuide === 'seojun') {
-              // 남성 스마트 멘토 서준 (차분한 스마트 청년 남성 음성)
-              utterance.voice = maleVoice || defaultVoice;
-              utterance.rate = 1.02;
-              utterance.pitch = isNativeMaleVoice ? 0.98 : 0.74;
-            } else {
-              // 남성 열혈 멘토 힘찬이: 시스템 보이스가 여성 기본 보이스인 환경에서는 피치를 0.76으로 확실하게 낮춰 씩씩한 소년/청년 남성 음성으로 출력!
-              utterance.voice = maleVoice || defaultVoice;
-              utterance.rate = 1.06;
-              utterance.pitch = isNativeMaleVoice ? 1.06 : 0.76;
-            }
-          } else if (spk.includes('병리사') || spk.includes('방사선사') || spk.includes('간호') || spk.includes('여성')) {
+          // 구글 TTS의 ism, kfb, kfc는 여성 보이스이므로 남성 보이스 탐색 시 절대 매칭되지 않도록 방어!
+          const maleVoice = koVoices.find(v => {
+            const n = (v.name || '').toLowerCase();
+            if (/female|여성|girl|woman|ism|kfb|kfc|sfg#female/i.test(n)) return false;
+            return /injoon|인준|bongjin|봉진|gookmin|국민|yunho|윤호|kob|kod|koe|male|남성|boy|man|sfg#male/i.test(n);
+          }) || null;
+
+          const femaleVoice = koVoices.find(v => {
+            const n = (v.name || '').toLowerCase();
+            if (/male|남성|boy|man|kob|kod|koe|sfg#male/i.test(n)) return false;
+            return /sunhi|선희|heami|혜미|yuna|유나|female|여성|ism|kfb|kfc|sfg/i.test(n);
+          }) || koVoices[0] || null;
+
+          const hasRealMaleVoice = !!maleVoice;
+          const defaultVoice = maleVoice || femaleVoice || (koVoices.length > 0 ? koVoices[0] : null);
+
+          if (charRole === 'himchan') {
+            // [열혈 멘토 힘찬이]: 남성 음성 필수!
+            // 시스템에 남성 보이스가 있으면 남성 보이스 사용, 없으면 음조를 0.82로 안정적으로 낮춰 남성 청년 톤 유지!
+            utterance.voice = maleVoice || defaultVoice;
+            utterance.rate = 1.05;
+            utterance.pitch = hasRealMaleVoice ? 1.02 : 0.82;
+          } else if (charRole === 'yuna') {
+            // [다정 멘토 유나]: 여성 음성 고정
+            utterance.voice = femaleVoice;
+            utterance.rate = 1.0;
+            utterance.pitch = 1.06;
+          } else if (charRole === 'seojun') {
+            // [스마트 멘토 서준]: 스마트 청년 남성 음성
+            utterance.voice = maleVoice || defaultVoice;
+            utterance.rate = 1.02;
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.78;
+          } else if (charRole === 'female_npc') {
             utterance.voice = femaleVoice;
             utterance.rate = 1.0;
             utterance.pitch = 1.04;
-          } else if (spk.includes(userData.name || '김민우') || spk.includes('주인공') || spk.includes('예비역') || spk.includes('이동민') || spk.includes('Minwoo') || spk.includes('Protagonist')) {
+          } else if (charRole === 'minwoo') {
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.98;
-            utterance.pitch = isNativeMaleVoice ? 0.98 : 0.74;
-          } else if (spk.includes('판정관') || spk.includes('adjudicator')) {
+            utterance.pitch = hasRealMaleVoice ? 0.98 : 0.76;
+          } else if (charRole === 'adjudicator') {
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.90;
-            utterance.pitch = isNativeMaleVoice ? 0.90 : 0.65;
+            utterance.pitch = hasRealMaleVoice ? 0.88 : 0.68;
           } else {
             // 의사 / 심리검사관 / 상담관 / 교관
             utterance.voice = maleVoice || defaultVoice;
             utterance.rate = 0.94;
-            utterance.pitch = isNativeMaleVoice ? 0.95 : 0.70;
+            utterance.pitch = hasRealMaleVoice ? 0.94 : 0.72;
           }
 
           if (window.speechSynthesis.paused) {
@@ -2672,6 +2706,16 @@
 
       // AI TTS 음성 낭독 실행
       speakDialogue(currentSpeaker, targetText, item.audioKey || null);
+
+      // 다음 문단 대사 TTS 오디오 백그라운드 사전 로딩 (문단 전환 시 0ms 즉각 재생)
+      if (currentDialogueIdx + 1 < currentDialogueList.length) {
+        const nextRaw = currentDialogueList[currentDialogueIdx + 1] || {};
+        const nextItem = (typeof getGuideResolvedItem === 'function') ? getGuideResolvedItem(nextRaw) : nextRaw;
+        const nextRawText = (currentLang === 'en' && nextItem.text_en) ? nextItem.text_en : (nextItem.text || '');
+        const nextTxt = formatSceneText(nextRawText);
+        const nextSpk = (currentLang === 'en' && nextItem.speaker_en) ? nextItem.speaker_en : (nextItem.speaker || scene.speaker);
+        preloadTts(nextSpk, nextTxt);
+      }
 
       typewriterEffect(targetText, () => {
         if (isLastChunk) {

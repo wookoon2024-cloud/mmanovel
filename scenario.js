@@ -15,7 +15,7 @@ const GUIDE_PERSONAS = {
     desc: "긍정적인 에너지와 활기찬 응원으로 긴장감을 풀어주는 든든한 멘토입니다.",
     desc_en: "Boosts your confidence with energetic encouragement and friendly spirit.",
     gender: "male",
-    voice: "ko-KR-HyunsuMultilingualNeural",
+    voice: "ko-KR-InJoonNeural",
     voice_en: "en-US-RyanMultilingualNeural",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
     badgeColor: "bg-blue-600",

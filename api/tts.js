@@ -3,7 +3,8 @@ const path = require('path');
 const crypto = require('crypto');
 const WebSocket = require('ws');
 
-const CACHE_DIR = process.env.VERCEL ? path.join('/tmp', 'tts') : path.join(process.cwd(), 'cache', 'tts');
+const BUNDLED_CACHE_DIR = path.join(process.cwd(), 'cache', 'tts');
+const CACHE_DIR = process.env.VERCEL ? path.join('/tmp', 'tts') : BUNDLED_CACHE_DIR;
 try {
   if (!fs.existsSync(CACHE_DIR)) {
     fs.mkdirSync(CACHE_DIR, { recursive: true });
@@ -141,9 +142,13 @@ function synthesizeSpeech(text, voiceConfig) {
   const key = crypto.createHash('md5').update(`${voice}:${rate}:${pitch}:${text}`).digest('hex');
   const targetFile = path.join(CACHE_DIR, `${key}.mp3`);
 
-  // 1. 이미 디스크에 캐싱된 오디오 파일이 있으면 즉시 반환
-  if (fs.existsSync(targetFile)) {
+  // 1. 이미 디스크 또는 번들 저장소에 캐싱된 오디오 파일이 있으면 즉시 반환
+  if (fs.existsSync(targetFile) && fs.statSync(targetFile).size > 0) {
     return Promise.resolve(targetFile);
+  }
+  const bundledFile = path.join(BUNDLED_CACHE_DIR, `${key}.mp3`);
+  if (fs.existsSync(bundledFile) && fs.statSync(bundledFile).size > 0) {
+    return Promise.resolve(bundledFile);
   }
 
   // 2. 동일한 텍스트/화자 요청이 진행 중이면 기존 Promise 공유 (중복 호출 방지)
@@ -289,13 +294,22 @@ module.exports = async (req, res) => {
 
   const { speaker = '김민우', text = '', lang = 'ko', guide = '' } = (req.method === 'POST' ? (req.body || {}) : (req.query || {}));
 
+  const sendError = (status, msg) => {
+    if (typeof res.status === 'function') {
+      return res.status(status).json({ error: msg });
+    }
+    res.statusCode = status;
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.end(JSON.stringify({ error: msg }));
+  };
+
   if (!text || text.trim() === '') {
-    return res.status(400).json({ error: 'Missing text parameter' });
+    return sendError(400, 'Missing text parameter');
   }
 
   const cleanText = cleanDialogueText(text);
   if (!cleanText) {
-    return res.status(400).json({ error: 'Empty text after cleaning' });
+    return sendError(400, 'Empty text after cleaning');
   }
 
   try {
@@ -322,6 +336,6 @@ module.exports = async (req, res) => {
     readStream.pipe(res);
   } catch (err) {
     console.error('[Edge TTS WebSocket Error]:', err.message);
-    return res.status(500).json({ error: 'TTS Synthesis failed', details: err.message });
+    return sendError(500, `TTS Synthesis failed: ${err.message}`);
   }
 };
