@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-09-17 22:02:38",
+  "last_sync": "2026-09-18 21:34:32",
   "sync_status": "OK",
   "changed": false,
   "summary": "모든 5개 정부 Open API 및 나라사랑포털 공식 데이터 실시간 정상 연동 중",
@@ -7,7 +7,7 @@
     "api_type": "WEB_FALLBACK_SCRAPING",
     "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%B3%91%EC%97%AD%ED%8C%90%EC%A0%95%EC%8B%A0%EC%B2%B4%EA%B2%80%EC%82%AC%EB%93%B1%EA%B2%80%EC%82%AC%EA%B7%9C%EC%B9%99",
     "law_name": "병역판정 신체검사 등 검사규칙",
-    "checked_at": "2026-09-17 22:01:17",
+    "checked_at": "2026-09-18 21:33:08",
     "bmi_appendix": 2,
     "disease_appendix": 3,
     "verified": true,
@@ -34,7 +34,7 @@
     "url": "https://www.data.go.kr/data/3064321/openapi.do",
     "title": "병무청 병역판정 신체검사 정보 Open API",
     "status": "HEALTHY",
-    "checked_at": "2026-09-17 21:56:59",
+    "checked_at": "2026-09-18 21:28:55",
     "bmi_range": "18.5 ~ 35.0",
     "verified": true,
     "notice": "일시적 네트워크 지연으로 이전 정상 검증 상태 유지 (<urlopen error timed out>)"
@@ -44,7 +44,7 @@
     "enabled": false,
     "message": "GEMINI_API_KEY 미설정으로 기존 규칙 기반(Regex) 검증으로 대체 진행되었습니다.",
     "model": null,
-    "verified_at": "2026-09-17 22:02:38",
+    "verified_at": "2026-09-18 21:34:32",
     "discrepancies": []
   },
   "apis": {
@@ -52,7 +52,7 @@
       "url": "https://www.data.go.kr/data/3064321/openapi.do",
       "title": "병무청 병역판정 신체검사 정보 Open API",
       "status": "HEALTHY",
-      "checked_at": "2026-09-17 21:56:59",
+      "checked_at": "2026-09-18 21:28:55",
       "bmi_range": "18.5 ~ 35.0",
       "verified": true,
       "notice": "일시적 네트워크 지연으로 이전 정상 검증 상태 유지 (<urlopen error timed out>)"
@@ -61,27 +61,27 @@
       "url": "https://www.data.go.kr/data/3064321/openapi.do",
       "title": "병무청 모집분야별 지원자격 및 실시간 군지원 접수현황 Open API",
       "status": "ACTIVE",
-      "checked_at": "2026-09-17 21:58:20",
+      "checked_at": "2026-09-18 21:30:16",
       "verified": true
     },
     "mma_hotspots_openapi": {
       "url": "https://www.data.go.kr",
       "title": "병무청 나라사랑가게 가맹점 및 할인혜택 Open API",
       "status": "ACTIVE",
-      "checked_at": "2026-09-17 21:58:20",
+      "checked_at": "2026-09-18 21:30:16",
       "verified": true
     },
     "narasarang_portal": {
       "url": "https://www.narasarang.or.kr",
       "title": "군인공제회C&C 나라사랑포털 공식 혜택 공시 데이터",
       "status": "HEALTHY",
-      "checked_at": "2026-09-17 21:58:20",
+      "checked_at": "2026-09-18 21:30:16",
       "verified": true
     },
     "travel_allowance_regulation": {
       "api_type": "DRF_ADMIN_RULE_OPEN_API",
       "law_name": "병역의무자 여비지급 규정 (병무청 훈령)",
-      "checked_at": "2026-09-17 21:58:21",
+      "checked_at": "2026-09-18 21:30:17",
       "meal_allowance": 8000,
       "verified": true,
       "issue_date": "",
@@ -93,7 +93,7 @@
       "api_type": "WEB_FALLBACK_SCRAPING",
       "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%B3%91%EC%97%AD%ED%8C%90%EC%A0%95%EC%8B%A0%EC%B2%B4%EA%B2%80%EC%82%AC%EB%93%B1%EA%B2%80%EC%82%AC%EA%B7%9C%EC%B9%99",
       "law_name": "병역판정 신체검사 등 검사규칙",
-      "checked_at": "2026-09-17 22:01:17",
+      "checked_at": "2026-09-18 21:33:08",
       "bmi_appendix": 2,
       "disease_appendix": 3,
       "verified": true,
