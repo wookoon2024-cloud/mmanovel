@@ -632,10 +632,10 @@ const MmaApiService = {
    */
   getLawCriteriaSync(category = "") {
     const cat = String(category);
-    if (cat.includes('천식') || cat.includes('내과') || cat.includes('복용약')) {
+    if (cat.includes('천식') || cat.includes('내과') || cat.includes('복용약') || cat.includes('당뇨') || cat.includes('고혈압') || cat.includes('장질환')) {
       return {
-        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 내과 137호(기관지 천식) 및 만성질환 평가기준",
-        docs: ["6개월 이상 연속 투약 증명 처방전", "폐기능검사(PFT) 결과지 및 병원 발행 의무기록사본"],
+        lawRef: "「병역판정 신체검사 등 검사규칙」(국방부령) [별표 3] 내과 137호(기관지 천식) 및 만성 내과 질환(고혈압·당뇨·장질환) 평가기준",
+        docs: ["병무용 진단서 (최근 3개월 이내 발급)", "6개월 이상 연속 투약 증명 처방전 및 조제기록", "폐기능검사(PFT)·혈액검사 등 정밀검사 결과지", "병원 발행 의무기록사본(진료기록부)"],
         expectedGrade: "4급 (보충역)"
       };
     }

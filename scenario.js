@@ -280,8 +280,8 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "{name} 님이 선택하신 [{region}] (주민등록 주소지: {residentAddress})의 일별 실시간 공석 달력입니다!\n\n원하시는 검사 일자와 시간(오전/오후)을 자유롭게 선택해 보세요.\n주소지 기준 실거리({distanceKm})에 맞춘 당일 여비 지급 규정도 함께 연계됩니다.",
-    text_en: "Here is the daily real-time vacancy calendar for your selected [{region}] (Address: {residentAddress})!\n\nPlease feel free to choose your desired exam date and time (AM/PM).\nThe travel allowance regulation based on actual distance ({distanceKm}) will also be linked.",
+    text: "{name} 님이 선택하신 [{region}] (주민등록 주소지: {residentAddress})의 일별 실시간 공석 달력입니다!\n\n※ [신청 시기 필독 안내] 병역판정검사 일자 및 장소 본인선택은 1년 내내 아무 때나 가능한 것이 아닙니다! 19세가 되는 해 매년 1월 중순 병무청 누리집에 접수 일정이 사전 공고되며, 공고된 접수 시작일시부터 선착순으로 마감됩니다.\n원하시는 검사 일자와 시간(오전/오후)을 가상으로 자유롭게 선택해 보세요.\n주소지 기준 실거리({distanceKm})에 맞춘 당일 여비 지급 규정도 함께 연계됩니다.",
+    text_en: "Here is the daily real-time vacancy calendar for your selected [{region}] (Address: {residentAddress})!\n\n※ [Important Notice] Self-selection is NOT available all year round! The schedule is pre-announced on the MMA website in mid-January each year and accepted on a first-come, first-served basis.\nPlease feel free to choose your preferred exam date and time (AM/PM) in this simulation.\nTravel allowance based on actual distance ({distanceKm}) will also be linked.",
     apiSource: "[API] 공공데이터포털: 병무청_병역판정검사 공석 데이터 & 법제처: 「병역의무자 여비지급 규정」 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Draft Exam Vacancies & Law Center: Military Service Travel Allowance Regulations Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -305,8 +305,8 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "오, {name} 님! 검사 희망일로 [{examDate}] 일정을 직접 모의 선택해 보셨군요!\n\n선택하신 관할 지방병무청({region})의 해당 일자 실시간 공석을 기준으로 가상 모의 배정이 완료되었습니다. (※ 실제 검사 신청은 병무청 민원포털에서 직접 진행하셔야 합니다!)",
-        text_en: "Oh, {name}! You have simulated selecting [{examDate}] as your preferred date!\n\nVirtual schedule matching is complete based on real-time vacancies at ({region}). (※ Please note that actual booking must be submitted on the official MMA portal!)"
+        text: "오, {name} 님! 검사 희망일로 [{examDate}] 일정을 직접 모의 선택해 보셨군요!\n\n선택하신 관할 지방병무청({region})의 해당 일자 실시간 공석을 기준으로 가상 모의 배정이 완료되었습니다. (※ 실제 검사 신청은 매년 1월 중 사전 공고 후 병무청 병무민원포털에서 직접 진행하셔야 합니다!)",
+        text_en: "Oh, {name}! You have simulated selecting [{examDate}] as your preferred date!\n\nVirtual schedule matching is complete based on real-time vacancies at ({region}). (※ Please note that actual booking opens in mid-January and must be submitted on the official MMA portal!)"
       },
       {
         speaker: "{name} (주인공)",
@@ -314,8 +314,8 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "원하는 날짜와 시간대를 미리 가상으로 선택해보니까 실제 신청 절차가 한눈에 쏙 들어오네!\n\n나중에 실제 병무청 누리집에서 신청할 때 참고할 수 있게 가상 신청 내역과 관할 병무청 연락처를 잘 확인해 둬야겠어.",
-        text_en: "Simulating my preferred date and time makes the actual application process so easy to understand!\n\nI should save these simulated application details and the regional office contact for when I apply on the official MMA portal."
+        text: "원하는 날짜와 시간대를 미리 가상으로 선택해보니까 실제 신청 절차가 한눈에 쏙 들어오네!\n\n나중에 실제 병무청 누리집에서 신청할 때 참고할 수 있게 포털 내 신청 경로와 관할 병무청 연락처를 잘 확인해 둬야겠어.",
+        text_en: "Simulating my preferred date and time makes the actual application process so easy to understand!\n\nI should save the exact portal application path and regional contact for when I apply on the official MMA portal."
       },
       {
         speaker: "힘찬이 (병무청 AI 가이드)",
@@ -323,8 +323,8 @@ const SCENARIOS = [
         char: "assets/himchan_smile.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "네! 방금 모의 선택하신 일정으로 실제 신청하시려면,\n아래 [신청 내용 복사] 후 [민원포털 예약] 버튼을 눌러 정식 접수하시면 됩니다!\n추가 문의사항은 관할 병무청 직통 번호로 언제든 상담 가능합니다.",
-        text_en: "If you wish to officially book this simulated schedule,\nsimply click [Copy Application Info] below and proceed via the [MMA Portal] button to submit your formal application!\nFor any questions, the regional office direct line is available."
+        text: "네! 실제 본인선택 신청 방법은 다음과 같습니다:\n① 신청 시기: 19세가 되는 해 매년 1월 중순 병무청 사전 공고(선착순 접수)\n② 신청 경로: [병무청 병무민원(mwpt.mma.go.kr)] ➔ [병역판정검사] ➔ [병역판정검사 일자 및 장소 본인선택(신청)]\n③ 본인인증(간편인증/공동인증서) 후 원하시는 일자와 검사장을 선택하시면 됩니다!\n\n아래 [신청 내용 복사] 후 [민원포털 예약] 버튼을 누르면 해당 누리집으로 바로 이동합니다.",
+        text_en: "Yes! Here is how to apply on the actual portal:\n① Period: Mid-January of your 19th year after pre-announcement (first-come basis)\n② Navigation Path: [MMA Civil Petition Portal (mwpt.mma.go.kr)] ➔ [Physical Exam] ➔ [Date & Location Self-Selection (Apply)]\n③ Log in with simple/joint authentication and choose your desired date and exam center!\nClick [Copy Info] and [MMA Portal] below to navigate directly."
       }
     ],
     defaultDialogues: [
@@ -352,13 +352,13 @@ const SCENARIOS = [
         char: "assets/himchan_cheer.png",
         charPos: "right",
         plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-        text: "혹시라도 나중에 다른 날짜로 변경하고 싶으시면,\n검사 희망일 전날까지 아래 관할 병무청 직통 연락처나 병무청 민원포털에서 언제든 100% 자유롭게 변경하실 수 있으니 안심하세요!",
-        text_en: "If you ever wish to change to a different date later,\nyou can freely change it 100% online up to 1 day before your desired date through the regional contact or portal below!"
+        text: "혹시라도 나중에 다른 날짜나 장소로 변경하고 싶으시면,\n매년 1월 접수 개시 이후 검사 희망일 전날까지 [병무민원포털(mwpt.mma.go.kr) ➔ 병역판정검사 ➔ 본인선택] 메뉴나 관할 병무청 직통 연락처를 통해 공석 범위 내에서 자유롭게 변경하실 수 있으니 안심하세요!",
+        text_en: "If you ever wish to change your date or venue later,\nyou can do so after the mid-January opening up to 1 day before your desired date via [MMA Portal (mwpt.mma.go.kr) ➔ Physical Exam ➔ Self-Selection] or regional phone contact!"
       }
     ],
     dialogues: [],
-    text: "통지서에 지정된 기본 일정인 [{examDate}]을 기준으로 가상 체험을 이어가겠습니다.\n\n실제 검사 일정 변경이나 문의사항이 있으실 경우, 아래 관할 병무청 직통 연락처 또는 병무청 누리집 민원포털을 통해 간편하게 신청하실 수 있습니다.",
-    text_en: "We will proceed with the virtual experience using your notice's default date [{examDate}].\n\nFor actual schedule changes or questions, you can easily apply through the regional office direct contact below or the MMA Civil Petition Portal.",
+    text: "통지서에 지정된 기본 일정인 [{examDate}]을 기준으로 가상 체험을 이어가겠습니다.\n\n※ 실제 검사 일정 변경이나 취소는 매년 1월 접수 개시 후 [병무청 병무민원(mwpt.mma.go.kr) ➔ 병역판정검사 ➔ 본인선택] 또는 아래 관할 병무청 직통 연락처를 통해 신청하실 수 있습니다.",
+    text_en: "We will proceed with the virtual experience using your notice's default date [{examDate}].\n\n※ For actual schedule changes, you can apply after the mid-January opening via [MMA Portal (mwpt.mma.go.kr) ➔ Physical Exam ➔ Self-Selection] or the regional office contact below.",
     apiSource: "[API] 공공데이터포털: 병무청_지방병무(지)청 조직 및 연락처 Open API",
     apiSource_en: "[API] Public Data Portal: MMA Regional Offices & Contact Info Open API",
     apiSourceUrl: "https://www.data.go.kr/data/3064321/openapi.do",
@@ -375,11 +375,11 @@ const SCENARIOS = [
     speaker: "힘찬이 (병무청 AI 가이드)",
     speaker_en: "Himchan (MMA AI Guide)",
     plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
-    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요,\n단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 진단서나 서류가 전혀 필요 없습니다! (안경만 착용하고 오시면 됩니다.)\n\n반면, 과거 수술을 받았거나 6개월 이상 치료 중인 질환(관절, 척추, 기질적 안과 질환, 만성 내과 등)이 있으신 경우에는 공정한 판정을 위해 병무용 진단서와 의무기록(영상 CD 포함)을 지참하셔야 합니다. {name} 님은 해당사항이 있으신가요?",
-    text_en: "Now that your schedule is set, let's check the required documents tailored to your medical history.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, if you have a history of surgery or over 6 months of continuous treatment (joint/spine, ocular diseases, chronic internal medicine), you must bring a Military Medical Certificate and medical records (including MRI/CT CDs). Do any of these apply to you?",
-    apiSource: "[API] 법제처 국가법령정보: 「병역판정 신체검사 등 검사규칙」(국방부령) [별표 1·3] Open API",
-    apiSource_en: "[API] National Law Information Center: 「Physical Exam Rules」(Defense Ministry Ordinance) [Table 1 & 3] Open API",
-    apiSourceUrl: "https://www.law.go.kr/법령/병역판정신체검사등검사규칙",
+    text: "일정이 정해졌으니, 검사 당일 헛걸음하지 않도록 몸 상태에 맞는 맞춤형 구비서류를 미리 챙겨볼까요?\n\n많은 분들이 시력(근시·난시)이나 체중(BMI)도 진단서를 떼어가야 하는지 궁금해하시는데요, 단순 시력(안경 착용)과 신장·체중은 병무청 자체 최첨단 장비로 현장에서 100% 직접 정밀 측정하므로 서류가 전혀 필요 없습니다! (안경만 지참)\n\n반면, 실제 수검자분들이 가장 많이 서류를 준비해오는 [내과 질환](천식, 고혈압, 당뇨, 갑상선 질환, 염증성 장질환 등)이나 과거 수술·치료 이력(정형외과 척추·관절, 기질적 안과 등)이 있으시다면, 공정한 판정을 위해 6개월 이상 치료 기록이 확인되는 [병무용 진단서 + 의무기록사본(진료기록부) + 처방전 + 정밀검사 결과지]를 반드시 지참하셔야 합니다!\n(병무청 공식 누리집 mma.go.kr ➔ 병역판정검사 ➔ 구비서류 안내에서 질환별 서류를 확인하실 수 있습니다.)\n{name} 님은 해당사항이 있으신가요?",
+    text_en: "Now that your schedule is set, let's check the required documents tailored to your health condition.\n\nMany ask if vision (myopia/astigmatism) or BMI requires a medical certificate. Simple vision correction (glasses) and BMI are measured directly on-site with MMA's advanced equipment, requiring NO medical certificate or documents!\n\nHowever, for internal medicine conditions (asthma, hypertension, diabetes, thyroid, inflammatory bowel disease) which are the most common document cases, or surgery/treatment history (orthopedics spine/joints, organic ocular disease), you must bring a Military Medical Certificate, medical records (treatment notes/prescriptions over 6 months), and imaging CDs!\n(Detailed guides available on official MMA website mma.go.kr ➔ Draft Exam ➔ Required Documents.)\nDo any of these apply to you?",
+    apiSource: "[API] 법제처: 「병역판정 신체검사 등 검사규칙」(국방부령) & 병무청 공식 누리집 구비서류 안내(mma.go.kr)",
+    apiSource_en: "[API] Ministry of Government Legislation: Exam Rules & MMA Official Website Document Guide (mma.go.kr)",
+    apiSourceUrl: "https://www.mma.go.kr/contents.do?mc=mma0000989",
     apiIcon: "scale",
     isApi: true,
     widgetType: "HEALTH_CHECK_CHOICE"
@@ -486,8 +486,8 @@ const SCENARIOS = [
         char: "assets/psychologist.png",
         charPos: "right",
         plateClass: "from-indigo-700 to-purple-800 border-indigo-400/40",
-        text: "안녕하십니까 {name} 님! 병역판정검사의 첫 관문인 [심리검사장]에 오신 것을 환영합니다.\n심리검사장에 들어서면 가장 먼저 진행하는 핵심 절차가 바로 [나라사랑카드 발급·등록]입니다!\n① 나라사랑카드: 주머니에 넣고 다니며, 임상병리, 기본검사, 각 과목 의사 진료실 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n② 당일 지급여비 수령: 오늘 검사가 끝나면 왕복 교통비와 식비 등 지급여비가 등록하신 이 계좌로 입금됩니다.\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 핵심 복지 카드로 쭉 사용하게 됩니다!\nKB국민과 IBK기업 두 은행의 혜택을 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요.",
-        text_en: "Welcome {name}! This is the Psychological Testing Hall, the first gateway of your physical examination.\nUpon entering, the very first essential step is [Nara Sarang Card Issuance & Registration]!\n① Nara Sarang Card: Kept in your pocket, tap this card at readers before entering each exam room (pathology, basic physical exam, doctor clinics) to verify identity and record results in real-time.\n② Travel Allowance: Transit and meal allowances will be deposited directly into this designated account upon exam completion.\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\nCompare the benefits and select your preferred Nara Sarang Card."
+        text: "안녕하십니까 {name} 님! 병역판정검사의 첫 관문인 [심리검사장]에 오신 것을 환영합니다.\n심리검사장에 들어서면 가장 먼저 진행하는 핵심 절차가 바로 [나라사랑카드 발급·등록]입니다!\n\n① 스마트 신분증 & 검사키: 주머니에 넣고 각 검사실 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n② 당일 지급여비 수령: 오늘 검사가 끝나면 왕복 교통비와 식비 등 지급여비가 등록하신 이 계좌로 즉시 입금됩니다.\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 핵심 복지 카드로 쭉 사용하게 됩니다!\n\n특히 나라사랑카드는 국방부·군인공제회 공공데이터 및 공식 사업자 선정에 따라 제3기 공식 금융기관으로 [신한은행, IBK기업은행, 하나은행] 3개 은행이 선정되어 운영 중입니다. 3개 은행의 공식 혜택을 꼼꼼히 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요!",
+        text_en: "Welcome {name}! This is the Psychological Testing Hall, the first gateway of your physical examination.\nUpon entering, the very first essential step is [Nara Sarang Card Issuance & Registration]!\n\n① Smart ID & Key: Tap this card at readers before entering each exam room to verify identity and record results in real-time.\n② Travel Allowance: Transit and meal allowances will be deposited directly into this designated account upon exam completion.\n③ Military & Reserve Welfare: Used continuously for military salary, up to 20% PX discounts, and future Reserve Force training allowances!\n\nAccording to MND/MMA public disclosure data, 3 major banks—[Shinhan Bank, IBK Industrial Bank, Hana Bank]—are the official 3rd-generation issuers. Compare the benefits and choose your preferred card!"
       },
       {
         speaker: "{name} (주인공)",
@@ -495,12 +495,12 @@ const SCENARIOS = [
         char: "assets/minwoo.png",
         charPos: "right",
         plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
-        text: "나라사랑카드 혜택을 꼼꼼히 보고 선택해야겠어...!",
-        text_en: "I should carefully check the Nara Sarang Card benefits before choosing...!"
+        text: "신한은행, IBK기업은행, 하나은행 3개 은행의 나라사랑카드 혜택을 꼼꼼히 비교해 보고 나한테 가장 맞는 카드를 선택해야겠어...!",
+        text_en: "I should carefully compare the benefits of Shinhan, IBK, and Hana Bank cards and choose the one that fits me best...!"
       }
     ],
-    apiSource: "[공식출처] 나라사랑포털(군인공제회C&C) & KB국민·IBK기업 공식 금융 혜택 공시 데이터",
-    apiSource_en: "[Official Source] Nara Sarang Portal & Official Bank Benefits Disclosure Data",
+    apiSource: "[공식출처] 국방부·군인공제회C&C 나라사랑포털 공공데이터 & 신한·IBK기업·하나 공식 금융 공시",
+    apiSource_en: "[Official Source] MND/MMA Nara Sarang Portal Public Data & Shinhan, IBK, Hana Official Disclosures",
     apiSourceUrl: "https://www.narasarang.or.kr",
     apiIcon: "credit-card",
     isApi: true,

@@ -120,7 +120,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.5</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.6</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -136,6 +136,10 @@
       <!-- 언어 전환 -->
       <button id="btn-lang" onclick="toggleLanguage()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="언어 변경">
         <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span id="lang-label">EN</span>
+      </button>
+      <!-- 진행 내역 / 장면 다시보기 (모바일/PC 공통 지원) -->
+      <button id="btn-history" onclick="openHistoryModal()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="진행 내역 / 장면 다시보기">
+        <i data-lucide="history" class="w-3.5 h-3.5 text-indigo-600"></i> <span id="label-history" class="hidden md:inline">히스토리</span>
       </button>
       <!-- AI 가이드 캐릭터 설정 (모바일/PC 공통 지원) -->
       <button id="btn-settings" onclick="openSettingsModal()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="AI 가이드 캐릭터 및 음성 변경">
@@ -173,7 +177,7 @@
           <div class="border-l border-slate-300 pl-2 sm:pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 id="lobby-main-header-title" class="text-xs sm:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-600 transition truncate max-w-[140px] sm:max-w-none">병무행정 비주얼노벨</h1>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.9.5</span>
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.9.6</span>
             </div>
           </div>
         </div>
@@ -1170,6 +1174,39 @@
     </div>
   </div>
 
+  <!-- ================= [MODAL 5: 시나리오 진행 내역 / 장면 히스토리 (History Modal)] ================= -->
+  <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl sm:rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-2xl relative flex flex-col max-h-[85vh]">
+      <!-- 심플 헤더 -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+        <div>
+          <h3 class="font-bold text-base text-white" id="history-modal-title">장면 이동</h3>
+          <p class="text-xs text-slate-400 mt-0.5" id="history-modal-subtitle">이동할 장면을 선택하세요.</p>
+        </div>
+        <button onclick="closeHistoryModal()" class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 에피소드 간단 표시 -->
+      <div id="history-episode-banner" class="py-2 text-xs text-slate-400 border-b border-slate-800/80 shrink-0 flex items-center justify-between">
+        <!-- JS fills simple episode name -->
+      </div>
+
+      <!-- 깔끔한 리스트 -->
+      <div id="history-scene-list" class="flex-1 overflow-y-auto custom-scroll py-2 space-y-1.5 pr-1">
+        <!-- JS fills clean rows -->
+      </div>
+
+      <!-- 하단 닫기 -->
+      <div class="pt-3 border-t border-slate-800 shrink-0 flex justify-end">
+        <button onclick="closeHistoryModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition cursor-pointer">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
   <script src="api.js?v=20260906_v195_28"></script>
@@ -1312,7 +1349,7 @@
       isCustomDate: false,
       healthCheck: "특이질환 없음",
       hasDisease: false,
-      cardType: "KB국민은행 나라사랑카드",
+      cardType: "신한은행 나라사랑카드",
       height: 178,
       weight: 72,
       bmi: 22.7,
@@ -1349,6 +1386,106 @@
         modal.classList.remove('flex');
       }
       stopPreviewAudio();
+    }
+
+    // ================= [시나리오 진행 내역 & 장면 이동 컨트롤러 (History Modal)] =================
+    function openHistoryModal() {
+      const modal = document.getElementById('history-modal');
+      if (!modal) return;
+
+      const isEn = (currentLang === 'en');
+      const titleElem = document.getElementById('history-modal-title');
+      const subtitleElem = document.getElementById('history-modal-subtitle');
+      if (titleElem) titleElem.innerText = isEn ? "Jump to Scene" : "장면 이동";
+      if (subtitleElem) subtitleElem.innerText = isEn ? "Select a scene to jump to." : "이동할 장면을 선택하세요.";
+
+      const banner = document.getElementById('history-episode-banner');
+      const listContainer = document.getElementById('history-scene-list');
+
+      let epName = isEn ? `Episode ${currentPlayingEpisode}` : `제${currentPlayingEpisode}화`;
+      if (currentPlayingEpisode === 1) epName += isEn ? " · Physical Exam" : " · 병역판정검사";
+      else if (currentPlayingEpisode === 2) epName += isEn ? " · Reserve Forces" : " · 예비군 훈련";
+      else if (currentPlayingEpisode === 3) epName += isEn ? " · Career Design" : " · 병역진로설계";
+
+      if (banner) {
+        banner.innerHTML = `
+          <span class="font-medium text-slate-300">${epName}</span>
+          <span class="text-slate-400">${isEn ? 'Current:' : '현재:'} <strong class="text-blue-400">${currentSceneIdx + 1}번</strong></span>
+        `;
+      }
+
+      const EP1_TITLES = [
+        "모바일 전자통지서 확인",
+        "AI 멘토 가이드 선택",
+        "검사 일자 및 장소 본인선택",
+        "신청 내역 및 관할 병무청 확인",
+        "질환별 구비서류 점검",
+        "병무청 도착 및 본인인증",
+        "검사복 환복 및 사물함 보관",
+        "나라사랑카드 발급 & 심리검사",
+        "임상병리(소변·혈액) & X-ray",
+        "기본검사실 (신장·체중·시력)",
+        "과목별 전문의 정밀 진료",
+        "군 특기 적성 상담",
+        "최종 신체등급 판정 & 여비 지급",
+        "환복 및 소지품 회수",
+        "귀가 및 전자 병역증 확인"
+      ];
+
+      const scenarios = getCurrentScenarios() || [];
+      if (listContainer) {
+        let html = '';
+        for (let i = 0; i < scenarios.length; i++) {
+          const isCurrent = (i === currentSceneIdx);
+          const numStr = (i + 1).toString().padStart(2, '0');
+
+          let title = `장면 ${numStr}`;
+          if (currentPlayingEpisode === 1 && EP1_TITLES[i]) {
+            title = EP1_TITLES[i];
+          } else if (currentPlayingEpisode === 2 && typeof EP2_STEPS_KO !== 'undefined' && EP2_STEPS_KO[i]) {
+            title = EP2_STEPS_KO[i].replace(/^\d+\.\s*/, '');
+          } else if (currentPlayingEpisode === 3 && typeof EP3_STEPS_KO !== 'undefined' && EP3_STEPS_KO[i]) {
+            title = EP3_STEPS_KO[i].replace(/^\d+\.\s*/, '');
+          }
+
+          html += `
+            <button onclick="jumpToSceneFromHistory(${i})" class="w-full text-left px-3 py-2.5 rounded-lg border transition flex items-center justify-between cursor-pointer ${
+              isCurrent
+                ? 'bg-blue-600/15 border-blue-500/60 text-white font-bold'
+                : 'bg-slate-950/40 hover:bg-slate-800/60 border-slate-800 hover:border-slate-700 text-slate-300'
+            }">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="font-mono text-xs ${isCurrent ? 'text-blue-400 font-bold' : 'text-slate-500'}">${numStr}</span>
+                <span class="text-xs sm:text-sm truncate">${title}</span>
+              </div>
+              ${isCurrent ? `<span class="text-[11px] text-blue-400 font-semibold shrink-0 ml-2">${isEn ? 'Current' : '현재'}</span>` : ''}
+            </button>
+          `;
+        }
+        listContainer.innerHTML = html;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeHistoryModal() {
+      const modal = document.getElementById('history-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function jumpToSceneFromHistory(idx) {
+      closeHistoryModal();
+      isAnnouncement = false;
+      pendingTransitionSceneIdx = null;
+      if (isTyping) {
+        clearInterval(typingInterval);
+        isTyping = false;
+      }
+      goToScene(idx);
     }
 
     function applySettingsAndClose() {
@@ -1649,6 +1786,7 @@
         log: "대화기록",
         restart: "처음으로",
         guideBtn: "가이드",
+        historyBtn: "히스토리",
         langToggle: "EN",
         langBtnTitle: "Switch to English (영어 전환)",
         soundOn: "TTS 음성 ON",
@@ -1720,6 +1858,7 @@
         log: "Log",
         restart: "Restart",
         guideBtn: "Guide",
+        historyBtn: "History",
         langToggle: "KO",
         langBtnTitle: "한국어로 전환 (Switch to Korean)",
         soundOn: "TTS Voice ON",
@@ -1808,6 +1947,10 @@
       if (labelHome) labelHome.innerText = dict.mainMenu;
       const labelSettings = document.getElementById('label-settings');
       if (labelSettings) labelSettings.innerText = dict.guideBtn || "가이드";
+      const labelHistory = document.getElementById('label-history');
+      if (labelHistory) labelHistory.innerText = dict.historyBtn || "히스토리";
+      const btnHistory = document.getElementById('btn-history');
+      if (btnHistory) btnHistory.title = (currentLang === 'en') ? "Scenario History & Scene Jump" : "시나리오 진행 내역 및 장면 다시보기";
       if (soundLabel) soundLabel.innerText = soundEnabled ? dict.soundOn : dict.soundOff;
       const btnSound = document.getElementById('btn-sound');
       const soundIcon = document.getElementById('sound-icon');
@@ -2840,7 +2983,7 @@
         .replace(/\{residentAddress\}/g, userData.residentAddress || '서울특별시 동작구 상도동 124 (숭실대입구역 인근 자취방)')
         .replace(/\{distanceKm\}/g, userData.distanceKm || '5.8 km (7호선 12분 소요)')
         .replace(/\{healthCheck\}/g, userData.healthCheck || '특이질환 없음')
-        .replace(/\{cardType\}/g, userData.cardType || 'KB국민은행 나라사랑카드')
+        .replace(/\{cardType\}/g, userData.cardType || '신한은행 나라사랑카드')
         .replace(/\{bmi\}/g, userData.bmi || '22.7')
         .replace(/\{finalGrade\}/g, userData.finalGrade || '1급 (현역)')
         .replace(/\{disposition\}/g, userData.disposition || '현역병 입영 대상')
@@ -4649,6 +4792,9 @@
           initMentorCarouselSwipe();
           if (window.lucide) lucide.createIcons();
         }, 10);
+      } else if (type === 'NARA_CARD_CHOICE') {
+        // 나라사랑카드 선택 팝업: 3개 카드 및 각 텍스트가 1줄씩 시원하게 나오도록 컨테이너 대폭 확장
+        choiceContainer.className = "w-full max-w-sm sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl max-h-[94vh] sm:max-h-[90vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1";
       } else {
         choiceContainer.className = "w-full max-w-sm sm:max-w-xl max-h-[86vh] sm:max-h-[75vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1";
       }
@@ -4785,10 +4931,11 @@
       } else if (type === 'CONTACT_CARD') {
         const contact = (typeof MmaApiService !== 'undefined') ? MmaApiService.getOfficeContact(userData.region) : { phone: "033-240-6241", address: "강원도 춘천시 백령로 65 (남춘천역 셔틀)", dept: "병역판정검사과" };
         const isCustom = !!userData.isCustomDate;
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[82vh] sm:max-h-none">
-            <!-- 팝업 본문 카드 (모바일 세로 높이 줄이고 내부 스크롤 적용) -->
-            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-5 space-y-2 sm:space-y-4 shadow-2xl w-full max-h-[46vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+          <div class="flex flex-col items-center gap-2 sm:gap-3.5 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150 max-h-[84vh] sm:max-h-none">
+            <!-- 팝업 본문 카드 -->
+            <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-3 sm:p-5 space-y-2 sm:space-y-3 shadow-2xl w-full max-h-[50vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
               <div class="flex items-center justify-between border-b border-slate-800 pb-2 sm:pb-3">
                 <span class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5 sm:gap-2">
                   <i data-lucide="calendar-check-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i> ${userData.examDate || '2026년 10월 21일 (수) 오전'} ${isCustom ? '가상 모의선택 완료' : '기본 배정 안내'}
@@ -4798,9 +4945,17 @@
                 </span>
               </div>
 
+              <!-- 신청 가능 시기 필독 배너 (요청사항 1) -->
+              <div class="p-2 sm:p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-[10px] sm:text-[11px] text-amber-200 flex items-start gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+                <div class="leading-relaxed">
+                  <strong class="text-amber-300 font-bold">[신청 시기 필독 안내]</strong> 본인선택은 상시 열려있는 것이 아닙니다! 19세가 되는 해 <strong>매년 1월 중순 병무청 사전 공고일시부터 선착순 접수</strong>됩니다. 인기 일자나 방학 기간은 조기 마감되니 미리 공고를 확인하세요.
+                </div>
+              </div>
+
               <!-- 병무청 전자민원 신청서 공문서 양식 -->
-              <div class="bg-slate-950/95 rounded-xl p-2.5 sm:p-4 border border-slate-800 space-y-2 sm:space-y-3 text-[10px] sm:text-xs">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 sm:pb-2 gap-2">
+              <div class="bg-slate-950/95 rounded-xl p-2.5 sm:p-3.5 border border-slate-800 space-y-2 text-[10px] sm:text-xs">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 gap-2">
                   <div>
                     <span class="text-[9px] sm:text-[10px] text-blue-400 font-bold uppercase tracking-wider block">병역법 시행령 제11조 [별지 제1호 서식]</span>
                     <h4 class="font-extrabold text-white text-[11px] sm:text-sm">${isCustom ? '병역판정검사 일자 및 장소 본인선택(변경) 신청서 (모의 양식)' : '병역판정검사 통지서 기본 배정 내역서'}</h4>
@@ -4811,40 +4966,66 @@
                 </div>
 
                 <!-- 수검 희망 검사장 내역 -->
-                <div class="p-2 sm:p-3 rounded-lg bg-slate-900/80 space-y-1 sm:space-y-1.5 text-[10px] sm:text-[11px] leading-relaxed">
+                <div class="p-2 sm:p-2.5 rounded-lg bg-slate-900/80 space-y-1 text-[10px] sm:text-[11px] leading-relaxed">
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망일시:</span> <strong class="text-blue-300 font-bold">${userData.examDate || '2026년 10월 21일 (수) 오전'}</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">수검 희망기관:</span> <strong class="text-white">${userData.region} (${contact.dept || '병역판정검사과'})</strong></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">검사장 소재지:</span> <span class="text-slate-300">${contact.address}</span></div>
                   <div class="flex items-start gap-1"><span class="text-slate-400 shrink-0">직통 문의전화:</span> <span class="text-emerald-400 font-semibold">${contact.phone}</span></div>
-                  <div class="pt-1.5 border-t border-slate-800/80 text-[9.5px] sm:text-[10.5px] text-amber-300/90 flex items-center gap-1.5">
-                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-                    <span>※ 본 화면은 사전 모의체험입니다. 실제 일정 신청은 아래 '민원포털 예약'을 이용해 주세요.</span>
+                </div>
+
+                <!-- 민원포털 신청 상세 경로 안내 (요청사항 2) -->
+                <div class="p-2 sm:p-2.5 rounded-lg bg-blue-950/40 border border-blue-500/30 text-[10px] sm:text-[11px] text-blue-200 space-y-1">
+                  <div class="flex items-center gap-1 font-bold text-blue-300">
+                    <i data-lucide="navigation" class="w-3.5 h-3.5 text-blue-400"></i> 실제 병무민원포털 온라인 신청 경로
+                  </div>
+                  <div class="text-slate-300 pl-3 border-l-2 border-blue-400/50 space-y-0.5 text-[9.5px] sm:text-[10.5px]">
+                    <div>① <strong class="text-white">병무청 병무민원(mwpt.mma.go.kr)</strong> 접속 후 간편인증/공동인증 로그인</div>
+                    <div>② 상단 메뉴: <span class="text-emerald-300 font-semibold">[병역판정검사]</span> ➔ <span class="text-emerald-300 font-semibold">[병역판정검사 일자 및 장소 본인선택]</span> 클릭</div>
+                    <div>③ [신청] 탭에서 원하는 일자 및 검사장 선택 후 접수 완료 (사전 모의 내역 참고)</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 팝업 아래 고정 버튼 영역 (무조건 보이도록 shrink-0 및 2열 배치) -->
+            <!-- 팝업 아래 고정 버튼 영역 -->
             <div class="grid grid-cols-2 gap-2 w-full shrink-0 pt-0.5">
               <a href="https://mwpt.mma.go.kr" target="_blank" rel="noopener noreferrer" class="py-2.5 sm:py-3.5 px-2 sm:px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-emerald-400/30 cursor-pointer">
-                <i data-lucide="external-link" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span class="truncate">${(currentLang === 'en') ? 'MMA Portal' : '민원포털 예약'}</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span class="truncate">${isEn ? 'MMA Civil Portal ↗' : '병무민원포털 신청 바로가기 ↗'}</span>
               </a>
               <button onclick="playBeep(750, 'triangle', 0.05); renderScene(4);" class="py-2.5 sm:py-3.5 px-2 sm:px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer">
-                <span>${(currentLang === 'en') ? 'Continue' : '계속 진행'}</span>
+                <span>${isEn ? 'Continue' : '계속 진행'}</span>
               </button>
             </div>
           </div>
         `;
       } else if (type === 'HEALTH_CHECK_CHOICE') {
+        const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col gap-2 w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col gap-2 w-full animate-in fade-in zoom-in-95 duration-150 max-w-xl max-h-[82vh] overflow-y-auto custom-scroll pr-1">
+            <!-- 병무청 공식 누리집 구비서류 종합안내 링크 배너 (요청사항 3) -->
+            <a href="https://www.mma.go.kr/contents.do?mc=mma0000989" target="_blank" rel="noopener noreferrer" class="group w-full p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-950/90 to-indigo-950/90 hover:from-blue-900/90 hover:to-indigo-900/90 border border-blue-500/40 transition flex items-center justify-between text-xs text-blue-200 shadow-lg cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-600/30 text-blue-300 flex items-center justify-center shrink-0 border border-blue-400/30">
+                  <i data-lucide="file-text" class="w-4 h-4"></i>
+                </div>
+                <div class="text-left">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-extrabold text-white text-xs sm:text-sm group-hover:text-blue-300 transition">${isEn ? 'MMA Official Document Checklist Guide' : '병무청 공식 누리집 질환별 구비서류 종합안내'}</span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-400/30">공식 누리집</span>
+                  </div>
+                  <p class="text-[9.5px] sm:text-[10.5px] text-slate-300 mt-0.5">${isEn ? 'Check official required documents per medical subject ↗' : '과목별 지참 서류(병무용진단서, 의무기록사본 등) 상세 목록 확인 ↗'}</p>
+                </div>
+              </div>
+              <i data-lucide="external-link" class="w-4 h-4 text-blue-400 group-hover:translate-x-0.5 transition shrink-0"></i>
+            </a>
+
             <!-- 1. 특이질환 없음 (단순 시력저하·안경 포함) -->
             <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('특이질환 없음');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-emerald-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
               <div class="flex items-center gap-2.5 sm:gap-3">
                 <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">1</span>
                 <div>
-                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-emerald-300">특이질환 없음 (단순 시력저하·안경 착용 포함)</p>
-                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">서류 불필요 · 현장 정밀 측정 (신분증만 지참)</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-emerald-300">${isEn ? 'No Specific Condition (Glasses / BMI Included)' : '특이질환 없음 (단순 시력저하·안경 착용 포함)'}</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'No documents needed · Measured on-site (Bring ID only)' : '서류 불필요 · 병무청 현장 정밀 측정 (신분증만 지참)'}</p>
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-emerald-300 transition shrink-0"></i>
@@ -4855,8 +5036,8 @@
               <div class="flex items-center gap-2.5 sm:gap-3">
                 <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">2</span>
                 <div>
-                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">무릎 / 발목 / 척추 질환 및 수술 이력</p>
-                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">병무용진단서 + 수술기록지 + MRI/CT CD 필수</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">${isEn ? 'Orthopedic Spine / Joint Disease or Surgery' : '무릎 / 발목 / 척추 질환 및 수술 이력'}</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Military Med Certificate + Surgery Note + MRI/CT CD' : '병무용진단서 + 수술기록지 + MRI/CT 영상 CD 필수'}</p>
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
@@ -4867,23 +5048,26 @@
               <div class="flex items-center gap-2.5 sm:gap-3">
                 <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">3</span>
                 <div>
-                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">기질적 안과 질환(망막·각막·녹내장 등) 수술·치료</p>
-                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">병무용진단서 + 의무기록사본 (단순 시력은 제외)</p>
+                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">${isEn ? 'Organic Ocular Disease (Retina/Cornea/Glaucoma)' : '기질적 안과 질환(망막·각막·녹내장 등) 수술·치료'}</p>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? 'Military Med Certificate + Medical Records (Excludes simple vision)' : '병무용진단서 + 의무기록사본 (단순 시력저하는 제외)'}</p>
                 </div>
               </div>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
             </button>
 
-            <!-- 4. 내과 / 만성 질환 -->
-            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/복용약');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-blue-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer">
+            <!-- 4. 내과 질환 (천식·고혈압·당뇨·장질환 등) - 수검자 최다 서류 지참 항목 (요청사항 3) -->
+            <button onclick="playBeep(750, 'triangle', 0.05); selectHealth('내과/만성질환(천식·고혈압·당뇨·장질환)');" onmouseenter="playBeep(450, 'sine', 0.015)" class="group w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-900/95 hover:bg-slate-800/95 border border-slate-700 hover:border-amber-400 transition duration-150 text-left flex items-center justify-between shadow-lg cursor-pointer relative overflow-hidden">
               <div class="flex items-center gap-2.5 sm:gap-3">
-                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">4</span>
+                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-amber-600/20 border border-amber-500/30 text-amber-300 flex items-center justify-center text-[10px] sm:text-xs font-bold shrink-0">4</span>
                 <div>
-                  <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-blue-300">천식 / 피부질환 / 만성 질환 투약 (6개월 이상)</p>
-                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">6개월 이상 치료 의무기록사본 및 처방전 지참</p>
+                  <div class="flex items-center gap-2">
+                    <p class="font-bold text-[11px] sm:text-sm text-white group-hover:text-amber-300">${isEn ? 'Internal Medicine (Asthma / Hypertension / Diabetes / IBD)' : '내과 질환 (천식·고혈압·당뇨·장질환·갑상선 등)'}</p>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/30 shrink-0">최다 지참 항목</span>
+                  </div>
+                  <p class="text-[9.5px] sm:text-xs text-slate-400 mt-0.5">${isEn ? '6+ mos continuous treatment records + Med Certificate + Prescriptions' : '6개월 이상 지속 투약·치료 기록 (병무용진단서 + 의무기록사본 + 처방전 필수)'}</p>
                 </div>
               </div>
-              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-blue-300 transition shrink-0"></i>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-amber-300 transition shrink-0"></i>
             </button>
           </div>
         `;
@@ -4914,108 +5098,160 @@
       } else if (type === 'NARA_CARD_CHOICE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-w-2xl max-h-[85vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 w-full animate-in fade-in zoom-in-95 duration-150 max-h-[88vh] sm:max-h-none overflow-y-auto custom-scroll pr-1">
             
-            <!-- 1. KB국민 나라사랑카드 -->
-            <div class="p-2.5 sm:p-5 rounded-xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-yellow-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-2 sm:space-y-4 relative overflow-hidden group">
-              <div class="absolute -top-10 -right-10 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- 공공데이터 3기 사업자 안내 배너 -->
+            <div class="col-span-1 md:col-span-3 p-2.5 sm:p-3 rounded-xl bg-blue-950/80 border border-blue-500/40 text-xs text-blue-200 flex flex-wrap items-center justify-between gap-1.5 shadow-md">
+              <div class="flex items-center gap-2 min-w-0">
+                <i data-lucide="database" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+                <div class="leading-snug">
+                  <strong class="text-white whitespace-nowrap">${isEn ? '[3rd Gen Nara Sarang Card (2026~2033)]' : '[공공데이터 제3기 사업자 (2026~2033)]'}</strong>
+                  <span class="text-slate-300 ml-1.5 whitespace-nowrap">${isEn ? 'Official Banks Selected by MND & MMA' : '국방부·군인공제회C&C 공식 선정 3대 금융기관 혜택 비교'}</span>
+                </div>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-400/30 shrink-0 whitespace-nowrap">${isEn ? 'Official Disclosure' : '공식 공시 기준'}</span>
+            </div>
+
+            <!-- 1. 신한은행 나라사랑카드 -->
+            <div class="p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-3.5 relative overflow-hidden group">
+              <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl pointer-events-none"></div>
               
-              <div class="space-y-1.5 sm:space-y-3">
-                <!-- 상단 아이콘 + 타이틀 (모바일 가로 1열 배치로 세로 공간 대폭 절약) -->
-                <div class="flex items-center gap-2 sm:gap-3">
-                  <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-yellow-500/15 flex items-center justify-center text-yellow-400 shrink-0">
-                    <i data-lucide="credit-card" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
+              <div class="space-y-3">
+                <!-- 카드 타이틀 (1줄 고정) -->
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 shrink-0 border border-blue-500/30">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
                   </div>
-                  <div class="min-w-0">
-                    <h4 class="font-black text-xs sm:text-lg text-white tracking-tight leading-tight truncate">
-                      ${isEn ? 'KB Kookmin Card' : 'KB국민 나라사랑카드'}
+                  <div class="min-w-0 flex-1">
+                    <h4 class="font-extrabold text-sm sm:text-base lg:text-lg text-white tracking-tight leading-snug whitespace-nowrap">
+                      ${isEn ? 'Shinhan Bank Card' : '신한은행 나라사랑카드'}
                     </h4>
-                    <p class="text-[9px] sm:text-xs text-yellow-400/90 font-medium truncate">
-                      ${isEn ? 'KB Card · MMA Partner' : 'KB국민카드 · 병역 맞춤형 혜택'}
-                    </p>
                   </div>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (모바일 2열 콤팩트 그리드로 2줄 압축) -->
-                <div class="grid grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-1 sm:space-y-1.5 sm:gap-y-0 text-[9.5px] sm:text-xs text-slate-300 pt-0.5">
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Transit:' : '대중교통:'}</strong> ${isEn ? '20% off' : '20% 청구할인'}</span>
+                <!-- 핵심 혜택 리스트 (1줄 고정) -->
+                <div class="space-y-2 text-[11px] sm:text-xs lg:text-[13px] text-slate-300 pt-0.5">
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'PX Mart:' : '군마트 PX:'}</strong> ${isEn ? 'Max 20% instant discount' : '최대 20% 즉시할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'PX/Store:' : '군마트 PX:'}</strong> ${isEn ? 'Max 20%' : '최대 20% 환급'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Transit:' : '대중교통:'}</strong> ${isEn ? '20% billing discount & KTX' : '20% 청구할인 (KTX/버스 포함)'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Starbucks:' : '스타벅스:'}</strong> ${isEn ? '15% off' : '15% 환급할인'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'GS25:' : 'GS25 편의점:'}</strong> ${isEn ? '10% off + Event promo discount' : '상시 10% + 행사상품 추가할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-yellow-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Theme Park:' : '놀이공원:'}</strong> ${isEn ? '50% off' : '50% 현장할인'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Savings:' : '군인우대:'}</strong> ${isEn ? 'SOL High-rate Savings Benefit' : '신한 SOL 장병적금 최고 우대금리'}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- 카드 하단 액션 버튼 영역 (모바일 가로 1열 나란히 배치) -->
-              <div class="flex items-center gap-1.5 sm:flex-col sm:space-y-2 sm:gap-0 pt-0.5 sm:pt-1">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('KB국민은행 나라사랑카드');" class="flex-1 sm:w-full py-2 sm:py-3 px-2 sm:px-3 rounded-lg sm:rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-[11px] sm:text-sm font-black flex items-center justify-center gap-1 transition shadow-md cursor-pointer shrink-0">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span>${isEn ? 'Select KB Card' : '이 카드로 등록 선택'}</span>
+              <div class="flex items-center gap-2 pt-1.5">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('신한은행 나라사랑카드');" class="flex-1 py-2 sm:py-2.5 px-3 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-md cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i> <span>${isEn ? 'Select Shinhan' : '신한카드 발급 선택'}</span>
                 </button>
-                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-300 hover:text-white text-[9.5px] sm:text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 sm:w-full">
-                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '혜택 안내 ↗'}</span>
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2.5 px-2.5 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '공식 혜택 ↗'}</span>
                 </a>
               </div>
             </div>
 
-            <!-- 2. IBK기업 나라사랑카드 -->
-            <div class="p-2.5 sm:p-5 rounded-xl sm:rounded-3xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-blue-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-2 sm:space-y-4 relative overflow-hidden group">
-              <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- 2. IBK기업은행 나라사랑카드 -->
+            <div class="p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-sky-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-3.5 relative overflow-hidden group">
+              <div class="absolute -top-10 -right-10 w-24 h-24 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-              <div class="space-y-1.5 sm:space-y-3">
-                <!-- 상단 아이콘 + 타이틀 (모바일 가로 1열 배치) -->
-                <div class="flex items-center gap-2 sm:gap-3">
-                  <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-400 shrink-0">
-                    <i data-lucide="credit-card" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
+              <div class="space-y-3">
+                <!-- 카드 타이틀 (1줄 고정) -->
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400 shrink-0 border border-sky-500/30">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
                   </div>
-                  <div class="min-w-0">
-                    <h4 class="font-black text-xs sm:text-lg text-white tracking-tight leading-tight truncate">
-                      ${isEn ? 'IBK Industrial Card' : 'IBK기업 나라사랑카드'}
+                  <div class="min-w-0 flex-1">
+                    <h4 class="font-extrabold text-sm sm:text-base lg:text-lg text-white tracking-tight leading-snug whitespace-nowrap">
+                      ${isEn ? 'IBK Industrial Card' : 'IBK기업은행 나라사랑카드'}
                     </h4>
-                    <p class="text-[9px] sm:text-xs text-blue-400/90 font-medium truncate">
-                      ${isEn ? 'IBK Bank · Life Benefits' : 'IBK기업은행 · 실속형 복지 혜택'}
-                    </p>
                   </div>
                 </div>
 
-                <!-- 핵심 혜택 리스트 (모바일 2열 콤팩트 그리드로 2줄 압축) -->
-                <div class="grid grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-1 sm:space-y-1.5 sm:gap-y-0 text-[9.5px] sm:text-xs text-slate-300 pt-0.5">
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Convenience:' : '편의점 CU:'}</strong> ${isEn ? '10% off' : '10% 무제한'}</span>
+                <!-- 핵심 혜택 리스트 (1줄 고정) -->
+                <div class="space-y-2 text-[11px] sm:text-xs lg:text-[13px] text-slate-300 pt-0.5">
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Convenience:' : '편의점:'}</strong> ${isEn ? 'CU / GS25 max 20% off' : 'CU / GS25 최대 20% 무제한 할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Train/Bus:' : 'KTX/고속버스:'}</strong> ${isEn ? '5% off' : '5% 청구할인'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Train/Bus:' : '대중교통:'}</strong> ${isEn ? 'KTX / Bus 5% off' : 'KTX / 고속버스 5% 청구할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'TOEIC:' : 'TOEIC:'}</strong> ${isEn ? '2,000 KRW' : '2,000원 할인'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'TOEIC:' : '어학 / 도서:'}</strong> ${isEn ? 'TOEIC 2,000 KRW & Kyobo' : 'TOEIC 2,000원 & 교보문고 할인'}</span>
                   </div>
-                  <div class="flex items-center gap-1 sm:gap-2">
-                    <span class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                    <span class="truncate"><strong>${isEn ? 'Cinema:' : 'CGV 영화관:'}</strong> ${isEn ? '3,000 KRW' : '최대 3,000원'}</span>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Cinema:' : '여가 / 문화:'}</strong> ${isEn ? 'CGV 3,000 KRW & Park 50%' : 'CGV 최대 3,000원 & 놀이공원 50%'}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- 카드 하단 액션 버튼 영역 (모바일 가로 1열 나란히 배치) -->
-              <div class="flex items-center gap-1.5 sm:flex-col sm:space-y-2 sm:gap-0 pt-0.5 sm:pt-1">
-                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="flex-1 sm:w-full py-2 sm:py-3 px-2 sm:px-3 rounded-lg sm:rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] sm:text-sm font-black flex items-center justify-center gap-1 transition shadow-md cursor-pointer shrink-0">
-                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i> <span>${isEn ? 'Select IBK Card' : '이 카드로 등록 선택'}</span>
+              <div class="flex items-center gap-2 pt-1.5">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('IBK기업은행 나라사랑카드');" class="flex-1 py-2 sm:py-2.5 px-3 rounded-lg sm:rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-md cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i> <span>${isEn ? 'Select IBK' : '기업카드 발급 선택'}</span>
                 </button>
-                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-blue-300 hover:text-white text-[9.5px] sm:text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 sm:w-full">
-                  <i data-lucide="external-link" class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '공식 혜택 ↗'}</span>
+                <a href="https://narasarang.ibk.co.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2.5 px-2.5 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-sky-300 hover:text-white text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '공식 혜택 ↗'}</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- 3. 하나은행 나라사랑카드 -->
+            <div class="p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl bg-slate-900/95 border-2 border-slate-700/80 hover:border-emerald-400 transition-all duration-200 shadow-xl flex flex-col justify-between space-y-3.5 relative overflow-hidden group">
+              <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+              <div class="space-y-3">
+                <!-- 카드 타이틀 (1줄 고정) -->
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 border border-emerald-500/30">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="font-extrabold text-sm sm:text-base lg:text-lg text-white tracking-tight leading-snug whitespace-nowrap">
+                      ${isEn ? 'Hana Bank Card' : '하나은행 나라사랑카드'}
+                    </h4>
+                  </div>
+                </div>
+
+                <!-- 핵심 혜택 리스트 (1줄 고정) -->
+                <div class="space-y-2 text-[11px] sm:text-xs lg:text-[13px] text-slate-300 pt-0.5">
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'PX Mart:' : '군마트 PX:'}</strong> ${isEn ? 'Max 20% instant/refund' : '최대 20% 즉시·환급할인'}</span>
+                  </div>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Transit & Tel:' : '교통 & 통신:'}</strong> ${isEn ? 'Transit 20% + Tel 2,000 KRW' : '대중교통 20% + 통신비 2,000원'}</span>
+                  </div>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Cafe/Coffee:' : '카페 / 커피:'}</strong> ${isEn ? 'Starbucks/Mega max 20%' : '스타벅스·메가커피 최대 20%'}</span>
+                  </div>
+                  <div class="flex items-center gap-2 leading-snug whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                    <span class="whitespace-nowrap"><strong>${isEn ? 'Savings:' : '장병특화:'}</strong> ${isEn ? 'Hana 1Q Savings & Travel' : '하나 원큐 장병적금 & 여행숙박'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1.5">
+                <button onclick="playBeep(750, 'triangle', 0.05); selectCard('하나은행 나라사랑카드');" class="flex-1 py-2 sm:py-2.5 px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition shadow-md cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i> <span>${isEn ? 'Select Hana' : '하나카드 발급 선택'}</span>
+                </button>
+                <a href="https://www.narasarang.or.kr" target="_blank" rel="noopener noreferrer" class="py-2 sm:py-2.5 px-2.5 rounded-lg sm:rounded-xl bg-slate-800/80 hover:bg-slate-700 text-emerald-300 hover:text-white text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1 transition cursor-pointer shrink-0 whitespace-nowrap">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 shrink-0"></i> <span>${isEn ? 'Benefits ↗' : '공식 혜택 ↗'}</span>
                 </a>
               </div>
             </div>
@@ -5561,6 +5797,11 @@
         `;
       }
 
+      if (type === 'NARA_CARD_CHOICE') {
+        choiceOverlay.classList.remove('sm:pb-52');
+      } else {
+        choiceOverlay.classList.add('sm:pb-52');
+      }
       choiceOverlay.classList.remove('hidden');
       choiceOverlay.classList.add('flex');
       const charLayer = document.getElementById('character-layer');
@@ -6694,6 +6935,7 @@
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
+        choiceOverlay.classList.add('sm:pb-52');
       }
       const choiceContainer = document.getElementById('center-choice-container');
       if (choiceContainer) choiceContainer.innerHTML = '';
