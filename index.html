@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>청춘의 첫 관문</title>
+  <title>청춘의 첫 관문 v2.0.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -120,7 +120,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v1.9.6</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v2.0.0</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -177,7 +177,7 @@
           <div class="border-l border-slate-300 pl-2 sm:pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 id="lobby-main-header-title" class="text-xs sm:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-600 transition truncate max-w-[140px] sm:max-w-none">병무행정 비주얼노벨</h1>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v1.9.6</span>
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v2.0.0</span>
             </div>
           </div>
         </div>
@@ -1207,6 +1207,80 @@
     </div>
   </div>
 
+  <!-- ================= [MODAL 6: 시나리오 설문조사 (단일 화면 5문항, 화이트 UI)] ================= -->
+  <div id="scenario-survey-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-2 sm:p-4">
+    <div class="bg-white text-slate-900 rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <!-- 상단 헤더 -->
+      <div class="px-5 sm:px-6 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <h3 id="survey-modal-title" class="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight">시나리오 체험 설문조사</h3>
+          <span id="survey-ep-badge" class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold">제1화 병역판정검사</span>
+        </div>
+        <button type="button" onclick="closeScenarioSurveyModal()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold shadow-xs transition cursor-pointer">
+          닫기
+        </button>
+      </div>
+
+      <!-- 설문 본문 (5문항 한 화면 표시) -->
+      <div id="survey-modal-body" class="px-5 sm:px-6 py-2 divide-y divide-slate-100">
+      </div>
+
+      <!-- 하단 버튼 -->
+      <div id="survey-modal-footer" class="px-5 sm:px-6 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+        <span id="survey-warn-msg" class="text-xs font-bold text-rose-600"></span>
+        <div class="flex items-center gap-2 ml-auto">
+          <button type="button" onclick="closeScenarioSurveyModal()" class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer">
+            닫기
+          </button>
+          <button type="button" onclick="submitScenarioSurvey()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold rounded-lg shadow-sm transition cursor-pointer">
+            설문 제출
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= [MODAL 7: 시나리오 과정 요약 (단일 화면 단계별 연결 흐름도)] ================= -->
+  <div id="scenario-summary-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-2 sm:p-4">
+    <div class="bg-white text-slate-900 rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[94vh]">
+      <!-- 상단 헤더 -->
+      <div class="px-5 sm:px-6 py-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-baseline gap-2">
+          <h3 id="subway-modal-title" class="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight">병역판정검사 전 과정 요약</h3>
+          <span id="subway-line-badge" class="text-xs text-slate-500">단계를 클릭하면 해당 장면으로 이동합니다</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="subway-tab-1" onclick="openScenarioSummaryModal(1)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+            제1화 병역판정검사
+          </button>
+          <button type="button" id="subway-tab-2" onclick="openScenarioSummaryModal(2)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+            제2화 예비군 훈련
+          </button>
+          <button type="button" id="subway-tab-3" onclick="openScenarioSummaryModal(3)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+            제3화 병역진로설계
+          </button>
+          <button type="button" onclick="closeScenarioSummaryModal()" class="ml-1 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold shadow-xs transition cursor-pointer">
+            닫기
+          </button>
+        </div>
+      </div>
+
+      <!-- 본문 (한 화면에 이어지는 단계별 사진 1장 + 제목 + 간단 소개) -->
+      <div id="subway-summary-body" class="p-5 sm:p-6 overflow-y-auto">
+      </div>
+
+      <!-- 하단 버튼 -->
+      <div class="px-5 sm:px-6 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <button type="button" onclick="closeScenarioSummaryModal(); openScenarioSurveyModal(currentSummaryEpisode || currentPlayingEpisode || 1);" class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer">
+          설문조사 참여
+        </button>
+        <button type="button" onclick="closeScenarioSummaryModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= [SCRIPT: 공공데이터 API & 대본 데이터 로드] ================= -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
   <script src="api.js?v=20260906_v195_28"></script>
@@ -1486,6 +1560,345 @@
         isTyping = false;
       }
       goToScene(idx);
+    }
+
+    // ================= [설문조사 (1~4 객관식 + 5 주관식) 및 시나리오 요약 컨트롤러] =================
+    let currentSurveyEpisode = 1;
+    let surveyAnswers = { q1: null, q2: null, q3: null, q4: null, q5: '' };
+
+    const SURVEY_DATA_BY_EP = {
+      1: {
+        badge: '제1화 병역판정검사',
+        title: '병역판정검사 시나리오 설문조사',
+        q3Options: ['본인선택 신청·구비서류', '3기 나라사랑카드 비교', '신체·심리검사 순서', '병역처분·여비 안내']
+      },
+      2: {
+        badge: '제2화 예비군 훈련',
+        title: '예비군 훈련 시나리오 설문조사',
+        q3Options: ['학생예비군 8시간 안내', '사격·CPR 조기퇴소 기준', 'PX 할인·교통비 지급', '학업·직장 권익보장']
+      },
+      3: {
+        badge: '제3화 병역진로설계',
+        title: '병역진로설계 시나리오 설문조사',
+        q3Options: ['전공·자격증 특기 매칭', '육·해·공군 특기 비교', '모집병 가산점 계산기', '장병내일준비적금 혜택']
+      }
+    };
+
+    function getSurveyQuestions(epNum) {
+      const epData = SURVEY_DATA_BY_EP[epNum] || SURVEY_DATA_BY_EP[1];
+      return [
+        {
+          key: 'q1',
+          num: 'Q1.',
+          question: '이번 시나리오가 병무행정 절차와 준비 사항을 이해하는 데 도움이 되었나요?',
+          options: ['매우 도움됨', '도움됨', '보통', '부족함']
+        },
+        {
+          key: 'q2',
+          num: 'Q2.',
+          question: '사전 체험을 통해 실제 현장 방문에 대한 부담이나 막연함이 줄어들었나요?',
+          options: ['크게 줄어듦', '어느 정도 줄어듦', '보통', '여전히 부담됨']
+        },
+        {
+          key: 'q3',
+          num: 'Q3.',
+          question: '시나리오 내용 중 가장 유익했던 안내 항목은 무엇인가요?',
+          options: epData.q3Options
+        },
+        {
+          key: 'q4',
+          num: 'Q4.',
+          question: '직접 선택하며 진행하는 시뮬레이션 안내 방식에 전반적으로 만족하시나요?',
+          options: ['매우 만족', '만족', '보통', '개선 필요']
+        }
+      ];
+    }
+
+    function openScenarioSurveyModal(epNum) {
+      currentSurveyEpisode = epNum || currentPlayingEpisode || 1;
+      const epData = SURVEY_DATA_BY_EP[currentSurveyEpisode] || SURVEY_DATA_BY_EP[1];
+      // 초기 상태: 아무것도 미리 선택하지 않음, 5번 주관식도 빈칸 유지
+      surveyAnswers = {
+        q1: null,
+        q2: null,
+        q3: null,
+        q4: null,
+        q5: ''
+      };
+
+      const badgeEl = document.getElementById('survey-ep-badge');
+      const titleEl = document.getElementById('survey-modal-title');
+      const footerEl = document.getElementById('survey-modal-footer');
+      const warnEl = document.getElementById('survey-warn-msg');
+      if (badgeEl) badgeEl.innerText = epData.badge;
+      if (titleEl) titleEl.innerText = epData.title;
+      if (footerEl) footerEl.classList.remove('hidden');
+      if (warnEl) warnEl.innerText = '';
+
+      renderSurveyModalForm();
+
+      const modal = document.getElementById('scenario-survey-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function renderSurveyModalForm() {
+      const bodyEl = document.getElementById('survey-modal-body');
+      if (!bodyEl) return;
+      const questions = getSurveyQuestions(currentSurveyEpisode);
+
+      let html = '';
+
+      questions.forEach((q) => {
+        const selectedIdx = surveyAnswers[q.key];
+        html += `
+          <div class="py-2.5">
+            <p class="text-xs sm:text-[13px] font-bold text-slate-800">
+              <span class="text-blue-600 font-extrabold mr-1">${q.num}</span>${q.question}
+            </p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+              ${q.options.map((opt, optIdx) => {
+                const isSelected = (selectedIdx === optIdx);
+                return `
+                  <button type="button" onclick="selectSurveyOption('${q.key}', ${optIdx})" class="flex items-center gap-2 py-2 px-2.5 rounded-lg border text-xs transition cursor-pointer text-left ${
+                    isSelected
+                      ? 'bg-blue-50/80 border-blue-600 text-blue-700 font-bold'
+                      : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700 font-medium'
+                  }">
+                    <span class="w-3.5 h-3.5 rounded-full shrink-0 ${
+                      isSelected
+                        ? 'border-4 border-blue-600 bg-white'
+                        : 'border border-slate-300 bg-white'
+                    }"></span>
+                    <span class="truncate">${opt}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      // 문항 5: 주관식 (기본 빈칸, 빈칸 상태에서도 제출 가능)
+      html += `
+        <div class="py-2.5">
+          <p class="text-xs sm:text-[13px] font-bold text-slate-800">
+            <span class="text-blue-600 font-extrabold mr-1">Q5.</span>추가로 좋았던 점이나 바라는 점이 있다면 자유롭게 남겨주세요. <span class="text-xs font-normal text-slate-400">(선택사항 · 미입력 가능)</span>
+          </p>
+          <input id="survey-q5-input" type="text" value="${surveyAnswers.q5}" oninput="surveyAnswers.q5 = this.value"
+            class="w-full mt-2 px-3.5 py-2 rounded-lg border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none text-xs sm:text-[13px] text-slate-900 bg-white placeholder-slate-400 transition"
+            placeholder="자유롭게 의견을 입력해 주세요. (빈칸으로 두셔도 제출됩니다)" />
+        </div>
+      `;
+
+      bodyEl.innerHTML = html;
+    }
+
+    function selectSurveyOption(qKey, optIdx) {
+      playBeep(680, 'sine', 0.03);
+      const inputEl = document.getElementById('survey-q5-input');
+      if (inputEl) surveyAnswers.q5 = inputEl.value;
+      surveyAnswers[qKey] = optIdx;
+      const warnEl = document.getElementById('survey-warn-msg');
+      if (warnEl) warnEl.innerText = '';
+      renderSurveyModalForm();
+    }
+
+    function submitScenarioSurvey() {
+      const inputEl = document.getElementById('survey-q5-input');
+      if (inputEl) surveyAnswers.q5 = inputEl.value.trim();
+
+      const questions = getSurveyQuestions(currentSurveyEpisode);
+      const unanswered = questions.filter(q => surveyAnswers[q.key] === null);
+      if (unanswered.length > 0) {
+        playBeep(320, 'sawtooth', 0.06);
+        const warnEl = document.getElementById('survey-warn-msg');
+        if (warnEl) warnEl.innerText = 'Q1~Q4 객관식 문항을 선택해 주세요.';
+        return;
+      }
+
+      playBeep(880, 'sine', 0.08);
+      const epData = SURVEY_DATA_BY_EP[currentSurveyEpisode] || SURVEY_DATA_BY_EP[1];
+      const finalComment = surveyAnswers.q5; // 빈칸이어도 그대로 제출 가능
+
+      const record = {
+        episode: currentSurveyEpisode,
+        episodeName: epData.badge,
+        timestamp: new Date().toISOString(),
+        q1: questions[0].options[surveyAnswers.q1],
+        q2: questions[1].options[surveyAnswers.q2],
+        q3: questions[2].options[surveyAnswers.q3],
+        q4: questions[3].options[surveyAnswers.q4],
+        q5: finalComment
+      };
+
+      try {
+        const prev = JSON.parse(localStorage.getItem('mma_survey_records') || '[]');
+        prev.push(record);
+        localStorage.setItem('mma_survey_records', JSON.stringify(prev));
+      } catch (e) {}
+
+      const bodyEl = document.getElementById('survey-modal-body');
+      const footerEl = document.getElementById('survey-modal-footer');
+      if (footerEl) footerEl.classList.add('hidden');
+
+      if (bodyEl) {
+        bodyEl.innerHTML = `
+          <div class="py-6 text-center space-y-3">
+            <h4 class="text-base sm:text-lg font-extrabold text-slate-900">설문에 참여해 주셔서 감사합니다.</h4>
+            <p class="text-xs text-slate-500">남겨주신 소중한 의견은 병무행정 안내 서비스 개선에 반영됩니다.</p>
+            <div class="text-left border-t border-b border-slate-100 py-3 my-2 space-y-1.5 text-xs text-slate-700 max-w-md mx-auto">
+              <div class="flex justify-between"><span class="text-slate-500">Q1. 절차 이해도</span><strong class="text-slate-900">${record.q1}</strong></div>
+              <div class="flex justify-between"><span class="text-slate-500">Q2. 부담감 해소</span><strong class="text-slate-900">${record.q2}</strong></div>
+              <div class="flex justify-between"><span class="text-slate-500">Q3. 유익한 정보</span><strong class="text-slate-900">${record.q3}</strong></div>
+              <div class="flex justify-between"><span class="text-slate-500">Q4. 전반적 만족도</span><strong class="text-slate-900">${record.q4}</strong></div>
+              ${record.q5 ? `<div class="pt-1 border-t border-slate-100"><span class="text-slate-500 block mb-0.5">Q5. 추가 의견</span><strong class="text-slate-900">${record.q5}</strong></div>` : ''}
+            </div>
+            <div class="flex items-center justify-center gap-2 pt-2">
+              <button type="button" onclick="closeScenarioSurveyModal(); openScenarioSummaryModal(${currentSurveyEpisode});" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs cursor-pointer transition">
+                시나리오 요약 보기
+              </button>
+              <button type="button" onclick="closeScenarioSurveyModal()" class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded-lg font-bold text-xs cursor-pointer transition">
+                닫기
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function closeScenarioSurveyModal() {
+      const modal = document.getElementById('scenario-survey-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // ================= [시나리오 과정 요약 (한 화면 단계별 연결 흐름도)] =================
+    let currentSummaryEpisode = 1;
+
+    const SUBWAY_ROADMAP_DATA = {
+      1: {
+        title: '제1화 병역판정검사 전 과정 요약 (10단계)',
+        cols: 5,
+        steps: [
+          { num: '01', name: '통지서 확인·본인선택', bg: 'assets/room.jpg', desc: '1월 중순 선착순으로 검사 일자와 장소를 직접 선택합니다.', sceneIdx: 0 },
+          { num: '02', name: '질환별 구비서류 준비', bg: 'assets/room.jpg', desc: '내과 질환·수술 이력 시 병무용 진단서와 의무기록을 챙깁니다.', sceneIdx: 4 },
+          { num: '03', name: '접수 및 사진 촬영', bg: 'assets/lobby.jpg', desc: '신분증으로 본인인증 후 병역증용 증명사진을 촬영합니다.', sceneIdx: 5 },
+          { num: '04', name: '검사복 환복·보관', bg: 'assets/locker_room.jpg', desc: '전자 사물함에 소지품을 보관하고 전용 검사복으로 환복합니다.', sceneIdx: 6 },
+          { num: '05', name: '나라사랑카드·심리검사', bg: 'assets/exam_room.jpg', desc: '신한·기업·하나 3기 카드를 발급받고 PC 심리검사를 진행합니다.', sceneIdx: 7 },
+          { num: '06', name: '임상병리·방사선 검사', bg: 'assets/lab_room.jpg', desc: '채혈·소변검사 및 흉부 X-ray 촬영으로 정밀 검진을 받습니다.', sceneIdx: 8 },
+          { num: '07', name: '기본신체검사 측정', bg: 'assets/body_measure_room.jpg', desc: '신장·체중(BMI), 혈압, 시력을 디지털 장비로 측정합니다.', sceneIdx: 9 },
+          { num: '08', name: '과목별 전문의 진료', bg: 'assets/doctor_room.jpg', desc: '제출한 진단서를 바탕으로 전담 의사와 1:1 정밀 문진을 합니다.', sceneIdx: 10 },
+          { num: '09', name: '적성분류·최종 병역처분', bg: 'assets/adjudicator_room.jpg', desc: '자격·전공에 따른 특기 분류 후 최종 신체등급을 판정받습니다.', sceneIdx: 12 },
+          { num: '10', name: '귀가 및 여비 입금', bg: 'assets/room.jpg', desc: '결과통보서를 수령하고 나라사랑카드 계좌로 여비를 받습니다.', sceneIdx: 14 }
+        ]
+      },
+      2: {
+        title: '제2화 예비군 훈련 전 과정 요약 (8단계)',
+        cols: 4,
+        steps: [
+          { num: '01', name: '통지서·방침보류 확인', bg: 'assets/ep2_room.jpg', desc: '모바일 통지서를 확인하고 학생예비군 8시간 일정을 점검합니다.', sceneIdx: 0 },
+          { num: '02', name: '전투복·신분증 준비', bg: 'assets/ep2_room.jpg', desc: '전투복, 전투화, 고무링과 신분증을 출발 전에 챙깁니다.', sceneIdx: 5 },
+          { num: '03', name: '09시 전 훈련장 입소', bg: 'assets/ep2_shuttle_stop.jpg', desc: '입소 마감 시간 전에 도착해 본인 확인 및 교번표를 받습니다.', sceneIdx: 7 },
+          { num: '04', name: '실내 강당 안보교육', bg: 'assets/ep2_auditorium.jpg', desc: '안보 교육 영상을 시청하고 분대 평가 가점을 획득합니다.', sceneIdx: 9 },
+          { num: '05', name: '영점사격·시가지전투', bg: 'assets/ep2_shooting_range.jpg', desc: '개인화기 3발 탄착군 사격과 마일즈 전술훈련을 수행합니다.', sceneIdx: 10 },
+          { num: '06', name: '심폐소생술(CPR) 실습', bg: 'assets/ep2_cpr_lab.jpg', desc: '실습 마네킹으로 흉부압박과 지혈대 응급처치를 실습합니다.', sceneIdx: 11 },
+          { num: '07', name: '군마트(PX) 이용', bg: 'assets/ep2_px_mart.jpg', desc: '휴식 시간에 훈련장 내 PX에서 면세 할인 혜택을 이용합니다.', sceneIdx: 12 },
+          { num: '08', name: '조기퇴소·교육필증 발급', bg: 'assets/ep2_camp_gate.jpg', desc: '16시 조기퇴소와 함께 교통비 입금 및 공결 필증을 받습니다.', sceneIdx: 14 }
+        ]
+      },
+      3: {
+        title: '제3화 병역진로설계 전 과정 요약 (7단계)',
+        cols: 4,
+        steps: [
+          { num: '01', name: '진로설계센터 방문', bg: 'assets/ep3_center_entrance.jpg', desc: '군 복무와 학업·경력을 연계하기 위해 지원센터를 방문합니다.', sceneIdx: 2 },
+          { num: '02', name: '전공·자격증 적성진단', bg: 'assets/ep3_diagnosis_room.jpg', desc: '본인 전공과 자격증 데이터를 입력해 추천 특기를 분석합니다.', sceneIdx: 3 },
+          { num: '03', name: '전문상담관 1:1 상담', bg: 'assets/ep3_consulting_room.jpg', desc: '육·해·공군별 특기 직무와 복무 여건을 비교해 확정합니다.', sceneIdx: 4 },
+          { num: '04', name: '군 특기 모의 장비 체험', bg: 'assets/ep3_vr_experience.jpg', desc: 'VR 시뮬레이터와 드론봇 등 실제 군 장비를 미리 체험합니다.', sceneIdx: 5 },
+          { num: '05', name: '입영 시기·가산점 설계', bg: 'assets/ep3_roadmap_lounge.jpg', desc: '복학 맞춤 입영월을 정하고 헌혈·봉사 가산점을 점검합니다.', sceneIdx: 6 },
+          { num: '06', name: '장병내일준비적금 설계', bg: 'assets/ep3_roadmap_lounge.jpg', desc: '정부 매칭 적금과 군 원격강좌 학점 취득 혜택을 확인합니다.', sceneIdx: 7 },
+          { num: '07', name: '병역진로설계 추천서 발급', bg: 'assets/ep3_certificate_hall.jpg', desc: '맞춤 추천 특기와 입영 로드맵이 담긴 추천서를 발급받습니다.', sceneIdx: 8 }
+        ]
+      }
+    };
+
+    function openScenarioSummaryModal(epNum) {
+      currentSummaryEpisode = epNum || currentPlayingEpisode || 1;
+      const data = SUBWAY_ROADMAP_DATA[currentSummaryEpisode] || SUBWAY_ROADMAP_DATA[1];
+
+      const titleEl = document.getElementById('subway-modal-title');
+      if (titleEl) titleEl.innerText = data.title;
+
+      [1, 2, 3].forEach(num => {
+        const tabBtn = document.getElementById(`subway-tab-${num}`);
+        if (!tabBtn) return;
+        if (num === currentSummaryEpisode) {
+          tabBtn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer bg-blue-600 text-white shadow-xs';
+        } else {
+          tabBtn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 text-slate-600';
+        }
+      });
+
+      const bodyEl = document.getElementById('subway-summary-body');
+      if (bodyEl) {
+        const colClass = data.cols === 5 ? 'grid-cols-2 sm:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4';
+        let html = `<div class="grid ${colClass} gap-x-3 gap-y-4">`;
+
+        data.steps.forEach((st, idx) => {
+          const isLast = (idx === data.steps.length - 1);
+          html += `
+            <div onclick="jumpToSceneFromSubway(${currentSummaryEpisode}, ${st.sceneIdx})" class="group cursor-pointer flex flex-col">
+              <!-- 상단 노선 연결선 + 단계 번호 -->
+              <div class="relative flex items-center mb-1.5">
+                <span class="relative z-10 w-6 h-6 rounded-full bg-blue-600 group-hover:bg-blue-700 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0">
+                  ${st.num}
+                </span>
+                ${!isLast ? '<div class="flex-1 h-0.5 bg-blue-200 group-hover:bg-blue-400 ml-1"></div>' : '<div class="flex-1 h-0.5 bg-transparent ml-1"></div>'}
+              </div>
+              <!-- 사진 1장 -->
+              <div class="w-full h-20 sm:h-24 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 shrink-0">
+                <img src="${st.bg}" alt="${st.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+              </div>
+              <!-- 제목 및 한 줄 소개 -->
+              <h4 class="font-extrabold text-xs sm:text-[13px] text-slate-900 group-hover:text-blue-600 mt-1.5 truncate">${st.name}</h4>
+              <p class="text-[11px] text-slate-600 leading-snug mt-0.5 line-clamp-2 break-keep">${st.desc}</p>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        bodyEl.innerHTML = html;
+      }
+
+      const modal = document.getElementById('scenario-summary-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeScenarioSummaryModal() {
+      const modal = document.getElementById('scenario-summary-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function jumpToSceneFromSubway(epNum, sceneIdx) {
+      closeScenarioSummaryModal();
+      if (currentPlayingEpisode !== epNum) {
+        startEpisodeDirect(epNum, false);
+        setTimeout(() => {
+          goToScene(sceneIdx);
+        }, 200);
+      } else {
+        goToScene(sceneIdx);
+      }
     }
 
     function applySettingsAndClose() {
@@ -4175,12 +4588,23 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5 pt-2">
-              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+              <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSurveyModal(2);" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                <span>설문조사 참여</span>
+              </button>
+              <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSummaryModal(2);" class="py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="git-commit-vertical" class="w-4 h-4"></i>
+                <span>시나리오 요약 확인</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-2.5 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-600 rounded-2xl font-bold text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
                 <i data-lucide="home" class="w-4 h-4"></i>
                 <span>메인 로비로 이동</span>
               </button>
-              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(2, true);" class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(2, true);" class="py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-2xl font-bold text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>제2화 다시 플레이</span>
               </button>
@@ -4627,12 +5051,23 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5 pt-2">
-              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+              <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSurveyModal(3);" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                <span>설문조사 참여</span>
+              </button>
+              <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSummaryModal(3);" class="py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+                <i data-lucide="git-commit-vertical" class="w-4 h-4"></i>
+                <span>시나리오 요약 확인</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="py-2.5 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-600 rounded-2xl font-bold text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
                 <i data-lucide="home" class="w-4 h-4"></i>
                 <span>메인 로비로 이동</span>
               </button>
-              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(3, true);" class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl font-black text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
+              <button onclick="playBeep(650, 'sine', 0.03); startEpisodeDirect(3, true);" class="py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-2xl font-bold text-xs sm:text-sm tracking-wide shadow-xl flex items-center justify-center gap-1.5 cursor-pointer transition hover:scale-[1.01]">
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>제3화 다시 플레이</span>
               </button>
@@ -5775,7 +6210,7 @@
       } else if (type === 'EPISODE_COMPLETE') {
         const isEn = (currentLang === 'en');
         choiceContainer.innerHTML = `
-          <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 max-w-lg w-full animate-in fade-in zoom-in-95 duration-150">
+          <div class="flex flex-col items-center gap-2.5 sm:gap-3 max-w-xl w-full animate-in fade-in zoom-in-95 duration-150">
             <div class="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 sm:p-6 shadow-2xl w-full text-center space-y-3 sm:space-y-4">
               <div class="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500/20 text-emerald-400">
                 <i data-lucide="check-circle-2" class="w-5 h-5 sm:w-7 sm:h-7"></i>
@@ -5784,12 +6219,24 @@
                 <h3 class="text-sm sm:text-lg font-extrabold text-white">${isEn ? 'Episode 1 Complete!' : '제1화 병역판정검사 편 완결!'}</h3>
                 <p class="text-[11px] sm:text-xs text-slate-400 mt-1">${isEn ? 'You have successfully completed the full physical exam & returned home safe!' : '병역판정검사부터 진로설계, 결과 확인 및 귀가까지 모든 시뮬레이션을 완주하셨습니다.'}</p>
               </div>
+
+              <!-- 설문조사 참여 & 시나리오 A-Z 요약 확인 핵심 버튼 2종 -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSurveyModal(1);" class="w-full py-3 sm:py-3.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-xl border border-emerald-400/40 cursor-pointer hover:scale-[1.01]">
+                  <i data-lucide="clipboard-check" class="w-4 h-4 shrink-0"></i>
+                  <span>${isEn ? 'Participate in Survey' : '설문조사 참여'}</span>
+                </button>
+                <button onclick="playBeep(750, 'triangle', 0.05); openScenarioSummaryModal(1);" class="w-full py-3 sm:py-3.5 px-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 shadow-xl border border-indigo-400/40 cursor-pointer hover:scale-[1.01]">
+                  <i data-lucide="git-commit-vertical" class="w-4 h-4 shrink-0"></i>
+                  <span>${isEn ? 'Scenario Summary (A-Z)' : '시나리오 요약 확인'}</span>
+                </button>
+              </div>
             </div>
             <div class="grid grid-cols-2 gap-2 sm:gap-2.5 w-full shrink-0">
-              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="w-full py-2.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl border border-blue-400/30 cursor-pointer hover:scale-[1.01]">
+              <button onclick="playBeep(650, 'sine', 0.03); openLobby();" class="w-full py-2.5 sm:py-3 bg-slate-800/90 hover:bg-slate-700 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-xl border border-slate-600/60 cursor-pointer hover:scale-[1.01]">
                 <i data-lucide="home" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 메인 메뉴로 이동
               </button>
-              <button onclick="playBeep(650, 'sine', 0.03); renderScene(0);" class="w-full py-2.5 sm:py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-2xl cursor-pointer hover:scale-[1.01]">
+              <button onclick="playBeep(650, 'sine', 0.03); renderScene(0);" class="w-full py-2.5 sm:py-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-xl cursor-pointer hover:scale-[1.01]">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> 처음부터 다시하기
               </button>
             </div>
@@ -5797,7 +6244,7 @@
         `;
       }
 
-      if (type === 'NARA_CARD_CHOICE') {
+      if (type === 'NARA_CARD_CHOICE' || type === 'EPISODE_COMPLETE') {
         choiceOverlay.classList.remove('sm:pb-52');
       } else {
         choiceOverlay.classList.add('sm:pb-52');
@@ -8380,7 +8827,7 @@
       if (transitionOverlay && !transitionOverlay.classList.contains('pointer-events-none')) return;
 
       // 3. 모달 팝업(이름 설정, 캘린더, 점검 모달 등)이 열려있으면 무시
-      const modals = ['name-input-overlay', 'calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal'];
+      const modals = ['name-input-overlay', 'calendar-modal', 'sync-warning-modal', 'api-sync-detail-modal', 'scenario-survey-modal', 'scenario-summary-modal', 'history-modal', 'guide-settings-modal'];
       for (const id of modals) {
         const m = document.getElementById(id);
         if (m && !m.classList.contains('hidden')) return;
@@ -8427,7 +8874,7 @@
       if (window.MmaTracker) window.MmaTracker.reportLobby(currentEpisodePage + 1);
       checkSystemSyncStatus();
       lucide.createIcons();
-      // 초기 로드 시 메인 시나리오 선택 로비 표출 (대기)
+      const params = new URLSearchParams(window.location.search); if (params.get('scene') !== null) { const ep = parseInt(params.get('ep') || '1', 10); const sc = parseInt(params.get('scene') || '14', 10); startEpisodeDirect(ep, false); setTimeout(() => { goToScene(sc); if (params.get('modal') === 'survey') openScenarioSurveyModal(ep); if (params.get('modal') === 'summary') openScenarioSummaryModal(ep); }, 150); } else if (params.get('modal') === 'survey') { openScenarioSurveyModal(parseInt(params.get('ep') || '1', 10)); } else if (params.get('modal') === 'summary') { openScenarioSummaryModal(parseInt(params.get('ep') || '1', 10)); }
     });
   </script>
 </body>
