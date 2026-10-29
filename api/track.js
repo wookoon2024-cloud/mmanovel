@@ -120,8 +120,8 @@ function maskIp(ip = '') {
 }
 
 // Vercel KV / Upstash Redis REST 지원 (환경변수 또는 연결된 클라우드 DB 기본값)
-const DEFAULT_UPSTASH_URL = 'https://enabling-tortoise-158995.upstash.io';
-const DEFAULT_UPSTASH_TOKEN = 'gQAAAAAAAm0TAAIgcDI3ZDlmY2M0MzI5N2Q0MzgwOTI5YmRhYjZjZjdjOTUyOA';
+const DEFAULT_UPSTASH_URL = ''; // Vercel 환경변수(KV_REST_API_URL)로 설정
+const DEFAULT_UPSTASH_TOKEN = ''; // Vercel 환경변수(KV_REST_API_TOKEN)로 설정
 
 async function sendToUpstash(cmd, ...args) {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || DEFAULT_UPSTASH_URL;
