@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>병무청 가는 길 데모</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root { --bg: #0f172a; --panel: #111c33; --line: #26334f; --text: #e5ecf6; --muted: #94a3b8; --accent: #2563eb; --accent2: #facc15; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Pretendard', system-ui, sans-serif; padding: 24px 16px 60px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  header p { color: var(--muted); font-size: 14px; margin-top: 6px; line-height: 1.6; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: #1e3a8a; color: #bfdbfe; margin-bottom: 8px; }
+
+  /* ===== 비주얼노벨 스테이지 목업 ===== */
+  .stage { position: relative; margin-top: 18px; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #0b1222; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+  .stage-bg { position: absolute; inset: -20px; background-size: cover; background-position: center; filter: blur(18px) brightness(.45); }
+  .scene-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .4s; }
+  .scene-img.show { opacity: 1; }
+  .scene-label { position: absolute; top: 12px; left: 12px; z-index: 6; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.55); padding: 4px 10px; border-radius: 99px; color: #cbd5e1; }
+  .progress { position: absolute; top: 12px; right: 12px; z-index: 6; display: flex; gap: 4px; }
+  .progress i { width: 22px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.25); }
+  .progress i.on { background: var(--accent2); }
+
+  /* 지도 카드 */
+  .map-card { position: absolute; top: 4%; left: 50%; transform: translateX(-50%); width: 76%; height: 68%; background: #fff; color: #0f172a; border-radius: 14px; overflow: hidden; display: none; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+  .map-card.show { display: flex; }
+  .map-area { flex: 1.7; position: relative; background: #f2f2f2; }
+  .map-area svg { width: 100%; height: 100%; display: block; }
+  .route-base { fill: none; stroke: #fff; stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
+  .route-line { fill: none; stroke: #2563eb; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  .route-flow { fill: none; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 2 22; animation: flow 1s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -24; } }
+  @keyframes pulse { 0% { r: 14; opacity: .7; } 100% { r: 40; opacity: 0; } }
+  .pulse { animation: pulse 1.8s ease-out infinite; }
+  .route-steps { flex: 1; padding: 14px 14px; display: flex; flex-direction: column; gap: 10px; border-left: 1px solid #e2e8f0; overflow: auto; }
+  .route-steps h3 { font-size: 15px; font-weight: 800; }
+  .route-steps .time { font-size: 12px; color: #475569; }
+  .route-steps .time b { color: #1d4ed8; }
+  .route-steps ol { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .route-steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.5; }
+  .route-steps li span { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #2563eb; color: #fff; font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+  
+
+  /* 사진 + 표시 */
+  .photo-box { position: absolute; top: 4%; left: 50%; transform: translateX(-50%); height: 68%; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.6); opacity: 0; transition: opacity .35s; }
+  .photo-box.show { opacity: 1; }
+  .photo-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .chip { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; font-size: clamp(11px, 1.35vw, 14px); font-weight: 800; padding: 6px 12px; border-radius: 8px; background: #2563eb; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+  .walk-arrow { stroke-dasharray: 3 2.5; animation: flow2 .9s linear infinite; }
+  @keyframes flow2 { to { stroke-dashoffset: -5.5; } }
+
+  /* 캐릭터 + 대사창 */
+  .char { position: absolute; right: 1%; bottom: 0; height: 60%; z-index: 3; filter: drop-shadow(0 6px 14px rgba(0,0,0,.5)); pointer-events: none; }
+  .char.big { height: 96%; right: 8%; }
+  .dialog { position: absolute; left: 3%; right: 3%; bottom: 3%; z-index: 4; min-height: 23%; background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(2,6,23,.96)); border: 1px solid rgba(96,165,250,.35); border-radius: 14px; padding: 14px 18px 12px; }
+  .speaker { position: absolute; top: -13px; left: 16px; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 8px; background: linear-gradient(90deg, #1d4ed8, #4338ca); }
+  .dialog p { font-size: clamp(12px, 1.45vw, 15px); line-height: 1.65; white-space: pre-line; padding-right: 16%; max-height: 8.4em; overflow-y: auto; margin-bottom: 26px; }
+  .dialog p b { color: var(--accent2); }
+  .nav { position: absolute; right: 14px; bottom: 10px; display: flex; gap: 6px; }
+  .nav button { font: inherit; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; cursor: pointer; }
+  .nav button.primary { background: var(--accent); border-color: var(--accent); }
+  .nav button:disabled { opacity: .35; cursor: default; }
+
+  section { margin-top: 30px; }
+  section h2 { font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; }
+  .flow span { background: var(--panel); border: 1px solid var(--line); padding: 8px 12px; border-radius: 10px; }
+  .flow span.new { border-color: var(--accent2); color: var(--accent2); font-weight: 700; }
+  .flow em { color: var(--muted); font-style: normal; }
+
+  @media (max-width: 720px) {
+    .stage { aspect-ratio: auto; height: 700px; }
+    .map-card { top: 44px; width: 94%; height: 470px; flex-direction: column; }
+    .route-steps { border-left: 0; border-top: 1px solid #e2e8f0; }
+    .photo-box { top: 44px; width: 94%; height: auto; }
+    .char { height: 26%; }
+    .dialog p { padding-right: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">시안 · 시나리오 미적용</span>
+    <h1>경기북부병무지청 가는 길 — 시나리오 삽입 시안</h1>
+    <p>SCENE 4(자취방 서류 점검)와 SCENE 5(로비 접수) 사이에 들어갈 <b>"가는 길"</b> 장면입니다. 실제 지도 위에 망월사역 → 경기북부병무지청 도보 경로를 보여주고, 정문에 도착한 뒤에는 검사장 건물로 가는 방향만 안내합니다. <b>다음 ▶</b> 또는 ←/→ 키로 넘겨보세요.</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="stage-bg" id="stageBg"></div>
+    <img class="scene-img" id="sceneImg" alt="">
+    <div class="scene-label" id="sceneLabel"></div>
+    <div class="progress" id="progress"></div>
+
+    <!-- 지도 카드: 실제 지도 이미지(1113x939) 위에 같은 좌표계로 경로를 그림 -->
+    <div class="map-card show" id="mapCard">
+      <div class="map-area">
+        <svg viewBox="140 50 560 615" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="routeHead" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="2.4" markerHeight="2.4" orient="auto">
+              <path d="M0 0 L10 5 L0 10Z" fill="#2563eb"/>
+            </marker>
+          </defs>
+          <image href="img/map_mangwolsa.webp" x="0" y="0" width="1113" height="939"/>
+          <path id="route" d="M538 529 L531 518 L528 430 L523 300 L521 256 L420 258 L292 268 L272 210 L265 186" class="route-base"/>
+          <path d="M538 529 L531 518 L528 430 L523 300 L521 256 L420 258 L292 268 L272 210 L265 186" class="route-line" marker-end="url(#routeHead)"/>
+          <path d="M538 529 L531 518 L528 430 L523 300 L521 256 L420 258 L292 268 L272 210 L265 186" class="route-flow"/>
+          <!-- 걷는 사람 점 -->
+          <circle r="9" fill="#facc15" stroke="#1e3a8a" stroke-width="3">
+            <animateMotion dur="6s" repeatCount="indefinite" rotate="auto"><mpath href="#route"/></animateMotion>
+          </circle>
+          <!-- 출발: 출구 번호를 가리지 않도록 왼쪽에 라벨만 -->
+          <g font-size="13" font-weight="800" text-anchor="middle">
+            <rect x="340" y="482" width="176" height="36" rx="18" fill="#1e3a8a"/>
+            <text x="428" y="507" fill="#fff" font-size="18">2번 출구에서 출발</text>
+          </g>
+          <!-- 도착 -->
+          <g font-size="13" font-weight="800" text-anchor="middle">
+            <rect x="180" y="56" width="164" height="36" rx="18" fill="#2563eb"/>
+            <text x="262" y="81" fill="#fff" font-size="18">도착! 병무지청</text>
+          </g>
+        </svg>
+      </div>
+      <div class="route-steps">
+        <h3>망월사역 → 경기북부병무지청</h3>
+        <div class="time">🚶 도보 약 <b>15~20분</b> · 오르막 있음</div>
+        <ol>
+          <li><span>1</span><div><b>망월사역 2번 출구</b>로 나와 철길 옆 길을 따라 위쪽으로 직진</div></li>
+          <li><span>2</span><div>큰길과 만나면 <b>왼쪽</b>으로</div></li>
+          <li><span>3</span><div>회룡중학교 쪽 오르막길로 <b>오른쪽</b>, 학교 담장을 끼고 쭉 올라가기</div></li>
+          <li class="end"><span>4</span><div><b>경기북부병무지청</b> 정문 도착</div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 사진 + 표시 -->
+    <div class="photo-box" id="photoBox">
+      <img id="photo" alt="">
+      <svg viewBox="0 0 100 75" id="anno">
+        <defs>
+          <marker id="head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10Z" fill="#facc15"/>
+          </marker>
+        </defs>
+        <g id="annoG"></g>
+      </svg>
+      <div id="chips"></div>
+    </div>
+
+    <img class="char" id="char" src="../assets/himchan.png" alt="">
+    <div class="dialog">
+      <div class="speaker" id="speaker">힘찬이 (병무청 AI 가이드)</div>
+      <p id="line">검사장까지 가는 길을 미리 볼까요?
+<b>망월사역 2번 출구</b>로 나와서 걸어가면 <b>15~20분</b> 정도 걸려요.</p>
+      <div class="nav">
+        <button id="prev">◀ 이전</button>
+        <button id="next" class="primary">다음 ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>시나리오 안에서의 위치</h2>
+    <div class="flow">
+      <span>SCENE 4 자취방 서류 점검</span><em>→</em>
+      <span class="new">NEW 가는 길 (지도 + 정문·건물)</span><em>→</em>
+      <span class="new">NEW 입장 (신발장 → 입구 → 본인확인)</span><em>→</em>
+      <span>SCENE 6 탈의실 · 배경 교체</span><em>→</em>
+      <span>SCENE 7 심리검사장 · 배경 교체</span>
+    </div>
+  </section>
+</div>
+
+<script>
+// 사진 주석 좌표는 사진 기준 0~100(가로) x 0~75(세로)
+const STEPS = [
+  { map: true, label: "가는 길 · 지도", bg: "img/05_gate76.jpg",
+    text: "검사장까지 가는 길을 미리 볼까요?\n<b>망월사역 2번 출구</b>로 나와서 걸어가면 <b>15~20분</b> 정도 걸려요.\n마지막에 오르막길이 있으니 시간 여유를 두고 출발하세요!" },
+  { img: "img/05_gate76.jpg", label: "도착 ① 정문",
+    text: "정문에 도착했어요!\n오른쪽 너머로 <b>'병역판정검사장'</b> 세로 간판이 붙은 건물이 보이죠?\n화살표처럼 열린 정문 안으로 들어가세요.",
+    anno: [ { ring: [83, 24, 7] }, { chip: [74, 13], t: "병역판정검사장" }, { arrow: [[4, 62], [33, 47]] } ] },
+  { img: "img/06_building.jpg", label: "도착 ② 검사장 건물",
+    text: "안으로 들어오면 왼쪽에 있는 이 건물이 <b>병역판정검사장</b>이에요.\n화살표 방향으로 가세요! 직진하면 민원실·주차장 쪽이니 주의하세요.",
+    anno: [ { ring: [40, 28, 10] }, { chip: [40, 15], t: "병역판정검사장" }, { arrow: [[56, 70], [42, 51]] } ] },
+  { img: "img/07_shoe_locker.jpg", label: "입장 ① 신발장",
+    text: "건물 입구에 도착했어요!\n먼저 입구 옆 <b>신발장</b>에 신발을 넣어 주세요.\n신발장 <b>열쇠는 꼭 챙기세요!</b>",
+    anno: [ { chip: [50, 8], t: "신발장 · 열쇠 챙기기" } ] },
+  { img: "img/08_entrance.jpg", label: "입장 ② 입구",
+    text: "<b>슬리퍼로 갈아신고</b> 문을 열고 들어오세요.\n안에서 잠시 대기하다가 <b>순서대로</b> 안내를 받으면 돼요.",
+    anno: [ { ring: [79, 11, 9] }, { chip: [79, 2.5], t: "슬리퍼로 갈아신기" }, { arrow: [[44, 72], [48, 44]] } ] },
+  { img: "img/09_kiosk.jpg", label: "입장 ③ 본인확인",
+    text: "순서가 되면 <b>본인확인</b>을 해요.\n신분증을 준비해 두었다가 안내에 따라 확인을 마치면 탈의실로 이동합니다!",
+    anno: [ { box: [22, 14, 50, 46] }, { chip: [47, 13], t: "본인확인" } ] },
+  { scene: "img/bg_locker_room.jpg", label: "SCENE 6 탈의실 (기존 대본)", speaker: "힘찬이 (병무청 AI 가이드)", char: "../assets/himchan_smile.png",
+    text: "탈의실 및 사물함실로 이동했습니다!\n\n휴대폰, 지갑, 시계 등 모든 개인 소지품은 사물함에 넣고 편안한 전용 검사복으로 환복해 주세요." },
+  { scene: "img/bg_locker_room.jpg", label: "SCENE 6 탈의실 (기존 대본)", speaker: "민우 (주인공)", char: "../assets/minwoo.png",
+    text: "소지품은 사물함에 넣고... 아! 미리 챙겨온 병원 진단서(의무기록) 서류는 검사복 주머니에 꼭 챙겨야지!" },
+  { scene: "img/bg_locker_room.jpg", label: "SCENE 6 탈의실 (기존 대본)", speaker: "힘찬이 (병무청 AI 가이드)", char: "../assets/himchan_cheer.png",
+    text: "정확합니다 민우 님! 환복을 마치셨다면 첫 번째 검사장인 [심리검사장]으로 출발해 볼까요?\n심리검사장 입구에서 오늘 검사의 필수 열쇠인 [나라사랑카드] 발급과 등록이 시작됩니다!" },
+  { scene: "img/bg_exam_room.jpg", label: "SCENE 7 심리검사장 (기존 대본)", speaker: "심리검사관 NPC", char: "../assets/psychologist.png",
+    text: "안녕하십니까 민우 님! 병역판정검사의 첫 관문인 [심리검사장]에 오신 것을 환영합니다.\n심리검사장에 들어서면 가장 먼저 진행하는 핵심 절차가 바로 [나라사랑카드 발급·등록]입니다!\n\n① 스마트 신분증 & 검사키: 주머니에 넣고 각 검사실 입구 리더기에 '삑-' 태그하여 본인을 인증하고 검사 결과를 실시간 전산 기록합니다.\n② 당일 지급여비 수령: 오늘 검사가 끝나면 왕복 교통비와 식비 등 지급여비가 등록하신 이 계좌로 즉시 입금됩니다.\n③ 군 복무 & 예비군 복지: 복무 중 군 급여 수령, PX 최대 20% 할인, 그리고 전역 후 예비군 훈련 여비 지급까지 핵심 복지 카드로 쭉 사용하게 됩니다!\n\n특히 나라사랑카드는 국방부·군인공제회 공공데이터 및 공식 사업자 선정에 따라 제3기 공식 금융기관으로 [신한은행, IBK기업은행, 하나은행] 3개 은행이 선정되어 운영 중입니다. 3개 은행의 공식 혜택을 꼼꼼히 비교해 보시고 마음에 드는 나라사랑카드를 선택해 보세요!" },
+  { scene: "img/bg_exam_room.jpg", label: "SCENE 7 심리검사장 (기존 대본)", speaker: "민우 (주인공)", char: "../assets/minwoo.png",
+    text: "신한은행, IBK기업은행, 하나은행 3개 은행의 나라사랑카드 혜택을 꼼꼼히 비교해 보고 나한테 가장 맞는 카드를 선택해야겠어...!" }
+];
+
+const $ = id => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+let cur = 0;
+
+function svgEl(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+function drawAnno(list) {
+  const g = $("annoG"), chips = $("chips");
+  g.innerHTML = ""; chips.innerHTML = "";
+  (list || []).forEach(a => {
+    if (a.arrow) {
+      const [[x1, y1], [x2, y2]] = a.arrow;
+      g.appendChild(svgEl("line", { x1, y1, x2, y2, stroke: "rgba(0,0,0,.45)", "stroke-width": 2.8, "stroke-linecap": "round" }));
+      g.appendChild(svgEl("line", { x1, y1, x2, y2, stroke: "#facc15", "stroke-width": 1.8, "stroke-linecap": "round", "marker-end": "url(#head)", class: "walk-arrow" }));
+    }
+    if (a.ring) {
+      const [cx, cy, r] = a.ring;
+      g.appendChild(svgEl("circle", { cx, cy, r, fill: "none", stroke: "#2563eb", "stroke-width": 1 }));
+    }
+    if (a.box) {
+      const [x, y, width, height] = a.box;
+      g.appendChild(svgEl("rect", { x, y, width, height, rx: 2, fill: "none", stroke: "#2563eb", "stroke-width": 1 }));
+    }
+    if (a.chip) {
+      const c = document.createElement("div");
+      c.className = "chip";
+      c.style.left = a.chip[0] + "%"; c.style.top = (a.chip[1] / 75 * 100) + "%";
+      c.textContent = a.t; chips.appendChild(c);
+    }
+  });
+}
+
+function render() {
+  const s = STEPS[cur];
+  $("sceneLabel").textContent = s.label;
+  $("progress").innerHTML = STEPS.map((_, i) => `<i class="${i <= cur ? "on" : ""}"></i>`).join("");
+  $("line").innerHTML = s.text;
+  $("speaker").textContent = s.speaker || "힘찬이 (병무청 AI 가이드)";
+  $("char").src = s.char || "../assets/himchan.png";
+  $("char").classList.toggle("big", !!s.scene);
+  $("sceneImg").classList.toggle("show", !!s.scene);
+  if (s.scene) $("sceneImg").src = s.scene;
+  $("mapCard").classList.toggle("show", !!s.map);
+  $("stageBg").style.backgroundImage = `url(${s.bg || s.img || s.scene})`;
+  const box = $("photoBox");
+  box.classList.remove("show");
+  drawAnno([]);
+  if (s.img) {
+    // 사진이 다 뜬 뒤에 주석을 그려야 이전 사진 위에 화살표가 겹쳐 보이지 않음
+    const img = $("photo");
+    img.onload = () => {
+      if (STEPS[cur] !== s) return;
+      drawAnno(s.anno);
+      box.classList.add("show");
+    };
+    img.src = s.img;
+    if (img.complete && img.naturalWidth) img.onload();
+  }
+  $("prev").disabled = cur === 0;
+  $("next").textContent = cur === STEPS.length - 1 ? "처음으로 ↺" : "다음 ▶";
+}
+
+$("prev").onclick = () => { if (cur > 0) { cur--; render(); } };
+$("next").onclick = () => { cur = cur < STEPS.length - 1 ? cur + 1 : 0; render(); };
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") $("next").click();
+  if (e.key === "ArrowLeft") $("prev").click();
+});
+render();
+</script>
+</body>
+</html>
