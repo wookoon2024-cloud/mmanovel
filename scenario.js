@@ -885,6 +885,279 @@ const SCENARIOS = [
   }
 ];
 
+const SCENARIOS_STANDARD = SCENARIOS;
+
+/**
+ * =========================================================================
+ * 🏢 [경기북부병무지청 특화 실사 시나리오 (SCENARIOS_GYEONGBUK)]
+ * =========================================================================
+ * 사용자가 관할청으로 [경기북부병무지청]을 선택한 경우에만 실행되는 실사 코스입니다.
+ * 망월사역 2번 출구 도보 안내(약도), 청사 정문 및 검사장 본관 전경, 1층 신발장 환복,
+ * 1층 무인 키오스크 본인확인 사진촬영, 1층 실사 탈의실까지 현장감을 극대화합니다.
+ */
+const SCENARIOS_GYEONGBUK = [
+  // [SCENE 0] 민우의 자취방 - 통지서 수령
+  SCENARIOS[0],
+
+  // [SCENE 1] 민우의 자취방 - 가이드 첫 등장 & 멘토 캐릭터 선택 확인
+  SCENARIOS[1],
+
+  // [SCENE 2] 민우의 자취방 - 선택된 관할청의 일별 실시간 달력 확인
+  SCENARIOS[2],
+
+  // [SCENE 3] 민우의 자취방 - 예약 확정 및 직통 연락처
+  SCENARIOS[3],
+
+  // [SCENE 4] 민우의 자취방 - 맞춤형 서류 점검
+  SCENARIOS[4],
+
+  // [SCENE 5] 망월사역 2번 출구 - 경기북부병무지청 찾아가는 길 도보 안내
+  {
+    bg: "assets/map_mangwolsa.webp",
+    char: "assets/himchan_smile.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "드디어 검사 당일 아침! 지하철 1호선을 타고 망월사역에 도착했어.\n\n2번 출구로 나왔는데... 경기북부병무지청 검사장이 어느 쪽이지?",
+        text_en: "Finally the exam morning! Arrived at Mangwolsa Station on Line 1.\nI came out Exit 2... but which way is the Gyeonggi Bukbu Regional Office?"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "걱정 마세요 {name} 님! 2번 출구로 나와 신한대학교 방면으로 직진한 뒤 골목을 돌면, 도보 7~10분 거리에 경기북부병무지청이 위치해 있습니다!\n\n수검자 여러분의 편의를 위해 길바닥과 전봇대 곳곳에 병무청 안내 표지판이 잘 부착되어 있으니 미니 약도를 보며 천천히 따라와 보세요!",
+        text_en: "Don't worry {name}! Exit 2, go straight towards Shinhan University, turn into the street, and it's a 7-10 min walk!\nDirection signs are posted along the route. Follow the mini map comfortably!"
+      }
+    ],
+    apiSource: "[안내] 경기북부병무지청 오시는 길: 1호선 망월사역 2번 출구 도보 500m (신한대 정문 방면)",
+    apiSource_en: "[Guide] Gyeonggi Bukbu Regional Office: Line 1 Mangwolsa Station Exit 2 (500m walking route)",
+    apiSourceUrl: "https://www.mma.go.kr",
+    apiIcon: "map-pin",
+    isApi: true,
+    widgetType: "ROUTE_MAP_MANGWOLSA"
+  },
+
+  // [SCENE 6] 경기북부병무지청 정문 도착 - 검사장 본관 진입
+  {
+    bg: "assets/05_gate76.jpg",
+    char: "assets/himchan_cheer.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        bg: "assets/05_gate76.jpg",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "와, 여기가 경기북부병무지청 정문이구나! 정문을 통과하니까 저 앞에 웅장한 '병역판정검사장' 본관 건물이 보여.",
+        text_en: "Wow, this is the main gate of Gyeonggi Bukbu Regional Office! Walking past the gate, I can see the Main Exam Building ahead."
+      },
+      {
+        bg: "assets/06_building.jpg",
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "맞습니다! 정문 안내실을 지나 우측 본관 1층이 바로 병역판정검사장 입구입니다.\n\n검사 시작 시간보다 15분 일찍 여유 있게 도착하셨네요! 검사는 정시에 바로 시작되므로 조금 일찍 도착하시는 것이 가장 이상적입니다. 이제 건물 안으로 들어가 볼까요?",
+        text_en: "Exactly! Passing the guard booth, the 1st floor of the main building on the right is the Entrance.\nYou arrived 15 mins early—perfect! The exam starts promptly on time. Shall we step inside?"
+      }
+    ],
+    apiSource: "[청사안내] 경기북부병무지청 병역판정검사장: 본관 1층~2층",
+    apiSource_en: "[Facility Guide] Gyeonggi Bukbu Exam Hall: Main Building 1F-2F",
+    apiSourceUrl: "https://www.mma.go.kr",
+    apiIcon: "building-2",
+    isApi: true,
+    widgetType: null
+  },
+
+  // [SCENE 7] 검사장 1층 현관 - 신발 보관 및 전용 슬리퍼 갈아신기
+  {
+    bg: "assets/07_shoe_locker.jpg",
+    char: "assets/himchan_smile.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        bg: "assets/07_shoe_locker.jpg",
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "잠깐! 검사장 실내 청결과 편안한 이동을 위해, 1층 현관 신발장에서 신고 오신 신발을 벗고 검사장 전용 슬리퍼로 갈아신어 주세요!",
+        text_en: "Hold on! To keep the center clean and ensure comfort, please switch from your shoes to exam slippers at the 1st floor shoe lockers!"
+      },
+      {
+        bg: "assets/08_entrance.jpg",
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "아, 슬리퍼로 먼저 갈아신는 거구나! 신발을 신발장에 쏙 넣고 편한 슬리퍼로 착용 완료! 이제 자동문을 열고 안으로 들어가면 되지?",
+        text_en: "Ah, changing into slippers first! Placed my shoes into the locker and put on the slippers. Ready to head through the entrance doors!"
+      },
+      {
+        bg: "assets/08_entrance.jpg",
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "네, 완벽합니다! 출입문을 열고 들어가시면 바로 앞에 1층 안내 로비와 무인 접수 키오스크가 보입니다.",
+        text_en: "Yes, perfect! Walking through the entrance doors, you will see the 1st floor lobby and reception kiosks directly ahead."
+      }
+    ],
+    apiSource: "[이용수칙] 검사장 실내 이동 시 전용 슬리퍼 착용 원칙 (개인 신발은 신발장에 보관)",
+    apiSource_en: "[Rules] Exam slippers must be worn inside the center (Personal shoes kept in lockers)",
+    apiSourceUrl: "https://www.mma.go.kr",
+    apiIcon: "sparkles",
+    isApi: true,
+    widgetType: null
+  },
+
+  // [SCENE 8] 검사장 1층 로비 - 키오스크 본인확인 & 현장 사진촬영 & 검사복 수령
+  {
+    bg: "assets/09_kiosk.jpg",
+    char: "assets/himchan.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "1층 로비 무인 키오스크 접수대에 도착했습니다! 가장 먼저 [본인확인 및 의무자 등록]을 진행합니다.\n① 신분증 인식: 주민등록증, 운전면허증, 여권 등 공인 신분증을 스캐너에 올려놓습니다.\n② 즉석 사진촬영: 대리검사를 철저히 방지하기 위해 카메라 정면을 바라보고 즉석 사진을 촬영합니다.\n③ 검사복 수령: 등록이 완료되면 살균 소독된 신체검사 전용 검사복을 받습니다.\n지참하신 신분증을 키오스크에 스캔하고 본인 사진을 촬영해 볼까요?",
+        text_en: "We've arrived at the 1st floor kiosk reception! The first step is [ID Verification & Registration]:\n① Scan Photo ID on the scanner.\n② On-site photo capture to prevent proxy exams.\n③ Pick up sanitized exam uniform.\nLet's scan your ID and capture your photo!"
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "긴장되는데... 카메라 렌즈를 정면으로 똑바로 쳐다보고 찰칵!",
+        text_en: "A bit nervous... Looking straight into the lens, click!"
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "후우... 사진도 잘 등록됐고 검사복도 받았어!",
+        text_en: "Phew... Photo registered well and picked up the exam uniform!"
+      }
+    ],
+    apiSource: "[행정기준] 병역법 제11조(병역판정검사) 및 병역판정검사 규정 (공인 신분증 확인 및 사진촬영)",
+    apiSource_en: "[Legal Basis] Military Service Act Article 11 & MMA Exam Regulations (Photo ID Verification & Photo Capture)",
+    apiSourceUrl: "https://www.law.go.kr/법령/병역법",
+    apiIcon: "shield-check",
+    isApi: true,
+    widgetType: "IDENTITY_REG_CONFIRM"
+  },
+
+  // [SCENE 9] 경기북부 1층 탈의실 및 사물함실 - 사물함 보관 & 검사복 환복
+  {
+    bg: "assets/bg_locker_room.jpg",
+    char: "assets/himchan_smile.png",
+    charPos: "right",
+    speaker: "힘찬이 (병무청 AI 가이드)",
+    speaker_en: "Himchan (MMA AI Guide)",
+    plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+    dialogues: [
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_smile.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "1층 탈의실 및 사물함실로 이동했습니다!\n\n휴대폰, 지갑, 시계 등 모든 개인 소지품은 사물함에 넣고 편안한 전용 검사복으로 환복해 주세요.",
+        text_en: "We've moved to the 1st floor locker room!\nPlease place all belongings into the locker and change into the examination uniform."
+      },
+      {
+        speaker: "{name} (주인공)",
+        speaker_en: "{name} (Protagonist)",
+        char: "assets/minwoo.png",
+        charPos: "right",
+        plateClass: "from-slate-700 to-slate-900 border-slate-500/40",
+        text: "소지품은 사물함에 넣고... 아! 미리 챙겨온 병원 진단서(의무기록) 서류는 전문의 진료 때 보여드려야 하니까 검사복 주머니에 꼭 챙겨야지!",
+        text_en: "Belongings in locker... Oh! I must keep my medical certificate and records in my uniform pocket!"
+      },
+      {
+        speaker: "힘찬이 (병무청 AI 가이드)",
+        speaker_en: "Himchan (MMA AI Guide)",
+        char: "assets/himchan_cheer.png",
+        charPos: "right",
+        plateClass: "from-blue-700 to-indigo-800 border-blue-400/40",
+        text: "정확합니다 {name} 님! 환복을 마치셨다면 첫 번째 검사장인 2층 [심리검사장]으로 올라가 볼까요?\n심리검사장 입구에서 오늘 검사의 필수 열쇠인 [나라사랑카드] 발급과 등록이 시작됩니다!",
+        text_en: "Exactly right {name}! Now let's head up to the 2nd floor [Psychological Testing Hall]!\nYour essential [Nara Sarang Card] registration begins there!"
+      }
+    ],
+    apiSource: null,
+    apiSource_en: null,
+    isApi: false,
+    widgetType: "LOCKER_CHANGE_CONFIRM"
+  },
+
+  // [SCENE 10] 심리검사장 - 나라사랑카드 발급·등록 및 PC 1:1 심리검사 (실사 배경)
+  {
+    ...SCENARIOS[7],
+    bg: "assets/bg_exam_room.jpg"
+  },
+
+  // [SCENE 11] 임상병리검사실 및 영상의학실
+  SCENARIOS[8],
+
+  // [SCENE 12] 기본검사실
+  SCENARIOS[9],
+
+  // [SCENE 13] 전문의 정밀 진료실
+  SCENARIOS[10],
+
+  // [SCENE 14] 적성분류
+  SCENARIOS[11],
+
+  // [SCENE 15] 판정실
+  SCENARIOS[12],
+
+  // [SCENE 16] 탈의실 일상복 환복 (실사 배경)
+  {
+    ...SCENARIOS[13],
+    bg: "assets/bg_locker_room.jpg"
+  },
+
+  // [SCENE 17] 집 도착 & 에필로그
+  SCENARIOS[14]
+];
+
+if (typeof window !== 'undefined') {
+  window.SCENARIOS = SCENARIOS;
+  window.SCENARIOS_STANDARD = SCENARIOS_STANDARD;
+  window.SCENARIOS_GYEONGBUK = SCENARIOS_GYEONGBUK;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { SCENARIOS, GUIDE_PERSONAS, adaptGuideDialogue, resolveGuideAssets };
+  module.exports = { SCENARIOS, SCENARIOS_STANDARD, SCENARIOS_GYEONGBUK, GUIDE_PERSONAS, adaptGuideDialogue, resolveGuideAssets };
 }
