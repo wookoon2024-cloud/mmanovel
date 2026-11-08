@@ -1123,7 +1123,7 @@
   <div id="camera-flash-overlay" class="fixed inset-0 z-40 bg-white pointer-events-none opacity-0 transition-opacity duration-300"></div>
 
   <!-- ================= [LAYER 3.5: 화면 중앙 플로팅 선택지 레이어 (VN Central Choice Overlay)] ================= -->
-  <div id="center-choice-overlay" class="fixed inset-0 z-30 flex items-center justify-center p-2 sm:p-4 pb-2 sm:pb-52 pointer-events-none hidden bg-slate-950/80 backdrop-blur-md transition-all duration-300">
+  <div id="center-choice-overlay" class="fixed inset-0 z-30 flex items-center justify-center p-2 sm:p-4 pointer-events-none hidden bg-slate-950/80 backdrop-blur-md transition-all duration-300">
     <div id="center-choice-container" class="w-full max-w-sm sm:max-w-xl max-h-[86vh] sm:max-h-[75vh] overflow-y-auto custom-scroll flex flex-col gap-2 pointer-events-auto p-1">
       <!-- 중앙 선택지 UI가 여기에 표출됩니다 -->
     </div>
@@ -1528,7 +1528,7 @@
 
   <!-- ================= [SCRIPT: 비주얼 노벨 인터랙티브 엔진] ================= -->
   <script>
-    const ASSET_VER = '20260923_norm_v1';
+    const ASSET_VER = '20261108_v224_center';
     function getAssetUrl(url) {
       if (!url) return '';
       if (url.includes('?')) return url;
@@ -3208,6 +3208,7 @@
 
         setTimeout(() => {
           onComplete();
+          if (overlay) overlay.style.transition = '';
           overlay.classList.remove('opacity-100', 'pointer-events-auto');
           overlay.classList.add('opacity-0', 'pointer-events-none');
           setTimeout(() => {
@@ -3426,7 +3427,13 @@
 
       // 배경 변경
       const bgImg = document.getElementById('bg-image');
-      if (bgImg) bgImg.style.backgroundImage = `url('${getAssetUrl(scene.bg)}')`;
+      if (bgImg) {
+        bgImg.style.backgroundImage = `url('${getAssetUrl(scene.bg)}')`;
+        const isRouteBg = scene.bg && (scene.bg.includes('05_gate') || scene.bg.includes('06_building') || scene.bg.includes('07_shoe') || scene.bg.includes('09_kiosk'));
+        if (!isRouteBg && !scene.photoBox && !scene.routeMap) {
+          bgImg.style.filter = '';
+        }
+      }
 
       // 가이드 페르소나 적용된 씬 기본 정보 산출
       const resolvedScene = getGuideResolvedItem(scene);
@@ -3635,7 +3642,8 @@
         layer.classList.add('hidden');
         mapCard.classList.add('hidden');
         photoBox.classList.add('hidden');
-        if (bgImg) bgImg.style.filter = '';
+        const isRouteBg = currentBg && (currentBg.includes('05_gate') || currentBg.includes('06_building') || currentBg.includes('07_shoe') || currentBg.includes('09_kiosk'));
+        if (bgImg && !isRouteBg) bgImg.style.filter = '';
       }
     }
 
@@ -6615,13 +6623,10 @@
         `;
       }
 
-      if (typeof updateRouteStageOverlay === 'function') updateRouteStageOverlay({}, {});
-      if (typeof updateRouteStageOverlay === 'function') updateRouteStageOverlay({}, {});
-      if (type === 'NARA_CARD_CHOICE' || type === 'EPISODE_COMPLETE') {
-        choiceOverlay.classList.remove('sm:pb-52');
-      } else {
-        choiceOverlay.classList.add('sm:pb-52');
+      if (type !== 'IDENTITY_REG_CONFIRM') {
+        if (typeof updateRouteStageOverlay === 'function') updateRouteStageOverlay({}, {});
       }
+      choiceOverlay.classList.remove('sm:pb-52');
       choiceOverlay.classList.remove('hidden');
       choiceOverlay.classList.add('flex');
       const charLayer = document.getElementById('character-layer');
@@ -7757,6 +7762,12 @@
     function confirmIdentityReg() {
       playBeep(920, 'sine', 0.08);
       setTimeout(() => playBeep(1200, 'triangle', 0.06), 100);
+      const overlay = document.getElementById('scene-transition-overlay');
+      if (overlay) {
+        overlay.style.transition = 'none';
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
       goToScene(6);
     }
 
@@ -7770,7 +7781,7 @@
       if (choiceOverlay) {
         choiceOverlay.classList.add('hidden');
         choiceOverlay.classList.remove('flex');
-        choiceOverlay.classList.add('sm:pb-52');
+        choiceOverlay.classList.remove('sm:pb-52');
       }
       const choiceContainer = document.getElementById('center-choice-container');
       if (choiceContainer) choiceContainer.innerHTML = '';
