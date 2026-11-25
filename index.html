@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>청춘의 첫 관문 v2.2.4</title>
+  <title>청춘의 첫 관문 v2.2.5</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -310,7 +310,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v2.2.4</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v2.2.5</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -367,7 +367,7 @@
           <div class="border-l border-slate-300 pl-2 sm:pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 id="lobby-main-header-title" class="text-xs sm:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-600 transition truncate max-w-[140px] sm:max-w-none">병무행정 비주얼노벨</h1>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v2.2.4</span>
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v2.2.5</span>
             </div>
           </div>
         </div>
@@ -395,21 +395,21 @@
       <div class="relative max-w-5xl w-full mx-auto px-0 sm:px-14">
         
         <!-- 좌측 이전 페이지 화살표 버튼 (<) -->
-        <button id="ep-prev-btn" onclick="prevEpisodePage()" class="absolute -left-1 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer opacity-0 pointer-events-none scale-75 invisible" title="이전 에피소드">
+        <button id="ep-prev-btn" onclick="prevEpisodePage()" class="hidden absolute -left-1 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer opacity-0 pointer-events-none scale-75 invisible" title="이전 에피소드">
           <i data-lucide="chevron-left" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
         <!-- 우측 다음 페이지 화살표 버튼 (>) -->
-        <button id="ep-next-btn" onclick="nextEpisodePage()" class="absolute -right-1 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer" title="다음 에피소드">
+        <button id="ep-next-btn" onclick="nextEpisodePage()" class="hidden absolute -right-1 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-slate-900/95 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-400 text-white flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer" title="다음 에피소드">
           <i data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
         <!-- 슬라이더 뷰포트 (오버플로우 숨김 & 터치 스와이프 및 드래그) -->
         <div id="episode-slider-viewport" class="overflow-hidden w-full rounded-2xl sm:rounded-3xl p-1 select-none cursor-grab active:cursor-grabbing" style="touch-action: pan-y;">
-          <div id="episode-slider-track" class="flex transition-transform duration-500 ease-out w-full will-change-transform">
+          <div id="episode-slider-track" class="flex justify-center transition-transform duration-500 ease-out w-full will-change-transform">
             
             <!-- [SLIDE 1: 제1화 병역판정검사] -->
-            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+            <div class="w-full max-w-lg mx-auto shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-700/80 hover:border-blue-500/80 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-600/20 cursor-pointer" onclick="handleCardClick(1)" onmouseenter="playEpVideo('ep1-live-video')" onmouseleave="pauseEpVideo('ep1-live-video')">
                 <!-- 포스터 이미지 영역 (인물과 폰이 온전히 다 보이는 높이 유지) -->
                 <div id="ep1-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
@@ -462,7 +462,7 @@
             </div>
 
             <!-- [SLIDE 2: 제2화 예비군 훈련 (준비 중)] -->
-            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+            <div class="hidden w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-slate-600 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(2)" onmouseenter="playEpVideo('ep2-live-video')" onmouseleave="pauseEpVideo('ep2-live-video')">
                 <div id="ep2-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep2_cover.jpg" alt="제2화 예비군 훈련" class="w-full h-full object-cover object-top opacity-90 transition-transform duration-700 ease-out group-hover:scale-105">
@@ -510,7 +510,7 @@
             </div>
 
             <!-- [SLIDE 3: 제3화 병역진로설계] -->
-            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+            <div class="hidden w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-blue-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(3)">
                 <div id="ep3-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep3_cover.jpg?v=20260911_ep3" alt="제3화 병역진로설계" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
@@ -557,7 +557,7 @@
             </div>
 
             <!-- [SLIDE 4: 제4화 사회복무요원 첫 출근 (준비 중)] -->
-            <div class="w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
+            <div class="hidden w-full md:w-1/2 shrink-0 px-1.5 sm:px-3">
               <div class="group rounded-2xl sm:rounded-3xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/60 overflow-hidden flex flex-col h-auto min-h-0 sm:h-[595px] sm:min-h-[595px] shadow-lg opacity-85 transition-all duration-300 hover:opacity-100 cursor-pointer" onclick="handleCardClick(4)">
                 <div id="ep4-poster-wrapper" class="relative w-full h-[320px] xs:h-[340px] sm:h-[370px] overflow-hidden bg-slate-950 transition-all duration-500 shrink-0">
                   <img src="assets/ep4_cover.jpg?v=20260904_v189" alt="제4화 사회복무요원 첫 출근" class="w-full h-full object-cover object-top opacity-95 transition-transform duration-700 ease-out group-hover:scale-105">
@@ -605,7 +605,7 @@
         </div>
 
         <!-- 하단 슬라이더 페이지네이션 인디케이터 (데스크톱 2버튼, 모바일 4점 인디케이터) -->
-        <div id="ep-desktop-indicators" class="hidden md:flex items-center justify-center gap-3 pt-1.5 sm:pt-2">
+        <div id="ep-desktop-indicators" class="hidden items-center justify-center gap-3 pt-1.5 sm:pt-2">
           <button onclick="goToEpisodePage(0)" id="ep-page-indicator-0" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/40 transition cursor-pointer">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
             <span id="ep-indicator-text-0" class="text-xs font-bold text-white">에피소드 1 · 2</span>
@@ -616,7 +616,7 @@
           </button>
         </div>
 
-        <div id="ep-mobile-indicators" class="flex md:hidden items-center justify-center gap-2 pt-0.5 pb-0.5">
+        <div id="ep-mobile-indicators" class="hidden items-center justify-center gap-2 pt-0.5 pb-0.5">
           <button onclick="goToEpisodePage(0)" id="ep-dot-0" class="h-1.5 w-6 rounded-full bg-blue-500 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(1)" id="ep-dot-1" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
           <button onclick="goToEpisodePage(2)" id="ep-dot-2" class="h-1.5 w-2 rounded-full bg-slate-700 transition-all duration-300 cursor-pointer"></button>
@@ -8684,7 +8684,7 @@
     }
 
     function getTotalEpisodePages() {
-      return isMobileLobby() ? 4 : 2;
+      return 1;
     }
 
     function goToEpisodePage(pageIdx) {
