@@ -1011,7 +1011,7 @@ const SCENARIOS_GYEONGBUK = [
       {
         bg: "assets/08_entrance.jpg",
         photoBox: "assets/08_entrance.jpg",
-        anno: [ { ring: [79, 11, 9] }, { chip: [79, 2.5], t: "슬리퍼로 갈아신기" }, { arrow: [[44, 72], [48, 44]] } ],
+        anno: [ { arrow: [[44, 72], [48, 44]] } ],
         speaker: "힘찬이 (병무청 AI 가이드)",
         speaker_en: "Himchan (MMA AI Guide)",
         char: "assets/himchan_cheer.png",
