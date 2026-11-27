@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>경기북부병무지청 3D 청사 안내 v4.5</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #dbeafe; }
+    #canvas-container { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    .panel {
+      background: #ffffff;
+      border: 2px solid #0f172a;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);
+    }
+    .nav-btn {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #334155;
+      transition: all 0.15s ease;
+    }
+    .nav-btn:hover {
+      background: #f1f5f9;
+      border-color: #000000;
+    }
+    .nav-btn.active {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #000000;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- 로딩 -->
+  <div id="loading" class="fixed inset-0 z-50 bg-slate-50 flex flex-col items-center justify-center gap-3 transition-opacity duration-500">
+    <div class="w-9 h-9 rounded-full border-4 border-slate-200 border-t-slate-900 animate-spin"></div>
+    <p class="text-sm font-bold text-slate-900">경기북부병무지청 3D 청사 안내 불러오는 중...</p>
+  </div>
+
+  <!-- 좌측 상단: 고대비 3D 바닥 길안내 4버튼 -->
+  <div class="fixed top-4 left-4 z-20 w-64">
+    <div class="panel rounded-xl p-3.5">
+      <div class="flex items-center justify-between mb-2.5 pb-2 border-b-2 border-slate-900">
+        <span class="text-sm font-black text-black tracking-tight">경기북부병무지청 안내</span>
+        <span class="text-[11px] font-bold text-slate-600">v4.5</span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <button onclick="window.setRoute('exam')" id="r-exam" class="nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-extrabold cursor-pointer text-left">
+          <span class="w-3.5 h-3.5 rounded-sm border border-black shrink-0" style="background:#16a34a;"></span>
+          <span>병역판정검사장</span>
+        </button>
+        <button onclick="window.setRoute('parking')" id="r-parking" class="nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-extrabold cursor-pointer text-left">
+          <span class="w-3.5 h-3.5 rounded-sm border border-black shrink-0" style="background:#ea580c;"></span>
+          <span>주차장 가는 길</span>
+        </button>
+        <button onclick="window.setRoute('minwon')" id="r-minwon" class="nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-extrabold cursor-pointer text-left">
+          <span class="w-3.5 h-3.5 rounded-sm border border-black shrink-0" style="background:#0284c7;"></span>
+          <span>민원실 안내</span>
+        </button>
+        <button onclick="window.setRoute('restroom')" id="r-restroom" class="nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-extrabold cursor-pointer text-left">
+          <span class="w-3.5 h-3.5 rounded-sm border border-black shrink-0" style="background:#e11d48;"></span>
+          <span>화장실 안내</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 우측 상단: 확대/축소 버튼만 유지 -->
+  <div class="fixed top-4 right-4 z-20">
+    <div class="panel rounded-xl p-1.5 flex flex-col items-center gap-1">
+      <button type="button" onmousedown="window.startZoom(-1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(-1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(-1)" class="w-10 h-10 rounded-lg bg-white hover:bg-slate-200 active:bg-slate-300 text-black font-black text-xl border-2 border-slate-800 transition flex items-center justify-center cursor-pointer" title="확대">+</button>
+      <span class="text-[11px] font-bold text-black select-none">확대/축소</span>
+      <button type="button" onmousedown="window.startZoom(1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(1)" class="w-10 h-10 rounded-lg bg-white hover:bg-slate-200 active:bg-slate-300 text-black font-black text-xl border-2 border-slate-800 transition flex items-center justify-center cursor-pointer" title="축소">−</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xdbe8f4, 230, 560);
+
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.3, 950);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.AgXToneMapping || THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.38;
+    container.appendChild(renderer.domElement);
+    renderer.domElement.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      console.warn('WebGL context lost - restoring...');
+    }, false);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.85;
+
+    // Blender 5.3 Cycles 물리 대기 하늘 360° 환경맵 로드 (유리창 하늘 반사 + 배경!)
+    const envLoader = new THREE.TextureLoader();
+    envLoader.load('assets/pbr/cycles_sky_env.jpg?v=3.1', (envTex) => {
+      envTex.mapping = THREE.EquirectangularReflectionMapping;
+      envTex.colorSpace = THREE.SRGBColorSpace;
+      scene.background = envTex;
+      scene.environment = pmrem.fromEquirectangular(envTex).texture;
+      scene.environmentIntensity = 0.92;
+    });
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.maxPolarAngle = Math.PI / 2 - 0.015;
+    controls.minDistance = 8;
+    controls.maxDistance = 260;
+
+    // 맑은 낮 기본 조명 (선명한 태양광 + 맑은 하늘 바운스)
+    const hemi = new THREE.HemisphereLight(0xe0f2fe, 0x9aa694, 0.62);
+    scene.add(hemi);
+
+    const sun = new THREE.DirectionalLight(0xffffff, 6.2);
+    sun.position.set(58, 76, 62);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.left = -92; sun.shadow.camera.right = 92;
+    sun.shadow.camera.top = 92; sun.shadow.camera.bottom = -92;
+    sun.shadow.camera.near = 10; sun.shadow.camera.far = 310;
+    sun.shadow.bias = -0.00025;
+    sun.shadow.normalBias = 0.025;
+    scene.add(sun);
+
+    const rim = new THREE.DirectionalLight(0xc8e4ff, 0.45);
+    rim.position.set(-85, 38, -60);
+    scene.add(rim);
+
+    scene.fog.color.setHex(0xdbeafe);
+    renderer.toneMappingExposure = 1.38;
+
+    // Blender에서 내보낸 PBR mma_bukbu_blender.glb 로드!
+    const annexXrayMeshes = [];
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+    const loader = new GLTFLoader();
+    loader.load('mma_bukbu_blender.glb?v=4.3', (gltf) => {
+      const root = gltf.scene;
+      root.traverse(obj => {
+        if (!obj.isMesh) return;
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+        // 별관(민원실 건물) 외벽·상층부 메시는 화장실 안내 시 X-Ray 투시 대상에 등록
+        if (obj.name && (obj.name.startsWith('Annex') || obj.name.startsWith('SignAnnex') || obj.name === 'SignSloganPlane')) {
+          obj.material = Array.isArray(obj.material)
+            ? obj.material.map(m => m.clone())
+            : obj.material.clone();
+          annexXrayMeshes.push(obj);
+        }
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        for (const mat of mats) {
+          if (!mat) continue;
+          if (mat.map) mat.map.anisotropy = maxAniso;
+          if (mat.normalMap) mat.normalMap.anisotropy = maxAniso;
+          // 알파 컷아웃 잔잎/솔잎 카드: 밝은 햇빛 투과감 + 선명한 나뭇잎 그림자!
+          if (mat.name && mat.name.startsWith('Leaf_')) {
+            mat.alphaTest = 0.35;
+            mat.transparent = false;
+            mat.side = THREE.DoubleSide;
+            mat.shadowSide = THREE.DoubleSide;
+            mat.depthWrite = true;
+            mat.roughness = 0.58;
+            mat.color.setHex(0xdfeed6);
+            mat.needsUpdate = true;
+          }
+          // 유리창: Cycles처럼 맑은 하늘·태양광 반사 극대화!
+          if (mat.name && (mat.name.includes('Window') || mat.name === 'Glass' || mat.name === 'Env_AptWin')) {
+            mat.roughness = 0.04;
+            mat.metalness = 0.62;
+            mat.envMapIntensity = 2.8;
+            mat.color.setHex(0xcbe6f0);
+            mat.needsUpdate = true;
+          }
+          // 태양광 패널: Cycles처럼 푸른 하늘 반사광!
+          if (mat.name === 'SolarPanel') {
+            mat.roughness = 0.10;
+            mat.metalness = 0.72;
+            mat.envMapIntensity = 2.6;
+            mat.color.setHex(0x4b74b8);
+            mat.needsUpdate = true;
+          }
+          // 원경 산지는 그림자 제외
+          if (mat.name === 'Env_Mountain') {
+            obj.castShadow = false;
+            obj.receiveShadow = false;
+          }
+          // 한글 현판: 그림자 겹침 방지 및 선명도 유지
+          if (mat.name && mat.name.startsWith('Sign_')) {
+            obj.castShadow = false;
+          }
+        }
+      });
+      scene.add(root);
+      const ld = document.getElementById('loading');
+      if (ld) { ld.style.opacity = '0'; setTimeout(() => ld.remove(), 450); }
+      // 비주얼노벨 연동 URL 파라미터 (?route=exam|parking|minwon|restroom) 자동 투어 시작
+      const initRoute = new URLSearchParams(window.location.search).get('route');
+      if (initRoute && ['exam', 'parking', 'minwon', 'restroom'].includes(initRoute)) {
+        setTimeout(() => window.setRoute(initRoute), 350);
+      }
+    }, undefined, (err) => {
+      console.error('GLB 로드 오류:', err);
+      const ld = document.getElementById('loading');
+      if (ld) ld.innerHTML = `<p class="text-rose-400 font-bold text-sm">GLB 로드 실패: ${err.message}</p>`;
+    });
+
+    // =========================================================================
+    // 적극행정 3D 바닥 길안내 시스템 (정문 -> 검사장 / 주차장 / 민원실 / 화장실)
+    // =========================================================================
+    const LOW_Y = -3.8;
+    function getDriveY(x) {
+      if (x <= -22.0) return 0.0;
+      if (x >= 16.0) return LOW_Y;
+      return ((x + 22.0) / 38.0) * LOW_Y;
+    }
+
+    // 고대비 선명한 3D 표지판 스프라이트 (진한 원색 배경 + 순흑색 굵은 글씨 + 굵은 검정 테두리!)
+    function makePinSprite(text, bgHex, borderHex = '#000000') {
+      const cv = document.createElement('canvas');
+      cv.width = 1024; cv.height = 240;
+      const ctx = cv.getContext('2d');
+      ctx.font = '900 74px Pretendard, "Malgun Gothic", sans-serif';
+      const tw = Math.min(940, ctx.measureText(text).width + 110);
+      const x0 = (1024 - tw) / 2, y0 = 20, h = 148, r = 28;
+      // 짙은 그림자
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.45)';
+      ctx.shadowBlur = 16;
+      ctx.shadowOffsetY = 6;
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, tw, h, r);
+      ctx.fillStyle = bgHex;
+      ctx.fill();
+      ctx.restore();
+      // 굵은 검정 테두리
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, tw, h, r);
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = borderHex;
+      ctx.stroke();
+      // 아래쪽 화살표 꼬리
+      ctx.beginPath();
+      ctx.moveTo(486, y0 + h + 2); ctx.lineTo(512, y0 + h + 46); ctx.lineTo(538, y0 + h + 2);
+      ctx.closePath();
+      ctx.fillStyle = borderHex; ctx.fill();
+      // 순흑색 굵은 글씨
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 512, y0 + h / 2 + 4);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = maxAniso;
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+      const sp = new THREE.Sprite(mat);
+      sp.scale.set(12.2, 2.85, 1);
+      sp.renderOrder = 999;
+      return sp;
+    }
+
+    const navRoot = new THREE.Group();
+    scene.add(navRoot);
+    const routeGroups = {};
+    const routeCurves = {};
+    const animatedFlows = [];
+
+    // 바닥에 100% 밀착되는 평면 리본 지오메트리 생성기 (공중 붕뜸 버그 완전 해결!)
+    function createFlatRibbon(curve, halfWidth, yOffset, segs = 140) {
+      const positions = [];
+      const indices = [];
+      const p = new THREE.Vector3(), tan = new THREE.Vector3(), side = new THREE.Vector3();
+      const up = new THREE.Vector3(0, 1, 0);
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        curve.getPointAt(u, p);
+        curve.getTangentAt(u, tan);
+        tan.y = 0;
+        if (tan.lengthSq() < 1e-6) tan.set(1, 0, 0);
+        tan.normalize();
+        side.crossVectors(up, tan).normalize().multiplyScalar(halfWidth);
+        positions.push(p.x - side.x, p.y + yOffset, p.z - side.z);
+        positions.push(p.x + side.x, p.y + yOffset, p.z + side.z);
+        if (i < segs) {
+          const b = i * 2;
+          indices.push(b, b + 1, b + 2, b + 1, b + 3, b + 2);
+        }
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function buildFloorRoute(key, colorHex, pointsArr, pins, halfW = 0.34, alwaysOnTop = false) {
+      const grp = new THREE.Group();
+      const curve = new THREE.CatmullRomCurve3(pointsArr, false, 'catmullrom', 0.06);
+      // 1) 바닥에 딱 붙는 흰색 테두리 + 컬러 리본 (실내 투시 경로는 alwaysOnTop으로 벽/지반 가림 방지!)
+      const outerMesh = new THREE.Mesh(
+        createFlatRibbon(curve, halfW + 0.10, 0.05, 180),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: !alwaysOnTop })
+      );
+      if (alwaysOnTop) outerMesh.renderOrder = 900;
+      grp.add(outerMesh);
+
+      const innerMesh = new THREE.Mesh(
+        createFlatRibbon(curve, halfW, 0.08, 180),
+        new THREE.MeshBasicMaterial({ color: colorHex, side: THREE.DoubleSide, depthTest: !alwaysOnTop })
+      );
+      if (alwaysOnTop) innerMesh.renderOrder = 901;
+      grp.add(innerMesh);
+
+      // 2) 진행 방향을 보여주는 바닥 밀착 화살표 스트림
+      const dotCount = Math.max(6, Math.floor(curve.getLength() / 6.5));
+      const dotGeo = new THREE.ConeGeometry(0.36, 0.95, 8);
+      dotGeo.rotateX(Math.PI / 2);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: !alwaysOnTop });
+      const dots = [];
+      for (let i = 0; i < dotCount; i++) {
+        const m = new THREE.Mesh(dotGeo, dotMat);
+        if (alwaysOnTop) m.renderOrder = 902;
+        grp.add(m);
+        dots.push({ mesh: m, offset: i / dotCount });
+      }
+      animatedFlows.push({ group: grp, curve, dots, speed: 0.10 });
+
+      // 3) 목적지 3D 핀 + 기둥
+      for (const p of pins) {
+        const poleH = p.poleH ?? 4.2;
+        const pole = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.08, 0.08, poleH, 8),
+          new THREE.MeshBasicMaterial({ color: colorHex })
+        );
+        pole.position.set(p.x, p.y + poleH / 2, p.z);
+        grp.add(pole);
+
+        const ring = new THREE.Mesh(
+          new THREE.RingGeometry(0.55, 0.95, 24),
+          new THREE.MeshBasicMaterial({ color: colorHex, side: THREE.DoubleSide })
+        );
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(p.x, p.y + 0.10, p.z);
+        grp.add(ring);
+
+        const sp = makePinSprite(p.label, p.bg);
+        sp.position.set(p.x, p.y + poleH + 1.5, p.z);
+        grp.add(sp);
+      }
+
+      navRoot.add(grp);
+      routeGroups[key] = grp;
+      routeCurves[key] = curve;
+    }
+
+    // 공통 정문 입구 표지 핀 (진한 황금 노랑 배경 + 검정 글씨!)
+    const gatePinGrp = new THREE.Group();
+    const gateSp = makePinSprite('정문 입구', '#facc15', '#000000');
+    gateSp.position.set(-34.0, 5.4, 30.8);
+    gatePinGrp.add(gateSp);
+    navRoot.add(gatePinGrp);
+
+    // 1. 입구 -> 병역판정검사장 가는 길 (진한 선명 초록 #16a34a)
+    buildFloorRoute('exam', 0x16a34a, [
+      new THREE.Vector3(-34.0, 0.05, 27.6),
+      new THREE.Vector3(-25.5, 0.16, 25.0),
+      new THREE.Vector3(-12.0, 0.16, 25.0),
+      new THREE.Vector3(  1.6, 0.16, 25.0),
+      new THREE.Vector3(  2.6, 0.22, 23.0),
+      new THREE.Vector3( 10.2, 0.56, 23.0),
+      new THREE.Vector3( 16.3, 0.56, 23.0),
+      new THREE.Vector3( 16.3, 0.56, 20.8),
+    ], [
+      { x: 16.3, y: 0.56, z: 20.9, label: '병역판정검사장 입구', bg: '#4ade80', poleH: 5.4 }
+    ]);
+
+    // 2. 입구 -> 주차장 가는 길 (진한 선명 오렌지 #ea580c)
+    buildFloorRoute('parking', 0xea580c, [
+      new THREE.Vector3(-34.0, 0.05, 32.8),
+      new THREE.Vector3(-22.0, getDriveY(-22) + 0.06, 32.8),
+      new THREE.Vector3(-10.0, getDriveY(-10) + 0.06, 32.8),
+      new THREE.Vector3(  4.0, getDriveY(4)   + 0.06, 32.8),
+      new THREE.Vector3( 16.0, LOW_Y + 0.06, 32.8),
+      new THREE.Vector3( 36.0, LOW_Y + 0.06, 32.8),
+      new THREE.Vector3( 49.0, LOW_Y + 0.06, 30.8),
+      new THREE.Vector3( 50.0, LOW_Y + 0.06, 13.5),
+      new THREE.Vector3( 64.0, LOW_Y + 0.06, 13.5),
+    ], [
+      { x: 64.0, y: LOW_Y, z: 13.5, label: '민원인 주차장', bg: '#fb923c', poleH: 5.0 }
+    ]);
+
+    // 3. 입구 -> 민원실 가는 길 (진한 선명 코발트 블루 #0284c7)
+    buildFloorRoute('minwon', 0x0284c7, [
+      new THREE.Vector3(-34.0, 0.05, 30.8),
+      new THREE.Vector3(-22.0, getDriveY(-22) + 0.06, 30.8),
+      new THREE.Vector3(-10.0, getDriveY(-10) + 0.06, 30.8),
+      new THREE.Vector3(  4.0, getDriveY(4)   + 0.06, 30.8),
+      new THREE.Vector3( 16.0, LOW_Y + 0.06, 30.8),
+      new THREE.Vector3( 32.5, LOW_Y + 0.06, 30.8),
+      new THREE.Vector3( 32.5, LOW_Y + 0.06, 23.0),
+    ], [
+      { x: 32.5, y: LOW_Y, z: 23.0, label: '민원실 (고객지원센터)', bg: '#38bdf8', poleH: 7.2 }
+    ]);
+
+    // 4. 화장실 안내: 정문 입구부터 -> 내리막길 -> 민원실 현관 -> 직진 -> 좌측 -> 안쪽 복도 -> 서쪽 화장실 (진한 크림슨 레드 #e11d48)
+    buildFloorRoute('restroom', 0xe11d48, [
+      new THREE.Vector3(-34.0, 0.05, 29.0),
+      new THREE.Vector3(-22.0, getDriveY(-22) + 0.06, 29.0),
+      new THREE.Vector3(-10.0, getDriveY(-10) + 0.06, 29.0),
+      new THREE.Vector3(  4.0, getDriveY(4)   + 0.06, 29.0),
+      new THREE.Vector3( 16.0, LOW_Y + 0.06, 29.0),
+      new THREE.Vector3( 32.5, LOW_Y + 0.06, 29.0),
+      new THREE.Vector3( 32.5, LOW_Y + 0.08, 22.0),
+      new THREE.Vector3( 32.5, LOW_Y + 0.08, 16.8),
+      new THREE.Vector3( 26.5, LOW_Y + 0.08, 16.8),
+      new THREE.Vector3( 26.5, LOW_Y + 0.08,  6.5),
+      new THREE.Vector3( 16.2, LOW_Y + 0.08,  6.5),
+      new THREE.Vector3( 13.8, LOW_Y + 0.08,  9.4),
+    ], [
+      { x: 13.5, y: LOW_Y, z: 9.8, label: '화장실 (민원실 1층 내부)', bg: '#fb7185', poleH: 4.8 }
+    ], 0.30, true);
+
+    // 1층 민원실 내부 X-Ray 구조 가이드 (화장실 안내 클릭 시에만 표시)
+    const indoorGroup = new THREE.Group();
+    indoorGroup.visible = false;
+    // 1층 실내 전체 바닥 영역 (별관 1층 x=10..44, z=3..21)
+    const indoorFloor = new THREE.Mesh(
+      new THREE.BoxGeometry(34.0, 0.08, 18.0),
+      new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.7 })
+    );
+    indoorFloor.position.set(27.0, LOW_Y + 0.03, 12.0);
+    indoorGroup.add(indoorFloor);
+    // 실내 화장실 구획 박스 (지반에 가려지지 않도록 depthTest:false 적용!)
+    const rrZone = new THREE.Mesh(
+      new THREE.BoxGeometry(4.4, 2.8, 5.4),
+      new THREE.MeshBasicMaterial({ color: 0x9d174d, transparent: true, opacity: 0.34, depthTest: false })
+    );
+    rrZone.position.set(13.5, LOW_Y + 1.45, 9.8);
+    rrZone.renderOrder = 895;
+    indoorGroup.add(rrZone);
+    const rrEdge = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.BoxGeometry(4.4, 2.8, 5.4)),
+      new THREE.LineBasicMaterial({ color: 0x9d174d, depthTest: false })
+    );
+    rrEdge.position.copy(rrZone.position);
+    rrEdge.renderOrder = 896;
+    indoorGroup.add(rrEdge);
+    // 민원실 접수 창구 구역 (정면/우측 안내용 기준점)
+    const deskZone = new THREE.Mesh(
+      new THREE.BoxGeometry(8.0, 1.1, 1.4),
+      new THREE.MeshBasicMaterial({ color: 0x1d4ed8, transparent: true, opacity: 0.28, depthTest: false })
+    );
+    deskZone.position.set(34.5, LOW_Y + 0.6, 12.2);
+    deskZone.renderOrder = 895;
+    indoorGroup.add(deskZone);
+    const deskPin = makePinSprite('민원실 창구', '#93c5fd', '#000000');
+    deskPin.scale.set(8.2, 1.9, 1);
+    deskPin.position.set(34.5, LOW_Y + 2.6, 12.2);
+    indoorGroup.add(deskPin);
+    scene.add(indoorGroup);
+
+    function setAnnexXray(enable) {
+      indoorGroup.visible = enable;
+      for (const obj of annexXrayMeshes) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        for (const m of mats) {
+          if (enable) {
+            m.transparent = true;
+            m.opacity = (obj.name === 'AnnexB1Brick') ? 0.14 : 0.10;
+            m.depthWrite = false;
+          } else {
+            m.transparent = false;
+            m.opacity = 1.0;
+            m.depthWrite = true;
+          }
+          m.needsUpdate = true;
+        }
+      }
+    }
+
+    const ROUTE_META = {
+      all:      { pos: new THREE.Vector3(-56, 46, 78), target: new THREE.Vector3(16, 0, 12) },
+      exam:     { pos: new THREE.Vector3(-10, 14, 46), target: new THREE.Vector3(16, 2, 21), dur: 7.5 },
+      parking:  { pos: new THREE.Vector3(24, 38, 72),  target: new THREE.Vector3(34, -2, 20), dur: 9.0 },
+      minwon:   { pos: new THREE.Vector3(18, 12, 48),  target: new THREE.Vector3(28, -2, 24), dur: 7.5 },
+      restroom: { pos: new THREE.Vector3(12, 26, 52),  target: new THREE.Vector3(16, -2.5, 16), dur: 10.0 }
+    };
+
+    let currentRoute = 'all';
+    let routeTour = null; // 정문 입구부터 천천히 길 따라가는 가이드 투어 상태!
+    window.setRoute = (mode) => {
+      const next = (currentRoute === mode) ? 'all' : mode;
+      currentRoute = next;
+      const showAll = (next === 'all');
+      gatePinGrp.visible = true;
+      for (const [k, grp] of Object.entries(routeGroups)) {
+        grp.visible = showAll || (next === k);
+      }
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      if (!showAll) document.getElementById('r-' + next)?.classList.add('active');
+
+      if (showAll) {
+        routeTour = null;
+        setAnnexXray(false);
+        const m = ROUTE_META.all;
+        camAnim = { sp: camera.position.clone(), ep: m.pos.clone(), st: controls.target.clone(), et: m.target.clone(), t: 0 };
+      } else {
+        camAnim = null;
+        setAnnexXray(false);
+        const curve = routeCurves[next];
+        const m = ROUTE_META[next];
+        if (curve && m) {
+          // 정문 입구 상공(건물 가림 없는 남서쪽 개방 시점)에서 부드럽게 출발!
+          routeTour = {
+            mode: next,
+            curve,
+            elapsed: 0,
+            dur: m.dur || 8.0,
+            xrayTriggered: false,
+            endPos: m.pos.clone(),
+            endTarget: m.target.clone()
+          };
+          camera.position.set(-44, 18, 52);
+          controls.target.set(-30, 1.0, 30);
+        }
+      }
+    };
+
+    const VIEWS = {
+      hero: { pos: new THREE.Vector3(-68, 52, 86), target: new THREE.Vector3(16, 2, 0) }
+    };
+    let camAnim = null;
+
+    let zoomDir = 0; const zOff = new THREE.Vector3();
+    function applyZoom(f) {
+      camAnim = null; routeTour = null; zOff.subVectors(camera.position, controls.target);
+      zOff.setLength(Math.max(controls.minDistance, Math.min(controls.maxDistance, zOff.length() * f)));
+      camera.position.copy(controls.target).add(zOff);
+    }
+    window.stepZoom = d => applyZoom(d < 0 ? 0.84 : 1.19);
+    window.startZoom = d => { zoomDir = d; }; window.stopZoom = () => { zoomDir = 0; };
+    const keys = {};
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) { camAnim = null; routeTour = null; }
+      if (e.key === '+' || e.key === '=') applyZoom(0.88);
+      if (e.key === '-' || e.key === '_') applyZoom(1.14);
+    });
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
+    controls.addEventListener('start', () => { camAnim = null; routeTour = null; });
+
+    const clock = new THREE.Clock(), fwd = new THREE.Vector3(), rgt = new THREE.Vector3();
+    const tmpPos = new THREE.Vector3(), tmpNext = new THREE.Vector3();
+    const tourPt = new THREE.Vector3(), tourAhead = new THREE.Vector3(), tourTan = new THREE.Vector3(), desiredCam = new THREE.Vector3();
+    let flowTime = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      flowTime += dt;
+      // 바닥 길안내 화살표 흐름 애니메이션
+      for (const fl of animatedFlows) {
+        if (!fl.group.visible) continue;
+        for (const d of fl.dots) {
+          const u = (d.offset + flowTime * fl.speed) % 1.0;
+          const u2 = Math.min(0.999, u + 0.015);
+          fl.curve.getPointAt(u, tmpPos);
+          fl.curve.getPointAt(u2, tmpNext);
+          d.mesh.position.set(tmpPos.x, tmpPos.y + 0.30, tmpPos.z);
+          d.mesh.lookAt(tmpNext.x, tmpNext.y + 0.30, tmpNext.z);
+        }
+      }
+      // 정문 입구부터 천천히 길 따라가는 가이드 투어 애니메이션
+      if (routeTour) {
+        routeTour.elapsed += dt;
+        const p = Math.min(1, routeTour.elapsed / routeTour.dur);
+        // 부드러운 가속/감속 이징
+        const u = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        routeTour.curve.getPointAt(Math.min(0.96, u), tourPt);
+        routeTour.curve.getPointAt(Math.min(0.999, u + 0.12), tourAhead);
+        routeTour.curve.getTangentAt(Math.min(0.96, u), tourTan);
+        tourTan.y = 0;
+        if (tourTan.lengthSq() < 1e-5) tourTan.set(1, 0, 0);
+        tourTan.normalize();
+
+        // 화장실 안내는 민원실 현관 접근 시(u > 0.42) X-Ray 실내 투시 자동 열기!
+        if (routeTour.mode === 'restroom' && u > 0.42 && !routeTour.xrayTriggered) {
+          routeTour.xrayTriggered = true;
+          setAnnexXray(true);
+        }
+
+        if (routeTour.mode === 'restroom' && u > 0.48) {
+          // 실내 진입 후에는 위에서 내려다보는 깔끔한 X-Ray 시점으로 부드럽게 전환 (건물 가림 없음!)
+          desiredCam.set(16, 26, 46);
+          camera.position.lerp(desiredCam, Math.min(1, dt * 2.4));
+          controls.target.lerp(tourAhead, Math.min(1, dt * 3.0));
+        } else if (routeTour.mode === 'parking' && tourPt.x > 44) {
+          // 동쪽 주차장 진입 구간: 건물이 없는 동남쪽 개방 공간에서 시원하게 조망!
+          desiredCam.set(tourPt.x + 24, 24, tourPt.z + 22);
+          camera.position.lerp(desiredCam, Math.min(1, dt * 2.4));
+          controls.target.lerp(tourAhead, Math.min(1, dt * 3.2));
+        } else {
+          // 항상 건물이 없는 남쪽(+Z) 개방 상공에서 길을 따라 천천히 이동 (절대 가려지지 않음!)
+          const camH = (routeTour.mode === 'parking') ? 22.0 : 16.5;
+          desiredCam.set(
+            tourPt.x - 8.0,
+            Math.max(15.0, tourPt.y + camH),
+            tourPt.z + 22.0
+          );
+          camera.position.lerp(desiredCam, Math.min(1, dt * 2.6));
+          tourAhead.y += 1.0;
+          controls.target.lerp(tourAhead, Math.min(1, dt * 3.4));
+        }
+
+        if (p >= 1) {
+          // 목적지 도착 후 깔끔한 마무리 조망 각도로 부드럽게 안착
+          camAnim = {
+            sp: camera.position.clone(), ep: routeTour.endPos.clone(),
+            st: controls.target.clone(), et: routeTour.endTarget.clone(), t: 0
+          };
+          routeTour = null;
+        }
+      }
+      if (zoomDir !== 0) applyZoom(zoomDir < 0 ? Math.pow(0.45, dt) : Math.pow(2.2, dt));
+      if (camAnim) {
+        camAnim.t = Math.min(1, camAnim.t + dt / 1.0);
+        const e = camAnim.t < 0.5 ? 2 * camAnim.t * camAnim.t : 1 - Math.pow(-2 * camAnim.t + 2, 2) / 2;
+        camera.position.lerpVectors(camAnim.sp, camAnim.ep, e);
+        controls.target.lerpVectors(camAnim.st, camAnim.et, e);
+        if (camAnim.t >= 1) camAnim = null;
+      }
+      const sp = 16 * dt;
+      camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+      rgt.crossVectors(fwd, camera.up).normalize();
+      if (keys['KeyW'] || keys['ArrowUp'])    { camera.position.addScaledVector(fwd, sp);  controls.target.addScaledVector(fwd, sp); }
+      if (keys['KeyS'] || keys['ArrowDown'])  { camera.position.addScaledVector(fwd, -sp); controls.target.addScaledVector(fwd, -sp); }
+      if (keys['KeyA'] || keys['ArrowLeft'])  { camera.position.addScaledVector(rgt, -sp); controls.target.addScaledVector(rgt, -sp); }
+      if (keys['KeyD'] || keys['ArrowRight']) { camera.position.addScaledVector(rgt, sp);  controls.target.addScaledVector(rgt, sp); }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    camera.position.copy(VIEWS.hero.pos);
+    controls.target.copy(VIEWS.hero.target);
+    animate();
+  </script>
+</body>
+</html>

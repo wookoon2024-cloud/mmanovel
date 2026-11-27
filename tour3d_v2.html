@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>경기북부병무지청 2차 실사 3D v2.2 (1:1,000 DXF + 네이버 내부 거리뷰 + 카카오 로드뷰)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0f172a; }
+    #canvas-container { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    .glass {
+      background: rgba(15, 23, 42, 0.86);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .cam-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #60a5fa;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- 좌측 상단 정보 카드 -->
+  <div class="fixed top-4 left-4 z-20 flex flex-col gap-2 w-80 max-w-[92vw] pointer-events-none">
+    <div class="glass rounded-2xl px-4 py-3 shadow-2xl pointer-events-auto">
+      <div class="flex flex-wrap items-center gap-1.5 mb-1">
+        <span class="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-extrabold">2차 작업 · 로드뷰 실측 반영</span>
+        <span class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-bold">v2.2 · 동쪽 주차장 풀구획·외벽 완전 밀폐</span>
+      </div>
+      <h1 class="text-sm font-extrabold text-white">경기북부병무지청 2차 실사 3D 모델</h1>
+      <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+        1차 DXF 뼈대 위에 <strong>네이버 청사 내부 거리뷰</strong>(남·동·북면, 경사로·옹벽·계단, 민원실, 3층 구름다리)와 <strong>카카오 로드뷰</strong>를 그대로 반영했습니다.
+      </p>
+    </div>
+
+    <div id="view-card" class="glass rounded-2xl px-4 py-2.5 shadow-xl pointer-events-auto">
+      <div id="view-title" class="text-xs font-extrabold text-sky-300">1. 정문~경사로·옹벽·청사 전체뷰</div>
+      <p id="view-desc" class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+        정문 진입 직후 좌측은 상부 체크광장·보행 경사로, 우측 차도는 옹벽을 따라 하부(B1 민원실·동쪽 순환주차장)로 바로 내려가는 실제 현장 구조를 그대로 구현했습니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 우측 상단 컨트롤 + 확대/축소 버튼 -->
+  <div class="fixed top-4 right-4 z-20 flex flex-col items-end gap-2">
+    <div class="flex flex-wrap items-center justify-end gap-1.5">
+      <button id="btn-day" onclick="window.setLight('day')" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600/80 border-blue-400/50 cursor-pointer">☀️ 맑은 낮</button>
+      <button id="btn-sunset" onclick="window.setLight('sunset')" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 cursor-pointer hover:bg-slate-800">🌅 노을</button>
+      <button id="btn-dxf" onclick="window.toggleDxf()" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300 border-cyan-400/50 cursor-pointer hover:bg-slate-800">📐 DXF선 OFF</button>
+      <a href="tour3d_cad.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 hover:bg-slate-800 transition">1차 CAD 완성본</a>
+      <a href="index.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition">◀ 비주얼노벨</a>
+    </div>
+
+    <div class="glass rounded-2xl p-1.5 shadow-2xl flex flex-col items-center gap-1.5 mt-1">
+      <button type="button" onmousedown="window.startZoom(-1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(-1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(-1)" class="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-blue-600 active:scale-95 text-white font-black text-xl border border-slate-600/80 transition flex items-center justify-center cursor-pointer" title="확대">+</button>
+      <span class="text-[10px] font-bold text-slate-300 select-none">확대/축소</span>
+      <button type="button" onmousedown="window.startZoom(1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(1)" class="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-blue-600 active:scale-95 text-white font-black text-xl border border-slate-600/80 transition flex items-center justify-center cursor-pointer" title="축소">−</button>
+    </div>
+  </div>
+
+  <!-- 하단 카메라 프리셋 (네이버 거리뷰 핵심 구도 6종 + 도보 체험) -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-20 w-[96vw] max-w-5xl">
+    <div class="glass rounded-2xl p-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5">
+      <button onclick="window.setView('overview')" id="c-overview" class="cam-btn active px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">1. 정문~전체뷰</button>
+      <button onclick="window.setView('rampSplit')" id="c-rampSplit" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">2. 경사로·옹벽·검사장 입구</button>
+      <button onclick="window.setView('southB1')" id="c-southB1" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">3. 남면 4층·민원실·계단</button>
+      <button onclick="window.setView('eastSkybridge')" id="c-eastSkybridge" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">4. 동쪽 주차장·구름다리·본관</button>
+      <button onclick="window.setView('mainGate')" id="c-mainGate" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">5. 전좌로 정문·원통로비</button>
+      <button onclick="window.setView('aerial')" id="c-aerial" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">6. 전체 조감도</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // =========================================================================
+    // [2차 작업 v2.0] 국토지리정보원 1:1,000 DXF 실측 좌표 + 네이버 내부 거리뷰 360° 실사 반영
+    // 핵심 실측 단차 (네이버 거리뷰 step_45, step_52, step_95 확인):
+    //   - 상부 광장/본관/병역판정검사장 2F 입구 레벨: y = 0.0m
+    //   - 하부 동쪽 순환주차장 / 별관 남쪽 고객지원센터(민원실) 1F 레벨: y = -3.8m (1개 층 높이 단차!)
+    //   - 정문 진입 차도: 정문(x=-24, y=0.0m) ➔ 별관 남쪽(x=+14, y=-3.8m)까지 완만히 하강,
+    //     그 동쪽(x=+14 ~ +85)은 완전히 평평한 하부 주차장·민원실 레벨(y = -3.8m)!
+    // =========================================================================
+    const LOW_Y = -3.8; // 하부 민원실·동쪽 순환 주차장 레벨 (실제 1개 층 단차)
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xdbeafe, 260, 620);
+
+    const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 760);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.04;
+    container.appendChild(renderer.domElement);
+
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+    const pmremGen = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGen.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.45;
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.maxPolarAngle = Math.PI / 2 - 0.012;
+    controls.minDistance = 5;
+    controls.maxDistance = 240;
+
+    // 맑은 하늘 그라디언트 돔
+    const skyCanvas = document.createElement('canvas'); skyCanvas.width = 16; skyCanvas.height = 512;
+    const skyCtx = skyCanvas.getContext('2d');
+    const skyTex = new THREE.CanvasTexture(skyCanvas); skyTex.colorSpace = THREE.SRGBColorSpace;
+    scene.add(new THREE.Mesh(new THREE.SphereGeometry(560, 32, 24), new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide, fog: false })));
+    function setSky(top, mid, hor) {
+      const g = skyCtx.createLinearGradient(0, 0, 0, 512);
+      g.addColorStop(0, top); g.addColorStop(0.45, mid); g.addColorStop(0.56, hor); g.addColorStop(1, hor);
+      skyCtx.fillStyle = g; skyCtx.fillRect(0, 0, 16, 512); skyTex.needsUpdate = true;
+    }
+    setSky('#1d4ed8', '#60a5fa', '#e0f2fe');
+
+    const hemi = new THREE.HemisphereLight(0xe0f2fe, 0x475569, 0.72); scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xfffdf5, 2.35);
+    sun.position.set(-60, 74, 68); sun.castShadow = true;
+    sun.shadow.mapSize.set(4096, 4096);
+    sun.shadow.camera.left = -115; sun.shadow.camera.right = 115;
+    sun.shadow.camera.top = 115; sun.shadow.camera.bottom = -115;
+    sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.04;
+    scene.add(sun);
+    const fill = new THREE.DirectionalLight(0x93c5fd, 0.38); fill.position.set(70, 35, -55); scene.add(fill);
+
+    // =========================================================================
+    // PBR 텍스처 & 재질 (네이버 거리뷰 실측 색상 반영)
+    // =========================================================================
+    function prepTex(tex, rx = 1, ry = 1) {
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(rx, ry);
+      tex.anisotropy = maxAniso; tex.colorSpace = THREE.SRGBColorSpace; return tex;
+    }
+    function makeGridStoneTex(base = '#e4e7ec', line = '#a6b0bc', cols = 8, rows = 8, rx = 0.16, ry = 0.16) {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const g = c.getContext('2d'); g.fillStyle = base; g.fillRect(0, 0, 512, 512);
+      const cw = 512 / cols, ch = 512 / rows;
+      for (let r = 0; r < rows; r++) for (let col = 0; col < cols; col++) {
+        const v = (Math.random() - 0.5) * 10;
+        g.fillStyle = v > 0 ? `rgba(255,255,255,${v/255})` : `rgba(0,0,0,${-v/255})`;
+        g.fillRect(col * cw, r * ch, cw, ch);
+      }
+      g.strokeStyle = line; g.lineWidth = 2;
+      for (let i = 0; i <= cols; i++) { g.beginPath(); g.moveTo(i * cw, 0); g.lineTo(i * cw, 512); g.stroke(); }
+      for (let j = 0; j <= rows; j++) { g.beginPath(); g.moveTo(0, j * ch); g.lineTo(512, j * ch); g.stroke(); }
+      return prepTex(new THREE.CanvasTexture(c), rx, ry);
+    }
+    function makeGroovedRetainTex() {
+      // 네이버 거리뷰 step_45_shot_1, step_52_shot_2: 세로 홈이 파인 콘크리트 블록 옹벽!
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const g = c.getContext('2d'); g.fillStyle = '#a3a8ad'; g.fillRect(0, 0, 512, 512);
+      for (let x = 0; x < 512; x += 16) {
+        g.fillStyle = (x % 32 === 0) ? '#888e94' : '#b2b7bc';
+        g.fillRect(x, 0, 6, 512);
+      }
+      g.strokeStyle = '#6b7280'; g.lineWidth = 2;
+      for (let y = 0; y <= 512; y += 64) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
+      return prepTex(new THREE.CanvasTexture(c), 6, 1.5);
+    }
+    function makeRedWhiteCheckerTex(repX = 4, repY = 4) {
+      // 네이버 거리뷰 step_52_shot_2, step_57_shot_1: 붉은 벽돌 + 흰색 체크 보도블록 광장!
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const g = c.getContext('2d');
+      const n = 8, s = 512 / n;
+      for (let r = 0; r < n; r++) for (let col = 0; col < n; col++) {
+        g.fillStyle = (r + col) % 2 === 0 ? '#d8c9c4' : '#a87066';
+        g.fillRect(col * s, r * s, s, s);
+      }
+      return prepTex(new THREE.CanvasTexture(c), repX, repY);
+    }
+    function makeAsphaltTex(rep = 14) {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const g = c.getContext('2d'); g.fillStyle = '#58606a'; g.fillRect(0, 0, 512, 512);
+      for (let i = 0; i < 6000; i++) {
+        const v = 70 + Math.floor(Math.random() * 38);
+        g.fillStyle = `rgb(${v},${v+2},${v+4})`; g.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+      }
+      return prepTex(new THREE.CanvasTexture(c), rep, rep);
+    }
+    function makeBrickTex() {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const g = c.getContext('2d'); g.fillStyle = '#9ca3af'; g.fillRect(0, 0, 512, 512);
+      const rows = 16, cols = 8, bh = 512 / rows, bw = 512 / cols;
+      const pal = ['#b67858', '#a86b4c', '#c38564', '#9e6244', '#bc7e5d'];
+      for (let r = 0; r < rows; r++) for (let col = -1; col <= cols; col++) {
+        const off = (r % 2) * (bw / 2);
+        g.fillStyle = pal[(r * 5 + col * 3 + 12) % pal.length];
+        g.fillRect(col * bw + off + 2, r * bh + 2, bw - 4, bh - 4);
+      }
+      return prepTex(new THREE.CanvasTexture(c), 4, 1.5);
+    }
+    function makeSignTex({ w = 512, h = 128, bg = '#ffffff', border = null, lines = [], vertical = false, circle = false }) {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const g = c.getContext('2d');
+      if (circle) {
+        g.clearRect(0, 0, w, h); g.beginPath(); g.arc(w/2, h/2, Math.min(w, h)/2 - 4, 0, Math.PI * 2);
+        g.fillStyle = bg; g.fill();
+        if (border) { g.strokeStyle = border.color; g.lineWidth = border.width || 10; g.stroke(); }
+      } else if (bg !== 'transparent') {
+        g.fillStyle = bg; g.fillRect(0, 0, w, h);
+        if (border) { g.strokeStyle = border.color; g.lineWidth = border.width || 6; g.strokeRect(border.width/2, border.width/2, w - border.width, h - border.width); }
+      }
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      if (vertical) {
+        const chars = lines[0].text.split(''); const step = (h - 30) / chars.length;
+        g.font = lines[0].font; g.fillStyle = lines[0].color;
+        chars.forEach((ch, idx) => g.fillText(ch, w / 2, 18 + step * (idx + 0.5)));
+      } else {
+        lines.forEach(l => { g.font = l.font; g.fillStyle = l.color; g.fillText(l.text, l.x ?? w / 2, l.y ?? h / 2); });
+      }
+      const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = maxAniso;
+      return tex;
+    }
+
+    const panelMat = new THREE.MeshStandardMaterial({ map: makeGridStoneTex('#e7e9ee', '#adb5c0', 8, 8, 0.16, 0.16), roughness: 0.68 });
+    const retainBlockMat = new THREE.MeshStandardMaterial({ map: makeGroovedRetainTex(), roughness: 0.88 });
+    const concreteMat = new THREE.MeshStandardMaterial({ color: 0xcbd2da, roughness: 0.82 });
+    const greenRoofMat = new THREE.MeshStandardMaterial({ color: 0x2e6f5e, roughness: 0.82 });
+    const blueRoofMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.55, metalness: 0.2 });
+    const solarMat = new THREE.MeshPhysicalMaterial({ color: 0x172554, roughness: 0.14, metalness: 0.65, clearcoat: 0.9, envMapIntensity: 1.8 });
+    const yellowLobbyMat = new THREE.MeshStandardMaterial({ color: 0xd9c264, roughness: 0.38, metalness: 0.25 });
+    const brickMat = new THREE.MeshStandardMaterial({ map: makeBrickTex(), roughness: 0.86 });
+    const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x1f5f6b, roughness: 0.07, metalness: 0.22, clearcoat: 1.0, envMapIntensity: 2.0 });
+    const mintSpandrelMat = new THREE.MeshPhysicalMaterial({ color: 0x99d1c6, roughness: 0.15, metalness: 0.15, clearcoat: 0.85, envMapIntensity: 1.4 });
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x28323e, roughness: 0.45, metalness: 0.55 });
+    const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.48 });
+    const yellowMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.55 });
+    const asphaltMat = new THREE.MeshStandardMaterial({ map: makeAsphaltTex(16), roughness: 0.90 });
+    const checkerPlazaMat = new THREE.MeshStandardMaterial({ map: makeRedWhiteCheckerTex(6, 5), roughness: 0.85 });
+    const sidewalkMat = new THREE.MeshStandardMaterial({ map: makeGridStoneTex('#d6dadf', '#a7b0ba', 10, 10, 4, 4), roughness: 0.82 });
+    const redWalkMat = new THREE.MeshStandardMaterial({ map: makeGridStoneTex('#9c7464', '#6d4e42', 8, 8, 2, 22), roughness: 0.88 });
+    const grassMat = new THREE.MeshStandardMaterial({ color: 0x4f783e, roughness: 0.94 });
+    const hedgeMat = new THREE.MeshStandardMaterial({ color: 0x2a5c30, roughness: 0.92 });
+    const railMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.88, roughness: 0.20 });
+    const graniteMat = new THREE.MeshStandardMaterial({ map: makeGridStoneTex('#cbc9c4', '#868a8f', 6, 4, 2, 1), roughness: 0.80 });
+    const handicapMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.65 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x7c4a26, roughness: 0.82 });
+
+    function addBox(w, h, d, mat, x, y, z, parent = scene, shadow = true) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+      m.position.set(x, y, z); m.castShadow = shadow; m.receiveShadow = true;
+      parent.add(m); return m;
+    }
+
+    function extrudeDxfPoly(ptsXZ, baseY, height, mat, parent = scene, shadow = true) {
+      const shape = new THREE.Shape();
+      ptsXZ.forEach(([x, z], i) => { if (i === 0) shape.moveTo(x, -z); else shape.lineTo(x, -z); });
+      shape.closePath();
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      geo.rotateX(-Math.PI / 2);
+      const m = new THREE.Mesh(geo, mat);
+      m.position.y = baseY; m.castShadow = shadow; m.receiveShadow = true;
+      parent.add(m); return m;
+    }
+
+    // 주차 차량 & 주차열 헬퍼
+    function addCar(x, y, z, rotY = 0, hex = 0xe2e8f0) {
+      const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = rotY;
+      const bm = new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.22, metalness: 0.45, clearcoat: 1.0 });
+      const gm = new THREE.MeshPhysicalMaterial({ color: 0x0f172a, roughness: 0.08, clearcoat: 1.0 });
+      const wm = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.9 });
+      addBox(1.82, 0.58, 4.2, bm, 0, 0.52, 0, g);
+      addBox(1.58, 0.52, 2.2, bm, 0, 1.0, -0.15, g);
+      addBox(1.62, 0.38, 1.9, gm, 0, 1.0, -0.15, g, false);
+      [[-0.86, 0.26, 1.25], [0.86, 0.26, 1.25], [-0.86, 0.26, -1.25], [0.86, 0.26, -1.25]].forEach(([wx, wy, wz]) => {
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.2, 12), wm);
+        w.rotation.z = Math.PI / 2; w.position.set(wx, wy, wz); g.add(w);
+      });
+      scene.add(g);
+    }
+    function buildRowNS({ startX, y, z, count, bayW = 2.55, bayD = 5.0, dir = 'north', cars = [], handicap = [] }) {
+      const tw = count * bayW;
+      const bz = dir === 'north' ? z - bayD / 2 : z + bayD / 2;
+      addBox(tw + 0.12, 0.03, 0.12, whiteMat, startX + tw / 2, y + 0.04, bz, scene, false);
+      const pal = [0xf8fafc, 0x334155, 0x94a3b8, 0x1e293b, 0xe2e8f0, 0x475569, 0x1e3a8a];
+      for (let i = 0; i <= count; i++) {
+        addBox(0.12, 0.03, bayD, whiteMat, startX + i * bayW, y + 0.04, z, scene, false);
+        if (i < count) {
+          const cx = startX + (i + 0.5) * bayW;
+          const sz = dir === 'north' ? (z - bayD / 2 + 0.9) : (z + bayD / 2 - 0.9);
+          if (handicap.includes(i)) addBox(bayW - 0.24, 0.035, bayD - 0.24, handicapMat, cx, y + 0.03, z, scene, false);
+          addBox(1.6, 0.11, 0.16, yellowMat, cx, y + 0.06, sz, scene, false);
+          if (cars.includes(i)) addCar(cx, y, z, dir === 'north' ? 0 : Math.PI, pal[(i * 5 + Math.abs(Math.round(z))) % pal.length]);
+        }
+      }
+    }
+    function buildColEW({ x, y, startZ, count, bayW = 2.55, bayD = 5.0, dir = 'west', cars = [] }) {
+      const td = count * bayW;
+      const bx = dir === 'west' ? x - bayD / 2 : x + bayD / 2;
+      addBox(0.12, 0.03, td + 0.12, whiteMat, bx, y + 0.04, startZ + td / 2, scene, false);
+      const pal = [0xf8fafc, 0x1e293b, 0x94a3b8, 0xe2e8f0, 0x334155, 0x475569];
+      for (let i = 0; i <= count; i++) {
+        addBox(bayD, 0.03, 0.12, whiteMat, x, y + 0.04, startZ + i * bayW, scene, false);
+        if (i < count) {
+          const cz = startZ + (i + 0.5) * bayW;
+          const sx = dir === 'west' ? (x - bayD / 2 + 0.9) : (x + bayD / 2 - 0.9);
+          addBox(0.16, 0.11, 1.6, yellowMat, sx, y + 0.06, cz, scene, false);
+          if (cars.includes(i)) addCar(x, y, cz, dir === 'west' ? Math.PI / 2 : -Math.PI / 2, pal[(i * 3 + Math.abs(Math.round(x))) % pal.length]);
+        }
+      }
+    }
+
+    // 입체 조경 수목 (소나무 / 활엽수 / 단풍나무 — 네이버 거리뷰 실측 색상 반영!)
+    const barkMat = new THREE.MeshStandardMaterial({ color: 0x5c3d28, roughness: 0.92 });
+    const leafPal = {
+      pine:  [0x1a472a, 0x245d36, 0x337544].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.85 })),
+      oak:   [0x2a612d, 0x3f7d38, 0x5a9a46].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.83 })),
+      maple: [0x991b1b, 0xc2410c, 0xd97706].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.82 }))
+    };
+    function addTree(x, y, z, h = 7.0, kind = 'pine', seed = 1) {
+      const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = (seed * 2.1) % (Math.PI * 2);
+      const s = h / 7.2, th = (kind === 'pine' ? 3.0 : 2.7) * s;
+      const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.13 * s, 0.26 * s, th, 8), barkMat);
+      tr.position.y = th / 2; tr.castShadow = true; g.add(tr);
+      const mats = leafPal[kind];
+      const cls = kind === 'pine'
+        ? [[0,3.4,0,2.1,0.95,0],[-1.3,3.1,0.8,1.5,0.78,0],[1.3,3.2,-0.7,1.55,0.8,0],[0.4,4.2,0.8,1.45,0.8,1],[-0.8,4.3,-0.8,1.45,0.8,1],[0,5.2,0,1.45,0.85,2]]
+        : [[0,3.3,0,1.6,1.3,0],[-1.0,3.7,0.7,1.25,1.1,0],[1.0,3.8,-0.6,1.3,1.15,1],[0.3,4.5,0.7,1.2,1.05,1],[0,5.3,0,1.25,1.1,2]];
+      cls.forEach(([cx, cy, cz, rx, ry, mi]) => {
+        const m = new THREE.Mesh(new THREE.IcosahedronGeometry(rx * s, 2), mats[mi]);
+        m.scale.set(1, ry / rx, 1); m.position.set(cx * s, cy * s, cz * s);
+        m.castShadow = true; m.receiveShadow = true; g.add(m);
+      });
+      scene.add(g);
+    }
+
+    // DXF 원본선 검증 오버레이
+    const dxfGroup = new THREE.Group(); dxfGroup.visible = false; scene.add(dxfGroup);
+    let dxfOn = false;
+    window.toggleDxf = () => {
+      dxfOn = !dxfOn; dxfGroup.visible = dxfOn;
+      const b = document.getElementById('btn-dxf');
+      if (b) b.innerText = dxfOn ? '📐 DXF선 ON' : '📐 DXF선 OFF';
+    };
+
+    // =========================================================================
+    // 2차 작업 메인 구축 (DXF 1:1,000 좌표 + 네이버 내부 거리뷰 100% 반영)
+    // =========================================================================
+    async function buildPhase2() {
+      const dxf = await (await fetch('dxf_pure.json')).json();
+
+      // 1) 베이스 대지 (하부 레벨 LOW_Y = -3.8m)
+      const baseGround = new THREE.Mesh(new THREE.PlaneGeometry(520, 520), grassMat);
+      baseGround.rotation.x = -Math.PI / 2; baseGround.position.y = LOW_Y - 0.08; baseGround.receiveShadow = true;
+      scene.add(baseGround);
+
+      // 2) [상부 청사 테라스 (y = 0.0m)] — 본관동, 북쪽 주차장·테니스장, 중앙 체크광장만 깔끔히 감싸고 동쪽 주차장 침범 금지!
+      //    - 북측/서측 메인 상부 테라스: x ∈ [-48, +26.5], z ∈ [-64.5, +26.0]
+      addBox(74.5, -LOW_Y, 90.5, retainBlockMat, -10.75, LOW_Y / 2, -19.25, scene);
+      const upperAsph1 = new THREE.Mesh(new THREE.PlaneGeometry(74.1, 90.1), asphaltMat);
+      upperAsph1.rotation.x = -Math.PI / 2; upperAsph1.position.set(-10.75, 0.02, -19.25); upperAsph1.receiveShadow = true; scene.add(upperAsph1);
+
+      // 3) [정문 진입로 평지 구간(x=-39~-22) + 내리막 차도(x=-22~+16) + 세로 홈 옹벽 + 대각선 계단]
+      //    - 정문 진입부 평지 연결 (x = -39.0 ~ -22.0, z = 30.8, y = 0.0m): 전좌로와 경사로를 빈틈없이 연결!
+      addBox(17.6, -LOW_Y, 9.2, retainBlockMat, -30.5, LOW_Y / 2, 30.8, scene);
+      const gateApron = new THREE.Mesh(new THREE.PlaneGeometry(17.6, 9.2), asphaltMat);
+      gateApron.rotation.x = -Math.PI / 2; gateApron.position.set(-30.5, 0.02, 30.8); gateApron.receiveShadow = true;
+      scene.add(gateApron);
+
+      //    - 내리막 차도: x = -22.0 (y = 0.0m) ➔ x = +16.0 (y = -3.8m) 완만한 5.7° 실제 경사
+      const rampStartX = -22.0, rampEndX = 16.0;
+      const rampRun = rampEndX - rampStartX; // 38m
+      const rampHyp = Math.hypot(rampRun, -LOW_Y);
+      const rampAng = Math.atan2(-LOW_Y, rampRun);
+      const driveRamp = new THREE.Group();
+      driveRamp.position.set((rampStartX + rampEndX) / 2, LOW_Y / 2, 30.8);
+      driveRamp.rotation.z = -rampAng;
+      scene.add(driveRamp);
+      const rampDeck = new THREE.Mesh(new THREE.BoxGeometry(rampHyp + 0.8, 0.45, 9.2), asphaltMat);
+      rampDeck.position.y = -0.20; rampDeck.receiveShadow = true; driveRamp.add(rampDeck);
+      // 경사로 하부 삼각 받침(바닥 틈새 방지)
+      addBox(rampHyp, 2.2, 9.0, retainBlockMat, 0, -1.5, 0, driveRamp, false);
+      // 경사로 하단 과속방지턱 (step_52_shot_2 노란 띠)
+      addBox(1.1, 0.06, 8.8, yellowMat, rampHyp / 2 - 2.0, 0.05, 0, driveRamp, false);
+
+      // 하부 평지 전체 아스팔트 — 외벽 안쪽(x∈[15, 85.2], z∈[-15, 41.8])에 딱 맞춰 밖으로 삐져나오지 않게 정리!
+      const lowerDriveAsph = new THREE.Mesh(new THREE.PlaneGeometry(31, 16), asphaltMat);
+      lowerDriveAsph.rotation.x = -Math.PI / 2; lowerDriveAsph.position.set(30.5, LOW_Y + 0.02, 27.5); lowerDriveAsph.receiveShadow = true;
+      scene.add(lowerDriveAsph);
+      const lowerEastAsph = new THREE.Mesh(new THREE.PlaneGeometry(41.5, 56.8), asphaltMat);
+      lowerEastAsph.rotation.x = -Math.PI / 2; lowerEastAsph.position.set(64.5, LOW_Y + 0.02, 13.4); lowerEastAsph.receiveShadow = true;
+      scene.add(lowerEastAsph);
+      // 본관 동측 ~ 별관 북측 하부 연결 중정 포장 (x∈[26.5, 45.6], z∈[-15, 21.3])
+      const lowerCourtyard = new THREE.Mesh(new THREE.PlaneGeometry(19.5, 36.5), asphaltMat);
+      lowerCourtyard.rotation.x = -Math.PI / 2; lowerCourtyard.position.set(36.0, LOW_Y + 0.02, 3.2); lowerCourtyard.receiveShadow = true;
+      scene.add(lowerCourtyard);
+
+      // [청사 전체 360° 연속 외곽벽 · 철제 펜스 — 빈틈 0% 완전 밀폐!]
+      const fencePanelMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.6, metalness: 0.5, transparent: true, opacity: 0.55 });
+      function getDriveY(x) {
+        if (x <= rampStartX) return 0.0;
+        if (x >= rampEndX) return LOW_Y;
+        return ((x - rampStartX) / rampRun) * LOW_Y;
+      }
+      // (1) 남측 경사로 구간 (x = -23 ~ +16, z = 35.5): 경사 따라 연속 연석 + 펜스 패널 + 기둥
+      addBox(rampHyp + 0.8, 0.35, 0.38, concreteMat, 0, 0.16, 4.7, driveRamp);
+      addBox(rampHyp + 0.8, 1.15, 0.06, fencePanelMat, 0, 0.88, 4.7, driveRamp, false);
+      addBox(rampHyp + 0.8, 0.07, 0.08, frameMat, 0, 1.46, 4.7, driveRamp, false);
+      addBox(rampHyp + 0.8, 0.07, 0.08, frameMat, 0, 0.36, 4.7, driveRamp, false);
+      for (let fx = -23.0; fx <= 44.0; fx += 2.2) {
+        const fy = getDriveY(fx);
+        addBox(0.08, 1.55, 0.08, frameMat, fx, fy + 0.78, 35.5, scene);
+      }
+      // (2) 남측 하부 민원실 앞 평지 구간 (x = +16 ~ +44, z = 35.5, y = LOW_Y): 연속 옹벽 연석 + 철제 펜스!
+      addBox(28.2, 0.45, 0.42, concreteMat, 30.0, LOW_Y + 0.22, 35.5, scene);
+      addBox(28.2, 1.15, 0.06, fencePanelMat, 30.0, LOW_Y + 0.98, 35.5, scene, false);
+      addBox(28.2, 0.07, 0.08, frameMat, 30.0, LOW_Y + 1.56, 35.5, scene, false);
+      addBox(28.2, 0.07, 0.08, frameMat, 30.0, LOW_Y + 0.48, 35.5, scene, false);
+      // (3) 남측 코너 연결벽 (x = 44.0, z = 35.5 ~ 41.8) + 동쪽 주차장 남측 외벽 (x = 44.0 ~ 85.2, z = 41.8)
+      addBox(0.65, 2.4, 6.7, retainBlockMat, 44.0, LOW_Y + 1.2, 38.65, scene);
+      addBox(41.8, 2.4, 0.65, retainBlockMat, 64.6, LOW_Y + 1.2, 41.8, scene);
+      addBox(41.8, 0.9, 0.06, fencePanelMat, 64.6, LOW_Y + 2.85, 41.8, scene, false);
+      // (4) 동측 끝 외벽 (x = 85.2, z = -15.0 ~ +41.8)
+      addBox(0.65, 2.8, 57.2, retainBlockMat, 85.2, LOW_Y + 1.4, 13.4, scene);
+      addBox(0.06, 0.9, 57.2, fencePanelMat, 85.2, LOW_Y + 3.25, 13.4, scene, false);
+      // (5) 북동측 외벽 (z = -15.0, x = 26.5 ~ 85.2) + 동북 연결 옹벽 (x = 26.5, z = -64.5 ~ -15.0)
+      addBox(59.0, 2.8, 0.65, retainBlockMat, 55.85, LOW_Y + 1.4, -15.0, scene);
+      addBox(0.65, 2.4, 50.0, retainBlockMat, 26.5, 1.2, -39.75, scene);
+      // (6) 북측 끝 외벽 (z = -64.5, x = -54.0 ~ +26.5)
+      addBox(81.0, 2.2, 0.65, retainBlockMat, -13.75, 1.1, -64.5, scene);
+
+      // [세로 홈 콘크리트 옹벽 + 3m 간격 기둥(Pilaster) + 4단 스테인리스 난간] (step_45_shot_2, step_52_shot_2!)
+      //   상부 광장 남쪽 가장자리(z = 26.2, x = -22 ~ +18)를 따라 하부 차도와 분리
+      addBox(40.5, -LOW_Y + 0.2, 0.55, retainBlockMat, -1.75, LOW_Y / 2, 26.1, scene);
+      for (let px = -20; px <= 18; px += 3.2) {
+        addBox(0.35, -LOW_Y + 0.25, 0.68, concreteMat, px, LOW_Y / 2, 26.1, scene);
+        addBox(0.06, 1.05, 0.06, railMat, px, 0.55, 26.1, scene);
+      }
+      [0.35, 0.62, 0.88, 1.08].forEach(ry => addBox(39.0, 0.045, 0.045, railMat, -1.5, ry, 26.1, scene, false));
+
+      // [옹벽 우측 대각선 외부 콘크리트 계단] (step_45_shot_1 왼쪽: 상부 병역판정검사장 광장 ➔ 하부 민원실 앞!)
+      for (let st = 0; st < 16; st++) {
+        const sy = -0.15 - st * (3.65 / 16);
+        const sx = 18.2 + st * 0.32;
+        addBox(0.36, 0.24, 1.9, concreteMat, sx, sy, 23.6, scene);
+      }
+      // 계단 난간
+      for (let st = 0; st <= 4; st++) {
+        addBox(0.06, 1.0, 0.06, railMat, 18.2 + st * 1.25, 0.35 - st * 0.9, 24.5, scene);
+      }
+
+      // 4) [중앙 붉은/흰 체크 보도블록 광장 + 소나무 정원 + 보행자 경사로] (step_57_shot_1, step_52_shot_2!)
+      addBox(36, 0.12, 30, checkerPlazaMat, -10.0, 0.06, 10.5, scene, false);
+      // 좌·우 소나무 잔디 화단 2개
+      addBox(9.2, 0.38, 19.5, grassMat, -19.2, 0.20, 11.8, scene);
+      addBox(9.2, 0.38, 19.5, grassMat, -8.5, 0.20, 11.8, scene);
+      // 노란 점자블록 유도선 (step_57_shot_1)
+      addBox(0.40, 0.15, 28, yellowMat, 2.2, 0.08, 11.5, scene, false);
+      addBox(30, 0.15, 0.40, yellowMat, -12.5, 0.08, 25.0, scene, false);
+      // 병역판정검사장 상부 현관 앞 보행 경사로 & 2단 스테인리스 핸드레일 (step_52_shot_2)
+      addBox(12.0, 0.16, 4.2, checkerPlazaMat, 13.5, 0.12, 23.2, scene, false);
+      for (let hx = 7.5; hx <= 19.5; hx += 2.0) addBox(0.05, 0.95, 0.05, railMat, hx, 0.55, 25.1, scene);
+      addBox(12.2, 0.05, 0.05, railMat, 13.5, 0.95, 25.1, scene, false);
+      addBox(12.2, 0.05, 0.05, railMat, 13.5, 0.55, 25.1, scene, false);
+
+      // 5) [서쪽 전좌로 도로 (DXF 실측 각도 +0.310 rad! 북서->남동 방향)] + 정문 화강석 기둥 3개 + 자바라 철문
+      const roadGroup = new THREE.Group();
+      roadGroup.position.set(-48.2, 0.55, 5.5); roadGroup.rotation.y = +0.310; scene.add(roadGroup);
+      const roadSlope = new THREE.Group(); roadSlope.rotation.x = 0.022; roadGroup.add(roadSlope);
+      addBox(11.6, 0.4, 185, asphaltMat, 0, -0.2, 0, roadSlope, false);
+      addBox(0.32, 0.22, 185, concreteMat, -5.92, 0.09, 0, roadSlope);
+      addBox(3.4, 0.4, 185, redWalkMat, -7.75, -0.08, 0, roadSlope, false);
+      addBox(0.32, 0.22, 110, concreteMat, 5.92, 0.09, -37.5, roadSlope);
+      addBox(0.32, 0.22, 62, concreteMat, 5.92, 0.09, 61.5, roadSlope);
+      addBox(3.8, 0.4, 110, redWalkMat, 7.95, -0.08, -37.5, roadSlope, false);
+      addBox(3.8, 0.4, 62, redWalkMat, 7.95, -0.08, 61.5, roadSlope, false);
+      addBox(4.6, 0.38, 13.0, asphaltMat, 7.8, -0.19, 24.0, roadSlope, false);
+      // 차선 + 횡단보도
+      [-0.17, 0.17].forEach(lx => {
+        addBox(0.14, 0.025, 110, yellowMat, lx, 0.015, -37.5, roadSlope, false);
+        addBox(0.14, 0.025, 62, yellowMat, lx, 0.015, 61.5, roadSlope, false);
+      });
+      addBox(0.14, 0.025, 185, whiteMat, -5.3, 0.015, 0, roadSlope, false);
+      addBox(0.14, 0.025, 110, whiteMat, 5.3, 0.015, -37.5, roadSlope, false);
+      addBox(0.14, 0.025, 62, whiteMat, 5.3, 0.015, 61.5, roadSlope, false);
+      for (let cx = -4.2; cx <= 4.2; cx += 1.2) addBox(0.58, 0.028, 3.6, whiteMat, cx, 0.016, 36.0, roadSlope, false);
+
+      // 전좌로 청사측 인도 위 가로수 (roadSlope 로컬 좌표 x=+8.2에 배치 → 절대 차도 위로 안 넘어옴!)
+      for (let tz = -52; tz <= 14; tz += 8.2) {
+        const tg = new THREE.Group(); tg.position.set(8.2, 0.1, tz);
+        const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.24, 2.6, 8), barkMat); tr.position.y = 1.3; tr.castShadow = true; tg.add(tr);
+        [[0,3.2,0,1.45,1.2,0],[-0.8,3.6,0.6,1.1,1.0,1],[0.8,3.7,-0.5,1.15,1.05,2]].forEach(([cx,cy,cz,rx,ry,mi]) => {
+          const m = new THREE.Mesh(new THREE.IcosahedronGeometry(rx, 2), leafPal.oak[mi]);
+          m.scale.set(1, ry/rx, 1); m.position.set(cx, cy, cz); m.castShadow = true; tg.add(m);
+        });
+        roadSlope.add(tg);
+      }
+
+      // 정문 3개 화강석 기둥(북측 기둥 + 중앙 보행기둥 + 남측 경비/담장 블록) + 자바라 철문 (step_122, step_79!)
+      addBox(1.4, 2.0, 1.1, graniteMat, -33.8, 1.0, 25.8, scene);
+      addBox(1.2, 1.9, 1.0, graniteMat, -31.2, 0.95, 26.4, scene);
+      for (let i = 0; i < 6; i++) addBox(0.06, 1.35, 0.06, railMat, -33.0 + i * 0.25, 0.72, 26.1, scene);
+      addBox(6.6, 1.95, 0.65, graniteMat, -26.5, 0.98, 35.4, scene);
+      addBox(6.8, 0.15, 0.8, concreteMat, -26.5, 2.0, 35.4, scene);
+      const plaqueTex = makeSignTex({ w: 512, h: 192, bg: '#3f3526', border: { color: '#d4af37', width: 12 }, lines: [{ text: '경기북부병무지청', font: '900 50px Pretendard', color: '#e5c158', y: 98 }] });
+      addBox(1.9, 0.72, 0.06, new THREE.MeshStandardMaterial({ map: plaqueTex }), -27.2, 1.15, 35.76, scene, false);
+      const addr76Tex = makeSignTex({ w: 256, h: 256, bg: '#ffffff', border: { color: '#1e3a8a', width: 16 }, circle: true, lines: [{ text: '76', font: '900 96px Pretendard', color: '#0f172a', y: 122 }, { text: '전좌로', font: '800 32px Pretendard', color: '#1e3a8a', y: 188 }] });
+      const addr76 = new THREE.Mesh(new THREE.CircleGeometry(0.44, 32), new THREE.MeshStandardMaterial({ map: addr76Tex, transparent: true }));
+      addr76.position.set(-24.0, 1.45, 35.78); scene.add(addr76);
+
+      // 서쪽 외곽 장미 생울타리 + 북쪽 철망 게이트 (전좌로 각도 +0.310 rad 완벽 평행!)
+      const westB = new THREE.Group(); westB.position.set(-40.2, 0, -5.5); westB.rotation.y = +0.310;
+      addBox(1.1, 1.7, 56, hedgeMat, 0, 0.85, 3, westB);
+      addBox(0.14, 1.85, 5.5, frameMat, 0, 0.92, -31.5, westB);
+      scene.add(westB);
+
+      // 6) [DXF 실측 본관동(b[5]) + 네이버 거리뷰 step_57, step_88, step_95, step_98 외관 100% 반영]
+      const bMain = dxf.buildings[5];
+      const bAnnex = dxf.buildings[6];
+      const bBridge = dxf.buildings[3];
+      const bCanopy = dxf.buildings[4];
+
+      extrudeDxfPoly(bMain.pts, 0.0, 12.6, panelMat);
+      extrudeDxfPoly(bMain.pts, 12.6, 0.45, concreteMat);
+      extrudeDxfPoly(bMain.pts, 13.06, 0.08, greenRoofMat, scene, false);
+      // 옥상 태양광 패널 + 백색 옥탑 + 돔 + 통신 철탑 2개 (step_57_shot_1)
+      for (let sx = -29; sx <= 21; sx += 3.4) {
+        const sp = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.12, 2.2), solarMat);
+        sp.position.set(sx, 13.45, -12.2); sp.rotation.x = 0.25; scene.add(sp);
+      }
+      addBox(6.2, 2.8, 5.2, whiteMat, -18.5, 14.4, -19.5, scene);
+      const dome = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.1, 1.6, 20), whiteMat); dome.position.set(1.5, 13.9, -22.5); scene.add(dome);
+      [-15.0, 13.0].forEach(tx => addBox(0.28, 9.5, 0.28, railMat, tx, 17.8, -17.0, scene));
+
+      // 본관 남면 3개 층 커튼월 + 민트그린 스팬드럴 유리띠 (step_57_shot_1!)
+      [2.5, 6.2, 9.8].forEach(wy => {
+        addBox(42, 1.85, 0.22, glassMat, 3.0, wy, -8.85, scene, false);
+        addBox(48, 1.85, 0.22, glassMat, -5.0, wy, -28.75, scene, false);
+      });
+      [4.35, 8.0].forEach(sy => addBox(42, 1.35, 0.24, mintSpandrelMat, 3.0, sy, -8.83, scene, false));
+      for (let mx = -17; mx <= 23; mx += 3.5) addBox(0.14, 9.6, 0.28, frameMat, mx, 6.2, -8.80, scene, false);
+
+      // 본관 상단 크림 파라펫 + '[태극] 경기북부병무지청' 간판 (step_57_shot_1)
+      const mainTitleTex = makeSignTex({ w: 1024, h: 160, bg: 'transparent', lines: [{ text: '경 기 북 부 병 무 지 청', font: '900 80px Pretendard', color: '#1e3a8a', y: 84 }] });
+      const mainTitle = new THREE.Mesh(new THREE.PlaneGeometry(18.5, 2.5), new THREE.MeshStandardMaterial({ map: mainTitleTex, transparent: true }));
+      mainTitle.position.set(-4.5, 11.75, -8.65); scene.add(mainTitle);
+
+      // 본관 남서쪽 노란색 360° 입체 원통 로비 + 상부 캔틸레버 지붕 (step_88_shot_1!)
+      const atr = new THREE.Mesh(new THREE.CylinderGeometry(5.8, 5.2, 9.8, 32), yellowLobbyMat);
+      atr.position.set(-25.5, 4.9, -9.8); atr.castShadow = true; atr.receiveShadow = true; scene.add(atr);
+      const atrG = new THREE.Mesh(new THREE.CylinderGeometry(5.88, 5.5, 3.5, 32, 1, false, -Math.PI * 0.35, Math.PI * 0.7), glassMat);
+      atrG.position.set(-25.5, 4.8, -9.7); scene.add(atrG);
+      addBox(16.5, 1.8, 8.2, panelMat, -25.2, 11.7, -8.0, scene);
+      addBox(1.8, 11.2, 2.2, panelMat, -32.4, 5.6, -5.0, scene);
+
+      // 본관 동쪽 날개 4×4 대형 커튼월 + 2층 필로티 테라스 (step_95_shot_1!)
+      addBox(0.24, 7.6, 9.2, glassMat, 26.25, 8.4, -14.5, scene, false);
+      for (let wz = -19; wz <= -10; wz += 2.3) addBox(0.28, 7.6, 0.14, frameMat, 26.28, 8.4, wz, scene, false);
+
+      // 본관 남쪽 유리 현관 캐노피 (DXF b[4])
+      extrudeDxfPoly(bCanopy.pts, 0.0, 3.3, glassMat);
+      extrudeDxfPoly(bCanopy.pts, 3.3, 0.25, concreteMat);
+
+      // [3층 통유리 연결 구름다리 (7-bay × 2-row)] + 하부 1~2층 연결 중정 (step_95_shot_1!)
+      extrudeDxfPoly(bBridge.pts, 7.6, 3.4, glassMat);
+      extrudeDxfPoly(bBridge.pts, 7.4, 0.35, concreteMat);
+      extrudeDxfPoly(bBridge.pts, 10.9, 0.4, concreteMat);
+      for (let bz = -9.0; bz <= 0.5; bz += 1.45) addBox(3.18, 3.3, 0.12, frameMat, 21.51, 9.3, bz, scene, false);
+
+      // 7) [DXF 실측 징병검사동(b[6]) — 동·남·북 4개 층(LOW_Y=-3.8m ~ +12.6m) 완전 구현!] (step_45, step_52, step_95, step_98!)
+      //    - 하부 1층(y = -3.8m ~ 0.0m): 적갈색 벽돌 외벽 + 남쪽 고객지원센터(민원실) 현관!
+      extrudeDxfPoly(bAnnex.pts, LOW_Y, -LOW_Y, brickMat);
+      //    - 상부 2~4층(y = 0.0m ~ 12.6m): 밝은 회백색 사각 석재 패널!
+      extrudeDxfPoly(bAnnex.pts, 0.0, 12.6, panelMat);
+      extrudeDxfPoly(bAnnex.pts, 12.6, 0.45, concreteMat);
+      extrudeDxfPoly(bAnnex.pts, 13.06, 0.08, greenRoofMat, scene, false);
+      // 옥상 4열 태양광 패널
+      for (let rz = 3.0; rz <= 16.5; rz += 4.2) for (let rx = 18.0; rx <= 40.0; rx += 3.6) {
+        const sp = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.12, 2.0), solarMat);
+        sp.position.set(rx, 13.5, rz); sp.rotation.x = 0.25; scene.add(sp);
+      }
+
+      // [서측면 (정문 방면, step_57_shot_1)]: 북서 통유리 계단탑 + 세로 '병역판정검사장' + 2줄 좁은 슬릿창
+      addBox(5.2, 14.4, 5.2, panelMat, 12.0, 7.2, 8.2, scene);
+      addBox(0.24, 12.0, 3.8, glassMat, 9.35, 6.8, 8.2, scene, false);
+      for (let y = 1.6; y <= 12.6; y += 2.2) addBox(0.28, 0.14, 3.9, frameMat, 9.32, y, 8.2, scene, false);
+      [5.4, 9.2].forEach(wy => addBox(0.24, 0.78, 5.2, glassMat, 9.36, wy, 15.2, scene, false));
+      const vSignTex = makeSignTex({ w: 140, h: 1024, bg: 'transparent', vertical: true, lines: [{ text: '병역판정검사장', font: '900 100px Pretendard', color: '#1e293b' }] });
+      const vSign = new THREE.Mesh(new THREE.PlaneGeometry(1.45, 9.6), new THREE.MeshStandardMaterial({ map: vSignTex, transparent: true }));
+      vSign.rotation.y = -Math.PI / 2; vSign.position.set(9.34, 7.6, 19.2); scene.add(vSign);
+
+      // [남측면 (step_52_shot_2 + step_45_shot_1)]:
+      //   - 좌측 상부(y = 0 ~ 12.6): '공정하고 정의로운 병역이 자랑스러운 대한민국' 대형 현판 + 상부 병역판정검사장 출입구
+      const sloTex = makeSignTex({
+        w: 1024, h: 240, bg: '#f8fafc', border: { color: '#cbd5e1', width: 8 },
+        lines: [{ text: '공정하고 정의로운', font: '700 42px Pretendard', color: '#3b82f6', y: 74 }, { text: '병역이 자랑스러운 대한민국', font: '900 66px Pretendard', color: '#0f172a', y: 158 }]
+      });
+      addBox(8.6, 1.9, 0.18, new THREE.MeshStandardMaterial({ map: sloTex }), 14.0, 4.2, 20.32, scene, false);
+      const examDoorSign = makeSignTex({ w: 512, h: 100, bg: 'transparent', lines: [{ text: '병역판정검사장', font: '900 58px Pretendard', color: '#1e293b', y: 52 }] });
+      const eDoorSignM = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 0.95), new THREE.MeshStandardMaterial({ map: examDoorSign, transparent: true }));
+      eDoorSignM.position.set(22.2, 3.6, 21.42); scene.add(eDoorSignM);
+      addBox(5.2, 2.8, 0.24, glassMat, 22.2, 1.5, 21.35, scene, false);
+
+      //   - 우측 3~4층 11-bay 대형 커튼월 + 민트그린 스팬드럴 (step_45_shot_1!)
+      addBox(22.0, 5.4, 0.22, glassMat, 33.8, 8.6, 21.32, scene, false);
+      addBox(22.0, 1.2, 0.24, mintSpandrelMat, 33.8, 8.5, 21.35, scene, false);
+      for (let mx = 23.0; mx <= 44.8; mx += 2.0) addBox(0.12, 5.5, 0.28, frameMat, mx, 8.6, 21.36, scene, false);
+      //   - 우측 2층 3개 대형 암회색 창호 밴드 (step_45_shot_1!)
+      [25.5, 33.5, 41.2].forEach(cx => addBox(6.8, 2.6, 0.22, glassMat, cx, 2.1, 21.32, scene, false));
+      //   - 하부 1층(y = -3.8m ~ 0.0m): '고객지원센터(민원실) | 군지원센터(면접실)' 유리 현관 캐노피! (step_45_shot_1!)
+      addBox(26.0, 1.8, 0.22, glassMat, 32.5, LOW_Y + 2.1, 21.32, scene, false);
+      addBox(4.8, 3.0, 1.4, glassMat, 32.5, LOW_Y + 1.5, 21.95, scene);
+      const minwonTex = makeSignTex({
+        w: 512, h: 110, bg: '#1e3a8a', border: { color: '#ffffff', width: 6 },
+        lines: [{ text: '고객지원센터(민원실) | 군지원센터(면접실)', font: '800 24px Pretendard', color: '#ffffff', y: 56 }]
+      });
+      addBox(5.1, 0.72, 1.55, new THREE.MeshStandardMaterial({ map: minwonTex }), 32.5, LOW_Y + 3.15, 22.0, scene, false);
+
+      // [동측면 (동쪽 주차장 방면, step_95_shot_1!)]:
+      //   - 상부 좌측 대형 '경기북부 / 병무청' 글씨 + 1칸 세로 슬릿창 + 우측 4×4 계단실 대형 커튼월 + 2층 6-bay 창호!
+      const eastTitleTex = makeSignTex({
+        w: 512, h: 320, bg: 'transparent',
+        lines: [
+          { text: '경기북부', font: '900 72px Pretendard', color: '#334155', y: 95 },
+          { text: '병 무 청', font: '900 116px Pretendard', color: '#334155', y: 215 }
+        ]
+      });
+      const eastTitle = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 4.5), new THREE.MeshStandardMaterial({ map: eastTitleTex, transparent: true }));
+      eastTitle.rotation.y = Math.PI / 2; eastTitle.position.set(45.72, 8.8, 16.0); scene.add(eastTitle);
+      addBox(0.24, 5.2, 0.75, glassMat, 45.65, 8.6, 11.6, scene, false); // 세로 슬릿창
+      addBox(0.24, 6.2, 7.6, glassMat, 45.65, 8.5, 6.2, scene, false);   // 4×4 계단 커튼월
+      for (let ez = 2.6; ez <= 9.8; ez += 1.8) addBox(0.28, 6.3, 0.12, frameMat, 45.68, 8.5, ez, scene, false);
+      addBox(0.24, 2.5, 16.5, glassMat, 45.65, 1.9, 11.2, scene, false); // 2층 6-bay 창호
+
+      // 부속건물 (DXF 실측 파란 지붕 차고 2동 + 동쪽 부속시설)
+      [2, 8].forEach(i => {
+        extrudeDxfPoly(dxf.buildings[i].pts, 0, 3.0, concreteMat);
+        extrudeDxfPoly(dxf.buildings[i].pts, 3.0, 0.25, blueRoofMat);
+      });
+      extrudeDxfPoly(dxf.buildings[0].pts, LOW_Y, 3.2, concreteMat);
+
+      // [동쪽 주차장 북서 사면 목재 정자 (step_98.png 실측!)]
+      const gazebo = new THREE.Group(); gazebo.position.set(36.0, LOW_Y + 2.2, -16.5);
+      addBox(3.4, 0.35, 3.4, woodMat, 0, 0.2, 0, gazebo);
+      [[-1.4,-1.4],[1.4,-1.4],[-1.4,1.4],[1.4,1.4]].forEach(([gx, gz]) => addBox(0.16, 2.6, 0.16, woodMat, gx, 1.5, gz, gazebo));
+      const gRoof = new THREE.Mesh(new THREE.ConeGeometry(2.8, 1.3, 4), new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.8 }));
+      gRoof.position.y = 3.4; gRoof.rotation.y = Math.PI / 4; gazebo.add(gRoof);
+      scene.add(gazebo);
+
+      // 8) [동쪽 하부 주차장 — DXF 아일랜드 26m 전체 폭 10면씩 꽉 채워 배치 + 연석 테두리!]
+      // 상단 아일랜드 중앙 화단/연석 (x = 51.5 ~ 78.0, z = 4.0)
+      addBox(26.2, 0.18, 0.45, concreteMat, 64.75, LOW_Y + 0.09, 4.0, scene);
+      buildRowNS({ startX: 52.0, y: LOW_Y, z: 1.2,  count: 10, dir: 'south', cars: [1, 3, 5, 8] });
+      buildRowNS({ startX: 52.0, y: LOW_Y, z: 6.8,  count: 10, dir: 'north', handicap: [0, 1], cars: [2, 4, 6, 9] });
+      // 하단 아일랜드 중앙 화단/연석 (x = 51.5 ~ 78.0, z = 21.9)
+      addBox(26.2, 0.18, 0.65, grassMat, 64.75, LOW_Y + 0.09, 21.9, scene);
+      buildRowNS({ startX: 52.0, y: LOW_Y, z: 19.1, count: 10, dir: 'south', cars: [1, 3, 6, 8] });
+      buildRowNS({ startX: 52.0, y: LOW_Y, z: 24.7, count: 10, dir: 'north', cars: [0, 2, 5, 7, 9] });
+      // 동쪽 주차장 북측 옹벽 변 10면 (x = 46 ~ 71.5) + 남측 친환경/장애인 6면 (x = 52 ~ 67.3)
+      buildRowNS({ startX: 46.5, y: LOW_Y, z: -11.2, count: 10, dir: 'north', cars: [0, 1, 2, 4, 6, 8] });
+      buildRowNS({ startX: 52.0, y: LOW_Y, z: 37.8,  count: 6,  dir: 'south', handicap: [0, 1], cars: [3, 5] });
+      // 북쪽 주차장 & 테니스장
+      addBox(21.0, 0.14, 15.0, new THREE.MeshStandardMaterial({ color: 0x5c854c, roughness: 0.88 }), -32.5, 0.07, -43.5, scene, false);
+      buildColEW({ x: -16.5, y: 0.0, startZ: -51.0, count: 5, dir: 'west', cars: [0, 1, 2, 3] });
+      buildColEW({ x: -4.5,  y: 0.0, startZ: -53.0, count: 6, dir: 'east', cars: [0, 1, 3, 4] });
+      buildColEW({ x: 0.8,   y: 0.0, startZ: -50.5, count: 5, dir: 'west', cars: [1, 2, 3] });
+      buildColEW({ x: 10.5,  y: 0.0, startZ: -48.0, count: 4, dir: 'east', cars: [0, 1, 2] });
+
+      // 9) 조경 수목 (소나무 정원 + 동쪽 주차장 단풍/소나무 + 전좌로 가로수 — 네이버 거리뷰 실측!)
+      [
+        [-20.5, 0.4, 17.5, 7.6, 'pine', 1], [-18.5, 0.4, 11.2, 8.4, 'pine', 2], [-20.0, 0.4, 5.5, 7.2, 'pine', 3],
+        [-9.5,  0.4, 17.0, 8.0, 'pine', 4], [-7.8,  0.4, 10.8, 8.6, 'pine', 5], [-9.2,  0.4, 5.2, 7.0, 'pine', 6],
+        [10.2,  0.1, 23.0, 3.6, 'pine', 7], [13.2,  0.1, 23.2, 3.4, 'pine', 8],
+        // 동쪽 주차장 아일랜드 단풍나무·그늘나무 (step_95_shot_1, step_45_shot_1!)
+        [60.5, LOW_Y, 21.9, 5.2, 'maple', 9], [70.0, LOW_Y, 21.9, 5.4, 'oak', 10],
+        [49.5, LOW_Y, 13.0, 5.0, 'maple', 11], [78.5, LOW_Y, 6.0, 6.2, 'pine', 12]
+      ].forEach(([x, y, z, h, k, s]) => addTree(x, y, z, h, k, s));
+
+      // DXF 원본선 검증 오버레이
+      const dlMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.75 });
+      dxf.roads.forEach(r => dxfGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(r.pts.map(([x, z]) => new THREE.Vector3(x, x > 45 ? LOW_Y + 0.12 : 0.12, z))), dlMat)));
+    }
+
+    // 카메라 프리셋 (네이버 거리뷰 핵심 시점 6종)
+    const VIEWS = {
+      overview:      { pos: new THREE.Vector3(-54, 22, 72),   target: new THREE.Vector3(14, 2, 4),   t: '1. 정문~경사로·옹벽·청사 전체뷰', d: '정문 진입 직후 좌측은 상부 체크광장·보행 경사로, 우측 차도는 옹벽을 따라 하부(B1 민원실·동쪽 주차장)로 내려가는 실제 구조입니다.' },
+      rampSplit:     { pos: new THREE.Vector3(-4, 2.8, 32),   target: new THREE.Vector3(24, 3.8, 18), t: '2. 경사로·세로 홈 옹벽·검사장 입구 (네이버 거리뷰 동일 구도)', d: '좌측 붉은/흰 체크 보행 경사로와 상부 병역판정검사장 입구, 우측 하부 주차장으로 내려가는 아스팔트 차도와 세로 홈 콘크리트 옹벽이 보입니다.' },
+      southB1:       { pos: new THREE.Vector3(24, -1.2, 36),  target: new THREE.Vector3(33, 3.2, 20), t: '3. 별관 남면 4층 · 고객지원센터(민원실) · 외부 계단', d: '네이버 거리뷰에서 확인된 별관 남면 4개 층(1층 민원실·군지원센터 현관, 2층 3분할 창, 3~4층 11-bay 커튼월)과 옹벽 대각선 외부 계단입니다.' },
+      eastSkybridge: { pos: new THREE.Vector3(68, 0.5, -2),   target: new THREE.Vector3(32, 5.5, 4),  t: '4. 동쪽 주차장 · 3층 통유리 구름다리 · 본관 동쪽 날개', d: '별관 동면 [경기북부 병무청] 간판과 4×4 계단 커튼월, 1층 적벽돌, 3층 7-bay 통유리 구름다리, 본관 동측 커튼월과 정자(정자)를 한눈에 봅니다.' },
+      mainGate:      { pos: new THREE.Vector3(-44, 2.4, 46),  target: new THREE.Vector3(-6, 5.5, 4),  t: '5. 전좌로 정문 · 본관 노란 원통 로비', d: '전좌로에서 정문 3개 화강석 기둥·자바라 철문, 본관 남서쪽 360° 노란 원통 로비, 민트그린 스팬드럴 유리창, 별관 서면을 바라봅니다.' },
+      aerial:        { pos: new THREE.Vector3(10, 128, 72),   target: new THREE.Vector3(14, 0, -4),   t: '6. 전체 조감도 (1:1,000 DXF 실측 기반)', d: '우측 상단 [📐 DXF선 ON/OFF]로 1차 공식 CAD 도면선과 100% 일치하는지 바로 대조해 볼 수 있습니다.' }
+    };
+    let camAnim = null;
+    window.setView = (k) => {
+      const v = VIEWS[k]; if (!v) return;
+      camAnim = { sp: camera.position.clone(), ep: v.pos.clone(), st: controls.target.clone(), et: v.target.clone(), t: 0 };
+      document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('c-' + k)?.classList.add('active');
+      document.getElementById('view-title').innerText = v.t;
+      document.getElementById('view-desc').innerText = v.d;
+    };
+    window.setLight = (m) => {
+      const d = document.getElementById('btn-day'), s = document.getElementById('btn-sunset');
+      if (m === 'sunset') {
+        setSky('#1e3a8a', '#ea580c', '#fdba74'); scene.fog.color.setHex(0xfdba74);
+        sun.color.setHex(0xff9248); sun.intensity = 2.0; sun.position.set(-85, 25, 32);
+        s.classList.add('bg-amber-600/80', 'text-white'); d.classList.remove('bg-blue-600/80', 'text-white');
+      } else {
+        setSky('#1d4ed8', '#60a5fa', '#e0f2fe'); scene.fog.color.setHex(0xdbeafe);
+        sun.color.setHex(0xfffdf5); sun.intensity = 2.35; sun.position.set(-60, 74, 68);
+        d.classList.add('bg-blue-600/80', 'text-white'); s.classList.remove('bg-amber-600/80', 'text-white');
+      }
+    };
+
+    // 확대/축소 버튼 & WASD
+    let zoomDir = 0; const zOff = new THREE.Vector3();
+    function applyZoom(f) {
+      camAnim = null; zOff.subVectors(camera.position, controls.target);
+      zOff.setLength(Math.max(controls.minDistance, Math.min(controls.maxDistance, zOff.length() * f)));
+      camera.position.copy(controls.target).add(zOff);
+    }
+    window.stepZoom = d => applyZoom(d < 0 ? 0.84 : 1.19);
+    window.startZoom = d => { zoomDir = d; }; window.stopZoom = () => { zoomDir = 0; };
+    const keys = {};
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) camAnim = null;
+      if (e.key === '+' || e.key === '=') applyZoom(0.88);
+      if (e.key === '-' || e.key === '_') applyZoom(1.14);
+    });
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
+    controls.addEventListener('start', () => { camAnim = null; });
+
+    const clock = new THREE.Clock(), fwd = new THREE.Vector3(), rgt = new THREE.Vector3();
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      if (zoomDir !== 0) applyZoom(zoomDir < 0 ? Math.pow(0.45, dt) : Math.pow(2.2, dt));
+      if (camAnim) {
+        camAnim.t = Math.min(1, camAnim.t + dt / 1.0);
+        const e = camAnim.t < 0.5 ? 2 * camAnim.t * camAnim.t : 1 - Math.pow(-2 * camAnim.t + 2, 2) / 2;
+        camera.position.lerpVectors(camAnim.sp, camAnim.ep, e);
+        controls.target.lerpVectors(camAnim.st, camAnim.et, e);
+        if (camAnim.t >= 1) camAnim = null;
+      }
+      const sp = 16 * dt;
+      camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+      rgt.crossVectors(fwd, camera.up).normalize();
+      if (keys['KeyW'] || keys['ArrowUp'])    { camera.position.addScaledVector(fwd, sp);  controls.target.addScaledVector(fwd, sp); }
+      if (keys['KeyS'] || keys['ArrowDown'])  { camera.position.addScaledVector(fwd, -sp); controls.target.addScaledVector(fwd, -sp); }
+      if (keys['KeyA'] || keys['ArrowLeft'])  { camera.position.addScaledVector(rgt, -sp); controls.target.addScaledVector(rgt, -sp); }
+      if (keys['KeyD'] || keys['ArrowRight']) { camera.position.addScaledVector(rgt, sp);  controls.target.addScaledVector(rgt, sp); }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    camera.position.copy(VIEWS.overview.pos);
+    controls.target.copy(VIEWS.overview.target);
+    buildPhase2().then(animate);
+  </script>
+</body>
+</html>

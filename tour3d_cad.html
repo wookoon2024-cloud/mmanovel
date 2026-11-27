@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>경기북부병무지청 순수 공식 문서 3D v1.7 (1차 완성 · DXF 1:1,000 + 세움터 건축물대장)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0f172a; }
+    #canvas-container { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    .glass {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .cam-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #60a5fa;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- 좌측: 공식 근거 2종 헤더 + 세움터 인스펙터 + DXF 레이어 제어 -->
+  <div class="fixed top-4 left-4 z-20 flex flex-col gap-2 w-80 max-w-[92vw] pointer-events-none">
+    <div class="glass rounded-2xl px-4 py-3 shadow-2xl pointer-events-auto">
+      <div class="flex flex-wrap items-center gap-1.5 mb-1">
+        <span class="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-extrabold">순수 공식 문서 2종 100%</span>
+        <span class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-bold">v1.7 · 1차 완성 (깔끔한 CAD 뷰)</span>
+      </div>
+      <h1 class="text-sm font-extrabold text-white">경기북부병무지청 순수 실측 CAD 3D</h1>
+      <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+        ① 국토정보플랫폼 1:1,000 수치지형도(<code class="text-cyan-300">성동0169 DXF</code>)<br/>
+        ② 세움터 건축물대장 총괄표제부(<code class="text-amber-300">호원동 274-2</code>)
+      </p>
+    </div>
+
+    <div id="inspector-card" class="glass rounded-2xl px-4 py-3 shadow-xl pointer-events-auto text-[11px] text-slate-200 space-y-1.5">
+      <div class="flex items-center justify-between">
+        <span class="font-extrabold text-amber-300">📋 세움터 건축물대장 공식 제원</span>
+        <span class="text-[10px] text-slate-400">건물 클릭 시 상세</span>
+      </div>
+      <div id="inspector-body" class="space-y-1 text-[11px]">
+        <div class="grid grid-cols-2 gap-1 text-slate-300">
+          <div>대지면적: <strong class="text-white">11,570 ㎡</strong></div>
+          <div>건축면적: <strong class="text-white">1,661.26 ㎡</strong></div>
+          <div>총 연면적: <strong class="text-white">5,987.85 ㎡</strong></div>
+          <div>옥외주차: <strong class="text-white">100대 (1,165㎡)</strong></div>
+          <div>건폐/용적: <strong class="text-white">14.36% / 39.71%</strong></div>
+          <div>사용승인: <strong class="text-white">2006.08.28.</strong></div>
+        </div>
+        <div class="pt-1.5 border-t border-slate-700/80 space-y-1 text-[10.5px]">
+          <div><span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-1"></span><strong>주1 본관동</strong>: B1/3F · 연면적 4,123.72㎡ (DXF 60.26×20.49m)</div>
+          <div><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-1"></span><strong>주2 징병검사동</strong>: 3F · 연면적 1,864.13㎡ (DXF 36.24×22.61m)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass rounded-2xl px-4 py-2.5 shadow-xl pointer-events-auto">
+      <div class="text-[11px] font-extrabold text-cyan-300 mb-1.5">🗂️ DXF 원본 레이어 100% (객체 119건)</div>
+      <div class="grid grid-cols-2 gap-1.5 text-[11px] text-slate-200">
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('mainBldg', this.checked)" class="accent-sky-500" />
+          <span>주요건물 (2)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('basement', this.checked)" class="accent-violet-400" />
+          <span>본관 지하1층 (B1)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('subBldg', this.checked)" class="accent-indigo-400" />
+          <span>부속건물 (8)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('roads', this.checked)" class="accent-cyan-400" />
+          <span>도로경계 (18)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('sidewalks', this.checked)" class="accent-emerald-400" />
+          <span>보도경계 (7)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('walls', this.checked)" class="accent-orange-400" />
+          <span>담장·옹벽 (14)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('contours', this.checked)" class="accent-lime-400" />
+          <span>등고·사면 (12)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('facilities', this.checked)" class="accent-fuchsia-400" />
+          <span>시설·배수 (42)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('points', this.checked)" class="accent-pink-400" />
+          <span>가로등/주 (13)</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+          <input type="checkbox" checked onchange="window.toggleLayer('grid', this.checked)" class="accent-slate-400" />
+          <span>10m 실측 격자</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 우측 상단 컨트롤 + 확대/축소 버튼 -->
+  <div class="fixed top-4 right-4 z-20 flex flex-col items-end gap-2">
+    <div class="flex flex-wrap items-center justify-end gap-1.5">
+      <button id="btn-measure" onclick="window.toggleMeasure()" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 cursor-pointer hover:bg-slate-800 transition" title="두 점을 클릭해 실제 미터(m) 거리를 측정합니다">
+        📏 거리 재기 OFF
+      </button>
+      <button id="btn-xray" onclick="window.toggleXray()" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 cursor-pointer hover:bg-slate-800 transition" title="대지 바닥을 반투명하게 해 본관동 지하 1층(B1)을 확인합니다">
+        🔍 지하층 투시
+      </button>
+      <button id="btn-theme" onclick="window.toggleTheme()" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-white cursor-pointer hover:bg-slate-800 transition">
+        🌗 다크/라이트
+      </button>
+      <a href="tour3d.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition">
+        기존 3D 페이지
+      </a>
+      <a href="index.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 hover:bg-slate-800 transition">
+        ◀ 비주얼노벨
+      </a>
+    </div>
+
+    <div class="glass rounded-2xl p-1.5 shadow-2xl flex flex-col items-center gap-1.5 mt-1">
+      <button type="button" onmousedown="window.startZoom(-1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(-1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(-1)" class="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-blue-600 active:scale-95 text-white font-black text-xl border border-slate-600/80 transition flex items-center justify-center cursor-pointer" title="확대">+</button>
+      <span class="text-[10px] font-bold text-slate-300 select-none">확대/축소</span>
+      <button type="button" onmousedown="window.startZoom(1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(1)" class="w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-blue-600 active:scale-95 text-white font-black text-xl border border-slate-600/80 transition flex items-center justify-center cursor-pointer" title="축소">−</button>
+    </div>
+  </div>
+
+  <!-- 하단 카메라 프리셋 -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-20 w-[95vw] max-w-4xl">
+    <div class="glass rounded-2xl p-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5">
+      <button onclick="window.setView('iso')" id="v-iso" class="cam-btn active px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">
+        1. 3D 등각 전체뷰
+      </button>
+      <button onclick="window.setView('top')" id="v-top" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">
+        2. 2D 정면 평면도 (북쪽 위)
+      </button>
+      <button onclick="window.setView('gate')" id="v-gate" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">
+        3. 전좌로 정문 방면
+      </button>
+      <button onclick="window.setView('east')" id="v-east" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">
+        4. 동쪽 아일랜드 구역
+      </button>
+      <button onclick="window.setView('north')" id="v-north" class="cam-btn px-3 py-2 rounded-xl text-xs font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 cursor-pointer">
+        5. 북쪽 본관 뒤 구역
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    let isLightBg = true;
+    scene.background = new THREE.Color(0xf1f5f9);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.2, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.04;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.maxPolarAngle = Math.PI / 2 - 0.01;
+    controls.minDistance = 8;
+    controls.maxDistance = 280;
+
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x94a3b8, 1.05);
+    scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xfffdf8, 1.7);
+    sun.position.set(-70, 95, 75);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(4096, 4096);
+    sun.shadow.camera.left = -120; sun.shadow.camera.right = 120;
+    sun.shadow.camera.top = 120; sun.shadow.camera.bottom = -120;
+    sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.03;
+    scene.add(sun);
+
+    const layers = {
+      mainBldg: new THREE.Group(),
+      basement: new THREE.Group(),
+      subBldg: new THREE.Group(),
+      roads: new THREE.Group(),
+      sidewalks: new THREE.Group(),
+      walls: new THREE.Group(),
+      contours: new THREE.Group(),
+      facilities: new THREE.Group(),
+      points: new THREE.Group(),
+      grid: new THREE.Group()
+    };
+    Object.values(layers).forEach(g => scene.add(g));
+
+    const basePlaneMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.95, transparent: true, opacity: 1.0 });
+    const basePlane = new THREE.Mesh(new THREE.PlaneGeometry(360, 360), basePlaneMat);
+    basePlane.rotation.x = -Math.PI / 2;
+    basePlane.position.set(10, -0.04, -5);
+    basePlane.receiveShadow = true;
+    scene.add(basePlane);
+
+    const grid10 = new THREE.GridHelper(240, 24, 0x94a3b8, 0xcbd5e1);
+    grid10.position.set(10, 0.01, -5);
+    layers.grid.add(grid10);
+
+    const clickableMeshes = [];
+    function extrudeBuilding(ptsXZ, baseY, height, colorHex, edgeHex, parent, meta) {
+      const shape = new THREE.Shape();
+      ptsXZ.forEach(([x, z], i) => {
+        if (i === 0) shape.moveTo(x, -z);
+        else shape.lineTo(x, -z);
+      });
+      shape.closePath();
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      geo.rotateX(-Math.PI / 2);
+      const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.65, metalness: 0.05 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.y = baseY;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      mesh.userData = meta;
+      parent.add(mesh);
+      clickableMeshes.push(mesh);
+
+      const edges = new THREE.EdgesGeometry(geo, 15);
+      const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: edgeHex }));
+      line.position.y = baseY;
+      parent.add(line);
+
+      if (meta.floorsCount && meta.floorsCount >= 2) {
+        const floorLineMat = new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: 0.45 });
+        for (let f = 1; f < meta.floorsCount; f++) {
+          const fy = baseY + (height / meta.floorsCount) * f;
+          const lpts = ptsXZ.map(([x, z]) => new THREE.Vector3(x, fy, z));
+          lpts.push(lpts[0].clone());
+          parent.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lpts), floorLineMat));
+        }
+      }
+      return mesh;
+    }
+
+    function addLineRibbon(pts, y, width, height, colorHex, parent) {
+      const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.75 });
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [x1, z1] = pts[i];
+        const [x2, z2] = pts[i + 1];
+        const dx = x2 - x1, dz = z2 - z1;
+        const len = Math.hypot(dx, dz);
+        if (len < 0.03) continue;
+        const m = new THREE.Mesh(new THREE.BoxGeometry(len + width * 0.3, height, width), mat);
+        m.position.set((x1 + x2) / 2, y + height / 2, (z1 + z2) / 2);
+        m.rotation.y = -Math.atan2(dz, dx);
+        m.receiveShadow = true;
+        if (height > 0.3) m.castShadow = true;
+        parent.add(m);
+      }
+    }
+
+    function addLabel(text, x, y, z, bg = '#0f172a', fg = '#ffffff', scale = 1.0) {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 110;
+      const g = c.getContext('2d');
+      g.fillStyle = bg;
+      g.beginPath(); g.roundRect(8, 8, 496, 94, 24); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,0.45)'; g.lineWidth = 4; g.stroke();
+      g.fillStyle = fg; g.font = '800 38px Pretendard'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(text, 256, 56);
+      const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+      sp.position.set(x, y, z);
+      sp.scale.set(16 * scale, 3.5 * scale, 1);
+      scene.add(sp);
+    }
+
+    async function loadPureCad() {
+      const resp = await fetch('dxf_pure.json');
+      const data = await resp.json();
+
+      // 1. DXF 건물 10개 전량 (세움터 층수/면적 반영, 깔끔한 CAD 매스)
+      data.buildings.forEach((b, idx) => {
+        if (idx === 5) {
+          extrudeBuilding(b.pts, 0, 11.4, 0xe0f2fe, 0x0284c7, layers.mainBldg, {
+            title: '주1 — 경기북부병무지청 본관동', layer: b.layer,
+            floors: '지하 1층 / 지상 3층 (세움터 공식)', floorsCount: 3,
+            ledgerArea: '4,123.72 ㎡', dxfFootprint: `${b.w}m × ${b.d}m (투영면적 ${b.area}㎡)`,
+            structure: '철근콘크리트구조 (2006.08.28 승인)'
+          });
+          // 세움터 공식 본관동 지하 1층 (B1: y = -3.8m ~ 0.0m, 반투명 보라색 단면)
+          const b1Mesh = extrudeBuilding(b.pts, -3.8, 3.76, 0x8b5cf6, 0x6d28d9, layers.basement, {
+            title: '주1 본관동 — 지하 1층 (세움터 공식 B1)', layer: b.layer,
+            floors: '지하 1층 (1/3 중 지하부)', floorsCount: 1,
+            ledgerArea: '본관동 연면적 4,123.72㎡ 포함', dxfFootprint: `${b.w}m × ${b.d}m`,
+            structure: '철근콘크리트구조 지하층'
+          });
+          b1Mesh.material.transparent = true; b1Mesh.material.opacity = 0.52;
+          addLabel('주1 본관동 (B1/3F · 4,123.7㎡)', b.cx - 8, 15.2, b.cz, '#0369a1', '#ffffff', 1.15);
+        } else if (idx === 6) {
+          extrudeBuilding(b.pts, 0, 11.4, 0xfef3c7, 0xd97706, layers.mainBldg, {
+            title: '주2 — 경기북부병무지청 징병검사동', layer: b.layer,
+            floors: '지상 3층 / 지하 0층 (세움터 공식)', floorsCount: 3,
+            ledgerArea: '1,864.13 ㎡', dxfFootprint: `${b.w}m × ${b.d}m (투영면적 ${b.area}㎡)`,
+            structure: '철근콘크리트구조 (2006.08.28 승인)'
+          });
+          addLabel('주2 징병검사동 (3F · 1,864.1㎡)', b.cx + 4, 15.2, b.cz, '#b45309', '#ffffff', 1.15);
+        } else if (idx === 3) {
+          extrudeBuilding(b.pts, 3.8, 3.6, 0xbae6fd, 0x0369a1, layers.subBldg, {
+            title: '연결 통로 (DXF B0014116)', layer: b.layer,
+            floors: '지상 2층 연결부', floorsCount: 1,
+            ledgerArea: '본관/검사동 포함', dxfFootprint: `${b.w}m × ${b.d}m (투영면적 ${b.area}㎡)`,
+            structure: 'DXF 부속건물(B0014116)'
+          });
+        } else {
+          extrudeBuilding(b.pts, 0, 3.4, 0xcbd5e1, 0x475569, layers.subBldg, {
+            title: `부속건물 #${idx} (DXF ${b.layer})`, layer: b.layer,
+            floors: '지상 1층 부속구조물', floorsCount: 1,
+            ledgerArea: '부속시설', dxfFootprint: `${b.w}m × ${b.d}m (투영면적 ${b.area}㎡)`,
+            structure: `국토정보플랫폼 1:1,000 실측 (${b.layer})`
+          });
+        }
+      });
+
+      // 2. 도로경계선 & 중심선 (DXF A001, A002 원본 좌표)
+      data.roads.forEach(r => {
+        if (r.layer === 'A0023210') addLineRibbon(r.pts, 0.03, 0.25, 0.04, 0xeab308, layers.roads);
+        else if (r.layer === 'A0013115') addLineRibbon(r.pts, 0.02, 0.35, 0.14, 0x0284c7, layers.roads);
+        else addLineRibbon(r.pts, 0.02, 0.24, 0.12, 0x38bdf8, layers.roads);
+      });
+
+      // 3. 보도경계선 (DXF A003 원본 좌표)
+      data.sidewalks.forEach(s => addLineRibbon(s.pts, 0.02, 0.22, 0.10, 0x10b981, layers.sidewalks));
+
+      // 4. 담장·울타리·옹벽·사면 (DXF B002, D001 원본 좌표)
+      data.walls.forEach(w => {
+        const pts2d = w.pts.map(p => [p[0], p[1]]);
+        if (w.layer === 'B0024126') addLineRibbon(pts2d, 0.0, 0.35, 1.8, 0xf97316, layers.walls);
+        else if (w.layer === 'B0024127') addLineRibbon(pts2d, 0.0, 0.16, 1.4, 0x64748b, layers.walls);
+        else if (w.layer.startsWith('D00151')) addLineRibbon(pts2d, 0.0, 0.40, 1.2, 0x9a3412, layers.walls);
+        else addLineRibbon(pts2d, 0.02, 0.14, 0.06, 0x94a3b8, layers.walls);
+      });
+
+      // 5. 등고선(F001) + 사면 경사 빗금선(F004)
+      data.contours.forEach(c => {
+        const yVis = (c.elev - 45.0) * 0.5 + 0.08;
+        const lpts = c.pts.map(p => new THREE.Vector3(p[0], yVis, p[1]));
+        layers.contours.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lpts), new THREE.LineBasicMaterial({ color: c.elev >= 45 ? 0x65a30d : 0x15803d })));
+      });
+      (data.slopes || []).forEach(s => {
+        const lpts = s.pts.map(p => new THREE.Vector3(p[0], 0.09, p[1]));
+        layers.contours.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lpts), new THREE.LineBasicMaterial({ color: 0x84cc16 })));
+      });
+
+      // 5-2. 시설물·배수로·구역경계선 (C0, D0, E0, G0 전량)
+      (data.facilities_lines || []).forEach(fl => addLineRibbon(fl.pts, 0.03, 0.16, 0.08, 0xc026d3, layers.facilities));
+      (data.drainage_boundary || []).forEach(db => addLineRibbon(db.pts, 0.03, 0.18, 0.07, 0x06b6d4, layers.facilities));
+      const facPtMat = new THREE.MeshStandardMaterial({ color: 0xd946ef, roughness: 0.45 });
+      (data.facilities_pts || []).forEach(fp => {
+        const m = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.25, 10), facPtMat);
+        m.position.set(fp.x, 0.13, fp.z); layers.facilities.add(m);
+      });
+
+      // 6. 실측 가로등/전신주 포인트 (DXF C0226232, C0223367 원본 좌표)
+      const poleMat = new THREE.MeshStandardMaterial({ color: 0xec4899, roughness: 0.4 });
+      data.points.forEach(pt => {
+        const h = pt.layer === 'C0223367' ? 9.5 : 6.0;
+        const m = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.2, h, 8), poleMat);
+        m.position.set(pt.x, h / 2, pt.z); m.castShadow = true; layers.points.add(m);
+      });
+
+      // 7. DXF 공식 주기 라벨
+      addLabel('전좌로 (DXF A0023210)', -49.5, 4.0, 0.0, '#1e293b', '#fde047', 0.85);
+    }
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let selectedMesh = null;
+    let selectedOrigColor = null;
+
+    // 1:1,000 실측 거리 측정 도구 (두 점 클릭 시 실제 미터 거리 표시)
+    let measureMode = false;
+    let measurePts = [];
+    const measureGroup = new THREE.Group();
+    scene.add(measureGroup);
+
+    window.toggleMeasure = () => {
+      measureMode = !measureMode;
+      measurePts = [];
+      measureGroup.clear();
+      const btn = document.getElementById('btn-measure');
+      if (btn) {
+        btn.innerText = measureMode ? '📏 거리 재기 ON (두 점 클릭)' : '📏 거리 재기 OFF';
+        btn.className = measureMode
+          ? 'glass px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 border-amber-400/60 bg-amber-600/25 cursor-pointer transition'
+          : 'glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 cursor-pointer hover:bg-slate-800 transition';
+      }
+    };
+
+    let xrayMode = false;
+    window.toggleXray = () => {
+      xrayMode = !xrayMode;
+      basePlaneMat.opacity = xrayMode ? 0.25 : 1.0;
+      basePlaneMat.needsUpdate = true;
+      const btn = document.getElementById('btn-xray');
+      if (btn) {
+        btn.innerText = xrayMode ? '🔍 지하층 투시 ON' : '🔍 지하층 투시';
+        btn.className = xrayMode
+          ? 'glass px-3 py-1.5 rounded-xl text-xs font-bold text-violet-300 border-violet-400/60 bg-violet-600/25 cursor-pointer transition'
+          : 'glass px-3 py-1.5 rounded-xl text-xs font-bold text-slate-200 cursor-pointer hover:bg-slate-800 transition';
+      }
+    };
+
+    renderer.domElement.addEventListener('click', (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+
+      if (measureMode) {
+        const hitPlane = raycaster.intersectObject(basePlane);
+        if (hitPlane.length > 0) {
+          const pt = hitPlane[0].point.clone(); pt.y = 0.25;
+          if (measurePts.length >= 2) { measurePts = []; measureGroup.clear(); }
+          measurePts.push(pt);
+          const dot = new THREE.Mesh(new THREE.SphereGeometry(0.45, 12, 12), new THREE.MeshBasicMaterial({ color: 0xf59e0b }));
+          dot.position.copy(pt); measureGroup.add(dot);
+          if (measurePts.length === 2) {
+            const [a, b] = measurePts;
+            const dist = Math.hypot(b.x - a.x, b.z - a.z);
+            measureGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), new THREE.LineBasicMaterial({ color: 0xf59e0b })));
+            const mid = a.clone().add(b).multiplyScalar(0.5);
+            const c = document.createElement('canvas'); c.width = 360; c.height = 96;
+            const g = c.getContext('2d');
+            g.fillStyle = '#0f172a'; g.beginPath(); g.roundRect(6, 6, 348, 84, 20); g.fill();
+            g.strokeStyle = '#f59e0b'; g.lineWidth = 4; g.stroke();
+            g.fillStyle = '#fde047'; g.font = '900 38px Pretendard'; g.textAlign = 'center'; g.textBaseline = 'middle';
+            g.fillText(`${dist.toFixed(2)} m`, 180, 49);
+            const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+            const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+            sp.position.set(mid.x, 2.8, mid.z); sp.scale.set(11, 3, 1);
+            measureGroup.add(sp);
+            document.getElementById('inspector-body').innerHTML = `
+              <div class="font-extrabold text-amber-300 text-xs">📏 1:1,000 실측 거리 측정 결과</div>
+              <div class="text-white text-sm font-black">직선 거리: ${dist.toFixed(2)} m</div>
+              <div class="text-slate-300">동서(ΔX): ${Math.abs(b.x - a.x).toFixed(2)}m · 남북(ΔZ): ${Math.abs(b.z - a.z).toFixed(2)}m</div>
+            `;
+          }
+        }
+        return;
+      }
+
+      const hits = raycaster.intersectObjects(clickableMeshes);
+      if (selectedMesh && selectedOrigColor !== null) {
+        selectedMesh.material.color.setHex(selectedOrigColor);
+        selectedMesh = null;
+      }
+      if (hits.length > 0) {
+        const m = hits[0].object;
+        selectedMesh = m;
+        selectedOrigColor = m.material.color.getHex();
+        m.material.color.setHex(0x38bdf8);
+        const u = m.userData;
+        document.getElementById('inspector-body').innerHTML = `
+          <div class="font-extrabold text-sky-300 text-xs">${u.title}</div>
+          <div class="text-slate-300">DXF 레이어: <strong class="text-white">${u.layer}</strong></div>
+          <div class="text-slate-300">DXF 실측 치수: <strong class="text-white">${u.dxfFootprint}</strong></div>
+          <div class="text-slate-300">세움터 층수: <strong class="text-white">${u.floors}</strong></div>
+          <div class="text-slate-300">세움터 연면적: <strong class="text-amber-300">${u.ledgerArea}</strong></div>
+          <div class="text-slate-300">구조/승인: <strong class="text-white">${u.structure}</strong></div>
+        `;
+      }
+    });
+
+    window.toggleLayer = (name, checked) => { if (layers[name]) layers[name].visible = checked; };
+    window.toggleTheme = () => {
+      isLightBg = !isLightBg;
+      scene.background.setHex(isLightBg ? 0xf1f5f9 : 0x0f172a);
+      basePlane.material.color.setHex(isLightBg ? 0xe2e8f0 : 0x1e293b);
+    };
+
+    const VIEWS = {
+      iso:   { pos: new THREE.Vector3(-72, 68, 92),  target: new THREE.Vector3(14, 0, -2) },
+      top:   { pos: new THREE.Vector3(14, 175, 2),   target: new THREE.Vector3(14, 0, -4) },
+      gate:  { pos: new THREE.Vector3(-64, 18, 56),  target: new THREE.Vector3(5, 3, 2) },
+      east:  { pos: new THREE.Vector3(112, 42, 44),  target: new THREE.Vector3(60, 0, 12) },
+      north: { pos: new THREE.Vector3(-42, 46, -98), target: new THREE.Vector3(-6, 0, -40) }
+    };
+    let camAnim = null;
+    window.setView = (key) => {
+      const v = VIEWS[key]; if (!v) return;
+      camAnim = { sp: camera.position.clone(), ep: v.pos.clone(), st: controls.target.clone(), et: v.target.clone(), t: 0 };
+      document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('v-' + key)?.classList.add('active');
+    };
+
+    let zoomDir = 0;
+    const zOff = new THREE.Vector3();
+    function applyZoom(f) {
+      camAnim = null;
+      zOff.subVectors(camera.position, controls.target);
+      zOff.setLength(Math.max(controls.minDistance, Math.min(controls.maxDistance, zOff.length() * f)));
+      camera.position.copy(controls.target).add(zOff);
+    }
+    window.stepZoom = d => applyZoom(d < 0 ? 0.84 : 1.19);
+    window.startZoom = d => { zoomDir = d; };
+    window.stopZoom = () => { zoomDir = 0; };
+    controls.addEventListener('start', () => { camAnim = null; });
+
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      if (zoomDir !== 0) applyZoom(zoomDir < 0 ? Math.pow(0.45, dt) : Math.pow(2.2, dt));
+      if (camAnim) {
+        camAnim.t = Math.min(1, camAnim.t + dt / 0.9);
+        const e = camAnim.t < 0.5 ? 2 * camAnim.t * camAnim.t : 1 - Math.pow(-2 * camAnim.t + 2, 2) / 2;
+        camera.position.lerpVectors(camAnim.sp, camAnim.ep, e);
+        controls.target.lerpVectors(camAnim.st, camAnim.et, e);
+        if (camAnim.t >= 1) camAnim = null;
+      }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    camera.position.copy(VIEWS.iso.pos);
+    controls.target.copy(VIEWS.iso.target);
+    loadPureCad().then(animate);
+  </script>
+</body>
+</html>

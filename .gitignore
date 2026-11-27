@@ -24,3 +24,11 @@ compare_himchan.html
 # 환경변수 (API 키)
 .env
 .env.local
+
+# 대용량 원본 공간정보(정사영상 TIF, 수치지도 DXF) 및 임시 렌더 이미지 제외
+*.tif
+*.dxf
+(B010)*
+(B060)*
+ortho_2025.jpg
+render_drone_*.png

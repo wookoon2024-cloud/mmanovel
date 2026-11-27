@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>청춘의 첫 관문 v2.2.5</title>
+  <title>청춘의 첫 관문 v2.3.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -310,7 +310,7 @@
       <div class="border-l border-slate-300 pl-2 sm:pl-3 flex flex-col justify-center cursor-pointer select-none" onclick="showMainMenu()" title="메인 메뉴(로비)로 이동">
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span id="top-app-title" class="text-xs sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[95px] sm:max-w-none hover:text-blue-600 transition">청춘의 첫 관문</span>
-          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v2.2.5</span>
+          <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200 shrink-0">v2.3.1</span>
           <span id="autosave-toast" class="hidden sm:inline text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 opacity-0 transition-opacity duration-300">✓ 자동저장됨</span>
         </div>
         <p id="top-step-title" class="hidden md:block text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[130px] sm:max-w-none">STEP 1: 통지서 확인 & 스마트 일정 변경</p>
@@ -322,6 +322,10 @@
       <!-- 메인메뉴 -->
       <button onclick="showMainMenu()" id="btn-home" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1 shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="메인 메뉴">
         <i data-lucide="home" class="w-3.5 h-3.5"></i> <span id="label-home" class="hidden sm:inline">메뉴</span>
+      </button>
+      <!-- 3D 청사 길안내 (상시 HUD 버튼) -->
+      <button onclick="open3DGuideModal()" id="btn-3d-hud" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition flex items-center gap-1 shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="경기북부병무지청 3D 청사 길안내">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i> <span class="hidden sm:inline">3D 청사안내</span><span class="sm:hidden">3D</span>
       </button>
       <!-- 언어 전환 -->
       <button id="btn-lang" onclick="toggleLanguage()" class="px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold shadow-sm cursor-pointer shrink-0 text-[11px] sm:text-xs focus:outline-none" title="언어 변경">
@@ -367,13 +371,18 @@
           <div class="border-l border-slate-300 pl-2 sm:pl-3 cursor-pointer select-none" onclick="showMainMenu()">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 id="lobby-main-header-title" class="text-xs sm:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-600 transition truncate max-w-[140px] sm:max-w-none">병무행정 비주얼노벨</h1>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v2.2.5</span>
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">v2.3.1</span>
             </div>
           </div>
         </div>
-        <button onclick="toggleLanguage()" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold text-xs shadow-sm cursor-pointer" title="다국어 언어 변경 (KO / EN)">
-          <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span class="lobby-lang-label">EN</span>
-        </button>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button onclick="open3DGuideModal()" class="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm cursor-pointer transition flex items-center gap-1.5" title="경기북부병무지청 3D 청사 길안내">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i> <span>3D 청사 길안내</span>
+          </button>
+          <button onclick="toggleLanguage()" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center gap-1 text-slate-800 font-bold text-xs shadow-sm cursor-pointer" title="다국어 언어 변경 (KO / EN)">
+            <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i> <span class="lobby-lang-label">EN</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1099,6 +1108,9 @@
         <div class="route-step-item"><b>2</b><span>큰길과 만나면 <strong>왼쪽</strong>으로</span></div>
         <div class="route-step-item"><b>3</b><span><strong>회룡중학교</strong> 쪽 오르막길로 오른쪽, 학교 담장을 끼고 쭉 올라가기</span></div>
         <div class="route-step-item"><b>4</b><span><strong>경기북부병무지청 정문</strong> 도착</span></div>
+        <button type="button" onclick="event.stopPropagation(); open3DGuideModal('exam');" class="mt-2 w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow cursor-pointer transition">
+          <span>3D 청사 길안내로 미리 보기</span>
+        </button>
       </div>
     </div>
 
@@ -1107,6 +1119,23 @@
       <img id="route-photo-img" src="assets/05_gate76.jpg" alt="경기북부병무지청 현장 안내 사진">
       <svg id="route-anno-svg" viewBox="0 0 100 75" preserveAspectRatio="none"></svg>
       <div id="route-anno-chips"></div>
+      <button type="button" onclick="event.stopPropagation(); open3DGuideModal('exam');" class="absolute bottom-3 right-3 z-20 px-3 py-1.5 rounded-lg bg-slate-900/95 hover:bg-slate-800 text-white text-xs font-extrabold border border-white/40 shadow-lg cursor-pointer transition">
+        3D 청사 길안내 보기
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= [LAYER 9: 경기북부병무지청 3D 청사 길안내 전체화면 팝업 모달] ================= -->
+  <div id="modal-3d-guide" class="fixed inset-0 z-[90] hidden bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 pointer-events-auto" onclick="event.stopPropagation()">
+    <div class="relative w-full h-full max-w-[1440px] max-h-[92vh] bg-white rounded-2xl overflow-hidden border-2 border-slate-900 shadow-2xl flex flex-col">
+      <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900 text-white shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-extrabold tracking-tight">경기북부병무지청 3D 청사 길안내</span>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-semibold">정문 출발 3D 동선</span>
+        </div>
+        <button type="button" onclick="close3DGuideModal()" class="px-3 py-1 rounded-lg bg-white hover:bg-slate-200 text-slate-900 text-xs font-extrabold cursor-pointer transition">닫기 ✕</button>
+      </div>
+      <iframe id="iframe-3d-guide" src="about:blank" class="w-full flex-1 border-0 bg-sky-100" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -3613,6 +3642,31 @@
         }
       });
     }
+
+    function open3DGuideModal(routeKey) {
+      const modal = document.getElementById('modal-3d-guide');
+      const frame = document.getElementById('iframe-3d-guide');
+      if (!modal || !frame) return;
+      const url = routeKey
+        ? ('tour3d_blender.html?v=4.5&route=' + encodeURIComponent(routeKey))
+        : 'tour3d_blender.html?v=4.5';
+      frame.src = url;
+      modal.classList.remove('hidden');
+    }
+
+    function close3DGuideModal() {
+      const modal = document.getElementById('modal-3d-guide');
+      const frame = document.getElementById('iframe-3d-guide');
+      if (modal) modal.classList.add('hidden');
+      if (frame) frame.src = 'about:blank';
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const m = document.getElementById('modal-3d-guide');
+        if (m && !m.classList.contains('hidden')) close3DGuideModal();
+      }
+    });
 
     function updateRouteStageOverlay(item, scene) {
       const layer = document.getElementById('route-stage-layer');

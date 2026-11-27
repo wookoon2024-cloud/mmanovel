@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>경기북부병무지청 Cycles 360° 실사 VR 웹뷰어 v1.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0c0a09; user-select: none; }
+    #canvas-container { position: fixed; inset: 0; width: 100vw; height: 100vh; cursor: grab; }
+    #canvas-container:active { cursor: grabbing; }
+    .glass {
+      background: rgba(18, 20, 26, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 240, 210, 0.18);
+    }
+    .spot-btn.active {
+      background: #d97706;
+      color: #ffffff;
+      border-color: #fbbf24;
+      box-shadow: 0 4px 16px rgba(217, 119, 6, 0.45);
+    }
+    #fade-veil {
+      position: fixed; inset: 0; z-index: 30; background: #0c0a09;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div id="fade-veil"></div>
+
+  <!-- 로딩 -->
+  <div id="loading" class="fixed inset-0 z-50 bg-stone-950 flex flex-col items-center justify-center gap-3 transition-opacity duration-500">
+    <div class="w-10 h-10 rounded-full border-4 border-amber-500/30 border-t-amber-400 animate-spin"></div>
+    <p class="text-sm font-bold text-amber-100">Blender Cycles 360° 실사 VR 파노라마 로딩 중...</p>
+  </div>
+
+  <!-- 좌측 상단 정보 카드 -->
+  <div class="fixed top-4 left-4 z-20 flex flex-col gap-2 w-80 max-w-[92vw] pointer-events-none">
+    <div class="glass rounded-2xl px-4 py-3 shadow-2xl pointer-events-auto">
+      <div class="flex flex-wrap items-center gap-1.5 mb-1">
+        <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-extrabold">Cycles 광추적 360° VR</span>
+        <span class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-bold">v1.0 · 실사 파노라마 웹뷰어</span>
+      </div>
+      <h1 class="text-sm font-extrabold text-white">경기북부병무지청 360° 실사 VR 투어</h1>
+      <p class="text-[11px] text-stone-300 mt-0.5 leading-snug">
+        Blender 5.3 Cycles 광추적 엔진으로 렌더링한 360° 실사 파노라마를 웹에서 60fps로 자유롭게 회전·확대합니다.
+      </p>
+    </div>
+
+    <div class="glass rounded-2xl px-4 py-2.5 shadow-xl pointer-events-auto">
+      <div id="spot-title" class="text-xs font-extrabold text-amber-300">1. 상공 360° 드론 조감도</div>
+      <p id="spot-desc" class="text-[11px] text-stone-300 mt-0.5 leading-relaxed">
+        드래그해서 360° 사방을 둘러보고, 우측 +/− 버튼으로 망원 확대해 보세요. 하단 버튼으로 4개 지점을 즉시 이동할 수 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 우측 상단 컨트롤 + 확대/축소 버튼 -->
+  <div class="fixed top-4 right-4 z-20 flex flex-col items-end gap-2">
+    <div class="flex flex-wrap items-center justify-end gap-1.5">
+      <button id="btn-auto" onclick="window.toggleAuto()" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-stone-200 hover:bg-stone-800 cursor-pointer">🔄 자동 회전</button>
+      <a href="tour3d_blender.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 hover:bg-stone-800">🧊 자유 3D 모드</a>
+      <a href="tour3d_cad.html" class="glass px-3 py-1.5 rounded-xl text-xs font-bold text-cyan-300 hover:bg-stone-800">1차 CAD</a>
+    </div>
+
+    <div class="glass rounded-2xl p-1.5 shadow-2xl flex flex-col items-center gap-1.5 mt-1">
+      <button type="button" onmousedown="window.startZoom(-1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(-1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(-1)" class="w-10 h-10 rounded-xl bg-stone-800/90 hover:bg-amber-600 active:scale-95 text-white font-black text-xl border border-stone-600/80 transition flex items-center justify-center cursor-pointer" title="확대 (망원)">+</button>
+      <span id="fov-label" class="text-[10px] font-bold text-stone-300 select-none">1.0x</span>
+      <button type="button" onmousedown="window.startZoom(1)" onmouseup="window.stopZoom()" onmouseleave="window.stopZoom()" ontouchstart="window.startZoom(1)" ontouchend="window.stopZoom()" onclick="window.stepZoom(1)" class="w-10 h-10 rounded-xl bg-stone-800/90 hover:bg-amber-600 active:scale-95 text-white font-black text-xl border border-stone-600/80 transition flex items-center justify-center cursor-pointer" title="축소 (광각)">−</button>
+    </div>
+  </div>
+
+  <!-- 하단 4개 360° VR 지점 이동 바 -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-20 w-[96vw] max-w-4xl">
+    <div class="glass rounded-2xl p-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5">
+      <button onclick="window.goSpot('drone')" id="s-drone" class="spot-btn active px-3.5 py-2 rounded-xl text-xs font-bold text-stone-200 bg-stone-800/80 hover:bg-stone-700 border border-stone-700 cursor-pointer">1. 상공 360° 드론 조감도</button>
+      <button onclick="window.goSpot('plaza')" id="s-plaza" class="spot-btn px-3.5 py-2 rounded-xl text-xs font-bold text-stone-200 bg-stone-800/80 hover:bg-stone-700 border border-stone-700 cursor-pointer">2. 중앙 체크무늬 광장</button>
+      <button onclick="window.goSpot('south')" id="s-south" class="spot-btn px-3.5 py-2 rounded-xl text-xs font-bold text-stone-200 bg-stone-800/80 hover:bg-stone-700 border border-stone-700 cursor-pointer">3. 별관 남면 · 민원실 앞</button>
+      <button onclick="window.goSpot('east')"  id="s-east"  class="spot-btn px-3.5 py-2 rounded-xl text-xs font-bold text-stone-200 bg-stone-800/80 hover:bg-stone-700 border border-stone-700 cursor-pointer">4. 동쪽 주차장 · 구름다리</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    const SPOTS = {
+      drone: {
+        file: 'assets/pano360/pano_drone.jpg?v=1.0',
+        lon: 45, lat: -24, fov: 62,
+        title: '1. 상공 360° 드론 조감도 (Cycles 실사)',
+        desc: '고도 28m 상공에서 경기북부병무지청 전체 단지, 전좌로, 호원동 주변 아파트와 도봉산 원경까지 360°로 조망합니다.'
+      },
+      plaza: {
+        file: 'assets/pano360/pano_plaza.jpg?v=1.0',
+        lon: 4, lat: 8, fov: 68,
+        title: '2. 중앙 체크무늬 광장 (보행자 시점)',
+        desc: '광장 한가운데 서서 본관동(경기북부병무지청), 노란 원통 로비, 소나무 잔잎 그림자, 별관동을 360°로 둘러봅니다.'
+      },
+      south: {
+        file: 'assets/pano360/pano_south.jpg?v=1.0',
+        lon: 0, lat: 14, fov: 66,
+        title: '3. 별관 남면 · 민원실 앞 (저고도 시점)',
+        desc: '적벽돌 1층 민원실 현관, 세로 병역판정검사장 현판, 11-bay 깊은 커튼월과 외부 계단을 실사 광추적 화질로 확인합니다.'
+      },
+      east: {
+        file: 'assets/pano360/pano_east.jpg?v=1.0',
+        lon: -76, lat: 8, fov: 68,
+        title: '4. 동쪽 주차장 · 3층 구름다리',
+        desc: '10면 풀구획 동쪽 순환 주차장, 단풍나무·소나무, 3층 통유리 구름다리와 동측 경기북부 병무청 현판을 둘러봅니다.'
+      }
+    };
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.1, 1100);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    container.appendChild(renderer.domElement);
+
+    const sphereGeo = new THREE.SphereGeometry(500, 64, 40);
+    sphereGeo.scale(-1, 1, 1);
+    const sphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    sphere.rotation.y = Math.PI / 2; // Blender +Y(북쪽)을 lon=0(-Z)에 정밀 정렬
+    scene.add(sphere);
+
+    const texLoader = new THREE.TextureLoader();
+    const texCache = {};
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+    let lon = 45, lat = -24, targetLon = 45, targetLat = -24;
+    let targetFov = 62;
+    let isDragging = false, prevX = 0, prevY = 0;
+    let autoRotate = false;
+    let zoomDir = 0;
+    let firstLoaded = false;
+
+    function updateFovLabel() {
+      const ratio = (65 / camera.fov).toFixed(1);
+      const el = document.getElementById('fov-label');
+      if (el) el.innerText = ratio + 'x';
+    }
+
+    function applyTexture(key, tex) {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = maxAniso;
+      tex.minFilter = THREE.LinearFilter;
+      sphereMat.map = tex;
+      sphereMat.needsUpdate = true;
+
+      const s = SPOTS[key];
+      lon = targetLon = s.lon;
+      lat = targetLat = s.lat;
+      camera.fov = targetFov = s.fov;
+      camera.updateProjectionMatrix();
+      updateFovLabel();
+
+      document.querySelectorAll('.spot-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('s-' + key)?.classList.add('active');
+      document.getElementById('spot-title').innerText = s.title;
+      document.getElementById('spot-desc').innerText = s.desc;
+
+      if (!firstLoaded) {
+        firstLoaded = true;
+        const ld = document.getElementById('loading');
+        if (ld) { ld.style.opacity = '0'; setTimeout(() => ld.remove(), 450); }
+      }
+      document.getElementById('fade-veil').style.opacity = '0';
+    }
+
+    window.goSpot = (key) => {
+      const s = SPOTS[key];
+      if (!s) return;
+      const veil = document.getElementById('fade-veil');
+      if (firstLoaded) veil.style.opacity = '1';
+      setTimeout(() => {
+        if (texCache[key]) {
+          applyTexture(key, texCache[key]);
+        } else {
+          texLoader.load(s.file, (tex) => {
+            texCache[key] = tex;
+            applyTexture(key, tex);
+          }, undefined, (err) => {
+            console.error('파노라마 로드 오류:', err);
+            veil.style.opacity = '0';
+            const ld = document.getElementById('loading');
+            if (ld) ld.innerHTML = `<p class="text-rose-400 font-bold text-sm">360° 파노라마 로드 실패: ${s.file}</p>`;
+          });
+        }
+      }, firstLoaded ? 220 : 0);
+    };
+
+    window.toggleAuto = () => {
+      autoRotate = !autoRotate;
+      const btn = document.getElementById('btn-auto');
+      if (autoRotate) btn.classList.add('bg-amber-600/80', 'text-white');
+      else btn.classList.remove('bg-amber-600/80', 'text-white');
+    };
+
+    window.stepZoom = (d) => { targetFov = Math.max(22, Math.min(92, targetFov + d * 10)); };
+    window.startZoom = (d) => { zoomDir = d; };
+    window.stopZoom = () => { zoomDir = 0; };
+
+    // 마우스 + 터치 드래그 360° 회전
+    function onDown(x, y) { isDragging = true; prevX = x; prevY = y; autoRotate = false; document.getElementById('btn-auto')?.classList.remove('bg-amber-600/80', 'text-white'); }
+    function onMove(x, y) {
+      if (!isDragging) return;
+      const sens = camera.fov / 420;
+      targetLon += (prevX - x) * sens;
+      targetLat += (y - prevY) * sens;
+      targetLat = Math.max(-85, Math.min(85, targetLat));
+      prevX = x; prevY = y;
+    }
+    function onUp() { isDragging = false; }
+
+    container.addEventListener('pointerdown', e => { onDown(e.clientX, e.clientY); container.setPointerCapture(e.pointerId); });
+    container.addEventListener('pointermove', e => onMove(e.clientX, e.clientY));
+    container.addEventListener('pointerup', onUp);
+    container.addEventListener('pointercancel', onUp);
+    container.addEventListener('wheel', e => {
+      targetFov = Math.max(22, Math.min(92, targetFov + e.deltaY * 0.04));
+    }, { passive: true });
+
+    const keys = {};
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (e.key === '+' || e.key === '=') window.stepZoom(-1);
+      if (e.key === '-' || e.key === '_') window.stepZoom(1);
+      if (e.key === '1') window.goSpot('drone');
+      if (e.key === '2') window.goSpot('plaza');
+      if (e.key === '3') window.goSpot('south');
+      if (e.key === '4') window.goSpot('east');
+    });
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+    const clock = new THREE.Clock();
+    const lookTarget = new THREE.Vector3();
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+
+      if (autoRotate && !isDragging) targetLon += 6.5 * dt;
+      if (zoomDir !== 0) targetFov = Math.max(22, Math.min(92, targetFov + zoomDir * 38 * dt));
+      if (keys['ArrowLeft'] || keys['KeyA'])  targetLon -= 52 * dt;
+      if (keys['ArrowRight'] || keys['KeyD']) targetLon += 52 * dt;
+      if (keys['ArrowUp'] || keys['KeyW'])    targetLat = Math.min(85, targetLat + 42 * dt);
+      if (keys['ArrowDown'] || keys['KeyS'])  targetLat = Math.max(-85, targetLat - 42 * dt);
+
+      lon += (targetLon - lon) * Math.min(1, dt * 10);
+      lat += (targetLat - lat) * Math.min(1, dt * 10);
+      if (Math.abs(targetFov - camera.fov) > 0.05) {
+        camera.fov += (targetFov - camera.fov) * Math.min(1, dt * 10);
+        camera.updateProjectionMatrix();
+        updateFovLabel();
+      }
+
+      const phi = THREE.MathUtils.degToRad(90 - lat);
+      const theta = THREE.MathUtils.degToRad(lon - 90);
+      lookTarget.set(
+        500 * Math.sin(phi) * Math.cos(theta),
+        500 * Math.cos(phi),
+        500 * Math.sin(phi) * Math.sin(theta)
+      );
+      camera.lookAt(lookTarget);
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    window.goSpot('drone');
+    animate();
+  </script>
+</body>
+</html>
